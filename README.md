@@ -6,4 +6,4 @@ value='You are now in the home page view - Click this button to view the read me
 [ladybug-tools.github.io]( https://ladybug-tools.github.io/ )
 ===
 
-Ladybug Tools Website: [www.ladybug.tools]( https://www.ladybug.tools )
+Ladybug Tools Website: [www.ladybug.tools]( http://www.ladybug.tools )
