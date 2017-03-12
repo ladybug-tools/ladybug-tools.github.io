@@ -9,7 +9,7 @@
 
 // Well, you have to start somewhere... ;-)
 
-	var urlAPIRepos = 'https://api.github.com/orgs/ladybug-analysis-tools/repos';
+	var urlAPIRepos = 'https://api.github.com/orgs/ladybug-tools/repos';
 
 	init();
 
@@ -24,7 +24,7 @@
 		''
 
 		var info = document.body.appendChild( document.createElement( 'div' ) );
-		info.innerHTML = 
+		info.innerHTML =
 
 			'<center>' +
 			'<img src=images/ladybug-logo.png >' +
@@ -32,7 +32,7 @@
 
 			'<h1>' +
 				'<a href="" >' + document.title + '</a> ' +
-				'<a href=https://github.com/ladybug-analysis-tools >&#x24D8;</a>' +
+				'<a href=https://github.com/ladybug-tools >&#x24D8;</a>' +
 			'</h1>' +
 
 			'<div id=repoDiv ></div>' +
@@ -68,7 +68,7 @@
 
 				homepage = ( repo.homepage !== '' &&  repo.homepage !== null ) ? '<p><a href=' + repo.html_url + ' > Home Page</a></p>' : '';
 
-				txt += 
+				txt +=
 
 					'<h2><a href=' + repo.html_url + ' >' + repo.name + '</a></h2>' +
 					homepage +
@@ -88,7 +88,7 @@
 
 	function addFooter() {
 
-	footer.innerHTML = 
+	footer.innerHTML =
 
 		'<br>' +
 		'<hr>' +
