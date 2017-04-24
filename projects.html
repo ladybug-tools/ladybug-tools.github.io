@@ -1,0 +1,118 @@
+﻿<!doctype html>
+<html lang=en >
+<head>
+<title>Ladybug Tools Projects</title>
+<meta charset=utf-8 />
+</head>
+<body>
+<script>
+
+// Well, you have to start somewhere... ;-)
+
+	var urlAPIRepos = 'https://api.github.com/orgs/ladybug-tools/repos';
+
+	init();
+
+
+	function init() {
+
+		var css = document.body.appendChild( document.createElement( 'style' ) );
+		css.innerHTML =
+
+			'body { font: 12pt monospace; left: 0; margin: 0 auto; max-width: 800px; position: absolute: right: 0; }' +
+			'h1 a { text-decoration: none; }' +
+		''
+
+		var info = document.body.appendChild( document.createElement( 'div' ) );
+		info.innerHTML =
+
+			'<center>' +
+			'<img src=images/ladybug_tools_logo.png style="width: 50%;">' +
+			'</center>' +
+
+			'<h1>' +
+				'<a href="" >' + document.title + '</a> ' +
+				'<a href=https://github.com/ladybug-tools >&#x24D8;</a>' +
+			'</h1>' +
+
+			'<div id=repoDiv ></div>' +
+			'<div id=footer ></div>' +
+
+
+		'';
+
+		getAPIRepos();
+
+		addFooter();
+
+	}
+
+	function getAPIRepos() {
+
+		var xhr = new XMLHttpRequest();
+		xhr.open( 'GET', urlAPIRepos, true );
+		xhr.onload = callback;
+		xhr.send( null );
+
+		function callback() {
+
+//			var repos, repo;
+
+			repos = JSON.parse( xhr.response );
+
+			var txt = '';
+
+			for ( var i = 0; i < repos.length; i++ ) {
+
+				repo = repos[ i ];
+
+				homepage = ( repo.homepage !== '' &&  repo.homepage !== null ) ? '<p><a href=' + repo.html_url + ' > Home Page</a></p>' : '';
+
+				txt +=
+
+					'<h2><a href=' + repo.html_url + ' >' + repo.name + '</a></h2>' +
+					homepage +
+					'<p>' + repo.description + '</p>' +
+					'<p>size: ' + repo.size + ' ~ pushed: ' + repo.pushed_at.replace( 'T', ' ~ ' ) + ' UTC </p>' +
+				'';
+
+			}
+
+			repoDiv.innerHTML = txt;
+
+
+		}
+
+	}
+
+
+	function addFooter() {
+
+	footer.innerHTML =
+
+		'<br>' +
+		'<hr>' +
+
+		'<center>' +
+		'<h3>The Ladybug Nursery Rhyme</h3>' +
+
+		'<p>"Ladybug, ladybug, fly away home</p>' +
+		'<p>Your house is on fire,</p>' +
+		'<p>and your children will burn</p>' +
+		'<p>All except for little Nan,</p>' +
+		'<p>weaving gold laces as fast as she can"</p>' +
+		'<p>- <a href="https://en.wikipedia.org/wiki/Ladybird_Ladybird" >English language nursery rhyme dating back to 1744</a></p>' +
+
+		'<hr>' +
+
+		'<h1> &#128030; </h1>' +
+		'</center>' +
+
+	'';
+
+	}
+
+
+</script>
+</body>
+</html>
