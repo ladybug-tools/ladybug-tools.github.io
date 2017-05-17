@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<!-- Ladybug tools home page -->
+<!-- Check ladybug.tools for more information -->
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Ladybug Tools | Home Page</title>
+  <meta name="description" content="ladybug tools home page" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" />
+  <link href="http://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="stylesheet" href="assets/css/testimonial.css" />
+</head>
+
+<body class="bg-faded">
+
+  <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+  <!--                        Landing slide show                             -->
+  <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+  <div id="header-slide-show" class="carousel slide" data-ride="carousel" data-pause="hover" data-interval="5000">
+    <ol class="carousel-indicators">
+      <li data-target="#header-slide-show" data-slide-to="0" class="active"></li>
+      <li data-target="#header-slide-show" data-slide-to="1"></li>
+      <li data-target="#header-slide-show" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner" role="listbox">
+      <div id="header-slide-show-item" class="carousel-item active" style="background-image:url('https://raw.githubusercontent.com/mostaphaRoudsari/hydra_1/master/Perforated_mesh/perforated_material_IMG_Perspective.PNG')">
+        <div id="header-slide-show-caption" class="carousel-caption d-md-block">
+          <h1>Ladybug Tools</h1>
+          <h5 class="wow fadeIn text-normal wow fadeIn" >We are developing open, performance-based solutions for the built environment.</h5>
+          <a href="#facts" class="btn btn-primary-outline btn-xl page-scroll wow fadeInUp m-t-3 fa fa-chevron-down"></a>
+        </div>
+      </div>
+      <div id="header-slide-show-item" class="carousel-item" style="background-image:url('https://raw.githubusercontent.com/mostaphaRoudsari/hydra_1/master/Real-time_Radiation_Analysis_with_Ladybug/Real-time_Radiation_Analysis_with_Ladybug_Rhino.png')">
+        <div id="header-slide-show-caption" class="carousel-caption d-md-block">
+          <h1>Ladybug Tools</h1>
+          <h5 class="wow fadeIn text-normal wow fadeIn" >We are developing open, performance-based solutions for the built environment.</h5>
+          <a href="#facts" class="btn btn-primary-outline btn-xl page-scroll wow fadeInUp m-t-3">Read More</a>
+        </div>
+      </div>
+      <div id="header-slide-show-item" class="carousel-item" style="background-image:url('assets/img/ladybug_network_diagram.png')">
+        <div id="header-slide-show-caption" class="carousel-caption d-md-block">
+          <h1 >Ladybug Tools</h1>
+          <h5 class="wow fadeIn text-normal wow fadeIn" >Integrated development.</h5>
+          <a href="#facts" class="btn btn-primary-outline btn-xl page-scroll wow fadeInUp m-t-3">Read More</a>
+        </div>
+      </div>
+    </div>
+    <a class="carousel-control-prev" href="#header-slide-show" role="button" data-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#header-slide-show" role="button" data-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+  </div>
+
+  <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+  <!--                Navigation bar on the top of the page                  -->
+  <!--
+    NOTE: If you're making a change to the nav bar you need to edit
+    it in all the other pages with one caveat. On the main page products
+    scrolls down to the #products div however in other pages it is a drop-down
+    with multiple items.
+  -->
+  <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
+  <nav id="topNav" class="navbar fixed-top navbar-toggleable-sm">
+      <div class="container">
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsingNavbar">
+              <span>☰</span>
+          </button>
+          <a class="navbar-brand img page-scroll" href="#header-slide-show">
+            <img src="assets/img/logo.png">
+          </a>
+          <a class="navbar-brand page-scroll" href="#facts">Ladybug Tools</a>
+          <div class="collapse navbar-collapse" id="collapsingNavbar">
+              <!-- items on the left side of the navbar -->
+              <ul class="navbar-nav">
+              </ul>
+              <!-- items on the right side of the navbar -->
+              <ul class="nav navbar-nav ml-auto">
+                  <li class="nav-item">
+                      <a class="nav-link page-scroll" href="#products">Products</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link page-scroll" href="">Learning</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link page-scroll" href="">Support</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link page-scroll" href="">Community</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link page-scroll" href="">About</a>
+                  </li>
+              </ul>
+          </div>
+      </div>
+  </nav>
+
+  <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+  <!--                             Facts grid                                -->
+  <!--                    What is ladybug tools section                      -->
+  <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+  <section id="facts">
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-12">
+                  <h1 class="section-title"> What is Ladybug Tools? </h1>
+                  <hr class="primary">
+                  <p class="section-subcontent">
+                    Ladybug Tools is a collection of open source plugins and web apps<br> to support integrated performance-based solutions for built environment. Ladybug tools provides the most comprehensive, integrated and customizable solution by connecting flexible 3d modeling environments to validated simulation engines.
+                  </p>
+                </br>
+              </div>
+          </div>
+      </div>
+      <!-- facts containers -->
+      <div class="container wow fadeInUp">
+          <div class="row">
+              <div class="col-lg-3 col-md-3 text-center">
+                  <div class="feature">
+                      <i class="icon-lg fa fa-check wow fadeInUp" style="color:#ed1c24" data-wow-delay=".1s"></i>
+                      <h6 class="text-uppercase">Validated</h6>
+                      <p class="text-muted m-b-0">
+                        Ladybug Tools is built on top of validated simulation engins: <a href="">Radiance</a>, <a href="">EnergyPlus</a> and <a href="">OpenFOAM</a>.
+                      </p>
+                  </div>
+              </div>
+              <div class="col-lg-3 col-md-3 text-center">
+                  <div class="feature">
+                      <i class="icon-lg fa fa-github wow fadeInUp" style="color:#f5b34c" data-wow-delay=".1s"></i>
+                      <h6 class="text-uppercase">Open and customizable</h6>
+                      <p class="text-muted m-b-0">
+                        Ladybug Tools is <a href="https://github.com/ladybug-tools">open source</a> and is designed to be customized by users for their.
+                      </p>
+                  </div>
+              </div>
+              <div class="col-lg-3 col-md-3 text-center">
+                    <div class="feature">
+                        <i class="icon-lg fa fa-line-chart wow fadeInUp" style="color:#26abe2" data-wow-delay=".1s"></i>
+                        <h6 class="text-uppercase">80k+ Downloads</h6>
+                        <p class="text-muted m-b-0">
+                          Ladybug Tools for Grasshopper and DynamoBIM has been downloaded more than 80,000 times.
+                          Ladybug Tools is the <a href="http://www.food4rhino.com/browse?searchText=&sort_by=its_field_downloads&items_per_page=10&f%5B0%5D=im_field_unified_type%3A773&f%5B1%5D=im_field_platform_app%3A720">3rd most downloaded</a> plugin for Grasshopper.
+                        </p>
+                    </div>
+              </div>
+              <div class="col-lg-3 col-md-3 text-center">
+                  <div class="feature">
+                      <i class="icon-lg fa fa-comments-o wow fadeInUp" style="color:#00a651" data-wow-delay=".1s"></i>
+                      <h6 class="text-uppercase">Community</h6>
+                      <p class="text-muted m-b-0">
+                        Ladybug Tools is supported by a <a href="http://bl.ocks.org/mostaphaRoudsari/raw/82f51f01b4619db2f09f/">vibrant community of professionals, researchers and academics from all around the world.</a>
+                      </p>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+
+  <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+  <!--                           Products grid                               -->
+  <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+  <section id="products" class="bg-alt">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="section-title"> Products </h1>
+                <hr class="primary">
+                <p class="section-subcontent">
+                  We are the developers of Ladybug, Honeybee, Butterfly, Dragonfly, EPWMap and contributors to other open-source projects
+                  including Design Explorer and Glazing Comfort Tool.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="container wow fadeInUp">
+        <div class="row">
+            <div class="col-md-3 col-sm-6 col-6 text-center">
+              <a href="./ladybug">
+                  <img class="img-circle img-software-icon" src="assets/img/ladybug.png" />
+              </a>
+              <h6 class="text-uppercase">Ladybug</h6>
+            </div>
+            <div class="col-md-3 col-sm-6 col-6 text-center">
+              <a href="./honeybee">
+                  <img class="img-circle img-software-icon" src="assets/img/honeybee.png" />
+              </a>
+              <h6 class="text-uppercase">Honeybee</h6>
+            </div>
+            <div class="col-md-3 col-sm-6 col-6 text-center">
+              <a href="./butterfly">
+                  <img class="img-circle img-software-icon" src="assets/img/butterfly.png" />
+              </a>
+              <h6 class="text-uppercase">Butterfly</h6>
+            </div>
+            <div class="col-md-3 col-sm-6 col-6 text-center">
+              <a href="./dragonfly">
+                  <img class="img-circle img-software-icon" src="assets/img/dragonfly.png" />
+              </a>
+              <h6 class="text-uppercase">Dragonfly</h6>
+            </div>
+        </div>
+    </div>
+  </section>
+
+  <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+  <!--                            Offices grid                               -->
+  <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+  <section id="offices">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="section-title">Who is using Ladybug Tools?</h1>
+                <hr class="primary">
+            </div>
+        </div>
+    </div>
+    <div class="container wow fadeInUp hidden-sm-down">
+      <div class="card-group">
+          <div class="card">
+              <img class="img-office-logo mx-auto" src="http://www.cradle-cfd.com/files/images/casestudy/payette/Payette_Logo.jpg" alt="...">
+          </div>
+          <div class="card">
+              <img class="img-office-logo mx-auto" src="http://www.cradle-cfd.com/files/images/casestudy/payette/Payette_Logo.jpg" alt="...">
+          </div>
+          <div class="card">
+              <img class="img-office-logo mx-auto" src="http://www.cradle-cfd.com/files/images/casestudy/payette/Payette_Logo.jpg" alt="...">
+          </div>
+          <div class="card">
+              <img class="img-office-logo mx-auto" src="http://www.cradle-cfd.com/files/images/casestudy/payette/Payette_Logo.jpg" alt="...">
+          </div>
+        </div>
+        <div class="card-group">
+            <div class="card">
+                <img class="img-office-logo mx-auto" src="https://upload.wikimedia.org/wikipedia/en/thumb/6/6a/UPenn_logo.svg/1280px-UPenn_logo.svg.png" alt="...">
+            </div>
+            <div class="card">
+                <img class="img-office-logo mx-auto" src="https://upload.wikimedia.org/wikipedia/en/thumb/6/6a/UPenn_logo.svg/1280px-UPenn_logo.svg.png" alt="...">
+            </div>
+            <div class="card">
+                <img class="img-office-logo mx-auto" src="https://upload.wikimedia.org/wikipedia/en/thumb/6/6a/UPenn_logo.svg/1280px-UPenn_logo.svg.png" alt="...">
+            </div>
+            <div class="card">
+                <img class="img-office-logo mx-auto" src="https://upload.wikimedia.org/wikipedia/en/thumb/6/6a/UPenn_logo.svg/1280px-UPenn_logo.svg.png" alt="...">
+            </div>
+            <div class="card">
+                <img class="img-office-logo mx-auto" src="https://upload.wikimedia.org/wikipedia/en/thumb/6/6a/UPenn_logo.svg/1280px-UPenn_logo.svg.png" alt="...">
+            </div>
+          </div>
+    </div>
+
+    <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+    <!--                            Testomonial                                -->
+    <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+    <div id="testimonial-slide-show" class="carousel slide container" data-ride="carousel" data-pause="hover" data-interval="5000">
+      <div class="carousel-inner" role="listbox">
+          <!--  1st slide  which will be 4 people -->
+          <div class="carousel-item row active">
+              <!-- start of a person -->
+              <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="testimonial_bubble">
+                  <div class="row">
+                    <div class="col-md-12 col-xs-12 testimonial_bubble_text">
+                      <p>
+                      <i class="fa fa-quote-left"></i>
+                        We would be in trouble without Ladybug Tools. We would be in trouble without Ladybug Tools. We would be in trouble without Ladybug Tools. We would be in trouble without Ladybug Tools.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 col-sm-6 col-6 testimonial_bubble_image">
+                      <img src="https://avatars1.githubusercontent.com/u/5567574" alt="..." />
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-6 testimonial_bubble_affiliations">
+                      <h5>Chris Mackey</h5>
+                      <a href="#">Building Scientist, Payette</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- end of the section for a person -->
+              <!-- start of a person -->
+              <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="testimonial_bubble">
+                  <div class="row">
+                    <div class="col-md-12 col-xs-12 testimonial_bubble_text">
+                      <p>
+                      <i class="fa fa-quote-left"></i>
+                        We would be in trouble without Ladybug Tools. We would be in trouble without Ladybug Tools. We would be in trouble without Ladybug Tools. We would be in trouble without Ladybug Tools.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 col-sm-6 col-6 testimonial_bubble_image">
+                      <img src="https://avatars1.githubusercontent.com/u/5567574" alt="..." />
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-6 testimonial_bubble_affiliations">
+                      <h5>Chris Mackey</h5>
+                      <a href="#">Building Scientist, Payette</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- end of the section for a person -->
+              <!-- start of a person -->
+              <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="testimonial_bubble">
+                  <div class="row">
+                    <div class="col-md-12 col-xs-12 testimonial_bubble_text">
+                      <p>
+                      <i class="fa fa-quote-left"></i>
+                        We would be in trouble without Ladybug Tools. We would be in trouble without Ladybug Tools.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 col-sm-6 col-6 testimonial_bubble_image">
+                      <img src="https://avatars1.githubusercontent.com/u/5567574" alt="..." />
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-6 testimonial_bubble_affiliations">
+                      <h5>Chris Mackey</h5>
+                      <a href="#">Building Scientist, Payette</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- end of the section for a person -->
+              <!-- start of a person -->
+              <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="testimonial_bubble">
+                  <div class="row">
+                    <div class="col-md-12 col-xs-12 testimonial_bubble_text">
+                      <p>
+                      <i class="fa fa-quote-left"></i>
+                        We would be in trouble without Ladybug Tools. We would be in trouble without Ladybug Tools.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 col-sm-6 col-6 testimonial_bubble_image">
+                      <img src="https://avatars1.githubusercontent.com/u/5567574" alt="..." />
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-6 testimonial_bubble_affiliations">
+                      <h5>Chris Mackey</h5>
+                      <a href="#">Building Scientist, Payette</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- end of the section for a person -->
+          </div>
+          <!--  end of 1st slide  which will be 4 people -->
+
+          <!--  2nd slide  which will be 4 people -->
+          <div class="carousel-item row">
+              <!-- start of a person -->
+              <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="testimonial_bubble">
+                  <div class="row">
+                    <div class="col-md-12 col-xs-12 testimonial_bubble_text">
+                      <p>
+                      <i class="fa fa-quote-left"></i>
+                        We would be in trouble without Ladybug Tools. We would be in trouble without Ladybug Tools. We would be in trouble without Ladybug Tools. We would be in trouble without Ladybug Tools.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 col-sm-6 col-6 testimonial_bubble_image">
+                      <img src="https://avatars1.githubusercontent.com/u/5567574" alt="..." />
+                    </div>
+                    <div class="col-md-8 col-sm-8 col-xs-8 testimonial_bubble_affiliations">
+                      <h5>Chris Mackey</h5>
+                      <a href="#">Building Scientist, Payette</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- end of the section for a person -->
+              <!-- start of a person -->
+              <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="testimonial_bubble">
+                  <div class="row">
+                    <div class="col-md-12 col-xs-12 testimonial_bubble_text">
+                      <p>
+                      <i class="fa fa-quote-left"></i>
+                        We would be in trouble without Ladybug Tools. We would be in trouble without Ladybug Tools. We would be in trouble without Ladybug Tools. We would be in trouble without Ladybug Tools.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 col-sm-6 col-6 testimonial_bubble_image">
+                      <img src="https://avatars1.githubusercontent.com/u/5567574" alt="..." />
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-6 testimonial_bubble_affiliations">
+                      <h5>Chris Mackey</h5>
+                      <a href="#">Building Scientist, Payette</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- end of the section for a person -->
+              <!-- start of a person -->
+              <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="testimonial_bubble">
+                  <div class="row">
+                    <div class="col-md-12 col-xs-12 testimonial_bubble_text">
+                      <p>
+                      <i class="fa fa-quote-left"></i>
+                        We would be in trouble without Ladybug Tools. We would be in trouble without Ladybug Tools.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 col-sm-6 col-6 testimonial_bubble_image">
+                      <img src="https://avatars1.githubusercontent.com/u/5567574" alt="..." />
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-6 testimonial_bubble_affiliations">
+                      <h5>Chris Mackey</h5>
+                      <a href="#">Building Scientist, Payette</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- end of the section for a person -->
+              <!-- start of a person -->
+              <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="testimonial_bubble">
+                  <div class="row">
+                    <div class="col-md-12 col-xs-12 testimonial_bubble_text">
+                      <p>
+                      <i class="fa fa-quote-left"></i>
+                        We would be in trouble without Ladybug Tools. We would be in trouble without Ladybug Tools.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 col-sm-6 col-6 testimonial_bubble_image">
+                      <img src="https://avatars1.githubusercontent.com/u/5567574" alt="..." />
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-6 testimonial_bubble_affiliations">
+                      <h5>Chris Mackey</h5>
+                      <a href="#">Building Scientist, Payette</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- end of the section for a person -->
+          </div>
+          <!--  end of 2nd slide  which will be 4 people -->
+      </div>
+    </div>
+
+    <!--  controls -->
+    <a class="carousel-control-prev" href="#testimonial-slide-show" role="button" data-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+
+    <a class="carousel-control-next" href="#testimonial-slide-show" role="button" data-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+  </section>
+
+  <!-- Footer -->
+  <footer id="footer">
+      <div class="container">
+          <div class="row">
+              <div class="col-6 col-sm-3 column">
+                  <h6 class="text-uppercase text-muted">About</h6>
+                  <ul class="list-unstyled">
+                      <li><a href="" target="ext">Our Story</a></li>
+                      <li><a href="" target="ext">Team</a></li>
+                      <li><a href="" target="ext">Workshops</a></li>
+                  </ul>
+              </div>
+              <div class="col-6 col-sm-3 column">
+                  <h6 class="text-uppercase text-muted">Product</h6>
+                  <ul class="list-unstyled">
+                      <li><a href="./ladybug">Ladybug</a></li>
+                      <li><a href="./honeybee">Honeybee</a></li>
+                      <li><a href="./butterfly">Butterfly</a></li>
+                      <li><a href="./dragonfly">Dragonfly</a></li>
+                      <li><a href="./epwmap">EPWMap</a></li>
+                  </ul>
+              </div>
+              <div class="col-6 col-sm-3 column"></div>
+              <div class="col-6 col-sm-3 column">
+                  <h6 class="text-uppercase text-muted">Contact Us</h6>
+                  <ul class="list-unstyled">
+                      <li class="text-muted small"><a href="mailto:info@ladybug.tools?subject=ladybug tools help">info@ladybug.tools</a></li>
+                  </ul>
+                  <ul class="list-inline">
+                      <li class="list-inline-item">
+                        <a rel="nofollow" href="https://www.twitter.com/ladybug_tools" title="Twitter">
+                          <i class="icon-sm fa fa-twitter fa-2x"></i>
+                        </a>&nbsp;
+                      </li>
+                      <li class="list-inline-item">
+                        <a rel="nofollow" href="https://www.facebook.com/ladybug-tools" title="Facebook">
+                          <i class="icon-sm fa fa-facebook fa-2x"></i>
+                        </a>&nbsp;
+                      </li>
+                      <li class="list-inline-item">
+                        <a rel="nofollow" href="https://www.github.com/ladybug-tools" title="GitHub">
+                          <i class="icon-sm fa fa-github fa-2x"></i>
+                        </a>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+          <br>
+          <span class="float-right text-muted small">©2017 Ladybug Tools LLC</span>
+      </div>
+  </footer>
+  <!--scripts loaded here-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/js/tether.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+  <script src="assets/js/scripts.js"></script>
+</body>
+
+</html>
