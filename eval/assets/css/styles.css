@@ -57,6 +57,10 @@ p {
     font-family:'Helvetica Neue',Arial,sans-serif;
 }
 
+.white-background {
+    background-color: white;
+}
+
 .text-normal {
     font-family:'Helvetica Neue',Arial,sans-serif;
 }
@@ -156,11 +160,19 @@ section {
     filter:grayscale(0%);
 }
 
+.member-image {
+  -webkit-filter:grayscale(75%);
+  -moz-filter:grayscale(75%);
+  -ms-filter:grayscale(75%);
+  -o-filter:grayscale(75%);
+  filter:grayscale(75%);
+}
+
 .feature-icon {
     padding: 1px;
     width: 80%;
     height: auto;
-    border-radius: .25rem;
+    border-radius: .75rem;
     transition: all .4s;
     -webkit-filter:grayscale(25%);
     -moz-filter:grayscale(25%);
@@ -176,6 +188,15 @@ section {
     -o-filter:grayscale(0%);
     filter:grayscale(0%);
     box-shadow: 5px 5px 2px #888888;
+}
+
+#single-image {
+    min-height: 72%;
+    background: no-repeat center center scroll;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
 
 #header-slide-show-item {
