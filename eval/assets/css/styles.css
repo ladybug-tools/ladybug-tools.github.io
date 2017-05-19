@@ -65,6 +65,10 @@ p {
     font-family:'Helvetica Neue',Arial,sans-serif;
 }
 
+h6, .text-uppercase{
+    margin-top: 0.75rem;
+}
+
 .wide-space {
     letter-spacing: 1.6px;
 }
@@ -143,21 +147,12 @@ section {
 .img-software-icon {
     padding: 1px;
     height: 8em;
+    border-radius: .75rem;
     transition: all .4s;
-    -webkit-filter:grayscale(50%);
-    -moz-filter:grayscale(50%);
-    -ms-filter:grayscale(50%);
-    -o-filter:grayscale(50%);
-    filter:grayscale(50%);
 }
 
 .img-software-icon:hover {
-    transform: scale(1.05);
-    -webkit-filter:grayscale(0%);
-    -moz-filter:grayscale(0%);
-    -ms-filter:grayscale(0%);
-    -o-filter:grayscale(0%);
-    filter:grayscale(0%);
+    box-shadow: 5px 5px 2px #888888;
 }
 
 .member-image {
