@@ -1,32 +1,33 @@
 var c = d3.select("div#tools_diagram");
+var i = d3.select("img.img-software-icon");
 
 var width = parseFloat(c.style('width')) - 30,
-    height = parseFloat(c.style('height')) - 30;
+    height = 4 * parseFloat(i.style('height')) - 30;
 
 var graph = {
     "nodes": [
-        {"id": "Ladybug", "group": 1, "img": "ladybug.png", "size": 60, "text": "Ladybug"},
-        {"id": "Honeybee", "group": 2, "img": "honeybee.png", "size": 60, "text": "Honeybee"},
-        {"id": "Butterfly", "group": 3, "img": "butterfly.png", "size": 60, "text": "Butterfly"},
-        {"id": "Weather_Data", "group": 1, "img": "weather_data.png", "size": 90, "text": "Visualize data"},
-        {"id": "Psychrometric", "group": 1, "img": "Psychrometric.png", "size": 90, "text": "Analyze data"},
-        {"id": "Renewables", "group": 1, "img": "renewables.png", "size": 90, "text": "Renewables"},
-        {"id": "Analysis", "group": 1, "img": "analysis.png", "size": 90, "text": "Analyze geometry"},
-        {"id": "EnergyPlus", "group": 2, "img": "energyplus.png", "size": 50, "text": "EnergyPlus"},
-        {"id": "OpenStudio", "group": 2, "img": "openstudio.png", "size": 50, "text": "OpenStudio"},
-        {"id": "Energy", "group": 2, "img": "energy.png", "size": 90, "text": "Energy analysis"},
-        {"id": "Radiance", "group": 2, "img": "radiance.png", "size": 50, "text": "Radiance"},
-        {"id": "Daysim", "group": 2, "img": "daysim.png", "size": 50, "text": "Daysim"},
-        {"id": "Daylight", "group": 2, "img": "daylight.png", "size": 90, "text": "Daylight analysis"},
-        {"id": "Glare", "group": 2, "img": "glare.png", "size": 90, "text": "Glare analysis"},
-        {"id": "Electric_Lighting", "group": 2, "img": "electric_lighting.png", "size": 90, "text": "Electric lighting"},
-        {"id": "Annual_Daylight", "group": 2, "img": "annual_daylight.png", "size": 90, "text": "Annual daylight"},
-        {"id": "Therm", "group": 2, "img": "therm.png", "size": 50, "text": "Therm & Window"},
-        {"id": "Glazing_cnstr", "group": 2, "img": "glazing_construction.png", "size": 90, "text": "Construction analysis"},
-        {"id": "Comfort", "group": 2, "img": "comfort.png", "size": 90, "text": "Indoor comfort"},
-        {"id": "OpenFoam", "group": 3, "img": "OpenFoam.png", "size": 50, "text": "OpenFOAM"},
-        {"id": "Airflow", "group": 3, "img": "airflow.png", "size": 90, "text": "Airflow"},
-        {"id": "Outdoor_Comfort", "group": 3, "img": "outdoor_comfort.png", "size": 90, "text": "Outdoor comfort"},
+        {"id": "Ladybug", "group": 1, "img": "ladybug.png", "size": 60, "text": "Ladybug", "link": "./ladybug.html"},
+        {"id": "Honeybee", "group": 2, "img": "honeybee.png", "size": 60, "text": "Honeybee", "link": "./honeybee.html"},
+        {"id": "Butterfly", "group": 3, "img": "butterfly.png", "size": 60, "text": "Butterfly", "link": "./butterfly.html"},
+        {"id": "Weather_Data", "group": 1, "img": "weather_data.png", "size": 90, "text": "Visualize data", "link": "./ladybug.html#charts"},
+        {"id": "Psychrometric", "group": 1, "img": "Psychrometric.png", "size": 90, "text": "Analyze data", "link": "./ladybug.html#sunpath"},
+        {"id": "Renewables", "group": 1, "img": "renewables.png", "size": 90, "text": "Renewables", "link": "./ladybug.html#renewables"},
+        {"id": "Analysis", "group": 1, "img": "analysis.png", "size": 90, "text": "Analyze geometry", "link": "./ladybug.html#radiation"},
+        {"id": "EnergyPlus", "group": 2, "img": "energyplus.png", "size": 50, "text": "EnergyPlus", "link": ""},
+        {"id": "OpenStudio", "group": 2, "img": "openstudio.png", "size": 50, "text": "OpenStudio", "link": ""},
+        {"id": "Energy", "group": 2, "img": "energy.png", "size": 90, "text": "Energy analysis", "link": ""},
+        {"id": "Radiance", "group": 2, "img": "radiance.png", "size": 50, "text": "Radiance", "link": ""},
+        {"id": "Daysim", "group": 2, "img": "daysim.png", "size": 50, "text": "Daysim", "link": ""},
+        {"id": "Daylight", "group": 2, "img": "daylight.png", "size": 90, "text": "Daylight analysis", "link": ""},
+        {"id": "Glare", "group": 2, "img": "glare.png", "size": 90, "text": "Glare analysis", "link": ""},
+        {"id": "Electric_Lighting", "group": 2, "img": "electric_lighting.png", "size": 90, "text": "Electric lighting", "link": ""},
+        {"id": "Annual_Daylight", "group": 2, "img": "annual_daylight.png", "size": 90, "text": "Annual daylight", "link": ""},
+        {"id": "Therm", "group": 2, "img": "therm.png", "size": 50, "text": "Therm & Window", "link": ""},
+        {"id": "Glazing_cnstr", "group": 2, "img": "glazing_construction.png", "size": 90, "text": "Construction analysis", "link": ""},
+        {"id": "Comfort", "group": 2, "img": "comfort.png", "size": 90, "text": "Indoor comfort", "link": ""},
+        {"id": "OpenFoam", "group": 3, "img": "OpenFoam.png", "size": 50, "text": "OpenFOAM", "link": ""},
+        {"id": "Airflow", "group": 3, "img": "airflow.png", "size": 90, "text": "Airflow", "link": ""},
+        {"id": "Outdoor_Comfort", "group": 3, "img": "outdoor_comfort.png", "size": 90, "text": "Outdoor comfort", "link": ""},
     ],
     "links": [
         {"source": "Ladybug", "target": "Honeybee", "value": 4},
@@ -67,14 +68,7 @@ var svg = d3.select("#tools_diagram").append("svg")
     .call(d3.zoom().scaleExtent([1 / 2, 8]).on("zoom", zoomed))
 
 
-var borderPath = svg.append("rect")
- 			.attr("x", 0)
- 			.attr("y", 0)
-      .attr("width", width)
- 			.attr("height", height)
- 			.style("stroke", "black")
- 			.style("fill", "none")
- 			.style("stroke-width", "2px");
+svg.on("dblclick.zoom", null); //disable double click zoom
 
 g = svg.append("g")
     .attr("transform", "translate(0,0)");
@@ -133,11 +127,32 @@ node.append("text")
     .attr("dy", ".35em")
     .text(function(d) { return d.text; });
 
+node.on("dblclick", function(d){
+      d3.event.preventDefault(); //stop showing browser menu
+      location.href = d.link;
+    });
+
+// for touch interface
+node.on("click", function(d){
+      d3.event.preventDefault(); //stop showing browser menu
+      location.href = d.link;
+    });
+
 // add titles
 d3.selectAll("image")
     .append("title")
     .text(function(d) { return d.text; })
 
+
+// add border
+var borderPath = svg.append("rect")
+ 			.attr("x", 0)
+ 			.attr("y", 0)
+      .attr("width", width)
+ 			.attr("height", height)
+ 			.style("stroke", "black")
+ 			.style("fill", "none")
+ 			.style("stroke-width", "2px");
 
 d3.select(window).on("resize", center);
 
@@ -154,10 +169,7 @@ function ticked() {
 }
 
 function center(){
-    var c = d3.select("div#tools_diagram");
     var x = parseFloat(c.style('width')) - 30; // 30 px for bootstrap padding
-
-    var i = d3.select("div#ladybug_icon");
     var y = 4 * parseFloat(i.style('height')) - 30;
 
     svg.attr("width", x).attr("height", y);
