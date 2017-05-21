@@ -1,0 +1,12 @@
+line {
+    stroke: black
+}
+
+.node {
+  pointer-events: all;
+}
+
+.nodes circle {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}

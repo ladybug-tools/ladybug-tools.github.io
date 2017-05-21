@@ -12,6 +12,7 @@
   <link href="http://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" rel="stylesheet" />
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
+  <link rel="stylesheet" href="assets/css/ladybug_tools_diagram.css" />
   <link rel="stylesheet" href="assets/css/styles.css" />
   <link rel="stylesheet" href="assets/css/testimonial.css" />
 </head>
@@ -187,33 +188,42 @@
             </div>
         </div>
     </div>
+
     <div class="container wow fadeInUp">
         <div class="row">
-            <div class="col-md-3 col-sm-6 col-6 text-center">
-              <a href="./ladybug.html">
-                  <img class="img-software-icon" src="assets/img/ladybug.png" />
-              </a>
-              <h6 class="text-uppercase">Ladybug</h6>
-            </div>
-            <div class="col-md-3 col-sm-6 col-6 text-center">
-              <a href="./honeybee.html">
-                  <img class="img-software-icon" src="assets/img/honeybee.png" />
-              </a>
-              <h6 class="text-uppercase">Honeybee</h6>
-            </div>
-            <div class="col-md-3 col-sm-6 col-6 text-center">
-              <a href="./butterfly.html">
-                  <img class="img-software-icon" src="assets/img/butterfly.png" />
-              </a>
-              <h6 class="text-uppercase">Butterfly</h6>
-            </div>
-            <div class="col-md-3 col-sm-6 col-6 text-center">
-              <a href="./dragonfly.html">
-                  <img class="img-software-icon" src="assets/img/dragonfly.png" />
-              </a>
-              <h6 class="text-uppercase">Dragonfly</h6>
+          <div class="col-md-2 col-sm-12 col-12">
+            <div class="row">
+                <div id="ladybug_icon" class="col-md-12 col-sm-6 col-6 text-center">
+                  <a href="./ladybug.html">
+                      <img class="img-fluid img-software-icon" src="assets/img/ladybug.png" />
+                  </a>
+                  <h6 class="text-uppercase">Ladybug</h6>
+                </div>
+                <div class="col-md-12 col-sm-6 col-6 text-center">
+                  <a href="./honeybee.html">
+                      <img class="img-fluid img-software-icon" src="assets/img/honeybee.png" />
+                  </a>
+                  <h6 class="text-uppercase">Honeybee</h6>
+                </div>
+                <div class="col-md-12 col-sm-6 col-6 text-center">
+                  <a href="./butterfly.html">
+                      <img class="img-fluid img-software-icon" src="assets/img/butterfly.png" />
+                  </a>
+                  <h6 class="text-uppercase">Butterfly</h6>
+                </div>
+                <div class="col-md-12 col-sm-6 col-6 text-center">
+                  <a href="./dragonfly.html">
+                      <img class="img-fluid img-software-icon" src="assets/img/dragonfly.png" />
+                  </a>
+                  <h6 class="text-uppercase">Dragonfly</h6>
+                </div>
             </div>
         </div>
+
+        <div id="tools_diagram" class="col-md-10 col-sm-12 col-12 py-3  justify-content-end" >
+        </div>
+
+      </div>
     </div>
   </section>
 
@@ -543,7 +553,11 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
-  <script src="assets/js/scripts.js"></script>
+  <script src="./assets/js/scripts.js"></script>
+
+  <script src="./assets/js/d3.v4.1.1.min.js"></script>
+  <script src="./assets/js/ladybug_tools_diagram.js"></script>
+
 </body>
 
 </html>
