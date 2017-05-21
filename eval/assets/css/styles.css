@@ -14,6 +14,15 @@ body {
     top:0;
 }
 
+p a {
+  color: #b34b49;
+  font-weight: bold;
+}
+
+p a:hover {
+  color: #b34b49;
+}
+
 /* workaround modal-open padding issue */
 body.modal-open {
     padding-right:0 !important;
