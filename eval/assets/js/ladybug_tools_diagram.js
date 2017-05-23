@@ -64,18 +64,35 @@ var svg = d3.select("#tools_diagram").append("svg")
     .attr("height", height)
     .attr("stroke", "black")
     .attr("fill", "none")
-    .attr("stroke-width", "1px")
-    .call(d3.zoom().scaleExtent([1 / 2, 8]).on("zoom", zoomed))
+    .attr("stroke-width", "1px");
 
+
+var zooming = false;
+var zoom = d3.zoom().scaleExtent([1 / 2, 8])
+  .on("zoom", zoomed);
 
 svg.on("dblclick.zoom", null); //disable double click zoom
+
 
 g = svg.append("g")
     .attr("transform", "translate(0,0)");
 
 function zoomed() {
+  // only zoom and pan when ctrl key is pressed.
+  if (zooming){
     g.attr("transform", d3.event.transform);
+  }
 }
+
+d3.select("body").on("keydown", function () {
+  	zooming = d3.event.ctrlKey;
+    svg.call(zoom);
+	});
+
+d3.select("body").on("keyup", function () {
+  svg.on('.zoom', null);
+  zooming = false;
+});
 
 var simulation = d3.forceSimulation()
     .force("link", d3.forceLink().id(function(d) { return d.id; }))
