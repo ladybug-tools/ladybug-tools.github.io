@@ -148,7 +148,6 @@ section {
     width: 80%;
     height: auto;
     transition: all .4s;
-    top: 50%;
 
     filter: grayscale(100%);
     -webkit-filter: grayscale(100%);
@@ -355,6 +354,11 @@ footer h4, footer h6 {
 
 .list-group-item, .card-footer {
     background-color:transparent;
+}
+
+.card {
+  background-color: #f7f7f7;
+  border: none;
 }
 
 textarea {
