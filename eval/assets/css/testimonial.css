@@ -38,6 +38,7 @@
 .testimonial_bubble_image img {
 	width:50%;
 	min-width:60px;
+  max-width:75px;
 	-webkit-border-radius:100%;
 	border-radius:100%;
 }
