@@ -1,7 +1,9 @@
 .testimonial_bubble {
-	padding:15px;
-	padding-top:25px
+	padding: 15%;
+  padding-top: 5px;
+	padding-bottom: 5px
 }
+
 .testimonial_bubble_text>p {
 	padding:15px;
 	margin:1em 0 2em;
@@ -12,6 +14,7 @@
 	-moz-border-radius:10px;
 	border-radius:10px
 }
+
 .testimonial_bubble_text>p:before {
 	left:30px;
 	content:"";
@@ -21,6 +24,7 @@
 	border-style:solid;
 	border-width:14px 14px 0
 }
+
 .testimonial_bubble_text>p:after {
 	left:33px;
 	content:"";
@@ -73,12 +77,11 @@
 }
 
 .testimonial_bubble_text>p {
-	color:#888;
-	border:2px solid #001A33
+	border:2px solid #888
 }
 
 .testimonial_bubble_text>p:before {
-	border-color:#001A33 transparent
+	border-color:#888 transparent
 }
 
 .testimonial_bubble_text>p:after {
