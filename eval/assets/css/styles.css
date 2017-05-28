@@ -160,6 +160,7 @@ section {
     padding: 1px;
     border-radius: .75rem;
     transition: all .4s;
+    max-width: 70%;
 }
 
 .img-software-icon:hover {
