@@ -53,8 +53,8 @@ I am so used to demos being available online, I am at a loss at the idea of demo
 
 * https://github.com/mrdoob/three.js/issues/1979 < Moving help to StackOverflow
 * https://github.com/aframevr/aframe/blob/master/CONTRIBUTING.md < discusses support
+* https://aframe.io/community/ < ditto
 * https://opensource.guide/
-
 
 
 
