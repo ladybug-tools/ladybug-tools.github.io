@@ -1,5 +1,5 @@
 
-New Site Read Me
+New Site Read Me ~ Draft
 ===
 
 # http://ladybug-tools.github.io/eval/
@@ -7,64 +7,62 @@ New Site Read Me
 
 _Some ideas - by Theo - put here until they have a proper place to go to_
 
-## Support Page Considerations
+# Ladybug Tools
 
-### Mission
+## Issues
+Significant changes at detail design stages are more expensive than changes at preliminary design stages.
 
-* Support options are clearly identified
-* Developer and user support is clearly identified
-* Make it fun and easy for the user community to support the user community
-* Capture frequently occuring issues - and make respones easily accessible
-* The support effort is part of the effort of spreading the word around the Internet abou Ladybug Tools
+Whenever geo-physical elements - such as Sun-control and weather - are significant contributors to a the design of building,
+then awareness of these design-influencing issues early in the design process may reduce or prevent the costs at major changes at later stages.
 
-## Solutions
+In order for geo-pgysical input to be useful at early design stages, the insights must be generated quickly, cheaply and easily.
 
-#### User issues including installing, implementing, learning etc should go to a [Discourse]( http://www.discourse.org/ ) discussion platform
-* Search results appear in Google 
+When people with considerable geo-physical talent are involved at early stages, then the tools must be able to give the experts the insights they seek.
 
-Until a Discourse presence is established, a special GitHub repo for general discussiom and support issues might be useful.
+When designers with less of a technical background are involved,
+the tools should be easy to pick and able to produce reports with meaning and relevance to lay-peeps.
 
-#### User issues including installing, implementing, learning etc should go to Stack Overflow. 
-* People who are not Ladybug users may become interested / more cross-marketing possibility
-* Support tends to be high quality
-* Search results appear in Google 
+The Ladybug Tools set of apps is designed to help designers - both expert and novice - make better early stage design decision based on timely, accurate and inexpensive calculations.
 
-A Ladybug Tools tag should be established by feeding in some typical questions. Note that Grashopper3D gets co-mingled with other apps named 'grasshopper'. Don't let this happen to Ladybug products. Establish unique tags by usage and then publish appropriate tags for each product. 
+## The Ladybug Tools
 
-#### Bug reports, feature requests and road map issues should go to GitHub Issues
-* Things that affect the programmers should go directly to the programmers
+### Butterfly: Wind, Architectural Aerodynamics
+	* https://github.com/ladybug-tools/butterfly
+	* Butterfly is python library to create and execute OpenFOAM cases
+	* [OpenFOAM]( https://en.wikipedia.org/wiki/OpenFOAM ) (for "Open source Field Operation And Manipulation") is a C++ toolbox for the development of customized numerical solvers, and pre-/post-processing utilities for the solution of continuum mechanics problems, including [computational fluid dynamics (CFD)]( https://en.wikipedia.org/wiki/Computational_fluid_dynamics )
+	* Are we [OpenFOAM+]( http://openfoam.com/ ) or [OpenFOAM]( https://openfoam.org/ )?? Anf why?
+	* Dynamo: Butterfly connects Dynamo to OpenFOAM for CFD simulation.
 
-Suitable issue tags should be developed for types of issues. Users should be made aware as to which repo to use for different product's issues
+### Dragonfly
+	* https://github.com/chriswmackey/Dragonfly
+	* A plugin for climate data generation and manipulation
+	* Dragonfly allows users to import several satellite image data sets into Rhino/Grasshopper and warp climate files based on either this satellite data, urban morphology parameters, or future climate change scenarios.
+	* The Dragonfly project intends to make many large-scale climate variables accessible to the visual scripting interface of Grasshopper as well as the 3D visualization interface of Rhino.
 
-#### Reddit
+### Honeybee
+	* https://github.com/mostaphaRoudsari/honeybee
+	* https://github.com/ladybug-tools/honeybee
+	*  A free and open source Grasshopper3D plugin for building energy and daylighting simulation with connections to
+		* EnergyPlus
+		* Radiance
+		* Daysim
+		* OpenStudio
+	* Dynamo: Honeybee connects Revit and DynamoBIM to Radiance and OpenStudio (EnergyPlus) for daylight and energy simulation.
 
-* A subReddit for Ladybug Tols: TBD
+### Ladybug:
+	* https://github.com/mostaphaRoudsari/ladybug
+	* https://github.com/ladybug-tools/ladybug
 
-
-#### Twitter hashtag
-
-* Discussions relating to Ladybug Tools on Twitter should incorporate a #ladybug-tool hashtag 
-
-#### Demo Files
-
-I am so used to demos being available online, I am at a loss at the idea of demoing and supporting Ladybug projects. Could I build a Grasshopper/Ladybug emulator that works in the browser?? In 3D of course. ;-)
-
-#### Links of Interest
-
-* https://github.com/mrdoob/three.js/issues/1979 < Moving help to StackOverflow
-* https://github.com/aframevr/aframe/blob/master/CONTRIBUTING.md < discusses support
-* https://aframe.io/community/ < ditto
-* https://opensource.guide/
-
-
+	* Core functionalities of Ladybug with no geometry library dependencies
+	* A Grasshopper3D plugin for environmental analysis
+	* imports standard EnergyPlus Weather files (.EPW) in Grasshopper and provides a variety of 2D and 3D designer-friendly interactive graphics to support the decision-making process during the initial stages of design.
+	* The tool also provides further support for designers to test their initial design options for implications from radiation and sunlight-hours analyses results.
+	* Dynamo: Ladybug is a plugin for weather data and environmental analysis [Updated for Dynamo 1.3.0].
 
 
-## Bibliography
+## About
 
-A big difference between proprietary and open source is that the latter opens up so many possibilities for peer review and verification.
+Ladybug Tools are primarily built using Python.  << which version?
 
-A good portion of the process depends highly on having free, speedy, easy access to realtime online sources. Old time references without links to out of print books printed on paper are the enemy. 
+Ladybug Tools are built using [visual programming languages (VPL)]( https://github.com/mostaphaRoudsari/ladybug )
 
-A proper modern bibliography has links which take you to the appriated page of a book scanned by Google Books ( or whoever ) with am ISBN number that is a link to a number of sources for the original work along with a link to the work as recorded by the Internet Archive in case the previous two methods are disrupted.
-
-_I will try to provide examples of links like these from Wikrpedia in the near future._
