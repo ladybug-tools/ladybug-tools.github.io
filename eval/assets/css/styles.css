@@ -164,7 +164,7 @@ section {
 }
 
 .img-software-icon:hover {
-    box-shadow: 5px 5px 2px #888888;
+    box-shadow: 0 0 10px #888888;
 }
 
 .member-image {
@@ -181,20 +181,10 @@ section {
     height: auto;
     border-radius: .75rem;
     transition: all .4s;
-    -webkit-filter:grayscale(25%);
-    -moz-filter:grayscale(25%);
-    -ms-filter:grayscale(25%);
-    -o-filter:grayscale(25%);
-    filter:grayscale(25%);
 }
 
 .feature-icon:hover {
-    -webkit-filter:grayscale(0%);
-    -moz-filter:grayscale(0%);
-    -ms-filter:grayscale(0%);
-    -o-filter:grayscale(0%);
-    filter:grayscale(0%);
-    box-shadow: 5px 5px 2px #888888;
+    box-shadow: 0px 0px 10px #888888;
 }
 
 #single-image {
