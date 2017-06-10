@@ -73,3 +73,9 @@ Ladybug Tools apps are built with a [visual programming language (VPL)]( https:/
 * [Grasshopper3d]( http://www.grasshopper3d.com/ ) running on top of [Rhino]( https://www.rhino3d.com/ )
 * [Autodesk Dynamo]( https://www.autodesk.com/products/dynamo-studio/overview )
 
+
+See also
+
+### [Credits and Bibliography]( bibliography.md )
+
+### [Support]( support.md )
