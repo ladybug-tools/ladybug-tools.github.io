@@ -13,7 +13,7 @@ _Some ideas - by Theo - put here until they have a proper place to go to_
 Significant changes at detail design stages are more expensive than changes at preliminary design stages.
 
 Whenever geo-physical elements - such as Sun-control and weather - are significant contributors to a the design of building,
-then awareness of these design-influencing issues early in the design process may reduce or prevent the costs at major changes at later stages.
+then awareness of these design-influencing issues early in the design process may reduce or prevent significant cost increases of major changes at later stages.
 
 In order for geo-physical input to be useful at early design stages, the insights must be generated quickly, cheaply and easily.
 
@@ -32,8 +32,9 @@ The Ladybug Tools set of apps is designed to help designers - both expert and no
 * Butterfly is python library to create and execute OpenFOAM cases
 * Helps with wind, Architectural Aerodynamics
 * [OpenFOAM]( https://en.wikipedia.org/wiki/OpenFOAM ) (for "Open source Field Operation And Manipulation") is a C++ toolbox for the development of customized numerical solvers, and pre-/post-processing utilities for the solution of continuum mechanics problems, including [computational fluid dynamics (CFD)]( https://en.wikipedia.org/wiki/Computational_fluid_dynamics )
-* Are we [OpenFOAM+]( http://openfoam.com/ ) or [OpenFOAM]( https://openfoam.org/ )?? And why?
 * Dynamo: Butterfly connects Dynamo to OpenFOAM for CFD simulation.
+
+_Are we [OpenFOAM+]( http://openfoam.com/ ) or [OpenFOAM]( https://openfoam.org/ )?? And why?_
 
 ### Dragonfly
 
@@ -66,7 +67,9 @@ The Ladybug Tools set of apps is designed to help designers - both expert and no
 
 ## About
 
-Ladybug Tools are primarily built using Python.  << which version?
+Ladybug Tools apps are primarily built using Python.  << which version?
 
-Ladybug Tools are built using [visual programming languages (VPL)]( https://github.com/mostaphaRoudsari/ladybug )
+Ladybug Tools apps are built with a [visual programming language (VPL)]( https://en.wikipedia.org/wiki/Visual_programming_language )
+* [Grasshopper3d]( http://www.grasshopper3d.com/ ) running on top of [Rhino]( https://www.rhino3d.com/ )
+* [Autodesk Dynamo]( https://www.autodesk.com/products/dynamo-studio/overview )
 
