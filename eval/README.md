@@ -79,3 +79,6 @@ See also
 ### [Credits and Bibliography]( bibliography.md )
 
 ### [Support]( support.md )
+
+### [FAQ]( faq.md )
+
