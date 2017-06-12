@@ -1,7 +1,28 @@
 
 
-Bibliography Considerations
+Credits and Bibliography
 ===
+
+[Standing on the shoulders of giants]( https://en.wikipedia.org/wiki/Standing_on_the_shoulders_of_giants )
+
+Giving credit whare credit is due is really a nice and helpful thing to do with
+[free and open-source software]( https://en.wikipedia.org/wiki/Free_and_open-source_software).
+
+Things you can do to help:
+
+* Make sure you are public and visibly listed as a member: https://github.com/orgs/ladybug-tools/people
+* Add a star to all the repositories: https://github.com/ladybug-tools
+* Add GitHub Topics to any and all repos
+* Add links wherever possible. Add Wikipedia links whenever possible
+* Creates and respond to issues.
+	* Closing issues is good
+	* The more there are issues the greater the trust by users
+* Spell out any acronyms at first use on any page
+* Write, write write:  Web sites exist and succeed on basis of written text
+
+
+
+## Bibliography Considerations
 
 A big difference between proprietary and open source is that the latter opens up so many possibilities for peer review and verification.
 
