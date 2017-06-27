@@ -26,7 +26,10 @@
               <div class="col-md-8 col-12 inner">
               <h1>Ladybug</h1>
               <h6 class="wow fadeIn text-normal wow fadeIn">
-                Ladybug is a free and open source environmental plugin for Grasshopper to help designers create an environmentally-conscious architectural design. The initial step in the design process should be the weather data analysis; a thorough understanding of the weather data will, more likely, lead designers to high-performance design decisions.
+                Ladybug is a free and open source environmental plugin for Grasshopper and Dynamo to help designers
+                create an environmentally-conscious architectural design. The initial step in the design process
+                should be the weather data analysis; a thorough understanding of the weather data will, more likely,
+                lead designers to high-performance design decisions.
               </h6>
               <a rel="nofollow" class="page-scroll" href="#facts" title="Read more">
                 <i class="icon-sm fa fa-chevron-down fa-2x"></i>
@@ -75,8 +78,14 @@
                         <a class="dropdown-item" href="./dragonfly.html">Dragonfly</a>
                     </div>
                   </li>
-                  <li class="nav-item">
-                      <a class="nav-link page-scroll" href="./learning.html">Learning</a>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="" id="productsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Education
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="productsDropdown">
+                        <a class="dropdown-item" href="./learning.html">Learning</a>
+                        <a class="dropdown-item" href="./publication.html">Publication</a>
+                    </div>
                   </li>
                   <li class="nav-item">
                       <a class="nav-link page-scroll" href="./forum.html">Forum</a>
@@ -103,7 +112,13 @@
                   <h1 class="section-title"> What is Ladybug? </h1>
                   <hr class="primary">
                   <p class="section-subcontent">
-                    Ladybug imports standard EnergyPlus Weather files (.EPW) in Grasshopper and provides a variety of 2D and 3D designer-friendly interactive graphics to support the decision-making process during the initial stages of design. The tool also provides further support for designers to test their initial design options for implications from radiation and sunlight-hours analyses results. Integration with Grasshopper allows for an almost instantaneous feedback on design modifications, and as it runs within the design environment, the information and analysis is interactive.
+                    Ladybug imports standard EnergyPlus Weather files (.EPW) in Grasshopper and Dynamo that provides a
+                    variety of 2D and 3D designer-friendly interactive graphics to support the decision-making process
+                    during the initial stages of design. The tool also provides further support for designers to test
+                    their initial design options for implications from radiation and sunlight-hours analyses results.
+                    Integration with <a href="https://en.wikipedia.org/wiki/Visual_programming_language" target="_blank">
+                    visual programming environments</a> allows for an almost instantaneous feedback on design modifications,
+                    and as it runs within the design environment, the information and analysis is interactive.
                   </p>
                 </br>
               </div>
@@ -116,9 +131,9 @@
             <!-- start of an icon -->
             <div class="col-md-2 col-sm-4 col-4 text-center">
               <a class="page-scroll" href="#charts">
-                  <img class="feature-icon" src="assets/img/ladybug/windrose.png" />
+                  <img class="feature-icon" src="assets/img/ladybug/3dchart.png" />
               </a>
-              <h6 class="text-uppercase">Charts</h6>
+              <h6 class="text-uppercase">Climate Data Plots</h6>
             </div>
             <!-- end of an icon -->
             <!-- start of an icon -->
@@ -126,23 +141,111 @@
               <a class="page-scroll" href="#sunpath">
                   <img class="feature-icon" src="assets/img/ladybug/sunpath.png" />
               </a>
-              <h6 class="text-uppercase">Sunpath</h6>
+              <h6 class="text-uppercase">Sunpath Graphics</h6>
             </div>
             <!-- end of an icon -->
             <!-- start of an icon -->
             <div class="col-md-2 col-sm-4 col-4 text-center">
-              <a class="page-scroll" href="#comfort">
-                  <img class="feature-icon" src="assets/img/ladybug/comfort.png" />
+              <a class="page-scroll" href="#sunpath">
+                  <img class="feature-icon" src="assets/img/ladybug/shadow.png" />
               </a>
-              <h6 class="text-uppercase">Thermal Comfort</h6>
+              <h6 class="text-uppercase">Shadow Studies</h6>
+            </div>
+            <!-- end of an icon -->
+            <!-- start of an icon -->
+            <div class="col-md-2 col-sm-4 col-4 text-center">
+              <a class="page-scroll" href="#sunpath">
+                  <img class="feature-icon" src="assets/img/ladybug/view_from_sun.png" />
+              </a>
+              <h6 class="text-uppercase">View from Sun</h6>
+            </div>
+            <!-- end of an icon -->
+            <!-- start of an icon -->
+            <div class="col-md-2 col-sm-4 col-4 text-center">
+              <a class="page-scroll" href="#sunpath">
+                  <img class="feature-icon" src="assets/img/ladybug/solar_access.png" />
+              </a>
+              <h6 class="text-uppercase">Solar Access Studies</h6>
+            </div>
+            <!-- end of an icon -->
+            <!-- start of an icon -->
+            <div class="col-md-2 col-sm-4 col-4 text-center">
+              <a class="page-scroll" href="#sunpath">
+                  <img class="feature-icon" src="assets/img/ladybug/solar_envelope.png" />
+              </a>
+              <h6 class="text-uppercase">Solar Envelope</h6>
+            </div>
+            <!-- end of an icon -->
+            <!-- start of an icon -->
+            <div class="col-md-2 col-sm-4 col-4 text-center">
+              <a class="page-scroll" href="#sunpath">
+                  <img class="feature-icon" src="assets/img/ladybug/solar_fan.png" />
+              </a>
+              <h6 class="text-uppercase">Solar Fan</h6>
             </div>
             <!-- end of an icon -->
             <!-- start of an icon -->
             <div class="col-md-2 col-sm-4 col-4 text-center">
               <a class="page-scroll" href="#radiation">
-                  <img class="feature-icon" src="assets/img/ladybug/radiation.png" />
+                <img class="feature-icon" src="assets/img/ladybug/radiation.png" />
               </a>
               <h6 class="text-uppercase">Radiation Study</h6>
+            </div>
+            <!-- end of an icon -->
+            <!-- start of an icon -->
+            <div class="col-md-2 col-sm-4 col-4 text-center">
+              <a class="page-scroll" href="#radiation">
+                <img class="feature-icon" src="assets/img/ladybug/view_studies.png" />
+              </a>
+              <h6 class="text-uppercase">View Studies</h6>
+            </div>
+            <!-- end of an icon -->
+            <!-- start of an icon -->
+            <div class="col-md-2 col-sm-4 col-4 text-center">
+              <a class="page-scroll" href="#comfort">
+                  <img class="feature-icon" src="assets/img/ladybug/psychrometric.png" />
+              </a>
+              <h6 class="text-uppercase">Psychrometric Charts</h6>
+            </div>
+            <!-- end of an icon -->
+            <!-- start of an icon -->
+            <div class="col-md-2 col-sm-4 col-4 text-center">
+              <a class="page-scroll" href="#comfort">
+                  <img class="feature-icon" src="assets/img/ladybug/adaptive_comfort.png" />
+              </a>
+              <h6 class="text-uppercase">Adaptive Thermal Comfort Charts</h6>
+            </div>
+            <!-- end of an icon -->
+            <!-- start of an icon -->
+            <div class="col-md-2 col-sm-4 col-4 text-center">
+              <a class="page-scroll" href="#comfort">
+                  <img class="feature-icon" src="assets/img/ladybug/outdoor_comfort.png" />
+              </a>
+              <h6 class="text-uppercase">Outdoor Thermal Comfort Studies</h6>
+            </div>
+            <!-- end of an icon -->
+            <!-- start of an icon -->
+            <div class="col-md-2 col-sm-4 col-4 text-center">
+              <a class="page-scroll" href="#comfort">
+                  <img class="feature-icon" src="assets/img/ladybug/shade_benefit.png" />
+              </a>
+              <h6 class="text-uppercase">Shade Benefit Analysis</h6>
+            </div>
+            <!-- end of an icon -->
+            <!-- start of an icon -->
+            <div class="col-md-2 col-sm-4 col-4 text-center">
+              <a class="page-scroll" href="#comfort">
+                  <img class="feature-icon" src="assets/img/ladybug/shade_design.png" />
+              </a>
+              <h6 class="text-uppercase">Generative Shade Design</h6>
+            </div>
+            <!-- end of an icon -->
+            <!-- start of an icon -->
+            <div class="col-md-2 col-sm-4 col-4 text-center">
+              <a class="page-scroll" href="#raytracing">
+                <img class="feature-icon" src="assets/img/ladybug/raytracing.png" />
+              </a>
+              <h6 class="text-uppercase">Raytracing</h6>
             </div>
             <!-- end of an icon -->
             <!-- start of an icon -->
@@ -151,14 +254,6 @@
                   <img class="feature-icon" src="assets/img/ladybug/shadowmask.png" />
               </a>
               <h6 class="text-uppercase">Renewables</h6>
-            </div>
-            <!-- end of an icon -->
-            <!-- start of an icon -->
-            <div class="col-md-2 col-sm-4 col-4 text-center">
-              <a class="page-scroll" href="#raytracing">
-                  <img class="feature-icon" src="assets/img/ladybug/raytracing.png" />
-              </a>
-              <h6 class="text-uppercase">Raytracing</h6>
             </div>
             <!-- end of an icon -->
           </div>
@@ -394,7 +489,7 @@
                   <h6 class="text-uppercase text-muted">About</h6>
                   <ul class="list-unstyled">
                       <li><a href="./about.html#facts">Our Story</a></li>
-                      <li><a href="./about.html#contributors">Team</a></li>
+                      <li><a href="./about.html#team">Team</a></li>
                       <li><a href="./forum.html">Forum</a></li>
                       <li><a href="./contribute.html">Contribute</a></li>
                   </ul>
@@ -453,7 +548,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
   <script src="assets/js/scripts.js"></script>
   <script>
-  
+
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -463,5 +558,5 @@
 	  ga('send', 'pageview');
 
   </script>
-  
+
 </body>

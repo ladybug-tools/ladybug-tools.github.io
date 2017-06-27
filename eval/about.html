@@ -59,8 +59,14 @@
                         <a class="dropdown-item" href="./dragonfly.html">Dragonfly</a>
                     </div>
                   </li>
-                  <li class="nav-item">
-                      <a class="nav-link page-scroll" href="./learning.html">Learning</a>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="" id="productsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Education
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="productsDropdown">
+                        <a class="dropdown-item" href="./learning.html">Learning</a>
+                        <a class="dropdown-item" href="./publication.html">Publication</a>
+                    </div>
                   </li>
                   <li class="nav-item">
                       <a class="nav-link page-scroll" href="./forum.html">Forum</a>
@@ -87,29 +93,46 @@
                   <h1 class="section-title"> Our Story </h1>
                   <hr class="primary">
                   <p class="section-subcontent">
-                    Ladybug Tools started by <a class="page-scroll" href="#mostapha">Mostapha</a> as a side project in mid 2012.
-                    The first version <a href="http://www.grasshopper3d.com/group/ladybug/forum/topics/ladybug-v-0-0-35-preview" target="_blank">
-                    was released</a> on January 2013 as the Ladybug plugin for Grasshopper which was a collection of 28 components for weather
-                    data visualization, radiation and sunlight hours analysis. As Mostapha discussed in
-                    <a href="http://www.ibpsa.org/proceedings/bs2013/p_2499.pdf" target="_blank" title="Check Table 1.">this paper</a> in 2013 the
-                    main goal of the project was to integrate the full range of environmental analysis in parameteric modeling environments.
+                    Ladybug Tools was started by <a class="page-scroll" href="#mostapha">Mostapha</a> in 2012 in order
+                    to make the process of environmental analysis more integrated, easier, and faster. The first version
+                    <a href="http://www.grasshopper3d.com/group/ladybug/forum/topics/ladybug-v-0-0-35-preview" target="_blank">
+                    was released</a> on January 2013 as the Ladybug plugin for <a href="http://grasshopper3d.com/" target="_blank">Grasshopper</a>.
+                    This was a collection of 28 components for weather data visualization, radiation, and sunlight hours analysis.
+                    Following the success of Ladybug, Honeybee for Grasshopper
+                    <a href="http://www.grasshopper3d.com/group/ladybug/forum/topics/release-notes-honeybee-0-0-50-ladybug-0-0-54" target="_blank">
+                    was released</a> in 2014 to connect <a href="http://grasshopper3d.com/" target="_blank">Grasshopper</a>
+                    with validated daylighting and energy simulation engines, such as
+                    <a href="http://radiance-online.org/" target="_blank">RADIANCE</a>, <a href="http://daysim.ning.com/" target="_blank">Daysim</a>,
+                    <a href="http://energyplus.net/" target="_blank">EnergyPlus</a> and <a href="http://openstudio.net/" target="_blank">OpenStudio</a>.
                   </p>
                   <p class="section-subcontent">
-                    Shortly after the start of the project other developers started to contribute to Ladybug. Notebly
-                    <a href="#chris" class="page-scroll">Chris Mackey</a> used Ladybug for his thesis and started to add comfort models to Ladybug
-                    which provided the basis for most of the comfort tools, including comfort maps for Honeybee.
-                    <br />[Mention the contributions from Saeran, Abraham, Boris, Djordje]
+                    Soon after, <a href="#chris" class="page-scroll">Chris</a> came on board to help move Ladybug move to the next phase
+                    of its development. While using Ladybug and Honeybee for <a href="http://dspace.mit.edu/handle/1721.1/99261" target="_blank">
+                    his thesis at MIT</a>, he <a href="http://www.grasshopper3d.com/group/ladybug/forum/topics/initial-documentation-of-thermal-maps"
+                    target="_blank">started to add comfort models</a> to Ladybug and Honeybee, which provided the basis for the current comfort tools
+                    in Honeybee. From this start, Chris then further developed multiple components, becoming one of the lead developers of Ladybug Tools.
                   </p>
                   <p class="section-subcontent">
-                    Honeybee was released on 2014 [Mention Anton,]
-                    Butterfly was released on 2017 [Mention Theodore,]
-                    Ladybug web [Mention Theo,]
-                    Connection to EnviMet [Antonello,]
+                    In 2017, with support from <a href="#theodore" class="page-scroll">Theodore</a>, Mostapha released the Butterfly plugin to add
+                    <a href="https://en.wikipedia.org/wiki/Computational_fluid_dynamics" target="_blank">Computational Fluid Dynamics (CFD)</a> to
+                    Ladybug Tools by connecting <a href="http://grasshopper3d.com/" target="_blank">Grasshopper</a> and
+                    <a href="http://dynamobim.org/" target="_blank">Dynamo</a> to <a href="http://openfoam.com/" target="_blank">OpenFOAM</a>.
                   </p>
                   <p class="section-subcontent">
-                    Thanks to the contribution of several experts and developers Ladybug Tools has grown into multiple inter-connected libraries
-                    and plugins that it used globally in academia as well as architecture and engineering offices. It supports wide range of
-                    analysis from climate visualization to computational fluid dynamics.
+                    We are currently in the process of integrating Ladybug Tools into more analysis engines such as
+                    <a href="https://windows.lbl.gov/software/therm/therm.html" target="_blank">THERM</a> (Honeybee),
+                    <a href="http://www.envi-met.com/" target="_blank">Envimet</a> and <a href="http://citysim.epfl.ch/" target="_blank">CitySim</a>
+                    (soon to be released Dragonfly), developing <a href="http://www.ladybug.tools/ladybug-web" target="_blank">Ladybug Tools for web</a>
+                    and <a href="https://github.com/ladybug-tools/" target="_blank">re-writing Ladybug Tools</a> to provide them both as Python libraries
+                    and plugins for <a href="http://grasshopper3d.com/" target="_blank">Grasshopper</a> and <a href="http://dynamobim.org/" target="_blank">Dynamo</a>.
+                  </p>
+                  <p class="section-subcontent">
+                    Throughout this time, <a class="page-scroll" href="#contributors">many developers tirelessly contributed to the community in many ways</a>.
+                    As a result of their efforts, Ladybug Tools has grown into multiple inter-connected libraries and plugins that are used in academia as
+                    well as architecture and engineering offices worldwide. They allow for a wide range of analyses from climate visualization to
+                    <a href="https://en.wikipedia.org/wiki/Computational_fluid_dynamics" target="_blank">computational fluid dynamics</a> and have changed the
+                    face of environmental building design as a result of their usage. The development and community of Ladybug Tools is ever growing and we are
+                    excited for the infinite possibilities that exists for the future!
                   </p>
                 </br>
               </div>
@@ -117,7 +140,7 @@
       </div>
 
       <!-- members small icons container -->
-      <div id="contributors" class="container wow fadeInUp">
+      <div id="team" class="container wow fadeInUp">
           <hr class="primary">
           <div class="row">
             <!-- start of an icon -->
@@ -262,17 +285,18 @@
                     <p class="card-text">
                       Mostapha Sadeghipour Roudsari is a designer, software developer, and an educator
                       focused on the integration of parametric environmental analysis and architectural design.
-                      He started the development of Ladybug Tools,
-                      <a href="http://www.ladybug.tools/epwmap" target="_blank">EPWmap</a> and Pollination.
+                      He started the development of several open source projects including Ladybug Tools,
+                      <a href="http://www.ladybug.tools/epwmap" target="_blank">EPWmap</a> and
+                      <a href="http://tt-acm.github.io/DesignExplorer/" target="_blank">DesignExplorer</a>.
                     </p>
                     <p class="card-text">
-                      He lectures and teaches seminars frequently throughout Architecture and Engineering
-                      schools, the AEC community, and as a lecturer at the
+                      He lectures and teaches seminars frequently throughout Architecture and Engineering schools,
+                      the AEC community, and is currently a lecturer at the
                       <a href="https://www.design.upenn.edu/" target="_blank">University of Pennsylvania</a>.
                     </p>
                     <p class="card-text">
-                      Mostapha is currently working on development of the <a href="https://github.com/ladybug-tools">[+] libraries</a>
-                      to make Ladybug Tools platform independent.
+                      Mostapha is currently working on development of the <a href="https://github.com/ladybug-tools"
+                      target="_blank">[+] libraries</a> to make Ladybug Tools platform independent.
                     </p>
                     <ul class="list-inline">
                       <li class="list-inline-item">
@@ -301,7 +325,7 @@
                           </a>&nbsp;
                         </li>
                         <li class="list-inline-item float-right">
-                          <a rel="nofollow" class="page-scroll" href="#contributors" title="Up">
+                          <a rel="nofollow" class="page-scroll" href="#team" title="Up">
                             <i class="icon-sm fa fa-chevron-up fa-2x"></i>
                           </a>&nbsp;
                         </li>
@@ -326,16 +350,16 @@
                   <div class="card-block px-3">
                     <h4 class="card-title">Chris Mackey</h4>
                     <p class="card-text">
-                      Chris Mackey has worked as a Building Scientist at Payette Architects since 2015
-                      after finishing both his Masters of Architecture and Masters of Science in Building
-                      Technology at MIT. He is a lead developer of Ladybug Tools, which he regularly applies
-                      at Payette and teaches to a wide range of professionals and student across the globe.
+                      Chris Mackey has worked as a Building Scientist at <a href="http://www.payette.com/" target="_blank">
+                      Payette Architects</a> since 2015 after finishing both his Masters of Architecture and Masters of
+                      Science in Building Technology at MIT. He is a lead developer of Ladybug Tools, which he regularly
+                      applies at Payette and teaches to a wide range of professionals and student across the globe.
                     </p>
                     <p class="card-text">
-                      He has contributed several components to Ladybug Tools and enhanced many of the existing
-                      components. He oversees the development of Ladybug and Honeybee legacy version and is
-                      currently in the process of building a <a href="./dragonfly">Dragonfly</a> to link Ladybug
-                      Tools to macro-scale climate modeling engines and data sets.
+                      He has contributed several components to Ladybug Tools and enhanced many of the existing components.
+                      He oversees the development of Ladybug and Honeybee legacy version and is currently in the process
+                      of building a <a href="./dragonfly">Dragonfly</a> to link Ladybug Tools to macro-scale climate
+                      modeling engines and data sets.
                     </p>
                     <ul class="list-inline">
                       <li class="list-inline-item">
@@ -364,7 +388,7 @@
                           </a>&nbsp;
                         </li>
                         <li class="list-inline-item float-right">
-                          <a rel="nofollow" class="page-scroll" href="#contributors" title="Up">
+                          <a rel="nofollow" class="page-scroll" href="#team" title="Up">
                             <i class="icon-sm fa fa-chevron-up fa-2x"></i>
                           </a>&nbsp;
                         </li>
@@ -404,13 +428,14 @@
                   <div class="card-block px-3">
                     <h4 class="card-title">Abraham Yezioro</h4>
                     <p class="card-text">
-                      Abraham is a faculty member at the Faculty of Architecture and Town Planning, Technion – IIT.
-                      He researches and teaches sustainability topics focusing in performance driven design. He develops computer models
-                      for supporting better environmental architectural design. He implements Ladybug and Honeybee in his teaching and
-                      research for both undergraduate and graduate courses.
+                      Abraham is a faculty member at the Faculty of Architecture and Town Planning, Technion (IIT).
+                      He researches and teaches sustainability topics focusing in performance driven design. He
+                      develops computer models for supporting better environmental architectural design and implements
+                      Ladybug and Honeybee in his teaching and research for both undergraduate and graduate courses.
                     </p>
                     <p class="card-text">
-                      Abraham is a major contributor to Ladybug forum and has developed a few components for Ladybug.
+                      Abraham is one of the major contributors to Ladybug forum and has developed a several components
+                      for Ladybug.
                     </p>
                     <ul class="list-inline">
                       <li class="list-inline-item">
@@ -424,7 +449,7 @@
                           </a>&nbsp;
                         </li>
                         <li class="list-inline-item float-right">
-                          <a rel="nofollow" class="page-scroll" href="#contributors" title="Up">
+                          <a rel="nofollow" class="page-scroll" href="#team" title="Up">
                             <i class="icon-sm fa fa-chevron-up fa-2x"></i>
                           </a>&nbsp;
                         </li>
@@ -449,13 +474,13 @@
                   <div class="card-block px-3">
                     <h4 class="card-title">Djordje Spasic</h4>
                     <p class="card-text">
-                      Djordje is an architect, working in a structural engineering office in Serbia.
+                      Djordje is an architect working in a structural engineering office in Serbia. He has
+                      developed several components for modeling of thermal comfort, mechanical comfort,
+                      solar hot water systems and photovoltaics for Ladybug Tools.
                     </p>
                     <p class="card-text">
-                      Djordje has developed several components for modeling of thermal comfort, mechanical comfort, solar hot water systems and photovoltaics for Ladybug Tools.
-                    </p>
-                    <p class="card-text">
-                      He is also the creator of <a href="http://www.grasshopper3d.com/group/gismo">Gismo</a> a Grasshopper plugin for GIS environmental analysis.
+                      He is also the creator of <a href="http://www.grasshopper3d.com/group/gismo"
+                      target="_blank">Gismo</a> a Grasshopper plugin for GIS environmental analysis.
                     </p>
                     <ul class="list-inline">
                       <li class="list-inline-item">
@@ -484,7 +509,7 @@
                           </a>&nbsp;
                         </li>
                         <li class="list-inline-item float-right">
-                          <a rel="nofollow" class="page-scroll" href="#contributors" title="Up">
+                          <a rel="nofollow" class="page-scroll" href="#team" title="Up">
                             <i class="icon-sm fa fa-chevron-up fa-2x"></i>
                           </a>&nbsp;
                         </li>
@@ -509,11 +534,10 @@
                   <div class="card-block px-3">
                     <h4 class="card-title">Sarith Subramaniam</h4>
                     <p class="card-text">
-                      Sarith is a Ph.D. candidate in Architectural Engineering from Penn State University.
-                    </p>
-                    <p class="card-text">
-                      His core research interests, and contributions to Ladybug tools,
-                      relate to advanced Daylighting simulation techniques.
+                      Sarith is a Ph.D. candidate in Architectural Engineering at Penn State University.
+                      His core research interests and contributions to Ladybug tools relate to advanced
+                      daylighting simulation techniques. He has made major contribution to Honeybee[+]
+                      for daylight and lighting modeling.
                     </p>
                     <ul class="list-inline">
                       <li class="list-inline-item">
@@ -537,7 +561,7 @@
                           </a>&nbsp;
                         </li>
                         <li class="list-inline-item float-right">
-                          <a rel="nofollow" class="page-scroll" href="#contributors" title="Up">
+                          <a rel="nofollow" class="page-scroll" href="#team" title="Up">
                             <i class="icon-sm fa fa-chevron-up fa-2x"></i>
                           </a>&nbsp;
                         </li>
@@ -562,15 +586,14 @@
                   <div class="card-block px-3">
                     <h4 class="card-title">Antonello Di Nunzio</h4>
                     <p class="card-text">
-                      Antonello is an architect who works for Accenture in Italy.
-                    </p>
-                    <p class="card-text">
-                      He has developed several components for Ladybug including Wet-bulb calculator and 3D terrain models generator.
+                      Antonello is an architect who works for Accenture in Italy. He has developed several
+                      components for Ladybug including Wet-bulb calculator and 3D terrain models generator.
                       He has also developed schedule generator components for Honeybee.
                     </p>
                     <p class="card-text">
-                      Antonello is currently working on a series of components to connect Ladybug and Gismo to
-                      <a href="http://www.envi-met.com/" target="_blank">ENVIMET</a> for uraban microclimatic analysis.
+                      Antonello is currently working on a series of components to connect Ladybug and
+                      <a href="http://www.grasshopper3d.com/group/gismo" target="_blank">Gismo</a> to
+                      <a href="http://www.envi-met.com/" target="_blank">Envimet</a> for uraban microclimatic analysis.
                     </p>
                     <ul class="list-inline">
                         <li class="list-inline-item">
@@ -584,7 +607,7 @@
                           </a>&nbsp;
                         </li>
                         <li class="list-inline-item float-right">
-                          <a rel="nofollow" class="page-scroll" href="#contributors" title="Up">
+                          <a rel="nofollow" class="page-scroll" href="#team" title="Up">
                             <i class="icon-sm fa fa-chevron-up fa-2x"></i>
                           </a>&nbsp;
                         </li>
@@ -617,7 +640,7 @@
                     <p class="card-text">
                       Anton has developed a handful of components in Honeybee and Ladybug including
                       <a href="http://www.grasshopper3d.com/group/ladybug/forum/topics/honeybee-generation-is-ready-to-fly-example-work-flow" target="_blank">
-                      Honeybee Generation components</a> and has squashed quite a few bugs as well!
+                      Honeybee Generation components</a>.
                     </p>
                     <ul class="list-inline">
                       <li class="list-inline-item">
@@ -631,7 +654,7 @@
                           </a>&nbsp;
                         </li>
                         <li class="list-inline-item float-right">
-                          <a rel="nofollow" class="page-scroll" href="#contributors" title="Up">
+                          <a rel="nofollow" class="page-scroll" href="#team" title="Up">
                             <i class="icon-sm fa fa-chevron-up fa-2x"></i>
                           </a>&nbsp;
                         </li>
@@ -656,15 +679,15 @@
                   <div class="card-block px-3">
                     <h4 class="card-title">Theodore Galanos</h4>
                     <p class="card-text">
-                      Theodore is currently the Head of Building Physics and Computational Design for NEAPOLI Consultants
-                      in Kuala Lumpur. In addition to leading various green building and sustainable development projects
-                      he is also responsible for development and company-wide implementation of various workflows for
-                      environmental performance on the building and urban scale.
+                      Theodore is currently the Head of Building Physics and Computational Design for NEAPOLI
+                      Consultants in Kuala Lumpur. In addition to leading various green building and sustainable
+                      development projects he is also responsible for development and company-wide implementation
+                      of various workflows for environmental performance on the building and urban scale.
                     </p>
                     <p class="card-text">
-                      He has contributed to the development of the Butterfly plugin. His current research initiatives focus
-                      on the development of workflows that integrate [and enhance] parametric, performance-based, design
-                      optimization with Machine Learning models
+                      He has contributed to the development of the <a href="./butterfly">Butterfly</a>. His current
+                      research initiatives focus on the development of workflows that integrate parametric,
+                      performance-based, design optimization with Machine Learning models.
                     </p>
                     <ul class="list-inline">
                       <li class="list-inline-item">
@@ -683,7 +706,7 @@
                           </a>&nbsp;
                         </li>
                         <li class="list-inline-item float-right">
-                          <a rel="nofollow" class="page-scroll" href="#contributors" title="Up">
+                          <a rel="nofollow" class="page-scroll" href="#team" title="Up">
                             <i class="icon-sm fa fa-chevron-up fa-2x"></i>
                           </a>&nbsp;
                         </li>
@@ -708,10 +731,10 @@
                   <div class="card-block px-3">
                     <h4 class="card-title">Saeran Vasanthakumar</h4>
                     <p class="card-text">
-                      Saeran is an Intern Architect (Ontario Association of Architects) and Researcher.
-                      He has contributed/revised/debugged components for the Ladybug, Honeybee, and
-                      Dragonfly plugins. His research interests lie in the process integration of
-                      advanced shape computation methods with energy and environmental simulation.
+                      Saeran is an Intern Architect at the Ontario Association of Architects and researcher.
+                      He has contributed/revised/debugged components for the Ladybug, Honeybee, and Dragonfly.
+                      His research interests lie in the process integration of advanced shape computation methods
+                      with energy and environmental simulation.
                     </p>
                     <ul class="list-inline">
                         <li class="list-inline-item">
@@ -720,7 +743,7 @@
                           </a>&nbsp;
                         </li>
                         <li class="list-inline-item float-right">
-                          <a rel="nofollow" class="page-scroll" href="#contributors" title="Up">
+                          <a rel="nofollow" class="page-scroll" href="#team" title="Up">
                             <i class="icon-sm fa fa-chevron-up fa-2x"></i>
                           </a>&nbsp;
                         </li>
@@ -746,11 +769,11 @@
                     <h4 class="card-title">Theo Armour</h4>
                     <p class="card-text">
                       Then: chartered architect in UK and HK, founder and CTO of CAD-Asia,
-                      Program Manager for AutoCAD at Autodesk. Now: develop open source,
-                      client-side realtime 3D apps for your browser.
+                      Program Manager for AutoCAD at Autodesk.
+                      Currently he works on developing open source, client-side realtime 3D apps for your browser.
                     </p>
                     <p class="card-text">
-                      Maintainer <a href="http://www.ladybug.tools/ladybug-web/" target="_blank">Ladybug Web</a>
+                      He is the maintainer <a href="http://www.ladybug.tools/ladybug-web/" target="_blank">Ladybug Web</a>.
                     </p>
                     <p class="card-text">
                     </p>
@@ -781,7 +804,7 @@
                           </a>&nbsp;
                         </li>
                         <li class="list-inline-item float-right">
-                          <a rel="nofollow" class="page-scroll" href="#contributors" title="Up">
+                          <a rel="nofollow" class="page-scroll" href="#team" title="Up">
                             <i class="icon-sm fa fa-chevron-up fa-2x"></i>
                           </a>&nbsp;
                         </li>
@@ -810,7 +833,7 @@
                       engineering firm as well as on research projects.
                     </p>
                     <p class="card-text">
-                      Boris has developed the solar envelope components for Ladybug Tools.
+                      He has developed the solar envelope components for Ladybug Tools.
                     </p>
                     <ul class="list-inline">
                       <li class="list-inline-item">
@@ -829,7 +852,7 @@
                         </a>&nbsp;
                       </li>
                       <li class="list-inline-item float-right">
-                        <a rel="nofollow" class="page-scroll" href="#contributors" title="Up">
+                        <a rel="nofollow" class="page-scroll" href="#team" title="Up">
                           <i class="icon-sm fa fa-chevron-up fa-2x"></i>
                         </a>&nbsp;
                       </li>
@@ -854,12 +877,10 @@
                   <div class="card-block px-3">
                     <h4 class="card-title">Devang Chauhan</h4>
                     <p class="card-text">
-                      Devang is an architect working on large scale infrastructure projects in India. He enjoys
-                      formulating performance oriented workflows.
-                    </p>
-                    <p class="card-text">
-                      Devang has improved to the original windrose component by adding several new features and
-                      fixed several bugs in other components of Ladybug and Honeybee legacy versions.
+                      Devang is an architect working on large scale infrastructure projects in India. By using his
+                      interest in formulating performance oriented workflows, he has improved the original windrose
+                      component by adding several new features and fixed several bugs in other components of
+                      Ladybug and Honeybee legacy versions.
                     </p>
                     <ul class="list-inline">
                       <li class="list-inline-item">
@@ -883,7 +904,7 @@
                           </a>&nbsp;
                         </li>
                         <li class="list-inline-item float-right">
-                          <a rel="nofollow" class="page-scroll" href="#contributors" title="Up">
+                          <a rel="nofollow" class="page-scroll" href="#team" title="Up">
                             <i class="icon-sm fa fa-chevron-up fa-2x"></i>
                           </a>&nbsp;
                         </li>
@@ -908,17 +929,17 @@
                   <div class="card-block px-3">
                     <h4 class="card-title">Byron Mardas</h4>
                     <p class="card-text">
-                      Byron is a senior Environmental Designer at Foster and Partners in London. He is involved
-                      in the environmental assessment and improvement of several projects world-wide, and together
-                      with other members of the team, tries to develop new tools, both for in-house and public use,
-                      in order to improve workflow.
+                      Byron is a senior Environmental Designer at <a href="http://fosterandpartners.com/" target="_blank">
+                      Foster and Partners</a> in London. He is involved in the environmental assessment and improvement of
+                      several projects worldwide and together with other members of the team, tries to develop new tools,
+                      both for in-house and public use in order to improve workflow.
                     </p>
                     <p class="card-text">
-                      His goal is to enable better integration of environmental thinking during the design process
-                      with the use of parametric and dynamic techniques, attractive to architects. He also teaches
-                      computational methods in the Sustainable Environmental Design master’s programme in Architectural
-                      Association school of Architecture in London. His contribution to Ladybug tools relate to solar
-                      assessment and daylight simulation.
+                      His goal is to enable better integration of environmental thinking during the design process with the
+                      use of parametric and dynamic techniques, attractive to architects. He also teaches computational
+                      methods in the Sustainable Environmental Design master’s programme in Architectural Association school
+                      of Architecture in London. His contribution to Ladybug tools relate to solar assessment and
+                      daylight simulation.
                     </p>
                     <ul class="list-inline">
                       <li class="list-inline-item">
@@ -937,7 +958,7 @@
                           </a>&nbsp;
                         </li>
                         <li class="list-inline-item float-right">
-                          <a rel="nofollow" class="page-scroll" href="#contributors" title="Up">
+                          <a rel="nofollow" class="page-scroll" href="#team" title="Up">
                             <i class="icon-sm fa fa-chevron-up fa-2x"></i>
                           </a>&nbsp;
                         </li>
@@ -969,7 +990,8 @@
                     <p class="card-text">
                       He has been involved in the development of
                       <a href="http://tt-acm.github.io/DesignExplorer/" target="_blank">Design Explorer</a>
-                      and is currently working on <b>PassiveBee</b> for connecting Honeybee to WUFI passive.
+                      and is currently working on <b>PassiveBee</b> for connecting Honeybee to
+                      <a href="https://wufi.de/en/software/wufi-passive/" target="_blank">WUFI passive</a>.
                     </p>
                     <ul class="list-inline">
                       <li class="list-inline-item">
@@ -988,7 +1010,7 @@
                           </a>&nbsp;
                         </li>
                         <li class="list-inline-item float-right">
-                          <a rel="nofollow" class="page-scroll" href="#contributors" title="Up">
+                          <a rel="nofollow" class="page-scroll" href="#team" title="Up">
                             <i class="icon-sm fa fa-chevron-up fa-2x"></i>
                           </a>&nbsp;
                         </li>
@@ -1012,7 +1034,7 @@
                   <h6 class="text-uppercase text-muted">About</h6>
                   <ul class="list-unstyled">
                       <li><a href="./about.html#facts">Our Story</a></li>
-                      <li><a href="./about.html#contributors">Team</a></li>
+                      <li><a href="./about.html#team">Team</a></li>
                       <li><a href="./forum.html">Forum</a></li>
                       <li><a href="./contribute.html">Contribute</a></li>
                   </ul>

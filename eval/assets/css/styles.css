@@ -16,7 +16,6 @@ body {
 
 p a {
   color: #b34b49;
-  font-weight: bold;
 }
 
 p a:hover {
@@ -206,11 +205,16 @@ section {
     background-size: cover;
 }
 
-#header-slide-show-caption {
-    color:#001A33;
+#header-slide-show-caption{
     top: 50%;
     transform: translateY(-50%);
     bottom: initial;
+}
+
+#header-slide-show-caption span{
+    color:#ffff;
+    background-color: black;
+    padding: 0px 10px 0px 10px;
 }
 
 aside {
