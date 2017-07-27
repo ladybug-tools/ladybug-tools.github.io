@@ -79,6 +79,7 @@ p {
 
 h6, .text-uppercase{
     margin-top: 1.25rem;
+    line-height: 25px;
 }
 
 .wide-space {
