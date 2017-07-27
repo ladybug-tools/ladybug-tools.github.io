@@ -26,10 +26,10 @@
               <div class="col-md-8 col-12 inner">
               <h1>Honeybee</h1>
               <h6 class="wow fadeIn text-normal wow fadeIn">
-                A python library to create, run and visualize the results of daylight using
-                (<a href="https://radiance-online.org/" target="_blank">RADIANCE</a>) and
-                energy analysis (<a href="https://www.openstudio.net/" target="_blank">OpenStudio</a>).
-                For Grasshopper / Rhino and Dynamo / Revit plugins check honeybee[+] repository.
+                A plugin and python library to create, run and visualize daylight simulations using
+                <a href="https://radiance-online.org/" target="_blank">RADIANCE</a>,
+                energy models using <a href="https://www.openstudio.net/" target="_blank">OPENSTUDIO</a>,
+                and heat flow through construction details using <a href="https://windows.lbl.gov/software/therm/therm.html" target="_blank">THERM</a>.
               </h6>
               <a rel="nofollow" class="page-scroll" href="#facts" title="Read more">
                 <i class="icon-sm fa fa-chevron-down fa-2x"></i>
@@ -112,11 +112,14 @@
                   <h1 class="section-title"> What is Honeybee? </h1>
                   <hr class="primary">
                   <p class="section-subcontent">
-                    A python library to create, run and visualize the results of daylight using
-                    (<a href="https://radiance-online.org/" target="_blank">RADIANCE</a>) and
-                    energy analysis (<a href="https://www.openstudio.net/" target="_blank">OpenStudio</a>).
-                    For Grasshopper / Rhino and Dynamo / Revit plugins check honeybee[+] repository.
-                    Honeybee is one of the most comprehensive plugins available for enviromental design.
+                    Honeybee supports detailed lighting and thermodynamic modeling that is typically more
+                    applicable to mid and later stages of design.  Specifically, it creates, runs and visualizes
+                    daylight simulations using <a href="https://radiance-online.org/" target="_blank">Radiance</a>,
+                    energy models using <a href="https://www.openstudio.net/" target="_blank">EnergyPlus/OpenStudio</a>,
+                    and heat flow through construction details using <a href="https://windows.lbl.gov/software/therm/therm.html" target="_blank">LBNL Therm/Window</a>.
+                    It accomplishes this by linking these various engines to CAD and visual scripitng interfaces such as
+                    Grasshopper / Rhino and Dynamo / Revit plugins.  It also serves as a single object-oriented library between these engines.
+                    As a result, Honeybee is one of the most comprehensive plugins presently available for enviromental design.
                   </p>
                 </br>
               </div>
@@ -129,7 +132,7 @@
             <!-- start of an icon -->
             <div class="col-md-2 col-sm-4 col-4 text-center">
               <a class="page-scroll" href="#charts">
-                  <img class="feature-icon" src="assets/img/honeybee/gridbased.png" />
+                  <img class="feature-icon" src="assets/img/honeybee/illuminace.png" />
               </a>
               <h6 class="text-uppercase">Illuminance Studies</h6>
             </div>
@@ -137,9 +140,17 @@
             <!-- start of an icon -->
             <div class="col-md-2 col-sm-4 col-4 text-center">
               <a class="page-scroll" href="#sunpath">
+                  <img class="feature-icon" src="assets/img/honeybee/gridbased.png" />
+              </a>
+              <h6 class="text-uppercase">Annual Daylight Studies</h6>
+            </div>
+            <!-- end of an icon -->
+            <!-- start of an icon -->
+            <div class="col-md-2 col-sm-4 col-4 text-center">
+              <a class="page-scroll" href="#sunpath">
                   <img class="feature-icon" src="assets/img/honeybee/annualdaylight.png" />
               </a>
-              <h6 class="text-uppercase">Rendered Images</h6>
+              <h6 class="text-uppercase">Annual Sun Exposure (ASE)</h6>
             </div>
             <!-- end of an icon -->
             <!-- start of an icon -->
@@ -152,18 +163,98 @@
             <!-- end of an icon -->
             <!-- start of an icon -->
             <div class="col-md-2 col-sm-4 col-4 text-center">
-              <a class="page-scroll" href="#comfort">
-                  <img class="feature-icon" src="assets/img/honeybee/coolingheating.png" />
+              <a class="page-scroll" href="#renewables">
+                  <img class="feature-icon" src="assets/img/honeybee/radiation.png" />
               </a>
-              <h6 class="text-uppercase">Thermal Loads</h6>
+              <h6 class="text-uppercase">Advanced Solar Radiation</h6>
             </div>
             <!-- end of an icon -->
             <!-- start of an icon -->
             <div class="col-md-2 col-sm-4 col-4 text-center">
-              <a class="page-scroll" href="#radiation">
-                  <img class="feature-icon" src="assets/img/honeybee/hvac.png" />
+              <a class="page-scroll" href="#renewables">
+                  <img class="feature-icon" src="assets/img/honeybee/electric.png" />
               </a>
-              <h6 class="text-uppercase">HVAC Systems</h6>
+              <h6 class="text-uppercase">Electric Light Modeling/Sizing</h6>
+            </div>
+            <!-- end of an icon -->
+            <!-- start of an icon -->
+            <div class="col-md-2 col-sm-4 col-4 text-center">
+              <a class="page-scroll" href="#comfort">
+                  <img class="feature-icon" src="assets/img/honeybee/heating.png" />
+              </a>
+              <h6 class="text-uppercase">Heating Energy Usage</h6>
+            </div>
+            <!-- end of an icon -->
+            <!-- start of an icon -->
+            <div class="col-md-2 col-sm-4 col-4 text-center">
+              <a class="page-scroll" href="#comfort">
+                  <img class="feature-icon" src="assets/img/honeybee/cooling.png" />
+              </a>
+              <h6 class="text-uppercase">Cooling Energy Usage</h6>
+            </div>
+            <!-- end of an icon -->
+            <!-- start of an icon -->
+            <div class="col-md-2 col-sm-4 col-4 text-center">
+              <a class="page-scroll" href="#comfort">
+                  <img class="feature-icon" src="assets/img/honeybee/hvacsizing.png" />
+              </a>
+              <h6 class="text-uppercase">HVAC Sizing</h6>
+            </div>
+            <!-- end of an icon -->
+            <!-- start of an icon -->
+            <div class="col-md-2 col-sm-4 col-4 text-center">
+              <a class="page-scroll" href="#comfort">
+                  <img class="feature-icon" src="assets/img/honeybee/colorzone.png" />
+              </a>
+              <h6 class="text-uppercase">Color Zones w/ Energy Results</h6>
+            </div>
+            <!-- end of an icon -->
+            <!-- start of an icon -->
+            <div class="col-md-2 col-sm-4 col-4 text-center">
+              <a class="page-scroll" href="#comfort">
+                  <img class="feature-icon" src="assets/img/honeybee/balance.png" />
+              </a>
+              <h6 class="text-uppercase">Energy Balance Visualization</h6>
+            </div>
+            <!-- end of an icon -->
+            <!-- start of an icon -->
+            <div class="col-md-2 col-sm-4 col-4 text-center">
+              <a class="page-scroll" href="#comfort">
+                  <img class="feature-icon" src="assets/img/honeybee/comfort.png" />
+              </a>
+              <h6 class="text-uppercase">Indoor Thermal Comfort</h6>
+            </div>
+            <!-- end of an icon -->
+            <!-- start of an icon -->
+            <div class="col-md-2 col-sm-4 col-4 text-center">
+              <a class="page-scroll" href="#comfort">
+                  <img class="feature-icon" src="assets/img/honeybee/microclimate.png" />
+              </a>
+              <h6 class="text-uppercase">Microclimate Mapping</h6>
+            </div>
+            <!-- end of an icon -->
+            <!-- start of an icon -->
+            <div class="col-md-2 col-sm-4 col-4 text-center">
+              <a class="page-scroll" href="#comfort">
+                  <img class="feature-icon" src="assets/img/honeybee/passive.png" />
+              </a>
+              <h6 class="text-uppercase">Passive Modeling</h6>
+            </div>
+            <!-- end of an icon -->
+            <!-- start of an icon -->
+            <div class="col-md-2 col-sm-4 col-4 text-center">
+              <a class="page-scroll" href="#comfort">
+                  <img class="feature-icon" src="assets/img/honeybee/shadebenefit.png" />
+              </a>
+              <h6 class="text-uppercase">Energy Shade Benefit</h6>
+            </div>
+            <!-- end of an icon -->
+            <!-- start of an icon -->
+            <div class="col-md-2 col-sm-4 col-4 text-center">
+              <a class="page-scroll" href="#raytracing">
+                  <img class="feature-icon" src="assets/img/honeybee/window.png" />
+              </a>
+              <h6 class="text-uppercase">Envelope Heat Flow Modeling</h6>
             </div>
             <!-- end of an icon -->
             <!-- start of an icon -->
@@ -171,7 +262,15 @@
               <a class="page-scroll" href="#raytracing">
                   <img class="feature-icon" src="assets/img/honeybee/therm.png" />
               </a>
-              <h6 class="text-uppercase">THERM</h6>
+              <h6 class="text-uppercase">Thermal Bridging</h6>
+            </div>
+            <!-- end of an icon -->
+            <!-- start of an icon -->
+            <div class="col-md-2 col-sm-4 col-4 text-center">
+              <a class="page-scroll" href="#raytracing">
+                  <img class="feature-icon" src="assets/img/honeybee/condensation.png" />
+              </a>
+              <h6 class="text-uppercase">Condensation Risk Studies</h6>
             </div>
             <!-- end of an icon -->
           </div>

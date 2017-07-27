@@ -82,6 +82,14 @@ h6, .text-uppercase{
     line-height: 25px;
 }
 
+h6 a{
+    font-weight:bold;
+}
+
+h6 a:hover {
+    text-decoration: none;
+}
+
 .wide-space {
     letter-spacing: 1.6px;
 }
