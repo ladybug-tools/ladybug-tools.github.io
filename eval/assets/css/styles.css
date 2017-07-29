@@ -230,6 +230,9 @@ section {
     top: 50%;
     transform: translateY(-50%);
     bottom: initial;
+}
+
+#header-slide-text-wrapper{
     background:white;
     opacity: 0.75;
 }
