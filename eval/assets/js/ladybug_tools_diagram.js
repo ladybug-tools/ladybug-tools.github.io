@@ -2,7 +2,7 @@ var c = d3.select("div#tools_diagram");
 var i = d3.select("img.img-software-icon");
 
 var width = parseFloat(c.style('width')) - 30,
-    height = 4 * parseFloat(i.style('height')) - 30;
+    height = 5 * parseFloat(i.style('height')) - 30;
 
 var graph = {
     "nodes": [
@@ -15,15 +15,15 @@ var graph = {
         {"id": "Analysis", "group": 1, "img": "analysis.png", "size": 90, "text": "Analyze geometry", "link": "./ladybug.html#radiation"},
         {"id": "EnergyPlus", "group": 2, "img": "energyplus.png", "size": 50, "text": "EnergyPlus", "link": ""},
         {"id": "OpenStudio", "group": 2, "img": "openstudio.png", "size": 50, "text": "OpenStudio", "link": ""},
-        {"id": "Energy", "group": 2, "img": "energy.png", "size": 90, "text": "Energy analysis", "link": ""},
+        {"id": "Energy", "group": 2, "img": "energy.png", "size": 90, "text": "Energy models", "link": ""},
         {"id": "Radiance", "group": 2, "img": "radiance.png", "size": 50, "text": "Radiance", "link": ""},
         {"id": "Daysim", "group": 2, "img": "daysim.png", "size": 50, "text": "Daysim", "link": ""},
         {"id": "Daylight", "group": 2, "img": "daylight.png", "size": 90, "text": "Daylight analysis", "link": ""},
         {"id": "Glare", "group": 2, "img": "glare.png", "size": 90, "text": "Glare analysis", "link": ""},
         {"id": "Electric_Lighting", "group": 2, "img": "electric_lighting.png", "size": 90, "text": "Electric lighting", "link": ""},
         {"id": "Annual_Daylight", "group": 2, "img": "annual_daylight.png", "size": 90, "text": "Annual daylight", "link": ""},
-        {"id": "Therm", "group": 2, "img": "therm.png", "size": 50, "text": "Therm & Window", "link": ""},
-        {"id": "Glazing_cnstr", "group": 2, "img": "glazing_construction.png", "size": 90, "text": "Construction analysis", "link": ""},
+        {"id": "Therm", "group": 2, "img": "therm.png", "size": 50, "text": "Therm", "link": ""},
+        {"id": "Glazing_cnstr", "group": 2, "img": "glazing_construction.png", "size": 90, "text": "U-Value", "link": ""},
         {"id": "Comfort", "group": 2, "img": "comfort.png", "size": 90, "text": "Indoor comfort", "link": ""},
         {"id": "OpenFoam", "group": 3, "img": "OpenFoam.png", "size": 50, "text": "OpenFOAM", "link": ""},
         {"id": "Airflow", "group": 3, "img": "airflow.png", "size": 90, "text": "Airflow", "link": ""},
@@ -62,8 +62,7 @@ var transform = d3.zoomIdentity;
 var svg = d3.select("#tools_diagram").append("svg")
     .attr("width", width)
     .attr("height", height)
-    .attr("stroke", "black")
-    .attr("fill", "none")
+    .attr("fill", "black")
     .attr("stroke-width", "1px");
 
 
@@ -167,9 +166,7 @@ var borderPath = svg.append("rect")
  			.attr("y", 0)
       .attr("width", width)
  			.attr("height", height)
- 			.style("stroke", "black")
  			.style("fill", "none")
- 			.style("stroke-width", "2px");
 
 d3.select(window).on("resize", center);
 
