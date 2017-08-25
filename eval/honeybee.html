@@ -112,14 +112,15 @@
                   <h1 class="section-title"> What is Honeybee? </h1>
                   <hr class="primary">
                   <p class="section-subcontent">
-                    Honeybee supports detailed lighting and thermodynamic modeling that is typically more
-                    applicable to mid and later stages of design.  Specifically, it creates, runs and visualizes
+                    Honeybee supports detailed daylighting and thermodynamic modeling that tends to be most relevant
+                    during mid and later stages of design.  Specifically, it creates, runs and visualizes the results of
                     daylight simulations using <a href="https://radiance-online.org/" target="_blank">Radiance</a>,
                     energy models using <a href="https://www.openstudio.net/" target="_blank">EnergyPlus/OpenStudio</a>,
-                    and heat flow through construction details using <a href="https://windows.lbl.gov/software/therm/therm.html" target="_blank">LBNL Therm/Window</a>.
-                    It accomplishes this by linking these various engines to CAD and visual scripitng interfaces such as
-                    Grasshopper / Rhino and Dynamo / Revit plugins.  It also serves as a single object-oriented library between these engines.
-                    As a result, Honeybee is one of the most comprehensive plugins presently available for enviromental design.
+                    and heat flow through construction details using <a href="https://windows.lbl.gov/software/therm/therm.html" target="_blank">Berkeley Lab Therm/Window</a>.
+                    It accomplishes this by linking these simulation engines to CAD and visual scripitng interfaces such as
+                    <a href="http://www.grasshopper3d.com/" target="_blank"> Grasshopper / Rhino</a> and <a href="http://dynamobim.org/" target="_blank">Dynamo / Revit</a> plugins.
+                    It also serves as an object-oriented Application Programming Interface (API) for these engines.
+                    For this reason, Honeybee is one of the most comprehensive plugins presently available for enviromental design.
                   </p>
                 </br>
               </div>
@@ -131,7 +132,7 @@
           <div class="row">
             <!-- start of an icon -->
             <div class="col-md-2 col-sm-4 col-4 text-center">
-              <a class="page-scroll" href="#charts">
+              <a class="page-scroll" href="#illuminance">
                   <img class="feature-icon" src="assets/img/honeybee/illuminace.png" />
               </a>
               <h6 class="text-uppercase">Illuminance Studies</h6>
@@ -139,7 +140,7 @@
             <!-- end of an icon -->
             <!-- start of an icon -->
             <div class="col-md-2 col-sm-4 col-4 text-center">
-              <a class="page-scroll" href="#sunpath">
+              <a class="page-scroll" href="#annualDaylight">
                   <img class="feature-icon" src="assets/img/honeybee/gridbased.png" />
               </a>
               <h6 class="text-uppercase">Annual Daylight Studies</h6>
@@ -147,7 +148,7 @@
             <!-- end of an icon -->
             <!-- start of an icon -->
             <div class="col-md-2 col-sm-4 col-4 text-center">
-              <a class="page-scroll" href="#sunpath">
+              <a class="page-scroll" href="#ase">
                   <img class="feature-icon" src="assets/img/honeybee/annualdaylight.png" />
               </a>
               <h6 class="text-uppercase">Annual Sun Exposure (ASE)</h6>
@@ -155,7 +156,7 @@
             <!-- end of an icon -->
             <!-- start of an icon -->
             <div class="col-md-2 col-sm-4 col-4 text-center">
-              <a class="page-scroll" href="#renewables">
+              <a class="page-scroll" href="#glare">
                   <img class="feature-icon" src="assets/img/honeybee/glareanalysis.png" />
               </a>
               <h6 class="text-uppercase">Glare Analysis</h6>
@@ -163,7 +164,7 @@
             <!-- end of an icon -->
             <!-- start of an icon -->
             <div class="col-md-2 col-sm-4 col-4 text-center">
-              <a class="page-scroll" href="#renewables">
+              <a class="page-scroll" href="#advRadiation">
                   <img class="feature-icon" src="assets/img/honeybee/radiation.png" />
               </a>
               <h6 class="text-uppercase">Advanced Solar Radiation</h6>
@@ -171,7 +172,7 @@
             <!-- end of an icon -->
             <!-- start of an icon -->
             <div class="col-md-2 col-sm-4 col-4 text-center">
-              <a class="page-scroll" href="#renewables">
+              <a class="page-scroll" href="#electric">
                   <img class="feature-icon" src="assets/img/honeybee/electric.png" />
               </a>
               <h6 class="text-uppercase">Electric Light Modeling/Sizing</h6>
@@ -179,7 +180,7 @@
             <!-- end of an icon -->
             <!-- start of an icon -->
             <div class="col-md-2 col-sm-4 col-4 text-center">
-              <a class="page-scroll" href="#comfort">
+              <a class="page-scroll" href="#heatingCooling">
                   <img class="feature-icon" src="assets/img/honeybee/heating.png" />
               </a>
               <h6 class="text-uppercase">Heating Energy Usage</h6>
@@ -187,7 +188,7 @@
             <!-- end of an icon -->
             <!-- start of an icon -->
             <div class="col-md-2 col-sm-4 col-4 text-center">
-              <a class="page-scroll" href="#comfort">
+              <a class="page-scroll" href="#heatingCooling">
                   <img class="feature-icon" src="assets/img/honeybee/cooling.png" />
               </a>
               <h6 class="text-uppercase">Cooling Energy Usage</h6>
@@ -195,7 +196,7 @@
             <!-- end of an icon -->
             <!-- start of an icon -->
             <div class="col-md-2 col-sm-4 col-4 text-center">
-              <a class="page-scroll" href="#comfort">
+              <a class="page-scroll" href="#hvac">
                   <img class="feature-icon" src="assets/img/honeybee/hvacsizing.png" />
               </a>
               <h6 class="text-uppercase">HVAC Sizing</h6>
@@ -203,7 +204,7 @@
             <!-- end of an icon -->
             <!-- start of an icon -->
             <div class="col-md-2 col-sm-4 col-4 text-center">
-              <a class="page-scroll" href="#comfort">
+              <a class="page-scroll" href="#colorZones">
                   <img class="feature-icon" src="assets/img/honeybee/colorzone.png" />
               </a>
               <h6 class="text-uppercase">Color Zones w/ Energy Results</h6>
@@ -211,7 +212,7 @@
             <!-- end of an icon -->
             <!-- start of an icon -->
             <div class="col-md-2 col-sm-4 col-4 text-center">
-              <a class="page-scroll" href="#comfort">
+              <a class="page-scroll" href="#energyBal">
                   <img class="feature-icon" src="assets/img/honeybee/balance.png" />
               </a>
               <h6 class="text-uppercase">Energy Balance Visualization</h6>
@@ -227,7 +228,7 @@
             <!-- end of an icon -->
             <!-- start of an icon -->
             <div class="col-md-2 col-sm-4 col-4 text-center">
-              <a class="page-scroll" href="#comfort">
+              <a class="page-scroll" href="#microclimate">
                   <img class="feature-icon" src="assets/img/honeybee/microclimate.png" />
               </a>
               <h6 class="text-uppercase">Microclimate Mapping</h6>
@@ -235,7 +236,7 @@
             <!-- end of an icon -->
             <!-- start of an icon -->
             <div class="col-md-2 col-sm-4 col-4 text-center">
-              <a class="page-scroll" href="#comfort">
+              <a class="page-scroll" href="#passive">
                   <img class="feature-icon" src="assets/img/honeybee/passive.png" />
               </a>
               <h6 class="text-uppercase">Passive Modeling</h6>
@@ -243,7 +244,7 @@
             <!-- end of an icon -->
             <!-- start of an icon -->
             <div class="col-md-2 col-sm-4 col-4 text-center">
-              <a class="page-scroll" href="#comfort">
+              <a class="page-scroll" href="#shadeBenefit">
                   <img class="feature-icon" src="assets/img/honeybee/shadebenefit.png" />
               </a>
               <h6 class="text-uppercase">Energy Shade Benefit</h6>
@@ -251,7 +252,7 @@
             <!-- end of an icon -->
             <!-- start of an icon -->
             <div class="col-md-2 col-sm-4 col-4 text-center">
-              <a class="page-scroll" href="#raytracing">
+              <a class="page-scroll" href="#envelope">
                   <img class="feature-icon" src="assets/img/honeybee/window.png" />
               </a>
               <h6 class="text-uppercase">Envelope Heat Flow Modeling</h6>
@@ -259,7 +260,7 @@
             <!-- end of an icon -->
             <!-- start of an icon -->
             <div class="col-md-2 col-sm-4 col-4 text-center">
-              <a class="page-scroll" href="#raytracing">
+              <a class="page-scroll" href="#bridging">
                   <img class="feature-icon" src="assets/img/honeybee/therm.png" />
               </a>
               <h6 class="text-uppercase">Thermal Bridging</h6>
@@ -267,7 +268,7 @@
             <!-- end of an icon -->
             <!-- start of an icon -->
             <div class="col-md-2 col-sm-4 col-4 text-center">
-              <a class="page-scroll" href="#raytracing">
+              <a class="page-scroll" href="#condensation">
                   <img class="feature-icon" src="assets/img/honeybee/condensation.png" />
               </a>
               <h6 class="text-uppercase">Condensation Risk Studies</h6>
@@ -352,18 +353,18 @@
 
       <div class="container wow fadeInUp">
           <!-- start of the feature -->
-          <div class="row" id="charts">
+          <div class="row" id="illuminance">
             <div class="container py-3">
               <div class="card">
                 <div class="row ">
                   <div class="col-md-6">
-                    <img class="w-100" src="https://raw.githubusercontent.com/chriswmackey/hydra_2/master/Radiation_Benefit_On_Sun_Path/Radiation_Benefit_On_Sun_Path_Rhino.png">
+                    <img class="w-100" src="https://github.com/mostaphaRoudsari/hydra_1/raw/master/Read_Daylight_Analysis_Results_from_Study_Folder/Read_Daylight_Analysis_Results_from_Study_Folder_Rhino.png">
                   </div>
                   <div class="col-md-6 px-3">
                     <div class="card-block px-3">
-                      <h4 class="card-title">Charts</h4>
-                      <p class="card-text">Ladybug supports variety of  2d and 3d charts.</p>
-                      <a href="http://hydrashare.github.io/hydra/?keywords=chart" class="btn btn-primary">Check for examples</a>
+                      <h4 class="card-title">Illuminance Studies</h4>
+                      <p class="card-text">Honeybee allows full customization of point-in-time illuminance simulations.</p>
+                      <a href="http://hydrashare.github.io/hydra/?keywords=grid" class="btn btn-primary">Check for examples</a>
                       <li class="list-inline-item float-right">
                         <a rel="nofollow" class="page-scroll" href="#features-collection" title="Up">
                           <i class="icon-sm fa fa-chevron-up fa-2x"></i>
@@ -377,18 +378,220 @@
           </div>
           <!-- end of the feature -->
           <!-- start of the feature -->
-          <div class="row" id="sunpath">
+          <div class="row" id="annualDaylight">
             <div class="container py-3">
               <div class="card">
                 <div class="row ">
                   <div class="col-md-6">
-                    <img class="w-100" src="https://raw.githubusercontent.com/mostaphaRoudsari/hydra_1/master/Central_Park_Shadow_Study/birdView.jpg">
+                    <img class="w-100" src="assets/img/honeybee/features/AnnualDaylight.jpg">
                   </div>
                   <div class="col-md-6 px-3">
                     <div class="card-block px-3">
-                      <h4 class="card-title">Sunpath</h4>
-                      <p class="card-text">You can use sunpath ... </p>
-                      <a href="http://hydrashare.github.io/hydra/?keywords=sunpath" class="btn btn-primary">Check for examples</a>
+                      <h4 class="card-title">Annual Daylight Studies</h4>
+                      <p class="card-text">Claculate all annual daylight metrics (DA, cDA, UDLI, ASE) and parse results down to the hour.</p>
+                      <a href="http://hydrashare.github.io/hydra/?keywords=honeybee_annual_daylight" class="btn btn-primary">Check for examples</a>
+                      <li class="list-inline-item float-right">
+                        <a rel="nofollow" class="page-scroll" href="#features-collection" title="Up">
+                          <i class="icon-sm fa fa-chevron-up fa-2x"></i>
+                        </a>&nbsp;
+                      </li>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- end of the feature -->
+          <!-- start of the feature -->
+          <div class="row" id="ase">
+            <div class="container py-3">
+              <div class="card">
+                <div class="row ">
+                  <div class="col-md-6">
+                    <img class="w-100" src="https://github.com/chriswmackey/hydra_2/raw/master/Estimate_Glare_Potential_Over_a_Year/Estimate_Glare_Potential_Over_a_Year_Rhino.png">
+                  </div>
+                  <div class="col-md-6 px-3">
+                    <div class="card-block px-3">
+                      <h4 class="card-title">Annual Sun Exposure</h4>
+                      <p class="card-text">Estimate potential for glare with Annual Sun Exposure (ASE).</p>
+                      <a href="http://hydrashare.github.io/hydra/?keywords=glare_potential" class="btn btn-primary">Check for examples</a>
+                      <li class="list-inline-item float-right">
+                        <a rel="nofollow" class="page-scroll" href="#features-collection" title="Up">
+                          <i class="icon-sm fa fa-chevron-up fa-2x"></i>
+                        </a>&nbsp;
+                      </li>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- end of the feature -->
+          <!-- start of the feature -->
+          <div class="row" id="glare">
+            <div class="container py-3">
+              <div class="card">
+                <div class="row ">
+                  <div class="col-md-6">
+                    <img class="w-100" src="assets/img/honeybee/features/DGP.jpg">
+                  </div>
+                  <div class="col-md-6 px-3">
+                    <div class="card-block px-3">
+                      <h4 class="card-title">Glare Analysis</h4>
+                      <p class="card-text">Perform detailed image-based glare studies to obtain metrics such as Daylight Glare Propability (DGP).</p>
+                      <a href="http://hydrashare.github.io/hydra/?keywords=glare_analysis" class="btn btn-primary">Check for examples</a>
+                      <li class="list-inline-item float-right">
+                        <a rel="nofollow" class="page-scroll" href="#features-collection" title="Up">
+                          <i class="icon-sm fa fa-chevron-up fa-2x"></i>
+                        </a>&nbsp;
+                      </li>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- end of the feature -->
+          <!-- start of the feature -->
+          <div class="row" id="advRadiation">
+            <div class="container py-3">
+              <div class="card">
+                <div class="row ">
+                  <div class="col-md-6">
+                    <img class="w-100" src="assets/img/honeybee/features/AdvancedRad.jpg">
+                  </div>
+                  <div class="col-md-6 px-3">
+                    <div class="card-block px-3">
+                      <h4 class="card-title">Advanced Solar Radiation</h4>
+                      <p class="card-text">Run high-accuracy solar radiation studies that account for light reflection and can model concentration
+                      of solar energy from parabolic mirror surfaces.</p>
+                      <a href="http://hydrashare.github.io/hydra/?keywords=radiation_analysis" class="btn btn-primary">Check for examples</a>
+                      <li class="list-inline-item float-right">
+                        <a rel="nofollow" class="page-scroll" href="#features-collection" title="Up">
+                          <i class="icon-sm fa fa-chevron-up fa-2x"></i>
+                        </a>&nbsp;
+                      </li>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- end of the feature -->
+          <!-- start of the feature -->
+          <div class="row" id="electric">
+            <div class="container py-3">
+              <div class="card">
+                <div class="row ">
+                  <div class="col-md-6">
+                    <img class="w-100" src="assets/img/honeybee/features/electricLight.jpg">
+                  </div>
+                  <div class="col-md-6 px-3">
+                    <div class="card-block px-3">
+                      <h4 class="card-title">Electric Light Modeling/Sizing</h4>
+                      <p class="card-text">Run illuminance simulations with IES light fixture definitions to ensure that electric
+                        lights are properly sized for given tasks.  This can also be used to estimate outdoor light pollution.</p>
+                      <a href="http://hydrashare.github.io/hydra/?keywords=ies_electrics" class="btn btn-primary">Check for examples</a>
+                      <li class="list-inline-item float-right">
+                        <a rel="nofollow" class="page-scroll" href="#features-collection" title="Up">
+                          <i class="icon-sm fa fa-chevron-up fa-2x"></i>
+                        </a>&nbsp;
+                      </li>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- end of the feature -->
+          <!-- start of the feature -->
+          <div class="row" id="heatingCooling">
+            <div class="container py-3">
+              <div class="card">
+                <div class="row ">
+                  <div class="col-md-6">
+                    <img class="w-100" src="https://github.com/chriswmackey/hydra_2/raw/master/Calculate_Annual_Utility_Bill/Calculate_Annual_Utility_Bill_Rhino.png">
+                  </div>
+                  <div class="col-md-6 px-3">
+                    <div class="card-block px-3">
+                      <h4 class="card-title">Heating and Cooling Energy Use</h4>
+                      <p class="card-text"> Perform detailed annual energy simulations to calculate End Use Intensity (EUI) and estimate annual utiltity bills.</p>
+                      <a href="http://hydrashare.github.io/hydra/?keywords=heating" class="btn btn-primary">Check for examples</a>
+                      <li class="list-inline-item float-right">
+                        <a rel="nofollow" class="page-scroll" href="#features-collection" title="Up">
+                          <i class="icon-sm fa fa-chevron-up fa-2x"></i>
+                        </a>&nbsp;
+                      </li>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- end of the feature -->
+          <!-- start of the feature -->
+          <div class="row" id="hvac">
+            <div class="container py-3">
+              <div class="card">
+                <div class="row ">
+                  <div class="col-md-6">
+                    <img class="w-100" src="assets/img/honeybee/features/hvacSizing.jpg">
+                  </div>
+                  <div class="col-md-6 px-3">
+                    <div class="card-block px-3">
+                      <h4 class="card-title">HVAC Sizing</h4>
+                      <p class="card-text">Calculate peaks loads and size HVAC systems.  Quantify the imact of strategies on the size/cost of HVAC systems.</p>
+                      <a href="http://hydrashare.github.io/hydra/?keywords=sizing" class="btn btn-primary">Check for examples</a>
+                      <li class="list-inline-item float-right">
+                        <a rel="nofollow" class="page-scroll" href="#features-collection" title="Up">
+                          <i class="icon-sm fa fa-chevron-up fa-2x"></i>
+                        </a>&nbsp;
+                      </li>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- end of the feature -->
+          <!-- start of the feature -->
+          <div class="row" id="colorZones">
+            <div class="container py-3">
+              <div class="card">
+                <div class="row ">
+                  <div class="col-md-6">
+                    <img class="w-100" src="assets/img/honeybee/features/colorZones.png">
+                  </div>
+                  <div class="col-md-6 px-3">
+                    <div class="card-block px-3">
+                      <h4 class="card-title">Color Zones with Energy Model Results</h4>
+                      <p class="card-text">Understand your model results down to the detail by coloring zones and zone surfaces with results.</p>
+                      <a href="http://hydrashare.github.io/hydra/?keywords=honeybee_color" class="btn btn-primary">Check for examples</a>
+                      <li class="list-inline-item float-right">
+                        <a rel="nofollow" class="page-scroll" href="#features-collection" title="Up">
+                          <i class="icon-sm fa fa-chevron-up fa-2x"></i>
+                        </a>&nbsp;
+                      </li>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- end of the feature -->
+          <!-- start of the feature -->
+          <div class="row" id="energyBal">
+            <div class="container py-3">
+              <div class="card">
+                <div class="row ">
+                  <div class="col-md-6">
+                    <img class="w-100" src="https://github.com/chriswmackey/hydra_2/raw/master/Energy_Balance/Energy_Balance_Rhino.png">
+                  </div>
+                  <div class="col-md-6 px-3">
+                    <div class="card-block px-3">
+                      <h4 class="card-title">Energy Balance Visualizations</h4>
+                      <p class="card-text">Don't just see WHAT your energy use is.  Understand WHY it exists and what is driving it with energy balance graphics.</p>
+                      <a href="http://hydrashare.github.io/hydra/?keywords=balance" class="btn btn-primary">Check for examples</a>
                       <li class="list-inline-item float-right">
                         <a rel="nofollow" class="page-scroll" href="#features-collection" title="Up">
                           <i class="icon-sm fa fa-chevron-up fa-2x"></i>
@@ -407,12 +610,13 @@
               <div class="card">
                 <div class="row ">
                   <div class="col-md-6">
-                    <img class="w-100" src="https://raw.githubusercontent.com/chriswmackey/hydra_2/master/Accounting_for_Solar_Radiation_in_Comfort/Accounting_for_Solar_Radiation_in_Comfort_Rhino.png">
+                    <img class="w-100" src="https://github.com/chriswmackey/hydra_2/raw/master/Comfort_Autonomy/Comfort_Autonomy_Rhino.png">
                   </div>
                   <div class="col-md-6 px-3">
                     <div class="card-block px-3">
-                      <h4 class="card-title">Thermal Comfort</h4>
-                      <p class="card-text">Thermal comfort ... </p>
+                      <h4 class="card-title">Indoor Thermal Comfort</h4>
+                      <p class="card-text">Use energy model results to spatially map thermal comfort, plot results on psychrometric/adaptive comfort charts,
+                        and perform a variety of other thermal comfort visualizations.</p>
                       <a href="http://hydrashare.github.io/hydra/?keywords=comfort" class="btn btn-primary">Check for examples</a>
                       <li class="list-inline-item float-right">
                         <a rel="nofollow" class="page-scroll" href="#features-collection" title="Up">
@@ -427,18 +631,18 @@
           </div>
           <!-- end of the feature -->
           <!-- start of the feature -->
-          <div class="row" id="radiation">
+          <div class="row" id="microclimate">
             <div class="container py-3">
               <div class="card">
                 <div class="row ">
                   <div class="col-md-6">
-                    <img class="w-100" src="https://raw.githubusercontent.com/mostaphaRoudsari/hydra_1/master/Cumulative_Radiation_Analysis_w_Ladybug/Cumulative_Radiation_Analysis_w_Ladybug_Rhino.png">
+                    <img class="w-100" src="https://github.com/chriswmackey/hydra_2/raw/master/Microclimate_Map_-_Simple/Microclimate_Map_-_Simple_Rhino.png">
                   </div>
                   <div class="col-md-6 px-3">
                     <div class="card-block px-3">
-                      <h4 class="card-title">Radiation Study</h4>
-                      <p class="card-text">Radiation analysis...</p>
-                      <a href="http://hydrashare.github.io/hydra/?keywords=radiation" class="btn btn-primary">Check for examples</a>
+                      <h4 class="card-title">Microclimate Mapping</h4>
+                      <p class="card-text">Use energy model results to spatially map both indoor and outdoor microclimates.</p>
+                      <a href="http://hydrashare.github.io/hydra/?keywords=microclimate" class="btn btn-primary">Check for examples</a>
                       <li class="list-inline-item float-right">
                         <a rel="nofollow" class="page-scroll" href="#features-collection" title="Up">
                           <i class="icon-sm fa fa-chevron-up fa-2x"></i>
@@ -452,18 +656,19 @@
           </div>
           <!-- end of the feature -->
           <!-- start of the feature -->
-          <div class="row" id="renewables">
+          <div class="row" id="passive">
             <div class="container py-3">
               <div class="card">
                 <div class="row ">
                   <div class="col-md-6">
-                    <img class="w-100" src="https://raw.githubusercontent.com/chriswmackey/hydra_2/master/Shading_Strategies_On_Sun_Path/Shading_Strategies_On_Sun_Path_Rhino.png">
+                    <img class="w-100" src="https://github.com/chriswmackey/hydra_2/raw/master/Evaporative_Cooling_Tower/Evaporative_Cooling_Tower_Rhino.png">
                   </div>
                   <div class="col-md-6 px-3">
                     <div class="card-block px-3">
-                      <h4 class="card-title">Renewables</h4>
-                      <p class="card-text"> Renewables ... </p>
-                      <a href="http://hydrashare.github.io/hydra/?keywords=pv" class="btn btn-primary">Check for examples</a>
+                      <h4 class="card-title">Passive Strategy Modeling</h4>
+                      <p class="card-text">Model a wide range of passive strategies including natural ventilation, earth tubes, evaporative
+                        cooling towers, high thermal mass, ventilation chimnies, vented double-skin facades, and virtually any shading geometry.</p>
+                      <a href="http://hydrashare.github.io/hydra/?keywords=passive" class="btn btn-primary">Check for examples</a>
                       <li class="list-inline-item float-right">
                         <a rel="nofollow" class="page-scroll" href="#features-collection" title="Up">
                           <i class="icon-sm fa fa-chevron-up fa-2x"></i>
@@ -477,18 +682,95 @@
           </div>
           <!-- end of the feature -->
           <!-- start of the feature -->
-          <div class="row" id="raytracing">
+          <div class="row" id="shadeBenefit">
             <div class="container py-3">
               <div class="card">
                 <div class="row ">
                   <div class="col-md-6">
-                    <img class="w-100" src="https://raw.githubusercontent.com/mostaphaRoudsari/hydra_1/master/Ray_tracing/Ray_tracing_Rhino.png">
+                    <img class="w-100" src="https://github.com/chriswmackey/hydra_2/raw/master/Energy_Shade_Benefit/Energy_Shade_Benefit_Rhino.png">
                   </div>
                   <div class="col-md-6 px-3">
                     <div class="card-block px-3">
-                      <h4 class="card-title">Ray tracing</h4>
-                      <p class="card-text">Raytracing this and that ... </p>
-                      <a href="http://hydrashare.github.io/hydra/?keywords=ray" class="btn btn-primary">Check for examples</a>
+                      <h4 class="card-title">Energy Shade Benefit</h4>
+                      <p class="card-text">Calculate the region where exterior shade is most desirable to decrease cooling energy use while not
+                      affecting heating energy use.</p>
+                      <a href="http://hydrashare.github.io/hydra/?keywords=energy_shade" class="btn btn-primary">Check for examples</a>
+                      <li class="list-inline-item float-right">
+                        <a rel="nofollow" class="page-scroll" href="#features-collection" title="Up">
+                          <i class="icon-sm fa fa-chevron-up fa-2x"></i>
+                        </a>&nbsp;
+                      </li>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- end of the feature -->
+          <!-- start of the feature -->
+          <div class="row" id="envelope">
+            <div class="container py-3">
+              <div class="card">
+                <div class="row ">
+                  <div class="col-md-6">
+                    <img class="w-100" src="assets/img/honeybee/features/thermFrame.jpg">
+                  </div>
+                  <div class="col-md-6 px-3">
+                    <div class="card-block px-3">
+                      <h4 class="card-title">Envelope Heat Flow Modeling</h4>
+                      <p class="card-text">Model the heat flow through construction details and calculate assembly U-values of
+                        windows with different framing details.</p>
+                      <a href="http://hydrashare.github.io/hydra/?keywords=lbnl" class="btn btn-primary">Check for examples</a>
+                      <li class="list-inline-item float-right">
+                        <a rel="nofollow" class="page-scroll" href="#features-collection" title="Up">
+                          <i class="icon-sm fa fa-chevron-up fa-2x"></i>
+                        </a>&nbsp;
+                      </li>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- end of the feature -->
+          <!-- start of the feature -->
+          <div class="row" id="bridging">
+            <div class="container py-3">
+              <div class="card">
+                <div class="row ">
+                  <div class="col-md-6">
+                    <img class="w-100" src="https://github.com/chriswmackey/hydra_2/raw/master/THERM_Export_Workflow/THERM_Export_Workflow_Rhino.png">
+                  </div>
+                  <div class="col-md-6 px-3">
+                    <div class="card-block px-3">
+                      <h4 class="card-title">Thermal Bridging</h4>
+                      <p class="card-text">Visualize thermal bridging and imporve the weakest links in construction details.</p>
+                      <a href="http://hydrashare.github.io/hydra/?keywords=lbnl" class="btn btn-primary">Check for examples</a>
+                      <li class="list-inline-item float-right">
+                        <a rel="nofollow" class="page-scroll" href="#features-collection" title="Up">
+                          <i class="icon-sm fa fa-chevron-up fa-2x"></i>
+                        </a>&nbsp;
+                      </li>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- end of the feature -->
+          <!-- start of the feature -->
+          <div class="row" id="condensation">
+            <div class="container py-3">
+              <div class="card">
+                <div class="row ">
+                  <div class="col-md-6">
+                    <img class="w-100" src="assets/img/honeybee/features/dewpoint.jpg">
+                  </div>
+                  <div class="col-md-6 px-3">
+                    <div class="card-block px-3">
+                      <h4 class="card-title">Condendation Risk Studies</h4>
+                      <p class="card-text">Visualize line of dewpoint in construction details and assess condensation risk from energy model surface temperature results.</p>
+                      <a href="http://hydrashare.github.io/hydra/?keywords=condensation" class="btn btn-primary">Check for examples</a>
                       <li class="list-inline-item float-right">
                         <a rel="nofollow" class="page-scroll" href="#features-collection" title="Up">
                           <i class="icon-sm fa fa-chevron-up fa-2x"></i>
