@@ -71,8 +71,15 @@
                   <li class="nav-item">
                       <a class="nav-link page-scroll" href="http://discourse.ladybug.tools" target="_blank">Forum</a>
                   </li>
-                  <li class="nav-item">
-                      <a class="nav-link page-scroll" href="./about.html">About</a>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="" id="aboutDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      About
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="aboutDropdown">
+                        <a class="dropdown-item" href="./about.html#story">Story</a>
+                        <a class="dropdown-item" href="./about.html#team">Team</a>
+                        <a class="dropdown-item" href="./about.html#faq">FAQ</a>
+                    </div>
                   </li>
                   <li class="nav-item">
                       <a class="nav-link page-scroll" href="./contribute.html">Contribute</a>
@@ -86,7 +93,7 @@
   <!--                             Facts grid                                -->
   <!--                    What is ladybug tools section                      -->
   <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
-  <section id="facts">
+  <section id="story">
       <div class="container">
           <div class="row">
               <div class="col-lg-12">
@@ -142,8 +149,8 @@
       </div>
 
       <!-- members small icons container -->
-      <div id="team" class="container wow fadeInUp">
-          <hr class="primary">
+      <hr class="primary">
+      <div id="team" class="container wow fadeInUp faq">
           <div class="row">
             <!-- start of an icon -->
             <div class="col-md-2 col-sm-4 col-4 text-center">
@@ -1027,6 +1034,53 @@
       </div>
   </section>
 
+  <section id="faq" class="bg-alt">
+
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-12">
+                  <h1 class="section-title">Frequently Asked Question</h1>
+                  <hr class="primary">
+              </div>
+          </div>
+      </div>
+
+      <div class="container wow fadeInUp">
+        <!-- start of a question -->
+        <div id = "1" class="container faq">
+          <div class="row">
+            <h4 class="section-title">Q: How can I install Ladybug Tools?</h4>
+          </div>
+          <div class="row">
+            <p class="section-subcontent text-left">
+              You can find a full set of installation instructions here.
+            </p>
+          </div>
+        </div>
+        <!-- end of the question -->
+        <!-- start of a question -->
+        <div id = "2" class="container faq">
+          <div class="row">
+            <h4 class="section-title">Q: What computer language is Ladybug Tools written in and why?</h4>
+          </div>
+          <div class="row">
+            <p class="section-subcontent text-left">
+              All of Ladybug Tools is written in Python and it set up to work with a variety of different
+              versions of Python (including ironPython, Python 2.7 and the latest Python versions).  Our community
+              uses Python primarily for the ease with which it can be learned in comparison to other languages.
+              The use of Python has allowed many within the community to educate themselves and contribute code
+              when previously they had no knowledge of computer languages. Python is also among the computer
+              languages of choice for the scientific community, primarily because it supports libraries for
+              advanced math (like scipy and numpy) and has advanced object-oriented programming capabilities,
+              thereby enabling one to build large-scale software applications with it.  Finally, Python is
+              completely free to use and is platform agnostic, meaning that it can be run just as easily on
+              Linux or Mac as it can be on Windows.
+            </p>
+          </div>
+        </div>
+        <!-- end of the question -->
+      </div>
+  </section>
 
   <!-- Footer -->
   <footer id="footer">
