@@ -443,7 +443,7 @@
           </div>
       </div>
 
-      <div class="container wow fadeInUp">
+      <div class="container">
         <!-- start of a member -->
         <div class="row" id="abraham">
           <div class="container py-3">
@@ -1064,15 +1064,31 @@
           </div>
       </div>
 
-      <div class="container wow fadeInUp">
+      <div class="container">
         <!-- start of a question -->
         <div id = "1" class="container faq">
           <div class="row">
-            <h4 class="section-title">Q: How can I install Ladybug Tools?</h4>
+            <h4 class="section-title text-left">Q.1. Do I need to purchase anything to run Ladybug Tools?</h4>
           </div>
           <div class="row">
             <p class="section-subcontent text-left">
-              You can find a full set of installation instructions here.
+              The short answer is no but the longer answer varies depending on what exactly you want to do.
+              Ladybug Tools is, itself, free and open source. However, most of the members of the Ladybug
+              community use the Legacy Ladybug Tools interface for <a href="https://www.rhino3d.com/" target="_blank">Rhinoceros/Grasshopper</a>.
+              Rhino is a proprietary computer aided design (CAD) software and requires the purchasing of a
+              <a href="https://www.rhino3d.com/sales/north-america/United_States" target="_blank">license</a>.
+              There are free trials of Rhino available and there are also significant educational discounts for students/educators.
+              Other members of our community use the Ladybug Tools interface for
+              <a href="https://www.autodesk.com/products/revit-family/overview" target="_blank">Revit/Dynamo</a>, which is
+              also proprietary and comparatively costly but has free educational versions available.
+            </p>
+            <p class="section-subcontent text-left">
+              The newest <a href="https://github.com/ladybug-tools" target="_blank">Ladybug Tools plugins (called [+] plugins)</a>
+              are written as standalone python libraries and can be interacted with over command line without having to pay a dime.
+              In the future, we hope to support more interfaces for Ladybug Tools by adding geometry translators from various CAD
+              interfaces to the [+] plugin’s core libraries. See our page on
+              <a href="https://github.com/ladybug-tools/honeybee/wiki/How-to-create-a-new-Honeybee-plus-plugin" target="_blank">
+              building your own Ladybug Tools interface</a> to find out more.
             </p>
           </div>
         </div>
@@ -1080,20 +1096,284 @@
         <!-- start of a question -->
         <div id = "2" class="container faq">
           <div class="row">
-            <h4 class="section-title">Q: What computer language is Ladybug Tools written in and why?</h4>
+            <h4 class="section-title text-left">Q.2. What is the open source software license of Ladybug Tools and what does it mean?</h4>
           </div>
           <div class="row">
             <p class="section-subcontent text-left">
-              All of Ladybug Tools is written in Python and it set up to work with a variety of different
-              versions of Python (including ironPython, Python 2.7 and the latest Python versions).  Our community
-              uses Python primarily for the ease with which it can be learned in comparison to other languages.
-              The use of Python has allowed many within the community to educate themselves and contribute code
-              when previously they had no knowledge of computer languages. Python is also among the computer
-              languages of choice for the scientific community, primarily because it supports libraries for
-              advanced math (like scipy and numpy) and has advanced object-oriented programming capabilities,
-              thereby enabling one to build large-scale software applications with it.  Finally, Python is
-              completely free to use and is platform agnostic, meaning that it can be run just as easily on
-              Linux or Mac as it can be on Windows.
+              All code of Ladybug Tools is licensed under the
+              <a href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank">GNU General Public License (GPL) Version 3</a>
+              unless stated otherwise. Much like any open source license, the GPL allows individuals to edit the code of Ladybug Tools
+              and customize it for their own purposes.  However, the critical feature of the GPL that differentiates it from most other
+              open source licenses is that it is a “copyleft” license.
+              <b>In other words, any derivative works from Ladybug Tools must also be released under an open source GPL license. This makes
+              it illegal for any entity to copy Ladybug Tools code into a piece of proprietary software (doing so would essentially make all
+              of such proprietary software now available under a GPL license). It also means that companies developing capabilities on top of
+              Ladybug Tools cannot limit the freedom clause of the GPL license for modification and redistribution of the code.</b> In other
+              words, any employee of such a company is free to share the new code back with the community and such a company cannot have a
+              policy that prevents employees from distributing the new development. Ultimately, this helps ensure that no one entity takes
+              unfair advantage of the volunteer software contributions from Ladybug Tools developers.  It is also intended to support a
+              general environment of open collaboration instead of competition.
+            </p>
+          </div>
+        </div>
+        <!-- end of the question -->
+        <!-- start of a question -->
+        <div id = "3" class="container faq">
+          <div class="row">
+            <h4 class="section-title text-left">Q.3. How can I install Ladybug Tools?</h4>
+          </div>
+          <div class="row">
+            <p class="section-subcontent text-left">
+              It depends on which Ladybug Tools plugin you want to use and what graphical user interface you plan to work in. You can find a
+              set of installation instructions under the “download" section for each tool/insect. For instance see
+              <a href="www.ladybug.tools/ladybug#download" target="_blank">this link</a> for instructions on installing ladybug.
+              Also, a full set of instructions for each plugin are included as a part of their installation package.
+            </p>
+          </div>
+        </div>
+        <!-- end of the question -->
+        <!-- start of a question -->
+        <div id = "4" class="container faq">
+          <div class="row">
+            <h4 class="section-title text-left">Q.4. How should I get started?</h4>
+          </div>
+          <div class="row">
+            <p class="section-subcontent text-left">
+              For available learning resources check our
+              <a href="http://www.ladybug.tools/eval/learning.html" target="_blank">learning page</a> and the example files
+              on <a href="http://hydrashare.github.io/hydra/" target="_blank">Hydra</a>. Also check the
+              <a href="http://www.ladybug.tools/eval/services.html#workshop" target="_blank">upcoming workshops</a> to see
+              if there are any introductory workshop that you can attend.
+              Finally, the best way to build your knowledge of Ladybug Tools is by applying it on your projects
+              (a.k.a learning by doing!) and by searching for the answer to your questions on the
+              <a href="http://discourse.ladybug.tools/" target="_blank">forum</a>.
+            </p>
+          </div>
+        </div>
+        <!-- end of the question -->
+        <!-- start of a question -->
+        <div id = "5" class="container faq">
+          <div class="row">
+            <h4 class="section-title text-left">Q.5. How can we contact you for events, workshops, etc?</h4>
+          </div>
+          <div class="row">
+            <p class="section-subcontent text-left">
+              Send us an email at workshop@ladybug.tools
+            </p>
+          </div>
+        </div>
+        <!-- end of the question -->
+        <!-- start of a question -->
+        <div id = "6" class="container faq">
+          <div class="row">
+            <h4 class="section-title text-left">Q.6. I have a question/problem with using Ladybug Tools. Where should I post my questions?</h4>
+          </div>
+          <div class="row">
+            <p class="section-subcontent text-left">
+              For all questions about how to use Ladybug Tools, search the
+              <a href="http://discourse.ladybug.tools/" target="_blank">forum</a>
+              and, if you cannot find your answer there, post a new discussion with your question.
+              The forum is also the right place to post any ideas for future work or feature requests.
+              If you have a bug report, please post it to the respective github repository on
+              <a href="http://github.com/ladybug-tools/" target="_blank">Ladybug Tools</a>.
+              Please do NOT directly email the developers with your questions. We have a very active
+              community on the forums and github that will help you. All of the developers are closely
+              monitoring the forum and are actively answering the questions.
+            </p>
+          </div>
+        </div>
+        <!-- end of the question -->
+        <!-- start of a question -->
+        <div id = "7" class="container faq">
+          <div class="row">
+            <h4 class="section-title text-left">Q.7. How should I cite Ladybug Tools?</h4>
+          </div>
+          <div class="row">
+            <p class="section-subcontent text-left">
+              Ladybug Tools is essentially an interface for several industry standard validated engines
+              including Radiance, EnergyPlus, OpenStudio, Therm and OpenFOAM. We are committed to supporting
+              validated, open source engines.
+            </p>
+          </div>
+        </div>
+        <!-- end of the question -->
+        <!-- start of a question -->
+        <div id = "8" class="container faq">
+          <div class="row">
+            <h4 class="section-title text-left">Q.8. How should I cite Ladybug Tools?</h4>
+          </div>
+          <div class="row">
+            <p class="section-subcontent text-left">
+              It depends on what are you trying to cite. To cite the full collection of Ladybug Tools plugins,
+              please reference the homepage of our official website (Ladybug Tools, www.ladybug.tools). To cite
+              the Ladybug and Honeybee legacy plugins, see
+              <a href="https://github.com/mostaphaRoudsari/ladybug/wiki/How-to-cite-Ladybug-and-Honeybee-legacy-plugins%3F" target="_blank">this document</a>.
+              To cite Honeybee[+] Radiance libraries, see <a href="https://github.com/ladybug-tools/honeybee/#citing-honeybee" target="_blank">here</a>.
+              To cite specific methods used by individual components or groups of components, check the
+              <a href="http://www.ladybug.tools/eval/publication.html" target="_blank">publications page</a>
+              or the descriptions of the components that you are trying to cite.
+            </p>
+          </div>
+        </div>
+        <!-- end of the question -->
+        <!-- start of a question -->
+        <div id = "9" class="container faq">
+          <div class="row">
+            <h4 class="section-title text-left">Q.9. Why is Ladybug Tools open source?</h4>
+          </div>
+          <div class="row">
+            <p class="section-subcontent text-left">
+              There is a great precedent for the production of open source software and creation of publicly available
+              datasets in the scientific community of building simulation. Our community now possesses several open
+              source engines including Radiance, EnergyPlus, OpenStudio and OpenFOAM.  It also has a number of publicly
+              available datasets, such as the epw climate database.  While many of these open source engines and databases
+              have existed for some time, they had never been united into a single open source interface that could be
+              used for comprehensive environmental design. Ladybug Tools has attempted to fill this niche by providing
+              the most comprehensive open source interface and object-oriented API for these engines. However, rather
+              than having a standalone graphic user interface (GUI), Ladybug Tools plugs directly into computer aided
+              design (CAD) software, including platforms such as Rhino/Grasshopper and Revit/Dynamo. This ultimately
+              cuts out a step of exporting to an additional GUI and enables a real time feedback between design and
+              environmental evaluation.
+            </p>
+          </div>
+        </div>
+        <!-- end of the question -->
+        <!-- start of a question -->
+        <div id = "10" class="container faq">
+          <div class="row">
+            <h4 class="section-title text-left">Q.10. What computer language is Ladybug Tools written in and why?</h4>
+          </div>
+          <div class="row">
+            <p class="section-subcontent text-left">
+              Most of Ladybug Tools is written in Python 2.7 but we have some web tools written in javascript and a
+              small number of components are written in C#.  The core library of the new [+] plugins support both Python
+              and IronPython, while most of the geometry libraries on top of this core have .NET dependencies and can be
+              only executed in IronPython.  The use of Python has allowed many within the community to educate themselves
+              and contribute code when previously they had no knowledge of computer languages.  Also, the fact that Python
+              is an cross-platform language means Ladybug Tools can be easily used on different operating systems and can
+              be connected to different graphical user interfaces (GUIs).
+            </p>
+          </div>
+        </div>
+        <!-- end of the question -->
+        <!-- start of a question -->
+        <div id = "11" class="container faq">
+          <div class="row">
+            <h4 class="section-title text-left">Q.11. How does Ladybug Tools support itself?</h4>
+          </div>
+          <div class="row">
+            <p class="section-subcontent text-left">
+              Ladybug Tools is first and foremost a community of volunteers. The vast majority of
+              support on our forums is done voluntarily by motivated individuals who are interested
+              in sharing their knowledge and making the world a better place.
+            </p>
+            <p class="section-subcontent text-left">
+              To ensure the long-term sustainability of the project as it grows exponentially,
+              <a class="page-scroll" href="#mostapha">Mostapha</a> and
+              <a class="page-scroll" href="#chris">Chris</a> co-founded Ladybug Tools LLC in August 2017.
+              This LLC provides <a href="http://www.ladybug.tools/services" target="_blank">commercial services</a>,
+              including contracted developments, project consulting,
+              cloud computing and training. These activities help fund the continued development, maintenance and
+              release of Ladybug Tools, helping make it a strongly viable, commercially supported, open source product.
+              Ladybug Tools LLC does NOT limit the right of other companies or individuals to offer similar services
+              using Ladybug Tools and the services of the LLC do NOT change the process for submitting code contributions.
+            </p>
+            <p class="section-subcontent text-left">
+              Ladybug Tools LLC also <a href="http://www.ladybug.tools/contribute" target="_blank">
+              accepts personal monetary contributions and is seeking industry partners</a>.
+            </p>
+          </div>
+        </div>
+        <!-- end of the question -->
+        <!-- start of a question -->
+        <div id = "12" class="container faq">
+          <div class="row">
+            <h4 class="section-title text-left">Q.12. What is the difference between Ladybug Tools and Ladybug Tools LLC?</h4>
+          </div>
+          <div class="row">
+            <p class="section-subcontent text-left">
+              Ladybug Tools is a collection of open source libraries and plugins, while Ladybug Tools LLC is a commercial
+              entity that is founded by the creators of Ladybug Tools <a class="page-scroll" href="#mostapha">Mostapha</a> and
+              <a class="page-scroll" href="#chris">Chris</a> to ensure the long-term sustainability of the project. It provides
+              <a href="http://www.ladybug.tools/services" target="_blank">commercial services</a> around Ladybug Tools.
+            </p>
+          </div>
+        </div>
+        <!-- end of the question -->
+        <!-- start of a question -->
+        <div id = "13" class="container faq">
+          <div class="row">
+            <h4 class="section-title text-left">Q.13. How can I contribute to Ladybug Tools?</h4>
+          </div>
+          <div class="row">
+            <p class="section-subcontent text-left">
+              There are many ways to contribute.  The simplest is just by reporting bugs and answering
+              questions on the <a href="http://discourse.ladybug.tools/" target="_blank">forum</a>.
+              You can become a personal patron on our <a href="http://patreon.com/ladybug_tools" target="_blank">Patreon page</a>
+              or if your office is heavily relies on Ladybug Tools you can convince them to become one of our
+              industry partners [link].
+            </p>
+            <p class="section-subcontent text-left">
+              Finally, if you have developed anything on top of or alongside Ladybug Tools, you can always contribute your code.
+              Read our <a href="https://github.com/blog/1184-contributing-guidelines" target="_blank">contribution guideline</a>
+              for more information.
+            </p>
+          </div>
+        </div>
+        <!-- end of the question -->
+        <!-- start of a question -->
+        <div id = "14" class="container faq">
+          <div class="row">
+            <h4 class="section-title text-left">Q.14. What are [+] plugins how are they different from the legacy plugins?</h4>
+          </div>
+          <div class="row">
+            <p class="section-subcontent text-left">
+              The legacy plugins are the original <a href="https://github.com/mostaphaRoudsari/ladybug" target="_blank">Ladybug</a>
+              and <a href="https://github.com/mostaphaRoudsari/honeybee" target="_blank">Honeybee</a> plugins which are only
+              available for Grasshopper and are limited to Windows operating systems.
+              The [+] libraries are re-implementations of the original plugins which support multiple graphical user interfaces (GUI),
+              including Grasshopper and Dynamo, and several operating systems (Windows, Linux, Mac). These [+] plugins live under
+              Ladybug Tools repository on GitHub (https://github.com/ladybug-tools).
+            </p>
+          </div>
+        </div>
+        <!-- end of the question -->
+        <!-- start of a question -->
+        <div id = "15" class="container faq">
+          <div class="row">
+            <h4 class="section-title text-left">Q.15. How did it all start?</h4>
+          </div>
+          <div class="row">
+            <p class="section-subcontent text-left">
+              Read the full story of Ladybug Tools <a class="page-scroll" href="#story">here</a>.
+            </p>
+          </div>
+        </div>
+        <!-- end of the question -->
+        <!-- start of a question -->
+        <div id = "16" class="container faq">
+          <div class="row">
+            <h4 class="section-title text-left">Q.16. Why is it called Ladybug, Honeybee, Butterfly, etc?</h4>
+          </div>
+          <div class="row">
+            <p class="section-subcontent text-left">
+              Ladybug started as a plugin for Grasshopper for Rhino and follows the culture of naming the plugins
+              after animals and insects.
+              <b>Ladybug</b> got its name because Mostapha wanted a name that includes a ‘bug’ so the software can never
+              be fully debugged! He ended up with two options - Ladybug and Bedbug - and Ladybug is obviously a better
+              name than Bedbug! What really sealed the deal was that
+              <a href="http://webecoist.momtastic.com/2011/02/22/furry-forecasters-7-amazing-weather-predicting-animals/" target="_blank">
+              Ladybugs are thought to predict the weather</a>!
+              <b>Honeybee</b> was originally supposed to be called Caterpillar but that name was
+              <a href="http://www.neoarchaic.net/caterpillar/" target="_blank">already taken</a>
+              for a Grasshopper unit conversion library. But then we realized how appropriate Honeybee is, since it
+              takes the best “nectar” of different software engines and brings them all together to create sweet results.
+              <b>Butterfly</b> was the obvious choice for a CFD plugin!
+              Finally, <b>Dragonfly</b> was conceived as a plugin for large-scale climate modeling and so it only made sense to name it
+              after a migratory insect that takes advantage of these phenomena. Grasshoppers and butterflies are both
+              migratory but those titles were both clearly taken.  This left the green darner
+              <a href="http://www.learner.org/jnorth/tm/fall/DragonflyMigration.html" target="_blank">dragonfly</a>,
+              which now leads ints neighboring plugins towards new territories and climatic datasets.
             </p>
           </div>
         </div>
