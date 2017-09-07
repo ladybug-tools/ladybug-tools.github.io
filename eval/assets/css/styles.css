@@ -45,6 +45,24 @@ hr.primary {
     opacity: 1;
 }
 
+hr.ladybug {
+    border-color: #ed1c24;
+    opacity: 1;
+    max-width: none;
+}
+
+hr.honeybee {
+    border-color: #f5b34c;
+    opacity: 1;
+    max-width: none;
+}
+
+hr.butterfly {
+    border-color: #26abe2;
+    opacity: 1;
+    max-width: none;
+}
+
 a {
     color: #001A33;
     -webkit-transition: all .35s;
@@ -63,6 +81,27 @@ p {
     line-height: 1.7;
     margin-bottom: 20px;
     font-family:'Helvetica Neue',Arial,sans-serif;
+}
+
+li.card-text {
+  font-size: 17px;
+  font-family:'Helvetica Neue',Arial,sans-serif;
+  font-weight: bold;
+}
+
+.card-text {
+  font-size: 17px;
+  line-height: 1.7;
+  font-family:'Helvetica Neue',Arial,sans-serif;
+  font-weight: bold;
+}
+
+.detail-text {
+  font-size: 14px;
+  font-weight: bold;
+  font-family:'Helvetica Neue',Arial,sans-serif;
+  text-transform: uppercase;
+  margin-bottom: 3px;
 }
 
 .feature {
@@ -390,6 +429,11 @@ footer h4, footer h6 {
 .card {
   background-color: #f7f7f7;
   border: none;
+}
+
+.card-deck {
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 textarea {
