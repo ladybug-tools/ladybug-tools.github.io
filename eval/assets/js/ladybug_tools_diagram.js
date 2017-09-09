@@ -6,33 +6,42 @@ var width = parseFloat(c.style('width')) - 30,
 
 var graph = {
     "nodes": [
-        {"id": "Ladybug", "group": 1, "img": "ladybug.png", "size": 60, "text": "Ladybug", "link": "./ladybug.html"},
-        {"id": "Honeybee", "group": 2, "img": "honeybee.png", "size": 60, "text": "Honeybee", "link": "./honeybee.html"},
-        {"id": "Butterfly", "group": 3, "img": "butterfly.png", "size": 60, "text": "Butterfly", "link": "./butterfly.html"},
-        {"id": "Weather_Data", "group": 1, "img": "weather_data.png", "size": 90, "text": "Visualize data", "link": "./ladybug.html#charts"},
-        {"id": "Psychrometric", "group": 1, "img": "Psychrometric.png", "size": 90, "text": "Analyze data", "link": "./ladybug.html#sunpath"},
-        {"id": "Renewables", "group": 1, "img": "renewables.png", "size": 90, "text": "Renewables", "link": "./ladybug.html#renewables"},
-        {"id": "Analysis", "group": 1, "img": "analysis.png", "size": 90, "text": "Analyze geometry", "link": "./ladybug.html#radiation"},
+        {"id": "Center", "group": 0, "img": "center.png", "size": 20, "text": "", "link": ""},
+        {"id": "Ladybug", "group": 1, "img": "ladybug.png", "size": 50, "text": "Ladybug", "link": "./ladybug.html"},
+        {"id": "Honeybee", "group": 2, "img": "honeybee.png", "size": 50, "text": "Honeybee", "link": "./honeybee.html"},
+        {"id": "Butterfly", "group": 3, "img": "butterfly.png", "size": 50, "text": "Butterfly", "link": "./butterfly.html"},
+        {"id": "Dragonfly", "group": 4, "img": "dragonfly.png", "size": 50, "text": "Dragonfly", "link": "./dragonfly.html"},
+        {"id": "Weather_Data", "group": 1, "img": "weather_data.png", "size": 75, "text": "Visualize data", "link": "./ladybug.html#charts"},
+        {"id": "Psychrometric", "group": 1, "img": "Psychrometric.png", "size": 75, "text": "Analyze data", "link": "./ladybug.html#sunpath"},
+        {"id": "Renewables", "group": 1, "img": "renewables.png", "size": 75, "text": "Renewables", "link": "./ladybug.html#renewables"},
+        {"id": "Analysis", "group": 1, "img": "analysis.png", "size": 75, "text": "Analyze geometry", "link": "./ladybug.html#radiation"},
         {"id": "EnergyPlus", "group": 2, "img": "energyplus.png", "size": 50, "text": "EnergyPlus", "link": ""},
         {"id": "OpenStudio", "group": 2, "img": "openstudio.png", "size": 50, "text": "OpenStudio", "link": ""},
-        {"id": "Energy", "group": 2, "img": "energy.png", "size": 90, "text": "Energy models", "link": ""},
+        {"id": "Energy", "group": 2, "img": "energy.png", "size": 75, "text": "Energy models", "link": ""},
         {"id": "Radiance", "group": 2, "img": "radiance.png", "size": 50, "text": "Radiance", "link": ""},
         {"id": "Daysim", "group": 2, "img": "daysim.png", "size": 50, "text": "Daysim", "link": ""},
-        {"id": "Daylight", "group": 2, "img": "daylight.png", "size": 90, "text": "Daylight analysis", "link": ""},
-        {"id": "Glare", "group": 2, "img": "glare.png", "size": 90, "text": "Glare analysis", "link": ""},
-        {"id": "Electric_Lighting", "group": 2, "img": "electric_lighting.png", "size": 90, "text": "Electric lighting", "link": ""},
-        {"id": "Annual_Daylight", "group": 2, "img": "annual_daylight.png", "size": 90, "text": "Annual daylight", "link": ""},
+        {"id": "Daylight", "group": 2, "img": "daylight.png", "size": 75, "text": "Daylight analysis", "link": ""},
+        {"id": "Glare", "group": 2, "img": "glare.png", "size": 75, "text": "Glare analysis", "link": ""},
+        {"id": "Electric_Lighting", "group": 2, "img": "electric_lighting.png", "size": 75, "text": "Electric lighting", "link": ""},
+        {"id": "Annual_Daylight", "group": 2, "img": "annual_daylight.png", "size": 75, "text": "Annual daylight", "link": ""},
         {"id": "Therm", "group": 2, "img": "therm.png", "size": 50, "text": "Therm", "link": ""},
-        {"id": "Glazing_cnstr", "group": 2, "img": "glazing_construction.png", "size": 90, "text": "U-Value", "link": ""},
-        {"id": "Comfort", "group": 2, "img": "comfort.png", "size": 90, "text": "Indoor comfort", "link": ""},
+        {"id": "Glazing_cnstr", "group": 2, "img": "glazing_construction.png", "size": 75, "text": "U-Value", "link": ""},
+        {"id": "Comfort", "group": 2, "img": "comfort.png", "size": 75, "text": "Indoor comfort", "link": ""},
         {"id": "OpenFoam", "group": 3, "img": "OpenFoam.png", "size": 50, "text": "OpenFOAM", "link": ""},
-        {"id": "Airflow", "group": 3, "img": "airflow.png", "size": 90, "text": "Airflow", "link": ""},
-        {"id": "Outdoor_Comfort", "group": 3, "img": "outdoor_comfort.png", "size": 90, "text": "Outdoor comfort", "link": ""},
+        {"id": "Airflow", "group": 3, "img": "airflow.png", "size": 75, "text": "Airflow", "link": ""},
+        {"id": "Outdoor_Comfort", "group": 3, "img": "outdoor_comfort.png", "size": 75, "text": "Outdoor comfort", "link": ""},
+        {"id": "NOAA", "group": 4, "img": "noaa.png", "size": 50, "text": "NOAA Database", "link": ""},
+        {"id": "UWG", "group": 4, "img": "uwg.png", "size": 50, "text": "Urban Weather Gen.", "link": ""}
     ],
     "links": [
-        {"source": "Ladybug", "target": "Honeybee", "value": 4},
-        {"source": "Honeybee", "target": "Butterfly", "value": 4},
+        {"source": "Center", "target": "Ladybug", "value": 0},
+        {"source": "Center", "target": "Honeybee", "value": 0},
+        {"source": "Center", "target": "Butterfly", "value": 0},
+        {"source": "Center", "target": "Dragonfly", "value": 0},
         {"source": "Butterfly", "target": "Ladybug", "value": 4},
+        {"source": "Butterfly", "target": "Honeybee", "value": 4},
+        {"source": "Ladybug", "target": "Dragonfly", "value": 4},
+        {"source": "Dragonfly", "target": "Honeybee", "value": 4},
         {"source": "Ladybug", "target": "Weather_Data", "value": 4},
         {"source": "Ladybug", "target": "Psychrometric", "value": 4},
         {"source": "Ladybug", "target": "Renewables", "value": 4},
@@ -48,6 +57,7 @@ var graph = {
         {"source": "Radiance", "target": "Daylight", "value": 4},
         {"source": "Radiance", "target": "Glare", "value": 4},
         {"source": "Radiance", "target": "Electric_Lighting", "value": 4},
+        {"source": "Radiance", "target": "Annual_Daylight", "value": 4},
         {"source": "Daysim", "target": "Annual_Daylight", "value": 4},
         {"source": "Honeybee", "target": "Therm", "value": 4},
         {"source": "Therm", "target": "Glazing_cnstr", "value": 4},
@@ -55,6 +65,8 @@ var graph = {
         {"source": "OpenFoam", "target": "Airflow", "value": 4},
         {"source": "OpenFoam", "target": "Outdoor_Comfort", "value": 4},
         {"source": "OpenFoam", "target": "Comfort", "value": 4},
+        {"source": "Dragonfly", "target": "NOAA", "value": 4},
+        {"source": "Dragonfly", "target": "UWG", "value": 4},
     ]
 }
 
@@ -95,9 +107,9 @@ d3.select("body").on("keyup", function () {
 
 var simulation = d3.forceSimulation()
     .force("link", d3.forceLink().id(function(d) { return d.id; }))
-    .force("charge", d3.forceManyBody().strength(-2000))
+    .force("charge", d3.forceManyBody().strength(-1500))
     .force("center", d3.forceCenter(width / 2, height / 2))
-    .force("collide", d3.forceCollide().radius(75).iterations(5))
+    .force("collide", d3.forceCollide().radius(75).iterations(6))
     .force("y", d3.forceY(0))
     .force("x", d3.forceX(0))
     .on("tick", ticked);
@@ -141,6 +153,7 @@ node.append("image")
 node.append("text")
     .attr("dx", function(d) { return d.size / 2 + 4; })
     .attr("dy", ".35em")
+    .attr("font-size", "13px")
     .text(function(d) { return d.text; });
 
 node.on("dblclick", function(d){
