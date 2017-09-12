@@ -117,8 +117,8 @@ li.card-text {
 }
 
 h6, .text-uppercase{
-    margin-top: 1.25rem;
-    line-height: 25px;
+    line-height: 28px;
+    font-size: 20px;
 }
 
 h6 a{
