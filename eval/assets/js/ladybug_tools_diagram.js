@@ -11,7 +11,7 @@ var graph = {
         {"id": "Honeybee", "group": 2, "img": "honeybee.png", "size": 50, "text": "Honeybee", "link": "./honeybee.html"},
         {"id": "Butterfly", "group": 3, "img": "butterfly.png", "size": 50, "text": "Butterfly", "link": "./butterfly.html"},
         {"id": "Dragonfly", "group": 4, "img": "dragonfly.png", "size": 50, "text": "Dragonfly", "link": "./dragonfly.html"},
-        {"id": "Weather_Data", "group": 1, "img": "weather_data.png", "size": 75, "text": "Visualize data", "link": "./ladybug.html#charts"},
+        {"id": "Weather_Data", "group": 1, "img": "weather_data.png", "size": 75, "text": "Visualize data", "link": "./ladybug.html#sunpath"},
         {"id": "Psychrometric", "group": 1, "img": "Psychrometric.png", "size": 75, "text": "Analyze data", "link": "./ladybug.html#sunpath"},
         {"id": "Renewables", "group": 1, "img": "renewables.png", "size": 75, "text": "Renewables", "link": "./ladybug.html#renewables"},
         {"id": "Analysis", "group": 1, "img": "analysis.png", "size": 75, "text": "Analyze geometry", "link": "./ladybug.html#radiation"},
@@ -158,13 +158,15 @@ node.append("text")
 
 node.on("dblclick", function(d){
       d3.event.preventDefault(); //stop showing browser menu
-      location.href = d.link;
+      window.open(d.link, '_blank')
+      //location.href = d.link;
     });
 
 // for touch interface
 node.on("click", function(d){
       d3.event.preventDefault(); //stop showing browser menu
-      location.href = d.link;
+      window.open(d.link, '_blank')
+      //location.href = d.link;
     });
 
 // add titles
