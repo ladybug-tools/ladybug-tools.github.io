@@ -93,13 +93,13 @@ But anything to do with code is on Gitub
 
 To be open source means to have no secrets. It mean that decisions are made in public.
 
-If the source code is public and the the thoght process leading up to the lines of code that were written should be public as well.
+If the source code is public and the thought process leading up to the lines of code that were written should be public as well.
 
 
 
 ##  We build tools
 
-Some peple build pretty web sites. Some people use the web to sell things. Whatever. We code the code others want to use.
+Some people build pretty web sites. Some people use the web to sell things. Whatever. We code the code others want to use.
 
 The more we code the better we are.
 
@@ -131,8 +131,3 @@ We want the science complex and the code easy. Not the other way around.
 We do real-time, online 3D STEM.
 
 We need if conditionals, for-to loops and equal signs - and that's about it.
-
-
-
-
-
