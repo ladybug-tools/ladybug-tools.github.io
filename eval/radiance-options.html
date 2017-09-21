@@ -90,11 +90,11 @@
   <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
   <!--                             Image grid                                -->
   <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
-  <section id="twobytwo">
+  <section id="sidebyside">
       <div class="container">
           <div class="row">
               <div class="col-lg-12">
-                  <h1 class="section-title">Radiance Options</h1>
+                  <h1 class="section-title">Radiance Options - Side by Side</h1>
                   <hr class="primary">
                   <p class="section-subcontent">
                     This is a viewer for parametric studies, credits and so on, a short
@@ -108,7 +108,7 @@
               <!-- card -->
               <div class="card">
                   <div class="row">
-                    <div class="col-lg-6 mx-auto text-center">rm:
+                    <div class="col-lg-6 mx-auto text-center">room:
                       <select class="custom-select" id="rm_left_count">
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -147,7 +147,7 @@
               </div>
               <div class="card">
                   <div class="row">
-                    <div class="col-lg-6 mx-auto text-center">rm:
+                    <div class="col-lg-6 mx-auto text-center">room:
                       <select class="custom-select" id="rm_right_count">
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -190,176 +190,393 @@
           </div>
       </div>
   </section>
+
   <script>
-  // time_log
-  var time_log_db = {"ad00500_ab1_c9_rm1": "11.19", "ad00500_ab1_c9_rm2": "17.48",
-    "ad10000_ab4_c9_rm1": "508.15", "ad02000_ab4_c9_rm2": "170.07", "ad02000_ab4_c9_rm1": "103.43",
-    "ad10000_ab2_c9_rm2": "527.74", "ad10000_ab4_c1_rm2": "94.38", "ad10000_ab1_c1_rm1": "22.17",
-    "ad10000_ab1_c1_rm2": "32.97", "ad10000_ab2_c6_rm2": "352.84", "ad10000_ab2_c6_rm1": "225.20",
-    "ad20000_ab1_c1_rm1": "42.98", "ad20000_ab1_c1_rm2": "62.05", "ad20000_ab2_c1_rm1": "75.53",
-    "ad10000_ab4_c3_rm1": "169.70", "ad20000_ab2_c9_rm1": "671.16", "ad20000_ab2_c9_rm2": "1051.29",
-    "ad10000_ab4_c3_rm2": "280.53", "ad02000_ab4_c3_rm1": "35.58", "ad02000_ab4_c3_rm2": "58.91",
-    "ad20000_ab1_c3_rm2": "190.19", "ad20000_ab1_c3_rm1": "125.99", "ad20000_ab3_c6_rm1": "601.68",
-    "ad20000_ab3_c6_rm2": "959.65", "ad20000_ab4_c1_rm2": "187.80", "ad20000_ab4_c1_rm1": "112.68",
-    "ad20000_ab4_c9_rm2": "1648.63", "ad10000_ab4_c6_rm1": "340.36", "ad10000_ab1_c6_rm2": "185.04",
-    "ad10000_ab1_c6_rm1": "126.37", "ad20000_ab3_c1_rm2": "162.93", "ad02000_ab3_c1_rm2": "18.67",
-    "ad02000_ab3_c1_rm1": "11.30", "ad20000_ab4_c9_rm1": "1014.34", "ad00500_ab2_c9_rm1": "18.69",
-    "ad00500_ab3_c3_rm1": "9.15", "ad00500_ab3_c3_rm2": "14.95", "ad00500_ab2_c9_rm2": "31.01",
-    "ad02000_ab4_c6_rm2": "124.39", "ad20000_ab4_c6_rm2": "1087.15", "ad00500_ab2_c6_rm1": "13.01",
-    "ad20000_ab1_c6_rm2": "366.59", "ad20000_ab1_c6_rm1": "250.53", "ad20000_ab2_c6_rm2": "695.29",
-    "ad20000_ab2_c6_rm1": "446.19", "ad00500_ab1_c6_rm2": "12.02", "ad00500_ab1_c6_rm1": "8.64",
-    "ad02000_ab1_c3_rm2": "22.08", "ad00500_ab4_c9_rm1": "27.73", "ad10000_ab3_c1_rm2": "82.30",
-    "ad20000_ab3_c3_rm1": "294.80", "ad10000_ab3_c1_rm1": "50.81", "ad02000_ab3_c3_rm1": "31.37",
-    "ad02000_ab3_c3_rm2": "51.81", "ad02000_ab2_c9_rm1": "69.20", "ad02000_ab2_c9_rm2": "111.79",
-    "ad10000_ab3_c9_rm2": "708.76", "ad10000_ab3_c9_rm1": "444.33", "ad20000_ab4_c3_rm1": "336.59",
-    "ad20000_ab4_c3_rm2": "544.23", "ad10000_ab4_c6_rm2": "545.60", "ad00500_ab1_c1_rm1": "4.65",
-    "ad00500_ab1_c1_rm2": "3.67", "ad20000_ab1_c9_rm1": "378.82", "ad20000_ab1_c9_rm2": "543.81",
-    "ad02000_ab1_c9_rm1": "39.21", "ad02000_ab3_c6_rm1": "61.42", "ad02000_ab3_c6_rm2": "100.58",
-    "ad00500_ab4_c3_rm2": "16.83", "ad20000_ab2_c3_rm2": "354.10", "ad20000_ab2_c3_rm1": "222.35",
-    "ad02000_ab1_c1_rm1": "6.04", "ad10000_ab2_c3_rm2": "177.62", "ad10000_ab2_c3_rm1": "112.37",
-    "ad02000_ab1_c1_rm2": "8.21", "ad02000_ab4_c1_rm2": "21.03", "ad02000_ab4_c1_rm1": "12.61",
-    "ad10000_ab3_c6_rm1": "297.17", "ad10000_ab3_c6_rm2": "478.59", "ad00500_ab3_c6_rm1": "16.47",
-    "ad00500_ab3_c6_rm2": "27.73", "ad00500_ab4_c3_rm1": "10.27", "ad20000_ab3_c9_rm2": "1401.84",
-    "ad20000_ab3_c9_rm1": "883.97", "ad02000_ab1_c9_rm2": "63.36", "ad00500_ab2_c3_rm2": "11.67",
-    "ad00500_ab2_c3_rm1": "7.46", "ad00500_ab2_c6_rm2": "21.58", "ad00500_ab4_c9_rm2": "45.83",
-    "ad00500_ab1_c3_rm2": "6.97", "ad02000_ab4_c6_rm1": "69.16", "ad00500_ab1_c3_rm1": "5.37",
-    "ad02000_ab1_c3_rm1": "13.77", "ad10000_ab2_c9_rm1": "335.08", "ad00500_ab4_c1_rm2": "6.86",
-    "ad00500_ab4_c1_rm1": "4.48", "ad02000_ab3_c9_rm2": "152.09", "ad02000_ab1_c6_rm2": "41.21",
-    "ad02000_ab1_c6_rm1": "26.51", "ad10000_ab1_c3_rm2": "94.18", "ad02000_ab3_c9_rm1": "90.93",
-    "ad20000_ab2_c1_rm2": "118.79", "ad10000_ab1_c3_rm1": "63.79", "ad00500_ab3_c9_rm2": "40.61",
-    "ad10000_ab4_c1_rm1": "57.44", "ad00500_ab3_c9_rm1": "24.35", "ad10000_ab3_c3_rm1": "149.19",
-    "ad10000_ab3_c3_rm2": "239.15", "ad00500_ab2_c1_rm1": "4.49", "ad02000_ab2_c1_rm1": "9.17",
-    "ad02000_ab2_c1_rm2": "14.97", "ad00500_ab2_c1_rm2": "4.96", "ad00500_ab4_c6_rm1": "18.44",
-    "ad00500_ab4_c6_rm2": "33.16", "ad10000_ab1_c9_rm1": "188.66", "ad10000_ab1_c9_rm2": "276.80",
-    "ad00500_ab3_c1_rm2": "5.86", "ad00500_ab3_c1_rm1": "4.41", "ad20000_ab3_c1_rm1": "99.55",
-    "ad02000_ab2_c6_rm2": "75.72", "ad02000_ab2_c6_rm1": "46.28", "ad20000_ab3_c3_rm2": "470.15",
-    "ad02000_ab2_c3_rm2": "40.70", "ad02000_ab2_c3_rm1": "24.25", "ad10000_ab2_c1_rm1": "38.55",
-    "ad10000_ab2_c1_rm2": "60.87", "ad20000_ab4_c6_rm1": "674.09", "ad10000_ab4_c9_rm2": "823.04"}
+    // time_log
+    var time_log_db = {"ad00500_ab1_c9_rm1": "11.19", "ad00500_ab1_c9_rm2": "17.48",
+      "ad10000_ab4_c9_rm1": "508.15", "ad02000_ab4_c9_rm2": "170.07", "ad02000_ab4_c9_rm1": "103.43",
+      "ad10000_ab2_c9_rm2": "527.74", "ad10000_ab4_c1_rm2": "94.38", "ad10000_ab1_c1_rm1": "22.17",
+      "ad10000_ab1_c1_rm2": "32.97", "ad10000_ab2_c6_rm2": "352.84", "ad10000_ab2_c6_rm1": "225.20",
+      "ad20000_ab1_c1_rm1": "42.98", "ad20000_ab1_c1_rm2": "62.05", "ad20000_ab2_c1_rm1": "75.53",
+      "ad10000_ab4_c3_rm1": "169.70", "ad20000_ab2_c9_rm1": "671.16", "ad20000_ab2_c9_rm2": "1051.29",
+      "ad10000_ab4_c3_rm2": "280.53", "ad02000_ab4_c3_rm1": "35.58", "ad02000_ab4_c3_rm2": "58.91",
+      "ad20000_ab1_c3_rm2": "190.19", "ad20000_ab1_c3_rm1": "125.99", "ad20000_ab3_c6_rm1": "601.68",
+      "ad20000_ab3_c6_rm2": "959.65", "ad20000_ab4_c1_rm2": "187.80", "ad20000_ab4_c1_rm1": "112.68",
+      "ad20000_ab4_c9_rm2": "1648.63", "ad10000_ab4_c6_rm1": "340.36", "ad10000_ab1_c6_rm2": "185.04",
+      "ad10000_ab1_c6_rm1": "126.37", "ad20000_ab3_c1_rm2": "162.93", "ad02000_ab3_c1_rm2": "18.67",
+      "ad02000_ab3_c1_rm1": "11.30", "ad20000_ab4_c9_rm1": "1014.34", "ad00500_ab2_c9_rm1": "18.69",
+      "ad00500_ab3_c3_rm1": "9.15", "ad00500_ab3_c3_rm2": "14.95", "ad00500_ab2_c9_rm2": "31.01",
+      "ad02000_ab4_c6_rm2": "124.39", "ad20000_ab4_c6_rm2": "1087.15", "ad00500_ab2_c6_rm1": "13.01",
+      "ad20000_ab1_c6_rm2": "366.59", "ad20000_ab1_c6_rm1": "250.53", "ad20000_ab2_c6_rm2": "695.29",
+      "ad20000_ab2_c6_rm1": "446.19", "ad00500_ab1_c6_rm2": "12.02", "ad00500_ab1_c6_rm1": "8.64",
+      "ad02000_ab1_c3_rm2": "22.08", "ad00500_ab4_c9_rm1": "27.73", "ad10000_ab3_c1_rm2": "82.30",
+      "ad20000_ab3_c3_rm1": "294.80", "ad10000_ab3_c1_rm1": "50.81", "ad02000_ab3_c3_rm1": "31.37",
+      "ad02000_ab3_c3_rm2": "51.81", "ad02000_ab2_c9_rm1": "69.20", "ad02000_ab2_c9_rm2": "111.79",
+      "ad10000_ab3_c9_rm2": "708.76", "ad10000_ab3_c9_rm1": "444.33", "ad20000_ab4_c3_rm1": "336.59",
+      "ad20000_ab4_c3_rm2": "544.23", "ad10000_ab4_c6_rm2": "545.60", "ad00500_ab1_c1_rm1": "4.65",
+      "ad00500_ab1_c1_rm2": "3.67", "ad20000_ab1_c9_rm1": "378.82", "ad20000_ab1_c9_rm2": "543.81",
+      "ad02000_ab1_c9_rm1": "39.21", "ad02000_ab3_c6_rm1": "61.42", "ad02000_ab3_c6_rm2": "100.58",
+      "ad00500_ab4_c3_rm2": "16.83", "ad20000_ab2_c3_rm2": "354.10", "ad20000_ab2_c3_rm1": "222.35",
+      "ad02000_ab1_c1_rm1": "6.04", "ad10000_ab2_c3_rm2": "177.62", "ad10000_ab2_c3_rm1": "112.37",
+      "ad02000_ab1_c1_rm2": "8.21", "ad02000_ab4_c1_rm2": "21.03", "ad02000_ab4_c1_rm1": "12.61",
+      "ad10000_ab3_c6_rm1": "297.17", "ad10000_ab3_c6_rm2": "478.59", "ad00500_ab3_c6_rm1": "16.47",
+      "ad00500_ab3_c6_rm2": "27.73", "ad00500_ab4_c3_rm1": "10.27", "ad20000_ab3_c9_rm2": "1401.84",
+      "ad20000_ab3_c9_rm1": "883.97", "ad02000_ab1_c9_rm2": "63.36", "ad00500_ab2_c3_rm2": "11.67",
+      "ad00500_ab2_c3_rm1": "7.46", "ad00500_ab2_c6_rm2": "21.58", "ad00500_ab4_c9_rm2": "45.83",
+      "ad00500_ab1_c3_rm2": "6.97", "ad02000_ab4_c6_rm1": "69.16", "ad00500_ab1_c3_rm1": "5.37",
+      "ad02000_ab1_c3_rm1": "13.77", "ad10000_ab2_c9_rm1": "335.08", "ad00500_ab4_c1_rm2": "6.86",
+      "ad00500_ab4_c1_rm1": "4.48", "ad02000_ab3_c9_rm2": "152.09", "ad02000_ab1_c6_rm2": "41.21",
+      "ad02000_ab1_c6_rm1": "26.51", "ad10000_ab1_c3_rm2": "94.18", "ad02000_ab3_c9_rm1": "90.93",
+      "ad20000_ab2_c1_rm2": "118.79", "ad10000_ab1_c3_rm1": "63.79", "ad00500_ab3_c9_rm2": "40.61",
+      "ad10000_ab4_c1_rm1": "57.44", "ad00500_ab3_c9_rm1": "24.35", "ad10000_ab3_c3_rm1": "149.19",
+      "ad10000_ab3_c3_rm2": "239.15", "ad00500_ab2_c1_rm1": "4.49", "ad02000_ab2_c1_rm1": "9.17",
+      "ad02000_ab2_c1_rm2": "14.97", "ad00500_ab2_c1_rm2": "4.96", "ad00500_ab4_c6_rm1": "18.44",
+      "ad00500_ab4_c6_rm2": "33.16", "ad10000_ab1_c9_rm1": "188.66", "ad10000_ab1_c9_rm2": "276.80",
+      "ad00500_ab3_c1_rm2": "5.86", "ad00500_ab3_c1_rm1": "4.41", "ad20000_ab3_c1_rm1": "99.55",
+      "ad02000_ab2_c6_rm2": "75.72", "ad02000_ab2_c6_rm1": "46.28", "ad20000_ab3_c3_rm2": "470.15",
+      "ad02000_ab2_c3_rm2": "40.70", "ad02000_ab2_c3_rm1": "24.25", "ad10000_ab2_c1_rm1": "38.55",
+      "ad10000_ab2_c1_rm2": "60.87", "ad20000_ab4_c6_rm1": "674.09", "ad10000_ab4_c9_rm2": "823.04"}
 
-  // default values
-  var ab_value_left = 1,
-    ad_value_left = 500,
-    rc_value_left = 1,
-    rm_value_left = 1;
-  var ab_value_right = 1,
-    ad_value_right = 500,
-    rc_value_right = 1,
-    rm_value_right = 1;
+    // default values
+    var ab_value_left = 1,
+      ad_value_left = 500,
+      rc_value_left = 1,
+      rm_value_left = 1;
+    var ab_value_right = 1,
+      ad_value_right = 500,
+      rc_value_right = 1,
+      rm_value_right = 1;
 
-  // set up change of images by changing the options.
-  var select_rm_left = d3.select("#rm_left_count");
-  var select_ab_left = d3.select("#ab_left");
-  var select_ad_left = d3.select("#ad_left");
-  var select_rc_left = d3.select("#rc_left");
+    // set up change of images by changing the options.
+    var select_rm_left = d3.select("#rm_left_count");
+    var select_ab_left = d3.select("#ab_left");
+    var select_ad_left = d3.select("#ad_left");
+    var select_rc_left = d3.select("#rc_left");
 
-  var select_rm_right = d3.select("#rm_right_count");
-  var select_ab_right = d3.select("#ab_right");
-  var select_ad_right = d3.select("#ad_right");
-  var select_rc_right = d3.select("#rc_right");
+    var select_rm_right = d3.select("#rm_right_count");
+    var select_ab_right = d3.select("#ab_right");
+    var select_ad_right = d3.select("#ad_right");
+    var select_rc_right = d3.select("#rc_right");
 
 
-  var rm_left = d3.select("#rm_left");
-  var rm_left_fc = d3.select("#rm_left_fc");
-  var rm_right = d3.select("#rm_right");
-  var rm_right_fc = d3.select("#rm_right_fc");
+    var rm_left = d3.select("#rm_left");
+    var rm_left_fc = d3.select("#rm_left_fc");
+    var rm_right = d3.select("#rm_right");
+    var rm_right_fc = d3.select("#rm_right_fc");
 
-  var rm_left_time = d3.select("#rm_left_time");
-  var rm_right_time = d3.select("#rm_right_time");
+    var rm_left_time = d3.select("#rm_left_time");
+    var rm_right_time = d3.select("#rm_right_time");
 
-  update_image_grid('right');
-  update_image_grid('left');
+    update_side_images('right');
+    update_side_images('left');
 
-  select_rm_right.on("change", function (d) {
-      rm_value_right = d3.select(this).property("value");
-      update_image_grid('right');
-  });
+    select_rm_right.on("change", function (d) {
+        rm_value_right = d3.select(this).property("value");
+        update_side_images('right');
+    });
 
-  select_ab_right.on("change", function (d) {
-      ab_value_right = d3.select(this).property("value");
-      update_image_grid('right');
-  });
+    select_ab_right.on("change", function (d) {
+        ab_value_right = d3.select(this).property("value");
+        update_side_images('right');
+    });
 
-  select_ad_right.on("change", function (d) {
-      ad_value_right = d3.select(this).property("value");
-      update_image_grid('right');
-  });
+    select_ad_right.on("change", function (d) {
+        ad_value_right = d3.select(this).property("value");
+        update_side_images('right');
+    });
 
-  select_rc_right.on("change", function (d) {
-      rc_value_right = d3.select(this).property("value");
-      update_image_grid('right');
-  });
+    select_rc_right.on("change", function (d) {
+        rc_value_right = d3.select(this).property("value");
+        update_side_images('right');
+    });
 
-  select_rm_left.on("change", function (d) {
-      rm_value_left = d3.select(this).property("value");
-      update_image_grid('left');
-  });
+    select_rm_left.on("change", function (d) {
+        rm_value_left = d3.select(this).property("value");
+        update_side_images('left');
+    });
 
-  select_ab_left.on("change", function (d) {
-      ab_value_left = d3.select(this).property("value");
-      update_image_grid('left');
-  });
+    select_ab_left.on("change", function (d) {
+        ab_value_left = d3.select(this).property("value");
+        update_side_images('left');
+    });
 
-  select_ad_left.on("change", function (d) {
-      ad_value_left = d3.select(this).property("value");
-      update_image_grid('left');
-  });
+    select_ad_left.on("change", function (d) {
+        ad_value_left = d3.select(this).property("value");
+        update_side_images('left');
+    });
 
-  select_rc_left.on("change", function (d) {
-      rc_value_left = d3.select(this).property("value");
-      update_image_grid('left');
-  });
+    select_rc_left.on("change", function (d) {
+        rc_value_left = d3.select(this).property("value");
+        update_side_images('left');
+    });
 
-  function update_image_grid(side){
-    // update images.
-    // This can be re-written as a loop and shorter but since it's only four I copy
-    // paste the code. This will also be easier for new developers to learn.
-    var ad, ab, rc, rm;
-    if (side == 'right'){
-      ad = ("00000" + ad_value_right).slice(-5);
-      ab = ab_value_right;
-      rc = rc_value_right;
-      rm = rm_value_right;
-    } else {
-      ad = ("00000" + ad_value_left).slice(-5);
-      ab = ab_value_left;
-      rc = rc_value_left;
-      rm = rm_value_left;
+    function update_side_images(side){
+      // update images.
+      // This can be re-written as a loop and shorter but since it's only four I copy
+      // paste the code. This will also be easier for new developers to learn.
+      var ad, ab, rc, rm;
+      if (side == 'right'){
+        ad = ("00000" + ad_value_right).slice(-5);
+        ab = ab_value_right;
+        rc = rc_value_right;
+        rm = rm_value_right;
+      } else {
+        ad = ("00000" + ad_value_left).slice(-5);
+        ab = ab_value_left;
+        rc = rc_value_left;
+        rm = rm_value_left;
+      }
+
+      base_path = "./assets/img/radiance_options/ad" + ad + "_ab" + ab + "_c" + rc + "_rm" + rm;
+      var rm_path = base_path + "_o.png";
+      var rm_fc_path = base_path + "_f.png";
+      var base_time = "ad" + ad + "_ab" + ab + "_c" + rc + "_rm" + rm;
+      var time_log = time_log_db[base_time]
+
+      // update images
+      if (side == 'right'){
+        rm_right_time.text("Render time: " + time_log + "s")
+        rm_right.transition().duration(300)
+          .style("opacity", 0).attr("src", "")
+          .transition().duration(300)
+          .attr("src", rm_path).style("opacity", 1);
+
+        rm_right_fc.transition().duration(300)
+          .style("opacity", 0).attr("src", "")
+          .transition().duration(600)
+          .attr("src", rm_fc_path).style("opacity", 1);
+      } else {
+        rm_left_time.text("Render time: " + time_log + "s")
+
+        rm_left.transition().duration(300)
+          .style("opacity", 0).attr("src", "")
+          .transition().duration(300)
+          .attr("src", rm_path).style("opacity", 1);
+
+        rm_left_fc.transition().duration(300)
+          .style("opacity", 0).attr("src", "")
+          .transition().duration(600)
+          .attr("src", rm_fc_path).style("opacity", 1);
+      }
     }
-
-    base_path = "./assets/img/radiance_options/ad" + ad + "_ab" + ab + "_c" + rc + "_rm" + rm;
-    var rm_path = base_path + "_o.png";
-    var rm_fc_path = base_path + "_f.png";
-    var base_time = "ad" + ad + "_ab" + ab + "_c" + rc + "_rm" + rm;
-    var time_log = time_log_db[base_time]
-
-    // update images
-    if (side == 'right'){
-      rm_right_time.text("Render time: " + time_log + "s")
-      rm_right.transition().duration(300)
-        .style("opacity", 0).attr("src", "")
-        .transition().duration(300)
-        .attr("src", rm_path).style("opacity", 1);
-
-      rm_right_fc.transition().duration(300)
-        .style("opacity", 0).attr("src", "")
-        .transition().duration(600)
-        .attr("src", rm_fc_path).style("opacity", 1);
-    } else {
-      rm_left_time.text("Render time: " + time_log + "s")
-
-      rm_left.transition().duration(300)
-        .style("opacity", 0).attr("src", "")
-        .transition().duration(300)
-        .attr("src", rm_path).style("opacity", 1);
-
-      rm_left_fc.transition().duration(300)
-        .style("opacity", 0).attr("src", "")
-        .transition().duration(600)
-        .attr("src", rm_fc_path).style("opacity", 1);
-    }
-  }
 
   </script>
+
+
+  <section id="grid" class="bg-alt">
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-12">
+                  <h1 class="section-title">Radiance Options - Grid</h1>
+                  <hr class="primary">
+                  <p class="section-subcontent">
+                    This is a viewer for parametric studies, credits and so on, a short
+                    note on how to use it!
+                  </p>
+                </br>
+              </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 mx-auto text-center">room:
+              <select class="custom-select" id="grid_rm">
+                <option value="1">1</option>
+                <option value="2">2</option>
+              </select>
+            </div>
+            <div class="col-lg-4 mx-auto text-center">-c:
+                <select class="custom-select" id="grid_rc">
+                  <option value="1">1</option>
+                  <option value="3">3</option>
+                  <option value="6">6</option>
+                  <option value="9">9</option>
+                </select>
+            </div>
+            <div class="col-lg-4 mx-auto text-center">
+                <input id="grid_fc" type="checkbox" aria-label="falsecolor"> false color?
+            </div>
+          </div>
+          <!-- start of the card group-->
+          <div class="col-lg-12 card-group">
+              <!-- card -->
+              <div class="card">
+                  <img class="card-img-top align-middle w-100" id="grid_1_1" src="" alt="loading...">
+                  <div class="card-block no-padding">
+                      <h4 class="card-text image-caption-text-small" id="grid_text_1_1"></h4>
+                  </div>
+              </div>
+              <div class="card">
+                  <img class="card-img-top align-middle w-100" id="grid_1_2" src="" alt="loading...">
+                  <div class="card-block no-padding">
+                      <h4 class="card-text image-caption-text-small" id="grid_text_1_2"></h4>
+                  </div>
+              </div>
+              <div class="card">
+                  <img class="card-img-top align-middle w-100" id="grid_1_3" src="" alt="loading...">
+                  <div class="card-block no-padding">
+                      <h4 class="card-text image-caption-text-small" id="grid_text_1_3"></h4>
+                  </div>
+              </div>
+              <div class="card">
+                  <img class="card-img-top align-middle w-100" id="grid_1_4" src="" alt="loading...">
+                  <div class="card-block no-padding">
+                      <h4 class="card-text image-caption-text-small" id="grid_text_1_4"></h4>
+                  </div>
+              </div>
+          </div>
+          <!-- end of the card group-->
+          <!-- start of the card group-->
+          <div class="col-lg-12 card-group">
+              <!-- card -->
+              <div class="card">
+                  <img class="card-img-top align-middle w-100" id="grid_2_1" src="" alt="loading...">
+                  <div class="card-block no-padding">
+                      <h4 class="card-text image-caption-text-small" id="grid_text_2_1"></h4>
+                  </div>
+              </div>
+              <div class="card">
+                  <img class="card-img-top align-middle w-100" id="grid_2_2" src="" alt="loading...">
+                  <div class="card-block no-padding">
+                      <h4 class="card-text image-caption-text-small" id="grid_text_2_2"></h4>
+                  </div>
+              </div>
+              <div class="card">
+                  <img class="card-img-top align-middle w-100" id="grid_2_3" src="" alt="loading...">
+                  <div class="card-block no-padding">
+                      <h4 class="card-text image-caption-text-small" id="grid_text_2_3"></h4>
+                  </div>
+              </div>
+              <div class="card">
+                  <img class="card-img-top align-middle w-100" id="grid_2_4" src="" alt="loading...">
+                  <div class="card-block no-padding">
+                      <h4 class="card-text image-caption-text-small" id="grid_text_2_4"></h4>
+                  </div>
+              </div>
+          </div>
+          <!-- end of the card group-->
+          <!-- start of the card group-->
+          <div class="col-lg-12 card-group">
+              <!-- card -->
+              <div class="card">
+                  <img class="card-img-top align-middle w-100" id="grid_3_1" src="" alt="loading...">
+                  <div class="card-block no-padding">
+                      <h4 class="card-text image-caption-text-small" id="grid_text_3_1"></h4>
+                  </div>
+              </div>
+              <div class="card">
+                  <img class="card-img-top align-middle w-100" id="grid_3_2" src="" alt="loading...">
+                  <div class="card-block no-padding">
+                      <h4 class="card-text image-caption-text-small" id="grid_text_3_2"></h4>
+                  </div>
+              </div>
+              <div class="card">
+                  <img class="card-img-top align-middle w-100" id="grid_3_3" src="" alt="loading...">
+                  <div class="card-block no-padding">
+                      <h4 class="card-text image-caption-text-small" id="grid_text_3_3"></h4>
+                  </div>
+              </div>
+              <div class="card">
+                  <img class="card-img-top align-middle w-100" id="grid_3_4" src="" alt="loading...">
+                  <div class="card-block no-padding">
+                      <h4 class="card-text image-caption-text-small" id="grid_text_3_4"></h4>
+                  </div>
+              </div>
+          </div>
+          <!-- end of the card group-->
+          <!-- start of the card group-->
+          <div class="col-lg-12 card-group">
+              <!-- card -->
+              <div class="card">
+                  <img class="card-img-top align-middle w-100" id="grid_4_1" src="" alt="loading...">
+                  <div class="card-block no-padding">
+                      <h4 class="card-text image-caption-text-small" id="grid_text_4_1"></h4>
+                  </div>
+              </div>
+              <div class="card">
+                  <img class="card-img-top align-middle w-100" id="grid_4_2" src="" alt="loading...">
+                  <div class="card-block no-padding">
+                      <h4 class="card-text image-caption-text-small" id="grid_text_4_2"></h4>
+                  </div>
+              </div>
+              <div class="card">
+                  <img class="card-img-top align-middle w-100" id="grid_4_3" src="" alt="loading...">
+                  <div class="card-block no-padding">
+                      <h4 class="card-text image-caption-text-small" id="grid_text_4_3"></h4>
+                  </div>
+              </div>
+              <div class="card">
+                  <img class="card-img-top align-middle w-100" id="grid_4_4" src="" alt="loading...">
+                  <div class="card-block no-padding">
+                      <h4 class="card-text image-caption-text-small" id="grid_text_4_4"></h4>
+                  </div>
+              </div>
+          </div>
+          <!-- end of the card group-->
+      </div>
+  </section>
+
+  <script>
+    // default values
+    var rc_value_grid = 1,
+      rm_value_grid = 1,
+      fc_value_grid = false;
+
+    var abs = [1, 2, 3, 4],
+      ads = [500, 2000, 10000, 20000];
+    // image-grid
+    var grid_base_path = "./assets/img/radiance_options/"
+
+    var select_rm_grid = d3.select("#grid_rm");
+    var select_rc_grid = d3.select("#grid_rc");
+    var select_fc_grid = d3.select("#grid_fc");
+
+    update_image_grid();
+
+    select_rc_grid.on("change", function (d) {
+        rc_value_grid = d3.select(this).property("value");
+        update_image_grid();
+    });
+
+    select_rm_grid.on("change", function (d) {
+        rm_value_grid = d3.select(this).property("value");
+        update_image_grid();
+    });
+
+    select_fc_grid.on("change", function (d) {
+        fc_value_grid = d3.select(this).property("checked");
+        update_image_grid();
+    });
+
+    function update_image_grid(){
+      for (row = 1; row < 5; row++){
+        for (col = 1; col < 5; col++){
+          var ad = ("00000" + ads[row - 1]).slice(-5);
+          var ab = abs[col - 1];
+          var grid_rm_path = grid_base_path + "ad" + ad + "_ab" + ab + "_c" + rc_value_grid + "_rm" + rm_value_grid;
+
+          if (fc_value_grid){
+            grid_rm_path = grid_rm_path + "_f.png";
+          } else {
+            grid_rm_path = grid_rm_path + "_o.png";
+          }
+
+          var base_time = "ad" + ad + "_ab" + ab + "_c" + rc_value_grid + "_rm" + rm_value_grid;
+          var time_log = time_log_db[base_time]
+
+          // update images
+          d3.select('#grid_' + row + '_' + col).transition().duration(300 + (col - 1) * 200)
+            .style("opacity", 0).attr("src", "")
+            .transition().duration(300 + (col - 1) * 200)
+            .attr("src", grid_rm_path).style("opacity", 1);
+          d3.select('#grid_text_' + row + '_' + col).transition().duration(300)
+            .transition().duration(300)
+            .text('-ab ' + ab + ' -ad ' + ads[row - 1] + ' -c ' + rc_value_grid +
+                  '; time: ' + time_log + 's');
+        }
+      }
+
+    }
+  </script>
+
   <!-- Footer -->
   <footer id="footer">
       <div class="container">
