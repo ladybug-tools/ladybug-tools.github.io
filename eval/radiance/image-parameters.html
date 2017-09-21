@@ -2,17 +2,17 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Ladybug Tools | Radiance Options</title>
-  <meta name="description" content="ladybug tools - Radiance Options" />
+  <title>Ladybug Tools | Radiance Image Parameters</title>
+  <meta name="description" content="ladybug tools - Radiance Image Parameters" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" />
   <link href="http://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" rel="stylesheet" />
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
-  <link rel="stylesheet" href="assets/css/styles.css" />
-  <link rel="stylesheet" href="assets/css/header.css" />
-  <script src="./assets/js/d3.v4.1.1.min.js"></script>
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <link rel="stylesheet" href="../assets/css/header.css" />
+  <script src="../assets/js/d3.v4.1.1.min.js"></script>
 </head>
 
 <body class="bg-faded">
@@ -33,9 +33,9 @@
               <span>☰</span>
           </button>
           <a class="navbar-brand img page-scroll" href="./index.html">
-            <img src="assets/img/logo.png">
+            <img src="../assets/img/logo.png">
           </a>
-          <a class="navbar-brand page-scroll" href="./index.html">Ladybug Tools</a>
+          <a class="navbar-brand page-scroll" href="../index.html">Ladybug Tools</a>
           <div class="collapse navbar-collapse" id="collapsingNavbar">
               <!-- items on the left side of the navbar -->
               <ul class="navbar-nav">
@@ -43,17 +43,17 @@
               <!-- items on the right side of the navbar -->
               <ul class="nav navbar-nav ml-auto">
                   <li class="nav-item">
-                      <a class="nav-link page-scroll" href="./services.html">Services</a>
+                      <a class="nav-link page-scroll" href="../services.html">Services</a>
                   </li>
                   <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="" id="productsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       Tools
                     </a>
                     <div class="dropdown-menu" aria-labelledby="productsDropdown">
-                        <a class="dropdown-item" href="./ladybug.html">Ladybug</a>
-                        <a class="dropdown-item" href="./honeybee.html">Honeybee</a>
-                        <a class="dropdown-item" href="./butterfly.html">Butterfly</a>
-                        <a class="dropdown-item" href="./dragonfly.html">Dragonfly</a>
+                        <a class="dropdown-item" href="../ladybug.html">Ladybug</a>
+                        <a class="dropdown-item" href="../honeybee.html">Honeybee</a>
+                        <a class="dropdown-item" href="../butterfly.html">Butterfly</a>
+                        <a class="dropdown-item" href="../dragonfly.html">Dragonfly</a>
                     </div>
                   </li>
                   <li class="nav-item dropdown">
@@ -61,9 +61,9 @@
                       Education
                     </a>
                     <div class="dropdown-menu" aria-labelledby="productsDropdown">
-                        <a class="dropdown-item" href="./learning.html">Learning</a>
-                        <a class="dropdown-item" href="./publication.html">Publication</a>
-                        <a class="dropdown-item" href="./workshop.html">Workshop</a>
+                        <a class="dropdown-item" href="../learning.html">Learning</a>
+                        <a class="dropdown-item" href="../publication.html">Publication</a>
+                        <a class="dropdown-item" href="../workshop.html">Workshop</a>
                     </div>
                   </li>
                   <li class="nav-item">
@@ -74,13 +74,13 @@
                       About
                     </a>
                     <div class="dropdown-menu" aria-labelledby="aboutDropdown">
-                        <a class="dropdown-item" href="./about.html#story">Story</a>
-                        <a class="dropdown-item" href="./about.html#team">Team</a>
-                        <a class="dropdown-item" href="./about.html#faq">FAQ</a>
+                        <a class="dropdown-item" href="../about.html#story">Story</a>
+                        <a class="dropdown-item" href="../about.html#team">Team</a>
+                        <a class="dropdown-item" href="../about.html#faq">FAQ</a>
                     </div>
                   </li>
                   <li class="nav-item">
-                      <a class="nav-link page-scroll" href="./contribute.html">Contribute</a>
+                      <a class="nav-link page-scroll" href="../contribute.html">Contribute</a>
                   </li>
               </ul>
           </div>
@@ -94,11 +94,13 @@
       <div class="container">
           <div class="row">
               <div class="col-lg-12">
-                  <h1 class="section-title">Radiance Options - Side by Side</h1>
+                  <h1 class="section-title">Side by side comparison</h1>
                   <hr class="primary">
                   <p class="section-subcontent">
-                    This is a viewer for parametric studies, credits and so on, a short
-                    note on how to use it!
+                    This is an interactive viewer for studying the impact of simulation
+                    parameters on the quality of the Radiance-rendered images. All the
+                    images were generated through matrix-based calculations for
+                    Climate-based Daylight Modeling Studies.
                   </p>
                 </br>
               </div>
@@ -108,7 +110,7 @@
               <!-- card -->
               <div class="card">
                   <div class="row">
-                    <div class="col-lg-6 mx-auto text-center">room:
+                    <div class="col-lg-6 mx-auto text-center">Room:
                       <select class="custom-select" id="rm_left_count">
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -147,7 +149,7 @@
               </div>
               <div class="card">
                   <div class="row">
-                    <div class="col-lg-6 mx-auto text-center">room:
+                    <div class="col-lg-6 mx-auto text-center">Room:
                       <select class="custom-select" id="rm_right_count">
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -327,7 +329,7 @@
         rm = rm_value_left;
       }
 
-      base_path = "./assets/img/radiance_options/ad" + ad + "_ab" + ab + "_c" + rc + "_rm" + rm;
+      base_path = "./assets/img/image_parameters/ad" + ad + "_ab" + ab + "_c" + rc + "_rm" + rm;
       var rm_path = base_path + "_o.png";
       var rm_fc_path = base_path + "_f.png";
       var base_time = "ad" + ad + "_ab" + ab + "_c" + rc + "_rm" + rm;
@@ -367,17 +369,19 @@
       <div class="container">
           <div class="row">
               <div class="col-lg-12">
-                  <h1 class="section-title">Radiance Options - Grid</h1>
+                  <h1 class="section-title">Image grid</h1>
                   <hr class="primary">
                   <p class="section-subcontent">
-                    This is a viewer for parametric studies, credits and so on, a short
-                    note on how to use it!
+                    This is an interactive viewer for studying the impact of simulation
+                    parameters on the quality of the Radiance-rendered images. All the
+                    images were generated through matrix-based calculations for
+                    Climate-based Daylight Modeling Studies.
                   </p>
                 </br>
               </div>
           </div>
           <div class="row">
-            <div class="col-lg-4 mx-auto text-center">room:
+            <div class="col-lg-4 mx-auto text-center">Room:
               <select class="custom-select" id="grid_rm">
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -392,7 +396,7 @@
                 </select>
             </div>
             <div class="col-lg-4 mx-auto text-center">
-                <input id="grid_fc" type="checkbox" aria-label="falsecolor"> false color?
+                <input id="grid_fc" type="checkbox" aria-label="falsecolor"> False color
             </div>
           </div>
           <!-- start of the card group-->
@@ -523,7 +527,7 @@
     var abs = [1, 2, 3, 4],
       ads = [500, 2000, 10000, 20000];
     // image-grid
-    var grid_base_path = "./assets/img/radiance_options/"
+    var grid_base_path = "./assets/img/image_parameters/"
 
     var select_rm_grid = d3.select("#grid_rm");
     var select_rc_grid = d3.select("#grid_rc");
@@ -549,8 +553,8 @@
     function update_image_grid(){
       for (row = 1; row < 5; row++){
         for (col = 1; col < 5; col++){
-          var ad = ("00000" + ads[row - 1]).slice(-5);
-          var ab = abs[col - 1];
+          var ad = ("00000" + ads[col - 1]).slice(-5);
+          var ab = abs[row - 1];
           var grid_rm_path = grid_base_path + "ad" + ad + "_ab" + ab + "_c" + rc_value_grid + "_rm" + rm_value_grid;
 
           if (fc_value_grid){
@@ -569,7 +573,7 @@
             .attr("src", grid_rm_path).style("opacity", 1);
           d3.select('#grid_text_' + row + '_' + col).transition().duration(300)
             .transition().duration(300)
-            .text('-ab ' + ab + ' -ad ' + ads[row - 1] + ' -c ' + rc_value_grid +
+            .text('-ab ' + ab + ' -ad ' + ads[col - 1] + ' -c ' + rc_value_grid +
                   '; time: ' + time_log + 's');
         }
       }
@@ -584,27 +588,27 @@
               <div class="col-6 col-sm-3 column">
                   <h6 class="text-uppercase text-muted">About</h6>
                   <ul class="list-unstyled">
-                      <li><a href="./about.html#story">Our Story</a></li>
-                      <li><a href="./about.html#team">Team</a></li>
+                      <li><a href="../about.html#story">Our Story</a></li>
+                      <li><a href="../about.html#team">Team</a></li>
                       <li><a href="http://discourse.ladybug.tools" target="_blank">Forum</a></li>
-                      <li><a href="./contribute.html">Contribute</a></li>
+                      <li><a href="../contribute.html">Contribute</a></li>
                   </ul>
               </div>
               <div class="col-6 col-sm-3 column">
                 <h6 class="text-uppercase text-muted">Services</h6>
                 <ul class="list-unstyled">
-                  <li><a href="./services.html">Services</a></li>
-                  <li><a href="./workshop.html">Workshop</a></li>
+                  <li><a href="../services.html">Services</a></li>
+                  <li><a href="../workshop.html">Workshop</a></li>
               </ul>
               </div>
               <div class="col-6 col-sm-3 column">
                   <h6 class="text-uppercase text-muted">Tools</h6>
                   <ul class="list-unstyled">
-                      <li><a href="./ladybug">Ladybug</a></li>
-                      <li><a href="./honeybee">Honeybee</a></li>
-                      <li><a href="./butterfly">Butterfly</a></li>
-                      <li><a href="./dragonfly">Dragonfly</a></li>
-                      <li><a href="./epwmap">EPWMap</a></li>
+                      <li><a href="../ladybug">Ladybug</a></li>
+                      <li><a href="../honeybee">Honeybee</a></li>
+                      <li><a href="../butterfly">Butterfly</a></li>
+                      <li><a href="../dragonfly">Dragonfly</a></li>
+                      <li><a href="../epwmap">EPWMap</a></li>
                   </ul>
               </div>
               <div class="col-6 col-sm-3 column">
