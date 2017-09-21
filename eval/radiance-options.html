@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Ladybug Tools | Radiance Options</title>
+  <meta name="description" content="ladybug tools - Radiance Options" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" />
+  <link href="http://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="stylesheet" href="assets/css/header.css" />
+  <script src="./assets/js/d3.v4.1.1.min.js"></script>
+</head>
+
+<body class="bg-faded">
+
+  <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+  <!--                Navigation bar on the top of the page                  -->
+  <!--
+    NOTE: If you're making a change to the nav bar you need to edit
+    it in all the other pages. On the main page logo, ladybug tools and products
+    scrolls down to the #products div however in other pages it is a drop-down
+    with multiple items.
+  -->
+  <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
+  <nav id="topNav" class="navbar fixed-top navbar-toggleable-sm">
+      <div class="container">
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsingNavbar">
+              <span>☰</span>
+          </button>
+          <a class="navbar-brand img page-scroll" href="./index.html">
+            <img src="assets/img/logo.png">
+          </a>
+          <a class="navbar-brand page-scroll" href="./index.html">Ladybug Tools</a>
+          <div class="collapse navbar-collapse" id="collapsingNavbar">
+              <!-- items on the left side of the navbar -->
+              <ul class="navbar-nav">
+              </ul>
+              <!-- items on the right side of the navbar -->
+              <ul class="nav navbar-nav ml-auto">
+                  <li class="nav-item">
+                      <a class="nav-link page-scroll" href="./services.html">Services</a>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="" id="productsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Tools
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="productsDropdown">
+                        <a class="dropdown-item" href="./ladybug.html">Ladybug</a>
+                        <a class="dropdown-item" href="./honeybee.html">Honeybee</a>
+                        <a class="dropdown-item" href="./butterfly.html">Butterfly</a>
+                        <a class="dropdown-item" href="./dragonfly.html">Dragonfly</a>
+                    </div>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="" id="productsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Education
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="productsDropdown">
+                        <a class="dropdown-item" href="./learning.html">Learning</a>
+                        <a class="dropdown-item" href="./publication.html">Publication</a>
+                        <a class="dropdown-item" href="./workshop.html">Workshop</a>
+                    </div>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link page-scroll" href="http://discourse.ladybug.tools" target="_blank">Forum</a>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="" id="aboutDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      About
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="aboutDropdown">
+                        <a class="dropdown-item" href="./about.html#story">Story</a>
+                        <a class="dropdown-item" href="./about.html#team">Team</a>
+                        <a class="dropdown-item" href="./about.html#faq">FAQ</a>
+                    </div>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link page-scroll" href="./contribute.html">Contribute</a>
+                  </li>
+              </ul>
+          </div>
+      </div>
+  </nav>
+
+  <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+  <!--                             Image grid                                -->
+  <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+  <section id="twobytwo">
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-12">
+                  <h1 class="section-title">Radiance Options</h1>
+                  <hr class="primary">
+                  <p class="section-subcontent">
+                    This is a viewer for parametric studies, credits and so on, a short
+                    note on how to use it!
+                  </p>
+                </br>
+              </div>
+          </div>
+            <!-- start of the card deck-->
+            <div class="col-lg-12 card-deck">
+              <!-- card -->
+              <div class="card">
+                  <div class="row">
+                    <div class="col-lg-6 mx-auto text-center">rm:
+                      <select class="custom-select" id="rm_left_count">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                      </select>
+                    </div>
+                    <div class="col-lg-6 mx-auto text-center">-ab:
+                      <select class="custom-select" id="ab_left">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                      </select>
+                    </div>
+                    <div class="col-lg-6 mx-auto text-center">-c:
+                        <select class="custom-select" id="rc_left">
+                          <option value="1">1</option>
+                          <option value="3">3</option>
+                          <option value="6">6</option>
+                          <option value="9">9</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-6 mx-auto text-center">-ad:
+                      <select class="custom-select" id="ad_left">
+                        <option value="500">500</option>
+                        <option value="2000">2000</option>
+                        <option value="10000">10000</option>
+                        <option value="20000">20000</option>
+                      </select>
+                    </div>
+                  </div>
+                  <img class="card-img-top align-middle w-100" id="rm_left" src="" alt="loading...">
+                  <img class="card-img-top align-middle w-100" id="rm_left_fc" src="" alt="loading...">
+                  <div class="card-block">
+                      <h4 class="card-title" id="rm_left_time"></h4>
+                  </div>
+              </div>
+              <div class="card">
+                  <div class="row">
+                    <div class="col-lg-6 mx-auto text-center">rm:
+                      <select class="custom-select" id="rm_right_count">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                      </select>
+                    </div>
+                    <div class="col-lg-6 mx-auto text-center">-ab:
+                      <select class="custom-select" id="ab_right">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                      </select>
+                    </div>
+                    <div class="col-lg-6 mx-auto text-center">-c:
+                        <select class="custom-select" id="rc_right">
+                          <option value="1">1</option>
+                          <option value="3">3</option>
+                          <option value="6">6</option>
+                          <option value="9">9</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-6 mx-auto text-center">-ad:
+                      <select class="custom-select" id="ad_right">
+                        <option value="500">500</option>
+                        <option value="2000">2000</option>
+                        <option value="10000">10000</option>
+                        <option value="20000">20000</option>
+                      </select>
+                    </div>
+                  </div>
+                  <img class="card-img-top align-middle w-100"  id="rm_right" src="" alt="loading...">
+                  <img class="card-img-top align-middle w-100"  id="rm_right_fc" src="" alt="loading...">
+                  <div class="card-block">
+                      <h4 class="card-title" id="rm_right_time"></h4>
+                  </div>
+              </div>
+              <!-- end of card -->
+            </div>
+
+          </div>
+      </div>
+  </section>
+  <script>
+  // time_log
+  var time_log_db = {"ad00500_ab1_c9_rm1": "11.19", "ad00500_ab1_c9_rm2": "17.48",
+    "ad10000_ab4_c9_rm1": "508.15", "ad02000_ab4_c9_rm2": "170.07", "ad02000_ab4_c9_rm1": "103.43",
+    "ad10000_ab2_c9_rm2": "527.74", "ad10000_ab4_c1_rm2": "94.38", "ad10000_ab1_c1_rm1": "22.17",
+    "ad10000_ab1_c1_rm2": "32.97", "ad10000_ab2_c6_rm2": "352.84", "ad10000_ab2_c6_rm1": "225.20",
+    "ad20000_ab1_c1_rm1": "42.98", "ad20000_ab1_c1_rm2": "62.05", "ad20000_ab2_c1_rm1": "75.53",
+    "ad10000_ab4_c3_rm1": "169.70", "ad20000_ab2_c9_rm1": "671.16", "ad20000_ab2_c9_rm2": "1051.29",
+    "ad10000_ab4_c3_rm2": "280.53", "ad02000_ab4_c3_rm1": "35.58", "ad02000_ab4_c3_rm2": "58.91",
+    "ad20000_ab1_c3_rm2": "190.19", "ad20000_ab1_c3_rm1": "125.99", "ad20000_ab3_c6_rm1": "601.68",
+    "ad20000_ab3_c6_rm2": "959.65", "ad20000_ab4_c1_rm2": "187.80", "ad20000_ab4_c1_rm1": "112.68",
+    "ad20000_ab4_c9_rm2": "1648.63", "ad10000_ab4_c6_rm1": "340.36", "ad10000_ab1_c6_rm2": "185.04",
+    "ad10000_ab1_c6_rm1": "126.37", "ad20000_ab3_c1_rm2": "162.93", "ad02000_ab3_c1_rm2": "18.67",
+    "ad02000_ab3_c1_rm1": "11.30", "ad20000_ab4_c9_rm1": "1014.34", "ad00500_ab2_c9_rm1": "18.69",
+    "ad00500_ab3_c3_rm1": "9.15", "ad00500_ab3_c3_rm2": "14.95", "ad00500_ab2_c9_rm2": "31.01",
+    "ad02000_ab4_c6_rm2": "124.39", "ad20000_ab4_c6_rm2": "1087.15", "ad00500_ab2_c6_rm1": "13.01",
+    "ad20000_ab1_c6_rm2": "366.59", "ad20000_ab1_c6_rm1": "250.53", "ad20000_ab2_c6_rm2": "695.29",
+    "ad20000_ab2_c6_rm1": "446.19", "ad00500_ab1_c6_rm2": "12.02", "ad00500_ab1_c6_rm1": "8.64",
+    "ad02000_ab1_c3_rm2": "22.08", "ad00500_ab4_c9_rm1": "27.73", "ad10000_ab3_c1_rm2": "82.30",
+    "ad20000_ab3_c3_rm1": "294.80", "ad10000_ab3_c1_rm1": "50.81", "ad02000_ab3_c3_rm1": "31.37",
+    "ad02000_ab3_c3_rm2": "51.81", "ad02000_ab2_c9_rm1": "69.20", "ad02000_ab2_c9_rm2": "111.79",
+    "ad10000_ab3_c9_rm2": "708.76", "ad10000_ab3_c9_rm1": "444.33", "ad20000_ab4_c3_rm1": "336.59",
+    "ad20000_ab4_c3_rm2": "544.23", "ad10000_ab4_c6_rm2": "545.60", "ad00500_ab1_c1_rm1": "4.65",
+    "ad00500_ab1_c1_rm2": "3.67", "ad20000_ab1_c9_rm1": "378.82", "ad20000_ab1_c9_rm2": "543.81",
+    "ad02000_ab1_c9_rm1": "39.21", "ad02000_ab3_c6_rm1": "61.42", "ad02000_ab3_c6_rm2": "100.58",
+    "ad00500_ab4_c3_rm2": "16.83", "ad20000_ab2_c3_rm2": "354.10", "ad20000_ab2_c3_rm1": "222.35",
+    "ad02000_ab1_c1_rm1": "6.04", "ad10000_ab2_c3_rm2": "177.62", "ad10000_ab2_c3_rm1": "112.37",
+    "ad02000_ab1_c1_rm2": "8.21", "ad02000_ab4_c1_rm2": "21.03", "ad02000_ab4_c1_rm1": "12.61",
+    "ad10000_ab3_c6_rm1": "297.17", "ad10000_ab3_c6_rm2": "478.59", "ad00500_ab3_c6_rm1": "16.47",
+    "ad00500_ab3_c6_rm2": "27.73", "ad00500_ab4_c3_rm1": "10.27", "ad20000_ab3_c9_rm2": "1401.84",
+    "ad20000_ab3_c9_rm1": "883.97", "ad02000_ab1_c9_rm2": "63.36", "ad00500_ab2_c3_rm2": "11.67",
+    "ad00500_ab2_c3_rm1": "7.46", "ad00500_ab2_c6_rm2": "21.58", "ad00500_ab4_c9_rm2": "45.83",
+    "ad00500_ab1_c3_rm2": "6.97", "ad02000_ab4_c6_rm1": "69.16", "ad00500_ab1_c3_rm1": "5.37",
+    "ad02000_ab1_c3_rm1": "13.77", "ad10000_ab2_c9_rm1": "335.08", "ad00500_ab4_c1_rm2": "6.86",
+    "ad00500_ab4_c1_rm1": "4.48", "ad02000_ab3_c9_rm2": "152.09", "ad02000_ab1_c6_rm2": "41.21",
+    "ad02000_ab1_c6_rm1": "26.51", "ad10000_ab1_c3_rm2": "94.18", "ad02000_ab3_c9_rm1": "90.93",
+    "ad20000_ab2_c1_rm2": "118.79", "ad10000_ab1_c3_rm1": "63.79", "ad00500_ab3_c9_rm2": "40.61",
+    "ad10000_ab4_c1_rm1": "57.44", "ad00500_ab3_c9_rm1": "24.35", "ad10000_ab3_c3_rm1": "149.19",
+    "ad10000_ab3_c3_rm2": "239.15", "ad00500_ab2_c1_rm1": "4.49", "ad02000_ab2_c1_rm1": "9.17",
+    "ad02000_ab2_c1_rm2": "14.97", "ad00500_ab2_c1_rm2": "4.96", "ad00500_ab4_c6_rm1": "18.44",
+    "ad00500_ab4_c6_rm2": "33.16", "ad10000_ab1_c9_rm1": "188.66", "ad10000_ab1_c9_rm2": "276.80",
+    "ad00500_ab3_c1_rm2": "5.86", "ad00500_ab3_c1_rm1": "4.41", "ad20000_ab3_c1_rm1": "99.55",
+    "ad02000_ab2_c6_rm2": "75.72", "ad02000_ab2_c6_rm1": "46.28", "ad20000_ab3_c3_rm2": "470.15",
+    "ad02000_ab2_c3_rm2": "40.70", "ad02000_ab2_c3_rm1": "24.25", "ad10000_ab2_c1_rm1": "38.55",
+    "ad10000_ab2_c1_rm2": "60.87", "ad20000_ab4_c6_rm1": "674.09", "ad10000_ab4_c9_rm2": "823.04"}
+
+  // default values
+  var ab_value_left = 1,
+    ad_value_left = 500,
+    rc_value_left = 1,
+    rm_value_left = 1;
+  var ab_value_right = 1,
+    ad_value_right = 500,
+    rc_value_right = 1,
+    rm_value_right = 1;
+
+  // set up change of images by changing the options.
+  var select_rm_left = d3.select("#rm_left_count");
+  var select_ab_left = d3.select("#ab_left");
+  var select_ad_left = d3.select("#ad_left");
+  var select_rc_left = d3.select("#rc_left");
+
+  var select_rm_right = d3.select("#rm_right_count");
+  var select_ab_right = d3.select("#ab_right");
+  var select_ad_right = d3.select("#ad_right");
+  var select_rc_right = d3.select("#rc_right");
+
+
+  var rm_left = d3.select("#rm_left");
+  var rm_left_fc = d3.select("#rm_left_fc");
+  var rm_right = d3.select("#rm_right");
+  var rm_right_fc = d3.select("#rm_right_fc");
+
+  var rm_left_time = d3.select("#rm_left_time");
+  var rm_right_time = d3.select("#rm_right_time");
+
+  update_image_grid('right');
+  update_image_grid('left');
+
+  select_rm_right.on("change", function (d) {
+      rm_value_right = d3.select(this).property("value");
+      update_image_grid('right');
+  });
+
+  select_ab_right.on("change", function (d) {
+      ab_value_right = d3.select(this).property("value");
+      update_image_grid('right');
+  });
+
+  select_ad_right.on("change", function (d) {
+      ad_value_right = d3.select(this).property("value");
+      update_image_grid('right');
+  });
+
+  select_rc_right.on("change", function (d) {
+      rc_value_right = d3.select(this).property("value");
+      update_image_grid('right');
+  });
+
+  select_rm_left.on("change", function (d) {
+      rm_value_left = d3.select(this).property("value");
+      update_image_grid('left');
+  });
+
+  select_ab_left.on("change", function (d) {
+      ab_value_left = d3.select(this).property("value");
+      update_image_grid('left');
+  });
+
+  select_ad_left.on("change", function (d) {
+      ad_value_left = d3.select(this).property("value");
+      update_image_grid('left');
+  });
+
+  select_rc_left.on("change", function (d) {
+      rc_value_left = d3.select(this).property("value");
+      update_image_grid('left');
+  });
+
+  function update_image_grid(side){
+    // update images.
+    // This can be re-written as a loop and shorter but since it's only four I copy
+    // paste the code. This will also be easier for new developers to learn.
+    var ad, ab, rc, rm;
+    if (side == 'right'){
+      ad = ("00000" + ad_value_right).slice(-5);
+      ab = ab_value_right;
+      rc = rc_value_right;
+      rm = rm_value_right;
+    } else {
+      ad = ("00000" + ad_value_left).slice(-5);
+      ab = ab_value_left;
+      rc = rc_value_left;
+      rm = rm_value_left;
+    }
+
+    base_path = "./assets/img/radiance_options/ad" + ad + "_ab" + ab + "_c" + rc + "_rm" + rm;
+    var rm_path = base_path + "_o.png";
+    var rm_fc_path = base_path + "_f.png";
+    var base_time = "ad" + ad + "_ab" + ab + "_c" + rc + "_rm" + rm;
+    var time_log = time_log_db[base_time]
+
+    // update images
+    if (side == 'right'){
+      rm_right_time.text("Render time: " + time_log + "s")
+      rm_right.transition().duration(300)
+        .style("opacity", 0).attr("src", "")
+        .transition().duration(300)
+        .attr("src", rm_path).style("opacity", 1);
+
+      rm_right_fc.transition().duration(300)
+        .style("opacity", 0).attr("src", "")
+        .transition().duration(600)
+        .attr("src", rm_fc_path).style("opacity", 1);
+    } else {
+      rm_left_time.text("Render time: " + time_log + "s")
+
+      rm_left.transition().duration(300)
+        .style("opacity", 0).attr("src", "")
+        .transition().duration(300)
+        .attr("src", rm_path).style("opacity", 1);
+
+      rm_left_fc.transition().duration(300)
+        .style("opacity", 0).attr("src", "")
+        .transition().duration(600)
+        .attr("src", rm_fc_path).style("opacity", 1);
+    }
+  }
+
+  </script>
+  <!-- Footer -->
+  <footer id="footer">
+      <div class="container">
+          <div class="row">
+              <div class="col-6 col-sm-3 column">
+                  <h6 class="text-uppercase text-muted">About</h6>
+                  <ul class="list-unstyled">
+                      <li><a href="./about.html#story">Our Story</a></li>
+                      <li><a href="./about.html#team">Team</a></li>
+                      <li><a href="http://discourse.ladybug.tools" target="_blank">Forum</a></li>
+                      <li><a href="./contribute.html">Contribute</a></li>
+                  </ul>
+              </div>
+              <div class="col-6 col-sm-3 column">
+                <h6 class="text-uppercase text-muted">Services</h6>
+                <ul class="list-unstyled">
+                  <li><a href="./services.html">Services</a></li>
+                  <li><a href="./workshop.html">Workshop</a></li>
+              </ul>
+              </div>
+              <div class="col-6 col-sm-3 column">
+                  <h6 class="text-uppercase text-muted">Tools</h6>
+                  <ul class="list-unstyled">
+                      <li><a href="./ladybug">Ladybug</a></li>
+                      <li><a href="./honeybee">Honeybee</a></li>
+                      <li><a href="./butterfly">Butterfly</a></li>
+                      <li><a href="./dragonfly">Dragonfly</a></li>
+                      <li><a href="./epwmap">EPWMap</a></li>
+                  </ul>
+              </div>
+              <div class="col-6 col-sm-3 column">
+                  <h6 class="text-uppercase text-muted">Contact Us</h6>
+                  <ul class="list-unstyled">
+                      <li class="text-muted small"><a href="mailto:info@ladybug.tools?subject=[ladybug-tools] Hello!">info@ladybug.tools</a></li>
+                  </ul>
+                  <ul class="list-inline">
+                      <li class="list-inline-item">
+                        <a rel="nofollow" href="https://www.twitter.com/ladybug_tools" title="Twitter" target="_blank">
+                          <i class="icon-sm fa fa-twitter fa-2x"></i>
+                        </a>&nbsp;
+                      </li>
+                      <li class="list-inline-item">
+                        <a rel="nofollow" href="https://www.facebook.com/ladybug-tools" title="Facebook" target="_blank">
+                          <i class="icon-sm fa fa-facebook fa-2x"></i>
+                        </a>&nbsp;
+                      </li>
+                      <li class="list-inline-item">
+                        <a rel="nofollow" href="https://www.github.com/ladybug-tools" title="GitHub" target="_blank">
+                          <i class="icon-sm fa fa-github fa-2x"></i>
+                        </a>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+          <br>
+          <span class="float-right text-muted small">©2017 Ladybug Tools LLC</span>
+      </div>
+  </footer>
+
+
+  <!--scripts loaded here-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/js/tether.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+  <script src="assets/js/scripts.js"></script>
+  <script>
+
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+	  ga('create', 'UA-100351402-1', 'auto');
+	  ga('send', 'pageview');
+
+  </script>
+</body>
