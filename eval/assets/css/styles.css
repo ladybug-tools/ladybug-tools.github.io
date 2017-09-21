@@ -129,6 +129,10 @@ h6 a:hover {
     text-decoration: none;
 }
 
+.feature h6 {
+  padding-top: 10px;
+}
+
 .wide-space {
     letter-spacing: 1.6px;
 }
