@@ -31,8 +31,9 @@ var graph = {
         {"id": "Airflow", "group": 3, "img": "airflow.png", "size": 75, "text": "Airflow", "link": "./butterfly.html#indoorairflow"},
         {"id": "Outdoor_Comfort", "group": 3, "img": "outdoor_comfort.png", "size": 75, "text": "Outdoor comfort", "link": "./honeybee.html#microclimate"},
         {"id": "HVAC_Sizing", "group": 3, "img": "hvac_sizing.png", "size": 75, "text": "HVAC sizing", "link": "./honeybee.html#hvac"},
-        {"id": "NOAA", "group": 4, "img": "noaa.png", "size": 50, "text": "NOAA Database", "link": ""},
-        {"id": "UWG", "group": 4, "img": "uwg.png", "size": 50, "text": "Urban Weather Gen.", "link": ""}
+        {"id": "NOAA", "group": 4, "img": "noaa.png", "size": 50, "text": "NOAA Database", "link": "./dragonfly.html#amy"},
+        {"id": "LANDSAT", "group": 4, "img": "landsat.png", "size": 50, "text": "Thermal Satellite Imgs", "link": "./dragonfly.html#thermalImage"},
+        {"id": "UWG", "group": 4, "img": "uwg.png", "size": 50, "text": "Urban Weather Gen", "link": "./dragonfly.html#uhi"}
     ],
     "links": [
         {"source": "Center", "target": "Ladybug", "value": 0},
@@ -69,6 +70,7 @@ var graph = {
         {"source": "OpenFoam", "target": "Comfort", "value": 4},
         {"source": "Dragonfly", "target": "NOAA", "value": 4},
         {"source": "Dragonfly", "target": "UWG", "value": 4},
+        {"source": "Dragonfly", "target": "LANDSAT", "value": 4},
     ]
 }
 
