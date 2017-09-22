@@ -2,7 +2,7 @@ var c = d3.select("div#tools_diagram");
 var i = d3.select("img.img-software-icon");
 
 var width = parseFloat(c.style('width')) - 30,
-    height = 5 * parseFloat(i.style('height')) - 30;
+    height = 5.25 * parseFloat(i.style('height')) - 30;
 
 var graph = {
     "nodes": [
