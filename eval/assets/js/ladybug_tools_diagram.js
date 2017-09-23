@@ -2,7 +2,7 @@ var c = d3.select("div#tools_diagram");
 var i = d3.select("img.img-software-icon");
 
 var width = parseFloat(c.style('width')) - 30,
-    height = 5.25 * parseFloat(i.style('height')) - 30;
+    height = 4.75 * parseFloat(i.style('height')) - 30;
 
 var graph = {
     "nodes": [
@@ -17,11 +17,11 @@ var graph = {
         {"id": "Analysis", "group": 1, "img": "analysis.png", "size": 75, "text": "Analyze geometry", "link": "./ladybug.html#radiation"},
         {"id": "EnergyPlus", "group": 2, "img": "energyplus.png", "size": 50, "text": "EnergyPlus", "link": "https://energyplus.net/"},
         {"id": "OpenStudio", "group": 2, "img": "openstudio.png", "size": 50, "text": "OpenStudio", "link": "https://www.openstudio.net/"},
-        {"id": "Energy", "group": 2, "img": "energy.png", "size": 75, "text": "Energy models", "link": "./honeybee.html#heatingCooling"},
+        {"id": "Energy", "group": 2, "img": "energy.png", "size": 75, "text": "Energy Modeling", "link": "./honeybee.html#heatingCooling"},
         {"id": "Radiance", "group": 2, "img": "radiance.png", "size": 50, "text": "Radiance", "link": "https://www.radiance-online.org/"},
         {"id": "Daysim", "group": 2, "img": "daysim.png", "size": 50, "text": "Daysim", "link": "http://daysim.ning.com/"},
-        {"id": "Daylight", "group": 2, "img": "daylight.png", "size": 75, "text": "Daylight analysis", "link": "./honeybee.html#illuminance"},
-        {"id": "Glare", "group": 2, "img": "glare.png", "size": 75, "text": "Glare analysis", "link": "./honeybee.html#glare"},
+        {"id": "Daylight", "group": 2, "img": "daylight.png", "size": 75, "text": "Daylight", "link": "./honeybee.html#illuminance"},
+        {"id": "Glare", "group": 2, "img": "glare.png", "size": 75, "text": "Glare", "link": "./honeybee.html#glare"},
         {"id": "Electric_Lighting", "group": 2, "img": "electric_lighting.png", "size": 75, "text": "Electric lighting", "link": "./honeybee.html#electric"},
         {"id": "Annual_Daylight", "group": 2, "img": "annual_daylight.png", "size": 75, "text": "Annual daylight", "link": "./honeybee.html#annualDaylight"},
         {"id": "Therm", "group": 2, "img": "therm.png", "size": 50, "text": "Therm", "link": "https://windows.lbl.gov/software/therm/therm.html"},
@@ -31,9 +31,9 @@ var graph = {
         {"id": "Airflow", "group": 3, "img": "airflow.png", "size": 75, "text": "Airflow", "link": "./butterfly.html#indoorairflow"},
         {"id": "Outdoor_Comfort", "group": 3, "img": "outdoor_comfort.png", "size": 75, "text": "Outdoor comfort", "link": "./honeybee.html#microclimate"},
         {"id": "HVAC_Sizing", "group": 3, "img": "hvac_sizing.png", "size": 75, "text": "HVAC sizing", "link": "./honeybee.html#hvac"},
-        {"id": "NOAA", "group": 4, "img": "noaa.png", "size": 50, "text": "NOAA Database", "link": "./dragonfly.html#amy"},
-        {"id": "LANDSAT", "group": 4, "img": "landsat.png", "size": 50, "text": "Thermal Satellite Imgs", "link": "./dragonfly.html#thermalImage"},
-        {"id": "UWG", "group": 4, "img": "uwg.png", "size": 50, "text": "Urban Weather Gen", "link": "./dragonfly.html#uhi"}
+        {"id": "AMY", "group": 4, "img": "noaa.png", "size": 50, "text": "NOAA Data", "link": "./dragonfly.html#thermalImage"},
+        {"id": "UWG", "group": 4, "img": "uwg.png", "size": 50, "text": "Heat Island", "link": "./dragonfly.html#uhi"},
+        {"id": "LANDSAT", "group": 4, "img": "landsat.png", "size": 50, "text": "Thermal Satellite Imgs", "link": "./dragonfly.html#thermalImage"}
     ],
     "links": [
         {"source": "Center", "target": "Ladybug", "value": 0},
@@ -43,7 +43,6 @@ var graph = {
         {"source": "Butterfly", "target": "Ladybug", "value": 4},
         {"source": "Butterfly", "target": "Honeybee", "value": 4},
         {"source": "Ladybug", "target": "Dragonfly", "value": 4},
-        {"source": "Dragonfly", "target": "Honeybee", "value": 4},
         {"source": "Ladybug", "target": "Weather_Data", "value": 4},
         {"source": "Ladybug", "target": "Psychrometric", "value": 4},
         {"source": "Ladybug", "target": "Renewables", "value": 4},
@@ -67,12 +66,13 @@ var graph = {
         {"source": "Butterfly", "target": "OpenFoam", "value": 4},
         {"source": "OpenFoam", "target": "Airflow", "value": 4},
         {"source": "OpenFoam", "target": "Outdoor_Comfort", "value": 4},
-        {"source": "OpenFoam", "target": "Comfort", "value": 4},
-        {"source": "Dragonfly", "target": "NOAA", "value": 4},
-        {"source": "Dragonfly", "target": "UWG", "value": 4},
         {"source": "Dragonfly", "target": "LANDSAT", "value": 4},
+        {"source": "Dragonfly", "target": "AMY", "value": 4},
+        {"source": "Dragonfly", "target": "UWG", "value": 4},
     ]
 }
+// {"source": "OpenFoam", "target": "Comfort", "value": 4},
+//{"source": "Dragonfly", "target": "Honeybee", "value": 4},
 
 var transform = d3.zoomIdentity;
 var svg = d3.select("#tools_diagram").append("svg")
