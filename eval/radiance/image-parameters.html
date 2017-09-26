@@ -110,13 +110,28 @@
       <div class="container">
           <div class="row">
               <div class="col-lg-12">
-                  <h1 class="section-title">Side by side comparison</h1>
+                  <h1 class="section-title">Comparison of simulation parameters for Radiance</h1>
                   <hr class="primary">
                   <p class="section-subcontent">
-                    This is an interactive viewer for studying the impact of simulation
-                    parameters on the quality of the Radiance-rendered images. All the
-                    images were generated through matrix-based calculations for
-                    Climate-based Daylight Modeling Studies.
+                    The images below provide a side-by-side comparison of the primary rendering
+                    parameters used for ambient calculations for matrix-based methods. While the
+                    images below were generated using an image-based Daylight Coefficients
+                    simulation (i.e. a Two-Phase Method), the inferences made from these images
+                    are broadly applicable to all types of matrix-based simulations in the
+                    Three-Phase and Four-Phase Method as well.
+                  </p>
+                  <p class="section-subcontent">
+                    Parameters comparable: Ambient bounces (-ab), Ambient Divisions (-ad), Sampling (-c).
+                  </p>
+                  <p class="section-subcontent">
+                    Rationale for comparing two models ("Room1" and" Room2"): "Room1": is a simple
+                    model for a space that contains a single south-facing window. "Room2" is larger
+                    and more complex as it contains contextual geometry, multiple windows and furniture.
+                    Therefore, the parameters required for convergence of results in the case of "Room2"
+                    will be greater, and thus require more computational effort.
+                    <br />
+                    Hint: Try setting -ab as 4, -ad as 2000 and -c as 1 and then compare both
+                    the images and the simulation runtime.
                   </p>
                 </br>
               </div>
@@ -385,13 +400,18 @@
       <div class="container">
           <div class="row">
               <div class="col-lg-12">
-                  <h1 class="section-title">Image grid</h1>
+                  <h1 class="section-title">Impact of Sampling</h1>
                   <hr class="primary">
                   <p class="section-subcontent">
-                    This is an interactive viewer for studying the impact of simulation
-                    parameters on the quality of the Radiance-rendered images. All the
-                    images were generated through matrix-based calculations for
-                    Climate-based Daylight Modeling Studies.
+                    The two-dimensional grid of images below show the effect of the sampling
+                    parameter (-c) on the results. The value of ambient divisions increases
+                    from (500 to 20,000) along the row of images and the value of ambient bounces
+                    increases along the columns (1 to 4). The runtime and rendering parameters
+                    are mentioned below each image.
+                  </p>
+                  <p class="section-subcontent">
+                    Parameters comparable: Sampling (-c).<br />
+                    Note: The value of -c for illuminance-based calculations defaults to 1.
                   </p>
                 </br>
               </div>
