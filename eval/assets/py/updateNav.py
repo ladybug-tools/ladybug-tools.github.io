@@ -27,9 +27,10 @@ for htmlFile in os.listdir(currentDir):
                 elif navTrigger == True:
                     searchStr = searchStr + line
 
-            # Replace the text.
+        # Replace the text.
+        with open(htmlFileAddress, 'r') as webPageFile:
             text = webPageFile.read()
-            text = text.replace(searchStr, navStr)
+        text = text.replace(searchStr, navStr)
 
         with open(htmlFileAddress, 'w') as f:
           f.write(text)
