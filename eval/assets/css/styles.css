@@ -296,7 +296,6 @@ section {
     width: 80%;
     height: auto;
     border-radius: 50%;
-    transition: all .4s;
     -webkit-filter:grayscale(75%);
     -moz-filter:grayscale(75%);
     -ms-filter:grayscale(75%);
