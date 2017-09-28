@@ -296,6 +296,7 @@ section {
     width: 80%;
     height: auto;
     border-radius: 50%;
+    transition: all .4s;
     -webkit-filter:grayscale(75%);
     -moz-filter:grayscale(75%);
     -ms-filter:grayscale(75%);
@@ -305,6 +306,11 @@ section {
 
 .patron-wall-image:hover {
     box-shadow: 0 0 10px #888888;
+    -webkit-filter:grayscale(0%);
+    -moz-filter:grayscale(0%);
+    -ms-filter:grayscale(0%);
+    -o-filter:grayscale(0%);
+    filter:grayscale(0%);
 }
 
 .feature-icon {
