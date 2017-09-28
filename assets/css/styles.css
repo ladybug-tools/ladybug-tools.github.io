@@ -67,6 +67,16 @@ hr.butterfly {
     max-width: none;
 }
 
+i.fa-hidden {
+  opacity: 0.3;
+  color: gray;
+}
+
+i.fa-hidden:hover {
+  opacity: 1.0;
+}
+
+
 a {
     color: #001A33;
     -webkit-transition: all .35s;
