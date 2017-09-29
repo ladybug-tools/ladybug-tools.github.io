@@ -278,8 +278,12 @@ section {
     -o-filter: grayscale(100%);
 }
 
-.faq {
-  padding-top: 60px;
+.padding-top-50 {
+  padding-top: 50px;
+}
+
+.padding-top-30 {
+  padding-top: 30px;
 }
 
 .img-software-icon {
