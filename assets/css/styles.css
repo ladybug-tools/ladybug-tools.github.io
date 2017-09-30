@@ -196,7 +196,7 @@ h6 a{
     font-weight:bold;
 }
 
-h6 a:hover {
+h1 a:hover, h4 a:hover, h6 a:hover{
     text-decoration: none;
 }
 
