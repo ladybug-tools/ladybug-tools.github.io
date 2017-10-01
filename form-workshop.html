@@ -268,6 +268,30 @@
   <script src="assets/js/scripts.js"></script>
 
   <script>
+    // dictionary of form options
+    var formOptions = {
+      1:"#1 Parametric/generative modeling essentials for Ladybug Tools",
+      2:"#2 Ladybug basics",
+      3:"#3 Honeybee basics for daylighting",
+      4:"#4 Honeybee basics for energy simulation",
+      5:"#5 Getting started with Ladybug and Honeybee for daylighting",
+      6:"#6 Getting started with Ladybug and Honeybee for energy simulation",
+      7:"#7 Honeybee basics for  U-value modeling",
+      8:"#8 Thermal comfort modeling with Honeybee",
+      9:"#9 HVAC modeling and sizing with Honeybee",
+      10:"#10 Automated iterative modeling + analysis",
+      11:"#11 CFD modeling with Butterfly",
+      12:"#12 Advanced daylight modeling with Honeybee",
+      13:"Custom workshop (please describe below)",
+      14:"Multiple workshops (please describe below)"
+    }
+    //call URL parser function
+    var thisURL = location.href;
+    var workshopOption = thisURL.split("#")[1]
+    $("#element_0").val(formOptions[workshopOption])
+  </script>
+
+  <script>
 
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
