@@ -105,7 +105,8 @@
 
                 <input name="element_counts" value="13" type="hidden" />
                 <input name="embed" value="forms" type="hidden" />
-                <input  value="Submit" type="submit" class="btn btn-primary-outline btn-l" style="width:100px; background:#001A33; color: white;"/>
+                <input  id="myBtn" value="Submit" type="submit" class="btn btn-primary-outline btn-l" style="width:100px; background:#001A33; color: white;" disabled/>
+                <p id="missing"><span style="color:red;">Missing required fields</span></p>
             </form>
             </div>
            </div>
@@ -267,6 +268,20 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
   <script src="assets/js/scripts.js"></script>
+
+  <script>
+    $("#emf-form").on("change", function(event) {
+      var compName = $("#element_2").val()
+      var packInter = $("#element_0").val()
+      var firstName = $("#element_5").val()
+      var lastName = $("#element_6").val()
+      var email = $("#element_10").val()
+      if (compName != '' && packInter != '' && firstName != '' && lastName != '' && email.includes("@")){
+        document.getElementById("myBtn").disabled = false
+        $("#missing").text('')
+      }
+    })
+  </script>
 
   <script>
     // dictionary of form options
