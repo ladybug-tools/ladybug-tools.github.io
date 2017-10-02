@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Ladybug Tools | Workshop Thank You</title>
-  <meta name="description" content="ladybug tools - workshop thank you" />
+  <title>Ladybug Tools | Thank You</title>
+  <meta name="description" content="ladybug tools - thank you" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" />
@@ -25,9 +25,7 @@
               </div>
               <div class="col-md-9 col-12 inner">
               <h1>Thank you!</h1>
-              <h6 class="wow fadeIn text-normal wow fadeIn">
-                Your request for workshop information has been received and a member of our team will be in contact with you shortly.
-                If you have any changes to your request, please email <a href="mailto:workshop@ladybug.tools?subject=ladybug tools workshop">workshop@ladybug.tools</a>.
+              <h6 class="wow fadeIn text-normal wow fadeIn" id="thankYouText">
               </h6>
             </div>
            </div>
@@ -188,6 +186,20 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
   <script src="assets/js/scripts.js"></script>
+
+  <script>
+    // dictionary of form options
+    var formOptions = {
+      'workshop':'Your request for workshop information has been received and a member of our team will be in contact with you shortly. \
+        If you have any changes to your request, please email workshop@ladybug.tools.',
+      'partnership':"#2 Ladybug basics"
+    }
+    //call URL parser function
+    var thisURL = location.href;
+    var workshopOption = thisURL.split("#")[1]
+    console.log(workshopOption)
+    $("#thankYouText").text(formOptions[workshopOption])
+  </script>
 
   <script>
 
