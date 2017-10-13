@@ -187,6 +187,10 @@ li.card-text {
     font-family:'Helvetica Neue',Arial,sans-serif;
 }
 
+.patron-button {
+  width: 10em;
+}
+
 h6, .text-uppercase{
     line-height: 28px;
     font-size: 20px;
