@@ -22,11 +22,11 @@ p a:hover {
   color: #b34b49;
 }
 
-li a {
+li a.bold_link {
   color: #b34b49;
 }
 
-li a:hover {
+li a.bold_link:hover {
   color: #b34b49;
 }
 
