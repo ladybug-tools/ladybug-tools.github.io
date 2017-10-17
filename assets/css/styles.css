@@ -22,6 +22,14 @@ p a:hover {
   color: #b34b49;
 }
 
+li a {
+  color: #b34b49;
+}
+
+li a:hover {
+  color: #b34b49;
+}
+
 select {
   margin-bottom: 10px;
 }
