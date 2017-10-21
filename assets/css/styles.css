@@ -318,15 +318,15 @@ section {
 }
 
 .patron-wall-image {
-    padding: 1px;
+    padding: 2px;
     width: 80%;
     height: auto;
     border-radius: 50%;
-    -webkit-filter:grayscale(75%);
-    -moz-filter:grayscale(75%);
-    -ms-filter:grayscale(75%);
-    -o-filter:grayscale(75%);
-    filter:grayscale(75%);
+    -webkit-filter:grayscale(85%);
+    -moz-filter:grayscale(85%);
+    -ms-filter:grayscale(85%);
+    -o-filter:grayscale(85%);
+    filter:grayscale(85%);
 }
 
 .patron-wall-image:hover {
