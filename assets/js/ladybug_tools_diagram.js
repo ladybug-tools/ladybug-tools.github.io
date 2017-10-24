@@ -24,7 +24,7 @@ var graph = {
         {"id": "Glare", "group": 2, "img": "glare.png", "size": 75, "text": "Glare", "link": "./honeybee.html#glare"},
         {"id": "Electric_Lighting", "group": 2, "img": "electric_lighting.png", "size": 75, "text": "Electric lighting", "link": "./honeybee.html#electric"},
         {"id": "Annual_Daylight", "group": 2, "img": "annual_daylight.png", "size": 75, "text": "Annual daylight", "link": "./honeybee.html#annualDaylight"},
-        {"id": "Therm", "group": 2, "img": "therm.png", "size": 50, "text": "Therm", "link": "https://windows.lbl.gov/software/therm/therm.html"},
+        {"id": "Therm", "group": 2, "img": "therm.png", "size": 50, "text": "Therm", "link": "https://windows.lbl.gov/software/therm"},
         {"id": "Glazing_cnstr", "group": 2, "img": "glazing_construction.png", "size": 75, "text": "U-Value", "link": "./honeybee.html#envelope"},
         {"id": "Comfort", "group": 2, "img": "comfort.png", "size": 75, "text": "Indoor comfort", "link": "./honeybee.html#comfort"},
         {"id": "OpenFoam", "group": 3, "img": "OpenFoam.png", "size": 50, "text": "OpenFOAM", "link": "http://www.openfoam.com/"},
