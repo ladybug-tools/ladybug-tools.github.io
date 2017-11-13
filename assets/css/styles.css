@@ -75,6 +75,12 @@ hr.butterfly {
     max-width: none;
 }
 
+hr.dragonfly {
+    border-color: #00a651;
+    opacity: 1;
+    max-width: none;
+}
+
 i.fa-hidden {
   opacity: 0.3;
   color: gray;
@@ -133,6 +139,13 @@ li.butterfly {
     height: 10px;
     width: 10px;
     background-color: #26abe2;
+    margin-top: 5px;
+}
+
+li.dragonfly {
+    height: 10px;
+    width: 10px;
+    background-color: #00a651;
     margin-top: 5px;
 }
 
