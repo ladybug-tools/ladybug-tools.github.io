@@ -169,6 +169,10 @@ li.card-text {
   font-weight: bold;
 }
 
+#video-instructions li {
+  padding-top:15px;
+}
+
 .card-text {
   font-size: 17px;
   line-height: 1.7;
