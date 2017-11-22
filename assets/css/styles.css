@@ -180,6 +180,11 @@ li.card-text {
   font-weight: bold;
 }
 
+.card-block{
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
 .detail-text {
   font-size: 14px;
   font-weight: bold;
@@ -250,6 +255,10 @@ h1 a:hover, h3 a:hover, h4 a:hover, h6 a:hover{
     background-color: #fff;
 }
 
+.white {
+    background-color: #fff;
+}
+
 .text-faded {
     color: rgba(245,245,245,0.7);
 }
@@ -282,6 +291,7 @@ section {
     padding: 70px 0;
     -webkit-transform: translateZ(0); /* https://www.binarymoon.co.uk/2014/02/fixing-css-transitions-in-google-chrome/ */
     backface-visibility: hidden;
+    background-color: rgba(245,245,245,0.7);
 }
 
 .section-title {
@@ -575,6 +585,9 @@ footer h4, footer h6 {
 .card-deck {
   margin-top: 15px;
   margin-bottom: 15px;
+}
+.card-title {
+  margin-top: 10px;
 }
 
 textarea {
