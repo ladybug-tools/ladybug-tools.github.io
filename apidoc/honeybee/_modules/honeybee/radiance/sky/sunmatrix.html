@@ -1,0 +1,373 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.sky.sunmatrix &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../index.html">
+    <img class="logo" src="../../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.sky.sunmatrix</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">._skyBase</span> <span class="k">import</span> <span class="n">RadianceSky</span>
+<span class="kn">from</span> <span class="nn">.gendaylit</span> <span class="k">import</span> <span class="n">gendaylit</span>
+
+<span class="kn">from</span> <span class="nn">ladybug.dt</span> <span class="k">import</span> <span class="n">DateTime</span>
+<span class="kn">from</span> <span class="nn">ladybug.sunpath</span> <span class="k">import</span> <span class="n">Sunpath</span>
+<span class="kn">from</span> <span class="nn">ladybug.wea</span> <span class="k">import</span> <span class="n">Wea</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<div class="viewcode-block" id="SunMatrix"><a class="viewcode-back" href="../../../../honeybee.radiance.sky.html#honeybee.radiance.sky.sunmatrix.SunMatrix">[docs]</a><span class="k">class</span> <span class="nc">SunMatrix</span><span class="p">(</span><span class="n">RadianceSky</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Radiance sun matrix (analemma) created from weather file.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        wea: An instance of ladybug Wea.</span>
+<span class="sd">        north: An angle in degrees between 0-360 to indicate north direction</span>
+<span class="sd">            (Default: 0).</span>
+<span class="sd">        hoys: The list of hours for generating the sky matrix (Default: 0..8759)</span>
+<span class="sd">        sky_type: Specify 0 for visible radiation, 1 for total solar radiation.</span>
+<span class="sd">        suffix: An optional suffix for sky name. The suffix will be added at the</span>
+<span class="sd">            end of the standard name. Use this input to customize the new and</span>
+<span class="sd">            avoid sky being overwritten by other skymatrix components.</span>
+<span class="sd">    Usage:</span>
+
+<span class="sd">        from honeybee.radiance.sky.sunmatrix import SunMatrix</span>
+<span class="sd">        epwfile = r&quot;./USA_CA_San.Francisco.Intl.AP.724940_TMY3.epw&quot;</span>
+<span class="sd">        sunmtx = sun_matrix.from_epw_file(epwfile, north=20)</span>
+<span class="sd">        analemma, sunlist, sunmtxfile = sunmtx.execute(&#39;c:/ladybug&#39;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wea</span><span class="p">,</span> <span class="n">north</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">hoys</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sky_type</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create sun matrix.&quot;&quot;&quot;</span>
+        <span class="n">RadianceSky</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wea</span> <span class="o">=</span> <span class="n">wea</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">north</span> <span class="o">=</span> <span class="n">north</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hoys</span> <span class="o">=</span> <span class="n">hoys</span> <span class="ow">or</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8760</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sky_type</span> <span class="o">=</span> <span class="n">sky_type</span>  <span class="c1"># set default to 0 for visible radiation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">suffix</span> <span class="o">=</span> <span class="n">suffix</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span>
+
+<div class="viewcode-block" id="SunMatrix.from_epw_file"><a class="viewcode-back" href="../../../../honeybee.radiance.sky.html#honeybee.radiance.sky.sunmatrix.SunMatrix.from_epw_file">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_epw_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">epw_file</span><span class="p">,</span> <span class="n">north</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">hoys</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create sun matrix from an epw file.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">Wea</span><span class="o">.</span><span class="n">from_epw_file</span><span class="p">(</span><span class="n">epw_file</span><span class="p">),</span> <span class="n">north</span><span class="p">,</span> <span class="n">hoys</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">isSunMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_climate_based</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True if the sky is generated from values from weather file.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">wea</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;An instance of ladybug Wea.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wea</span>
+
+    <span class="nd">@wea</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">wea</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s1">&#39;isWea&#39;</span><span class="p">),</span> \
+            <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;wea must be a WEA object not a </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">w</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wea</span> <span class="o">=</span> <span class="n">w</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">north</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;An angle in degrees between 0-360 to indicate north direction (Default: 0).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_north</span>
+
+    <span class="nd">@north</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">north</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="n">north</span> <span class="o">=</span> <span class="n">n</span> <span class="ow">or</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_north</span> <span class="o">=</span> <span class="n">north</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sky default name.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;sunmtx_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sky_type_human_readable</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wea</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">station_id</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wea</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wea</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">longitude</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">north</span><span class="p">,</span>
+            <span class="s1">&#39;_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">suffix</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">suffix</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sky_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Specify 0 for visible radiation, 1 for solar radiation and 2 for luminance.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sky_type</span>
+
+    <span class="nd">@sky_type</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">sky_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Specify 0 for visible radiation, 1 for solar radiation and 2 for luminance.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sky_type</span> <span class="o">=</span> <span class="n">t</span> <span class="o">%</span> <span class="mi">3</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sky_type_human_readable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Human readable sky type.&quot;&quot;&quot;</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;vis&#39;</span><span class="p">,</span> <span class="s1">&#39;sol&#39;</span><span class="p">,</span> <span class="s1">&#39;lum&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">values</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sky_type</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">analemmafile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Analemma file.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.ann&#39;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sunlistfile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sun list file.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.sun&#39;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sunmtxfile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sun matrix file.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.mtx&#39;</span>
+
+<div class="viewcode-block" id="SunMatrix.hours_match"><a class="viewcode-back" href="../../../../honeybee.radiance.sky.html#honeybee.radiance.sky.sunmatrix.SunMatrix.hours_match">[docs]</a>    <span class="k">def</span> <span class="nf">hours_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hours_file</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if hours in the hours file matches the hours of wea.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">hours_file</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">hours_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">hrf</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">hrf</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+        <span class="n">found</span> <span class="o">=</span> <span class="n">line</span> <span class="o">==</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hoys</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+        <span class="k">if</span> <span class="n">found</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Reusing sun_matrix: </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sunmtxfile</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">found</span></div>
+
+<div class="viewcode-block" id="SunMatrix.execute"><a class="viewcode-back" href="../../../../honeybee.radiance.sky.html#honeybee.radiance.sky.sunmatrix.SunMatrix.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">working_dir</span><span class="p">,</span> <span class="n">reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate sun matrix.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            working_dir: Folder to execute and write the output.</span>
+<span class="sd">            reuse: Reuse the matrix if already existed in the folder.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Full path to analemma, sunlist and sun_matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fp</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">working_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">analemmafile</span><span class="p">)</span>
+        <span class="n">lfp</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">working_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sunlistfile</span><span class="p">)</span>
+        <span class="n">mfp</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">working_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sunmtxfile</span><span class="p">)</span>
+        <span class="n">hrf</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">working_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.hrs&#39;</span><span class="p">)</span>
+        <span class="n">output_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky_type</span>
+
+        <span class="k">if</span> <span class="n">reuse</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hours_match</span><span class="p">(</span><span class="n">hrf</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">lfp</span><span class="p">,</span> <span class="n">mfp</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+                        <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">fp</span><span class="p">,</span> <span class="n">lfp</span><span class="p">,</span> <span class="n">mfp</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">hrf</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outf</span><span class="p">:</span>
+            <span class="n">outf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hoys</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="n">wea</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wea</span>
+        <span class="n">month_date_time</span> <span class="o">=</span> <span class="p">(</span><span class="n">DateTime</span><span class="o">.</span><span class="n">from_hoy</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hoys</span><span class="p">)</span>
+        <span class="n">latitude</span><span class="p">,</span> <span class="n">longitude</span> <span class="o">=</span> <span class="n">wea</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span> <span class="o">-</span><span class="n">wea</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">longitude</span>
+
+        <span class="n">sp</span> <span class="o">=</span> <span class="n">Sunpath</span><span class="o">.</span><span class="n">from_location</span><span class="p">(</span><span class="n">wea</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">north</span><span class="p">)</span>
+        <span class="n">solarradiances</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">sun_values</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">sun_up_hours</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># collect hours that sun is up</span>
+        <span class="n">solarstring</span> <span class="o">=</span> \
+            <span class="s1">&#39;void light solar</span><span class="si">{0}</span><span class="s1"> 0 0 3 </span><span class="si">{1}</span><span class="s1"> </span><span class="si">{1}</span><span class="s1"> </span><span class="si">{1}</span><span class="s1"> &#39;</span> \
+            <span class="s1">&#39;solar</span><span class="si">{0}</span><span class="s1"> source sun 0 0 4 </span><span class="si">{2:.6f}</span><span class="s1"> </span><span class="si">{3:.6f}</span><span class="s1"> </span><span class="si">{4:.6f}</span><span class="s1"> 0.533&#39;</span>
+
+        <span class="c1"># use gendaylit to calculate radiation values for each hour.</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Calculating sun positions and radiation values.&#39;</span><span class="p">)</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">timecount</span><span class="p">,</span> <span class="n">timeStamp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">month_date_time</span><span class="p">):</span>
+            <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hour</span> <span class="o">=</span> <span class="n">timeStamp</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">timeStamp</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">timeStamp</span><span class="o">.</span><span class="n">hour</span> <span class="o">+</span> <span class="mf">0.5</span>
+            <span class="n">dnr</span><span class="p">,</span> <span class="n">dhr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">wea</span><span class="o">.</span><span class="n">direct_normal_radiation</span><span class="p">[</span><span class="n">timeStamp</span><span class="o">.</span><span class="n">int_hoy</span><span class="p">]),</span> \
+                <span class="nb">int</span><span class="p">(</span><span class="n">wea</span><span class="o">.</span><span class="n">diffuse_horizontal_radiation</span><span class="p">[</span><span class="n">timeStamp</span><span class="o">.</span><span class="n">int_hoy</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">dnr</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">sun</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">calculate_sun</span><span class="p">(</span><span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hour</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">sun</span><span class="o">.</span><span class="n">altitude</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">sun</span><span class="o">.</span><span class="n">sun_vector</span>
+            <span class="n">solarradiance</span> <span class="o">=</span> \
+                <span class="nb">int</span><span class="p">(</span><span class="n">gendaylit</span><span class="p">(</span><span class="n">sun</span><span class="o">.</span><span class="n">altitude</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hour</span><span class="p">,</span> <span class="n">dnr</span><span class="p">,</span> <span class="n">dhr</span><span class="p">,</span> <span class="n">output_type</span><span class="p">))</span>
+            <span class="n">cur_sun_definition</span> <span class="o">=</span> <span class="n">solarstring</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">solarradiance</span><span class="p">,</span> <span class="o">-</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="n">y</span><span class="p">,</span> <span class="o">-</span><span class="n">z</span><span class="p">)</span>
+            <span class="n">solarradiances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">solarradiance</span><span class="p">)</span>
+            <span class="n">sun_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur_sun_definition</span><span class="p">)</span>
+            <span class="c1"># keep the number of hour relative to hoys in this sun matrix</span>
+            <span class="n">sun_up_hours</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">timecount</span><span class="p">)</span>
+
+        <span class="n">sun_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sun_up_hours</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">sun_count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;There is 0 sun up hours!&#39;</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;# Number of sun up hours: </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">sun_count</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Writing sun positions and radiation values to </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fp</span><span class="p">))</span>
+        <span class="c1"># create solar discs.</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">annfile</span><span class="p">:</span>
+            <span class="n">annfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sun_values</span><span class="p">))</span>
+            <span class="n">annfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Writing list of suns to </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lfp</span><span class="p">))</span>
+        <span class="c1"># create list of suns.</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">lfp</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">sunlist</span><span class="p">:</span>
+            <span class="n">sunlist</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s2">&quot;solar</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">sun_count</span><span class="p">)))</span>
+            <span class="p">)</span>
+            <span class="n">sunlist</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Start creating header for the sun matrix.</span>
+        <span class="n">file_header</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;#?RADIANCE&#39;</span><span class="p">]</span>
+        <span class="n">file_header</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;Sun matrix created by Honeybee&#39;</span><span class="p">]</span>
+        <span class="n">file_header</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;LATLONG= </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">latitude</span><span class="p">,</span> <span class="o">-</span><span class="n">longitude</span><span class="p">)]</span>
+        <span class="n">file_header</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;NROWS=</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">sun_count</span><span class="p">]</span>
+        <span class="n">file_header</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;NCOLS=</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hoys</span><span class="p">)]</span>
+        <span class="n">file_header</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;NCOMP=3&#39;</span><span class="p">]</span>
+        <span class="n">file_header</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;FORMAT=ascii&#39;</span><span class="p">]</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Writing sun matrix to </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mfp</span><span class="p">))</span>
+        <span class="c1"># Write the matrix to file.</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">mfp</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">sunMtx</span><span class="p">:</span>
+            <span class="n">sunMtx</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">file_header</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">sunValue</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">solarradiances</span><span class="p">):</span>
+                <span class="n">sun_rad_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0 0 0&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hoys</span><span class="p">)</span>
+                <span class="n">sun_rad_list</span><span class="p">[</span><span class="n">sun_up_hours</span><span class="p">[</span><span class="n">idx</span><span class="p">]]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> </span><span class="si">{0}</span><span class="s1"> </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sunValue</span><span class="p">)</span>
+                <span class="n">sunMtx</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sun_rad_list</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="n">sunMtx</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">fp</span><span class="p">,</span> <span class="n">lfp</span><span class="p">,</span> <span class="n">mfp</span></div>
+
+<div class="viewcode-block" id="SunMatrix.duplicate"><a class="viewcode-back" href="../../../../honeybee.radiance.sky.html#honeybee.radiance.sky.sunmatrix.SunMatrix.duplicate">[docs]</a>    <span class="k">def</span> <span class="nf">duplicate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Duplicate this class.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">sun_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wea</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">north</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hoys</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">suffix</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SunMatrix.to_rad_string"><a class="viewcode-back" href="../../../../honeybee.radiance.sky.html#honeybee.radiance.sky.sunmatrix.SunMatrix.to_rad_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_rad_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">working_dir</span><span class="p">,</span> <span class="n">write_hours</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the radiance command line as a string.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
+            <span class="s1">&#39;sun_matrix does not have a single line command. Try execute method.&#39;</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="SunMatrix.ToString"><a class="viewcode-back" href="../../../../honeybee.radiance.sky.html#honeybee.radiance.sky.sunmatrix.SunMatrix.ToString">[docs]</a>    <span class="k">def</span> <span class="nf">ToString</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwrite .NET ToString method.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sky representation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

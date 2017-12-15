@@ -1,0 +1,327 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.sky.skymatrix &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../index.html">
+    <img class="logo" src="../../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.sky.skymatrix</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">ladybug.wea</span> <span class="k">import</span> <span class="n">Wea</span>
+<span class="kn">from</span> <span class="nn">._skyBase</span> <span class="k">import</span> <span class="n">RadianceSky</span>
+<span class="kn">from</span> <span class="nn">..command.gendaymtx</span> <span class="k">import</span> <span class="n">Gendaymtx</span>
+<span class="kn">from</span> <span class="nn">..parameters.gendaymtx</span> <span class="k">import</span> <span class="n">GendaymtxParameters</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<div class="viewcode-block" id="SkyMatrix"><a class="viewcode-back" href="../../../../honeybee.radiance.sky.html#honeybee.radiance.sky.skymatrix.SkyMatrix">[docs]</a><span class="k">class</span> <span class="nc">SkyMatrix</span><span class="p">(</span><span class="n">RadianceSky</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Radiance sky matrix based on an epw weather file.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        wea: An instance of ladybug Wea.</span>
+<span class="sd">        sky_density: A positive intger for sky density. [1] Tregenza Sky,</span>
+<span class="sd">            [2] Reinhart Sky, etc. (Default: 1)</span>
+<span class="sd">        north: An angle in degrees between 0-360 to indicate north direction</span>
+<span class="sd">            (Default: 0).</span>
+<span class="sd">        hoys: The list of hours for generating the sky matrix (Default: 0..8759).</span>
+<span class="sd">        mode: Sky mode 0: total, 1: direct-only, 2: diffuse-only (Default: 0).</span>
+<span class="sd">        suffix: An optional suffix for sky name. The suffix will be added at the</span>
+<span class="sd">            end of the standard name. Use this input to customize the new and</span>
+<span class="sd">            avoid sky being overwritten by other skymatrix components.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;_wea&#39;</span><span class="p">,</span> <span class="s1">&#39;hoys&#39;</span><span class="p">,</span> <span class="s1">&#39;_sky_type&#39;</span><span class="p">,</span> <span class="s1">&#39;_sky_matrixParameters&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;_mode&#39;</span><span class="p">,</span> <span class="s1">&#39;suffix&#39;</span><span class="p">,</span> <span class="s1">&#39;north&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wea</span><span class="p">,</span> <span class="n">sky_density</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">north</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">hoys</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create sky.&quot;&quot;&quot;</span>
+        <span class="n">RadianceSky</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wea</span> <span class="o">=</span> <span class="n">wea</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hoys</span> <span class="o">=</span> <span class="n">hoys</span> <span class="ow">or</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8760</span><span class="p">)</span>
+        <span class="n">sky_density</span> <span class="o">=</span> <span class="n">sky_density</span> <span class="ow">or</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sky_type</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># default to visible radiation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sky_matrixParameters</span> <span class="o">=</span> <span class="n">GendaymtxParameters</span><span class="p">(</span><span class="n">output_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_sky_type</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">north</span> <span class="o">=</span> <span class="n">north</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sky_density</span> <span class="o">=</span> <span class="n">sky_density</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">suffix</span> <span class="o">=</span> <span class="n">suffix</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span>
+
+<div class="viewcode-block" id="SkyMatrix.from_epw_file"><a class="viewcode-back" href="../../../../honeybee.radiance.sky.html#honeybee.radiance.sky.skymatrix.SkyMatrix.from_epw_file">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_epw_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">epw_file</span><span class="p">,</span> <span class="n">sky_density</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">north</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                      <span class="n">hoys</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create sky from an epw file.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">Wea</span><span class="o">.</span><span class="n">from_epw_file</span><span class="p">(</span><span class="n">epw_file</span><span class="p">),</span> <span class="n">sky_density</span><span class="p">,</span> <span class="n">north</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span>
+                   <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">isSkyMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_climate_based</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True if the sky is generated from values from weather file.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sky_matrix_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return sky matrix parameters.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sky_matrixParameters</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">wea</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;An instance of ladybug Wea.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wea</span>
+
+    <span class="nd">@wea</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">wea</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s1">&#39;isWea&#39;</span><span class="p">),</span> \
+            <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;wea must be a WEA object not a </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">w</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wea</span> <span class="o">=</span> <span class="n">w</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sky_density</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A positive intger for sky density. [1] Tregenza Sky, [2] Reinhart Sky, etc.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sky_matrixParameters</span><span class="o">.</span><span class="n">sky_density</span>
+
+    <span class="nd">@sky_density</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">sky_density</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="n">sky_density</span> <span class="o">=</span> <span class="n">s</span> <span class="ow">or</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sky_matrixParameters</span><span class="o">.</span><span class="n">sky_density</span> <span class="o">=</span> <span class="n">sky_density</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">north</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;An angle in degrees between 0-360 to indicate north direction (Default: 0).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sky_matrixParameters</span><span class="o">.</span><span class="n">rotation</span>
+
+    <span class="nd">@north</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">north</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="n">north</span> <span class="o">=</span> <span class="n">n</span> <span class="ow">or</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sky_matrixParameters</span><span class="o">.</span><span class="n">rotation</span> <span class="o">=</span> <span class="n">north</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sky mode 0: total, 1: direct-only, 2: diffuse-only (Default: 0).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span>
+
+    <span class="nd">@mode</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span> <span class="o">=</span> <span class="n">m</span> <span class="ow">or</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sky_matrixParameters</span><span class="o">.</span><span class="n">only_direct</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sky_matrixParameters</span><span class="o">.</span><span class="n">only_sky</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sky_matrixParameters</span><span class="o">.</span><span class="n">only_direct</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sky_matrixParameters</span><span class="o">.</span><span class="n">only_sky</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sky_matrixParameters</span><span class="o">.</span><span class="n">only_direct</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sky_matrixParameters</span><span class="o">.</span><span class="n">only_sky</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sky default name.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;skymtx_</span><span class="si">{}</span><span class="s2">_r</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sky_type_human_readable</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky_density</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wea</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">station_id</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wea</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wea</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">longitude</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">north</span><span class="p">,</span>
+            <span class="s1">&#39;_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">suffix</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">suffix</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sky_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Specify 0 for visible radiation, 1 for total solar radiation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sky_type</span>
+
+    <span class="nd">@sky_type</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">sky_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Specify 0 for visible radiation, 1 for total solar radiation.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sky_type</span> <span class="o">=</span> <span class="n">t</span> <span class="o">%</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sky_matrixParameters</span><span class="o">.</span><span class="n">output_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sky_type</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sky_type_human_readable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Human readable sky type.&quot;&quot;&quot;</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;vis&#39;</span><span class="p">,</span> <span class="s1">&#39;sol&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">values</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sky_type</span><span class="p">]</span>
+
+<div class="viewcode-block" id="SkyMatrix.hours_match"><a class="viewcode-back" href="../../../../honeybee.radiance.sky.html#honeybee.radiance.sky.skymatrix.SkyMatrix.hours_match">[docs]</a>    <span class="k">def</span> <span class="nf">hours_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hours_file</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if hours in the hours file matches the hours of wea.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">hours_file</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">hours_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">hrf</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">hrf</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">line</span> <span class="o">==</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hoys</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span></div>
+
+<div class="viewcode-block" id="SkyMatrix.write_wea"><a class="viewcode-back" href="../../../../honeybee.radiance.sky.html#honeybee.radiance.sky.skymatrix.SkyMatrix.write_wea">[docs]</a>    <span class="k">def</span> <span class="nf">write_wea</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">write_hours</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write the wea file.</span>
+
+<span class="sd">        WEA carries radiation values from epw and is what gendaymtx uses to</span>
+<span class="sd">        generate the sky.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            target_dir: Path to target directory.</span>
+<span class="sd">            write_hours: Write hours in a separate file in folder.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">weafilepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.wea&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">wea</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">weafilepath</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hoys</span><span class="p">,</span> <span class="n">write_hours</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SkyMatrix.to_rad_string"><a class="viewcode-back" href="../../../../honeybee.radiance.sky.html#honeybee.radiance.sky.skymatrix.SkyMatrix.to_rad_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_rad_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">working_dir</span><span class="p">,</span> <span class="n">write_hours</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the radiance command line as a string.&quot;&quot;&quot;</span>
+        <span class="c1"># check if wea file in available otherwise include the line</span>
+        <span class="n">outfilepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">working_dir</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.smx&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="n">weafilepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">working_dir</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.wea&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="n">weafilepath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wea</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">weafilepath</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hoys</span><span class="p">,</span> <span class="n">write_hours</span><span class="p">)</span>
+        <span class="n">genday</span> <span class="o">=</span> <span class="n">Gendaymtx</span><span class="p">(</span><span class="n">wea_file</span><span class="o">=</span><span class="n">weafilepath</span><span class="p">,</span> <span class="n">output_name</span><span class="o">=</span><span class="n">outfilepath</span><span class="p">)</span>
+        <span class="n">genday</span><span class="o">.</span><span class="n">gendaymtx_parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sky_matrixParameters</span>
+        <span class="n">genday</span><span class="o">.</span><span class="n">gendaymtx_parameters</span><span class="o">.</span><span class="n">output_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky_type</span>
+        <span class="k">return</span> <span class="n">genday</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SkyMatrix.execute"><a class="viewcode-back" href="../../../../honeybee.radiance.sky.html#honeybee.radiance.sky.skymatrix.SkyMatrix.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">working_dir</span><span class="p">,</span> <span class="n">reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate sky matrix.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            working_dir: Folder to execute and write the output.</span>
+<span class="sd">            reuse: Reuse the matrix if already existed in the folder.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">outfilepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">working_dir</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.smx&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="n">weafilepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">working_dir</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.wea&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="n">hoursfilepath</span> <span class="o">=</span> <span class="n">weafilepath</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.hrs&#39;</span>
+
+        <span class="k">if</span> <span class="n">reuse</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">outfilepath</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">hours_match</span><span class="p">(</span><span class="n">hoursfilepath</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Using the same SkyMatrix from an older run.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">())</span>
+            <span class="k">return</span> <span class="n">outfilepath</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">outfilepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">working_dir</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.smx&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+            <span class="n">weafilepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">working_dir</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.wea&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+            <span class="n">weafilepath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wea</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">weafilepath</span><span class="p">)</span>
+            <span class="n">genday</span> <span class="o">=</span> <span class="n">Gendaymtx</span><span class="p">(</span><span class="n">wea_file</span><span class="o">=</span><span class="n">weafilepath</span><span class="p">,</span> <span class="n">output_name</span><span class="o">=</span><span class="n">outfilepath</span><span class="p">)</span>
+            <span class="n">genday</span><span class="o">.</span><span class="n">gendaymtx_parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sky_matrixParameters</span>
+            <span class="n">genday</span><span class="o">.</span><span class="n">gendaymtx_parameters</span><span class="o">.</span><span class="n">output_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky_type</span>
+            <span class="k">return</span> <span class="n">genday</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SkyMatrix.duplicate"><a class="viewcode-back" href="../../../../honeybee.radiance.sky.html#honeybee.radiance.sky.skymatrix.SkyMatrix.duplicate">[docs]</a>    <span class="k">def</span> <span class="nf">duplicate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Duplicate this class.&quot;&quot;&quot;</span>
+        <span class="n">skymtx</span> <span class="o">=</span> <span class="n">SkyMatrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wea</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky_density</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">north</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hoys</span><span class="p">,</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">suffix</span><span class="p">)</span>
+        <span class="n">skymtx</span><span class="o">.</span><span class="n">sky_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky_type</span>
+        <span class="k">return</span> <span class="n">skymtx</span></div>
+
+<div class="viewcode-block" id="SkyMatrix.ToString"><a class="viewcode-back" href="../../../../honeybee.radiance.sky.html#honeybee.radiance.sky.skymatrix.SkyMatrix.ToString">[docs]</a>    <span class="k">def</span> <span class="nf">ToString</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwrite .NET ToString method.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sky representation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

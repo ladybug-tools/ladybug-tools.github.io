@@ -1,0 +1,2346 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.parameters package &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="honeybee.radiance.recipe package" href="honeybee.radiance.recipe.html" />
+    <link rel="prev" title="honeybee.radiance.material package" href="honeybee.radiance.material.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="honeybee.html">honeybee package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="honeybee.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="honeybee.energyplus.html">honeybee.energyplus package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="honeybee.radiance.html">honeybee.radiance package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="honeybee.radiance.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.analysisgrid">honeybee.radiance.analysisgrid module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.analysispoint">honeybee.radiance.analysispoint module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.datatype">honeybee.radiance.datatype module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.filemanager">honeybee.radiance.filemanager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.geometry">honeybee.radiance.geometry module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.imagecollection">honeybee.radiance.imagecollection module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.properties">honeybee.radiance.properties module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.radfile">honeybee.radiance.radfile module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.runmanager">honeybee.radiance.runmanager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.scene">honeybee.radiance.scene module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.view">honeybee.radiance.view module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.server.html">honeybee.server package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.vectormath.html">honeybee.vectormath package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.config">honeybee.config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.dataoperation">honeybee.dataoperation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.futil">honeybee.futil module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.geometryoperation">honeybee.geometryoperation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbdynamicsurface">honeybee.hbdynamicsurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbfensurface">honeybee.hbfensurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbobject">honeybee.hbobject module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbshadesurface">honeybee.hbshadesurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbsurface">honeybee.hbsurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbzone">honeybee.hbzone module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.room">honeybee.room module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.schedule">honeybee.schedule module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.surfaceproperties">honeybee.surfaceproperties module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.surfacetype">honeybee.surfacetype module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.utilcol">honeybee.utilcol module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="honeybee.html">honeybee package</a><ul>
+  <li><a href="honeybee.radiance.html">honeybee.radiance package</a><ul>
+      <li>Previous: <a href="honeybee.radiance.material.html" title="previous chapter">honeybee.radiance.material package</a></li>
+      <li>Next: <a href="honeybee.radiance.recipe.html" title="next chapter">honeybee.radiance.recipe package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="honeybee-radiance-parameters-package">
+<h1>honeybee.radiance.parameters package<a class="headerlink" href="#honeybee-radiance-parameters-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-honeybee.radiance.parameters.dctimestep">
+<span id="honeybee-radiance-parameters-dctimestep-module"></span><h2>honeybee.radiance.parameters.dctimestep module<a class="headerlink" href="#module-honeybee.radiance.parameters.dctimestep" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.radiance.parameters.dctimestep.DctimestepParameters">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.parameters.dctimestep.</code><code class="descname">DctimestepParameters</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/parameters/dctimestep.html#DctimestepParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.dctimestep.DctimestepParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.parameters._advancedparametersbase.AdvancedRadianceParameters</span></code></p>
+<dl class="method">
+<dt id="honeybee.radiance.parameters.dctimestep.DctimestepParameters.freeze">
+<code class="descname">freeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.dctimestep.DctimestepParameters.freeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.parameters.dctimestep.DctimestepParameters.unfreeze">
+<code class="descname">unfreeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.dctimestep.DctimestepParameters.unfreeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.parameters.falsecolor">
+<span id="honeybee-radiance-parameters-falsecolor-module"></span><h2>honeybee.radiance.parameters.falsecolor module<a class="headerlink" href="#module-honeybee.radiance.parameters.falsecolor" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.radiance.parameters.falsecolor.FalsecolorParameters">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.parameters.falsecolor.</code><code class="descname">FalsecolorParameters</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/parameters/falsecolor.html#FalsecolorParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.falsecolor.FalsecolorParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.parameters._advancedparametersbase.AdvancedRadianceParameters</span></code></p>
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.falsecolor.FalsecolorParameters.contour_bands">
+<code class="descname">contour_bands</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.falsecolor.FalsecolorParameters.contour_bands" title="Permalink to this definition">¶</a></dt>
+<dd><p>-cb</p>
+<p>The -cb option produces contour bands instead of lines, where the
+thickness of the bands is related to the rate of change in the image.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.falsecolor.FalsecolorParameters.contour_lines">
+<code class="descname">contour_lines</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.falsecolor.FalsecolorParameters.contour_lines" title="Permalink to this definition">¶</a></dt>
+<dd><p>-cl</p>
+<p>If contour lines are desired rather than just false color, the -cl
+option can be used. These lines can be placed over another Radiance
+picture using the -p  option.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.falsecolor.FalsecolorParameters.contour_quant">
+<code class="descname">contour_quant</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.falsecolor.FalsecolorParameters.contour_quant" title="Permalink to this definition">¶</a></dt>
+<dd><p>-n</p>
+<p>The -n option can be used to change the number of contours (and
+corresponding legend entries) from the default value of 8.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.parameters.falsecolor.FalsecolorParameters.freeze">
+<code class="descname">freeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.falsecolor.FalsecolorParameters.freeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.falsecolor.FalsecolorParameters.label">
+<code class="descname">label</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.falsecolor.FalsecolorParameters.label" title="Permalink to this definition">¶</a></dt>
+<dd><p>-l label</p>
+<p>A legend is produced for the new image with a label given by the -l
+option. The default label is “Nits”, which is appropriate for standard
+Radiance images.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.falsecolor.FalsecolorParameters.legend_height">
+<code class="descname">legend_height</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.falsecolor.FalsecolorParameters.legend_height" title="Permalink to this definition">¶</a></dt>
+<dd><p>The -lw and -lh options may be used to change the legend dimensions
+from the default width and height of 100x200. A value of zero in either
+eliminates the legend in the output.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.falsecolor.FalsecolorParameters.legend_width">
+<code class="descname">legend_width</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.falsecolor.FalsecolorParameters.legend_width" title="Permalink to this definition">¶</a></dt>
+<dd><p>The -lw and -lh options may be used to change the legend dimensions
+from the default width and height of 100x200. A value of zero in either
+eliminates the legend in the output.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.falsecolor.FalsecolorParameters.log">
+<code class="descname">log</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.falsecolor.FalsecolorParameters.log" title="Permalink to this definition">¶</a></dt>
+<dd><p>-log
+For a logarithmic rather than a linear mapping, the -log option can be
+used, where decades is the number of decades below the maximum scale
+desired.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.falsecolor.FalsecolorParameters.multiplier">
+<code class="descname">multiplier</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.falsecolor.FalsecolorParameters.multiplier" title="Permalink to this definition">¶</a></dt>
+<dd><p>The default multiplier is 179, which converts from radiance or irradiance
+to luminance or illuminance, respectively. A different multiplier can be
+given with -m to get daylight factors or whatever.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.falsecolor.FalsecolorParameters.palette">
+<code class="descname">palette</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.falsecolor.FalsecolorParameters.palette" title="Permalink to this definition">¶</a></dt>
+<dd><p>The -pal option provides different color palettes for falsecolor. The
+current choices are spec for the old spectral mapping, hot for a thermal
+scale, and pm3d for a variation of the default mapping, def.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.falsecolor.FalsecolorParameters.pic_for_contours">
+<code class="descname">pic_for_contours</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.falsecolor.FalsecolorParameters.pic_for_contours" title="Permalink to this definition">¶</a></dt>
+<dd><p>-p picture</p>
+<p>Contour lines can be placed over another Radiance picture using the -p option.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.falsecolor.FalsecolorParameters.print_extrema_points">
+<code class="descname">print_extrema_points</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.falsecolor.FalsecolorParameters.print_extrema_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>-e</p>
+<p>The -e option causes extrema points to be printed on the brightest and
+darkest pixels of the input picture.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.falsecolor.FalsecolorParameters.scale">
+<code class="descname">scale</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.falsecolor.FalsecolorParameters.scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>-s scale</p>
+<p>A different scale can be given with the -s option. If the argument given
+to -s begins with an “a” for “auto,” then the maximum is used for scaling
+the result. The default multiplier is 179, which converts from radiance
+or irradiance to luminance or illuminance, respectively.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.parameters.falsecolor.FalsecolorParameters.unfreeze">
+<code class="descname">unfreeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.falsecolor.FalsecolorParameters.unfreeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.parameters.genBsdf">
+<span id="honeybee-radiance-parameters-genbsdf-module"></span><h2>honeybee.radiance.parameters.genBsdf module<a class="headerlink" href="#module-honeybee.radiance.parameters.genBsdf" title="Permalink to this headline">¶</a></h2>
+<p>Radiance rcontrib Parameters.</p>
+<dl class="class">
+<dt id="honeybee.radiance.parameters.genBsdf.GenbsdfParameters">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.parameters.genBsdf.</code><code class="descname">GenbsdfParameters</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/parameters/genBsdf.html#GenbsdfParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.genBsdf.GenbsdfParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.parameters._advancedparametersbase.AdvancedRadianceParameters</span></code></p>
+<dl class="method">
+<dt id="honeybee.radiance.parameters.genBsdf.GenbsdfParameters.freeze">
+<code class="descname">freeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.genBsdf.GenbsdfParameters.freeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.genBsdf.GenbsdfParameters.geom_unit_excl">
+<code class="descname">geom_unit_excl</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.genBsdf.GenbsdfParameters.geom_unit_excl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exclude geometry in ouput. The accepted inputs for this option are one from
+(‘meter’,’foot’,’inch’,’centimeter’,’millimeter’)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.genBsdf.GenbsdfParameters.geom_unit_incl">
+<code class="descname">geom_unit_incl</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.genBsdf.GenbsdfParameters.geom_unit_incl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Include geometry in ouput. The accepted inputs for this option are one from
+(‘meter’,’foot’,’inch’,’centimeter’,’millimeter’)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.parameters.genBsdf.GenbsdfParameters.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/parameters/genBsdf.html#GenbsdfParameters.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.genBsdf.GenbsdfParameters.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.parameters.genBsdf.GenbsdfParameters.unfreeze">
+<code class="descname">unfreeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.genBsdf.GenbsdfParameters.unfreeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.parameters.gendaylit">
+<span id="honeybee-radiance-parameters-gendaylit-module"></span><h2>honeybee.radiance.parameters.gendaylit module<a class="headerlink" href="#module-honeybee.radiance.parameters.gendaylit" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.radiance.parameters.gendaylit.GendaylitParameters">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.parameters.gendaylit.</code><code class="descname">GendaylitParameters</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/parameters/gendaylit.html#GendaylitParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.gendaylit.GendaylitParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.parameters._advancedparametersbase.AdvancedRadianceParameters</span></code></p>
+<p>Gendaylit parameters.</p>
+<dl class="docutils">
+<dt>Read more:</dt>
+<dd><a class="reference external" href="http://radsite.lbl.gov/radiance/man_html/gensky.1.html">http://radsite.lbl.gov/radiance/man_html/gensky.1.html</a></dd>
+</dl>
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gendaylit.GendaylitParameters.altitude_azimuth">
+<code class="descname">altitude_azimuth</code><a class="headerlink" href="#honeybee.radiance.parameters.gendaylit.GendaylitParameters.altitude_azimuth" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-ang] A tuple corresponding to altitude and azimuth
+angle.This input can be used instead of specifying the monthDayTime.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gendaylit.GendaylitParameters.ground_reflect">
+<code class="descname">ground_reflect</code><a class="headerlink" href="#honeybee.radiance.parameters.gendaylit.GendaylitParameters.ground_reflect" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-g rfl] A float number to indicate ground reflectance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gendaylit.GendaylitParameters.latitude">
+<code class="descname">latitude</code><a class="headerlink" href="#honeybee.radiance.parameters.gendaylit.GendaylitParameters.latitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-a lat] A float number to indicate site altitude. Negative
+angle indicates south latitude.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gendaylit.GendaylitParameters.longitude">
+<code class="descname">longitude</code><a class="headerlink" href="#honeybee.radiance.parameters.gendaylit.GendaylitParameters.longitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-o lon] A float number to indicate site latitude. Negative
+angle indicates east longitude.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gendaylit.GendaylitParameters.meridian">
+<code class="descname">meridian</code><a class="headerlink" href="#honeybee.radiance.parameters.gendaylit.GendaylitParameters.meridian" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-m mer] A float number to indicate site meridian west of</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">Greenwich.</code></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* For the full list of attributes try self.keys</code></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">** values between []'s indicate Radiance equivalent keys for advanced users</code></dt>
+<dd></dd></dl>
+
+<p>Usage:</p>
+<dl class="attribute">
+<dt>
+<code class="descname">altitude_azimuth</code><em class="property"> = None</em></dt>
+<dd><p>[-ang] A tuple corresponding to altitude and azimuth
+angle.This input can be used instead of specifying the monthDayTime.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gendaylit.GendaylitParameters.dir_horz_dif_horz_illum">
+<code class="descname">dir_horz_dif_horz_illum</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.gendaylit.GendaylitParameters.dir_horz_dif_horz_illum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Direct normal luminance and diffuse horizontal illuminance</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gendaylit.GendaylitParameters.dir_horz_dif_horz_irrad">
+<code class="descname">dir_horz_dif_horz_irrad</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.gendaylit.GendaylitParameters.dir_horz_dif_horz_irrad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Direct-horizontal irradiance and diffuse-horizontal irradiance in W/m^2</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gendaylit.GendaylitParameters.dir_norm_dif_horz_irrad">
+<code class="descname">dir_norm_dif_horz_irrad</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.gendaylit.GendaylitParameters.dir_norm_dif_horz_irrad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Direct-normal irradiance and diffuse-horizontal irradiance in W/m^2</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.parameters.gendaylit.GendaylitParameters.freeze">
+<code class="descname">freeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.gendaylit.GendaylitParameters.freeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gendaylit.GendaylitParameters.glob_horz_irrad">
+<code class="descname">glob_horz_irrad</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.gendaylit.GendaylitParameters.glob_horz_irrad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Global horizontal irradiance</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">ground_reflect</code><em class="property"> = None</em></dt>
+<dd><p>[-g rfl] A float number to indicate ground reflectance</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">latitude</code><em class="property"> = None</em></dt>
+<dd><p>[-a lat] A float number to indicate site altitude. Negative angle
+indicates south latitude.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">longitude</code><em class="property"> = None</em></dt>
+<dd><p>[-o lon] A float number to indicate site latitude. Negative angle
+indicates east longitude.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">meridian</code><em class="property"> = None</em></dt>
+<dd><p>[-m mer] A float number to indicate site meridian west of
+Greenwich.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gendaylit.GendaylitParameters.output_type">
+<code class="descname">output_type</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.gendaylit.GendaylitParameters.output_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specify 0 for visible radiation, 1 for solar radiation and 2 for luminance</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gendaylit.GendaylitParameters.perez_parameters">
+<code class="descname">perez_parameters</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.gendaylit.GendaylitParameters.perez_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perez parameters corresponding to epsilon and delta values.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gendaylit.GendaylitParameters.suppress_sun">
+<code class="descname">suppress_sun</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.gendaylit.GendaylitParameters.suppress_sun" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prevent the solar disc from being in the output.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gendaylit.GendaylitParameters.suppress_warnings">
+<code class="descname">suppress_warnings</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.gendaylit.GendaylitParameters.suppress_warnings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Suppress warning messages.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gendaylit.GendaylitParameters.time_interval">
+<code class="descname">time_interval</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.gendaylit.GendaylitParameters.time_interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.parameters.gendaylit.GendaylitParameters.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/parameters/gendaylit.html#GendaylitParameters.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.gendaylit.GendaylitParameters.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate Radiance string for gendaylit.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.parameters.gendaylit.GendaylitParameters.unfreeze">
+<code class="descname">unfreeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.gendaylit.GendaylitParameters.unfreeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.parameters.gendaymtx">
+<span id="honeybee-radiance-parameters-gendaymtx-module"></span><h2>honeybee.radiance.parameters.gendaymtx module<a class="headerlink" href="#module-honeybee.radiance.parameters.gendaymtx" title="Permalink to this headline">¶</a></h2>
+<p>Radiance raytracing Parameters.</p>
+<dl class="class">
+<dt id="honeybee.radiance.parameters.gendaymtx.GendaymtxParameters">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.parameters.gendaymtx.</code><code class="descname">GendaymtxParameters</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/parameters/gendaymtx.html#GendaymtxParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.gendaymtx.GendaymtxParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.parameters._advancedparametersbase.AdvancedRadianceParameters</span></code></p>
+<p>Radiance Parameters for grid based analysis.</p>
+<p>Read more:
+<a class="reference external" href="https://www.radiance-online.org/learning/documentation/manual-pages/pdfs/gendaymtx.pdf">https://www.radiance-online.org/learning/documentation/manual-pages/pdfs/gendaymtx.pdf</a></p>
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gendaymtx.GendaymtxParameters.verbose_report">
+<code class="descname">verbose_report</code><a class="headerlink" href="#honeybee.radiance.parameters.gendaymtx.GendaymtxParameters.verbose_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-v] A boolean to indicate verbose reporting (Default: True)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gendaymtx.GendaymtxParameters.remove_header">
+<code class="descname">remove_header</code><a class="headerlink" href="#honeybee.radiance.parameters.gendaymtx.GendaymtxParameters.remove_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-h] A boolean to disable header (Default: False)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gendaymtx.GendaymtxParameters.only_direct">
+<code class="descname">only_direct</code><a class="headerlink" href="#honeybee.radiance.parameters.gendaymtx.GendaymtxParameters.only_direct" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-d] A boolean to only generate sun-only matrix (Default: False)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gendaymtx.GendaymtxParameters.only_sky">
+<code class="descname">only_sky</code><a class="headerlink" href="#honeybee.radiance.parameters.gendaymtx.GendaymtxParameters.only_sky" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-s] A boolean to only generate sky matrix with no direct sun
+(Default: False)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gendaymtx.GendaymtxParameters.rotation">
+<code class="descname">rotation</code><a class="headerlink" href="#honeybee.radiance.parameters.gendaymtx.GendaymtxParameters.rotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-r deg] A floating number in degrees that indicates zenith
+rotation (Default: 0)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gendaymtx.GendaymtxParameters.sky_density">
+<code class="descname">sky_density</code><a class="headerlink" href="#honeybee.radiance.parameters.gendaymtx.GendaymtxParameters.sky_density" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-m N] An integer to indicate number of sky patches. Default
+value of 1 generates 146 sky pacthes.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gendaymtx.GendaymtxParameters.ground_color">
+<code class="descname">ground_color</code><a class="headerlink" href="#honeybee.radiance.parameters.gendaymtx.GendaymtxParameters.ground_color" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-g r g b] A tuple of r, g, b values to indicate ground
+color (Default:  0.2 0.2 0.2)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gendaymtx.GendaymtxParameters.sky_color">
+<code class="descname">sky_color</code><a class="headerlink" href="#honeybee.radiance.parameters.gendaymtx.GendaymtxParameters.sky_color" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-c r g b] A tuple of r, g, b values to indicate sky color
+(Default: 0.960, 1.004, 1.118)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gendaymtx.GendaymtxParameters.output_format">
+<code class="descname">output_format</code><a class="headerlink" href="#honeybee.radiance.parameters.gendaymtx.GendaymtxParameters.output_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-o{f|d}] An integer to indicate binary output format.
+0 is double output [d] and 1 is binary float numbers (f). If you’re
+running Radiance on Windows do not use this option. (Default: None)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gendaymtx.GendaymtxParameters.output_type">
+<code class="descname">output_type</code><a class="headerlink" href="#honeybee.radiance.parameters.gendaymtx.GendaymtxParameters.output_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-O{0|1}] An integr specifies output type. 0 generates the
+values for visible radiance whereas 1 indicates the results should
+be total solar radiance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* For the full list of attributes try self.parameters</code></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">** values between []'s indicate Radiance equivalent keys for advanced users</code></dt>
+<dd></dd></dl>
+
+<p>Usage:</p>
+<blockquote>
+<div><p># generate sky matrix with default values
+gmtx = GendaymtxParameters()</p>
+<p># check the current values
+print(gmtx.to_rad_string())
+&gt; -v -r 0 -m 1 -of</p>
+<p># ask only for direct sun
+gmtx.only_direct = True</p>
+<p># check the new values. -d is added.
+print(gmtx.to_rad_string())
+&gt; -v -d -r 0 -m 1 -of</p>
+</div></blockquote>
+<dl class="method">
+<dt id="honeybee.radiance.parameters.gendaymtx.GendaymtxParameters.freeze">
+<code class="descname">freeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.gendaymtx.GendaymtxParameters.freeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">ground_color</code><em class="property"> = None</em></dt>
+<dd><p>[-g r g b] A tuple of r, g, b values to indicate ground
+color (Default:  0.2 0.2 0.2)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">only_direct</code><em class="property"> = None</em></dt>
+<dd><p><em>[-d] A boolean to only generate sun-only matrix (Default</em> – False)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">only_sky</code><em class="property"> = None</em></dt>
+<dd><p>[-s] A boolean to only generate sky matrix with no direct sun
+(Default: False)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">output_format</code><em class="property"> = None</em></dt>
+<dd><p>[-o{f|d}] An integer to indicate binary output format.
+0 is double output [d] and 1 is binary float numbers (f). If you’re
+running Radiance on Windows do not use this option. (Default: None)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">output_type</code><em class="property"> = None</em></dt>
+<dd><p>[-O{0|1}] An integr specifies output type. 0 generates the
+values for visible radiance whereas 1 indicates the results should
+be total solar radiance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">remove_header</code><em class="property"> = None</em></dt>
+<dd><p><em>[-h] A boolean to disable header (Default</em> – False)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">rotation</code><em class="property"> = None</em></dt>
+<dd><p>[-r deg] A floating number in degrees that indicates zenith
+rotation (Default: 0)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">sky_color</code><em class="property"> = None</em></dt>
+<dd><p>[-c r g b] A tuple of r, g, b values to indicate sky color
+(Default: 0.960, 1.004, 1.118)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">sky_density</code><em class="property"> = None</em></dt>
+<dd><p>[-m N] An integer to indicate number of sky patches. Default
+value of 1 generates 146 sky pacthes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.parameters.gendaymtx.GendaymtxParameters.unfreeze">
+<code class="descname">unfreeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.gendaymtx.GendaymtxParameters.unfreeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">verbose_report</code><em class="property"> = None</em></dt>
+<dd><p><em>[-v] A boolean to indicate verbose reporting (Default</em> – True)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.parameters.gensky">
+<span id="honeybee-radiance-parameters-gensky-module"></span><h2>honeybee.radiance.parameters.gensky module<a class="headerlink" href="#module-honeybee.radiance.parameters.gensky" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.radiance.parameters.gensky.GenskyParameters">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.parameters.gensky.</code><code class="descname">GenskyParameters</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/parameters/gensky.html#GenskyParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.gensky.GenskyParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.parameters._advancedparametersbase.AdvancedRadianceParameters</span></code></p>
+<p>Gensky parameters.</p>
+<dl class="docutils">
+<dt>Read more:</dt>
+<dd><a class="reference external" href="http://radsite.lbl.gov/radiance/man_html/gensky.1.html">http://radsite.lbl.gov/radiance/man_html/gensky.1.html</a></dd>
+</dl>
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gensky.GenskyParameters.altitude_azimuth">
+<code class="descname">altitude_azimuth</code><a class="headerlink" href="#honeybee.radiance.parameters.gensky.GenskyParameters.altitude_azimuth" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-ang] A tuple corresponding to altitude and azimuth
+angle.This input can be used instead of specifying the monthDayTime.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gensky.GenskyParameters.sunny_sky">
+<code class="descname">sunny_sky</code><a class="headerlink" href="#honeybee.radiance.parameters.gensky.GenskyParameters.sunny_sky" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-s|+s] A boolean value to generate sunny sky with or without
+sun. Set to True to generate a sunnny sky with sun, Fasle to generate
+a sunny sky without sun (Default: None)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gensky.GenskyParameters.cloudy_sky">
+<code class="descname">cloudy_sky</code><a class="headerlink" href="#honeybee.radiance.parameters.gensky.GenskyParameters.cloudy_sky" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-c] A boolean value to generate cloudy sky</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gensky.GenskyParameters.interm_sky">
+<code class="descname">interm_sky</code><a class="headerlink" href="#honeybee.radiance.parameters.gensky.GenskyParameters.interm_sky" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-i|+i] A boolean value to generate intermediate sky with or
+without sun. Set to True to generate an intermediate sky with sun,
+Fasle to generate a intermediate sky without sun (Default: None)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gensky.GenskyParameters.uniform_cloudy_sky">
+<code class="descname">uniform_cloudy_sky</code><a class="headerlink" href="#honeybee.radiance.parameters.gensky.GenskyParameters.uniform_cloudy_sky" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-u] A boolean value to generate Uniform cloudy sky.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gensky.GenskyParameters.ground_reflect">
+<code class="descname">ground_reflect</code><a class="headerlink" href="#honeybee.radiance.parameters.gensky.GenskyParameters.ground_reflect" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-g rfl] A float number to indicate ground reflectance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gensky.GenskyParameters.zenith_bright">
+<code class="descname">zenith_bright</code><a class="headerlink" href="#honeybee.radiance.parameters.gensky.GenskyParameters.zenith_bright" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-b brt] A float number to indicate zenith brightness in
+watts/steradian/meter-sq.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gensky.GenskyParameters.zenith_bright_horz_diff">
+<code class="descname">zenith_bright_horz_diff</code><a class="headerlink" href="#honeybee.radiance.parameters.gensky.GenskyParameters.zenith_bright_horz_diff" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-B irrad] A float number to indicate zenith
+brightness from horizontal diffuse irradiance in watts/meter-sq.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gensky.GenskyParameters.solar_rad">
+<code class="descname">solar_rad</code><a class="headerlink" href="#honeybee.radiance.parameters.gensky.GenskyParameters.solar_rad" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-r rad] A float number to indicate solar radiance in</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">watts/steradians/meter-sq.</code></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gensky.GenskyParameters.solar_rad_horz_diff">
+<code class="descname">solar_rad_horz_diff</code><a class="headerlink" href="#honeybee.radiance.parameters.gensky.GenskyParameters.solar_rad_horz_diff" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-R irrad] A float number to indicate solar radiance
+from horizontal direct irradiance in watts/meter-sq.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gensky.GenskyParameters.turbidity">
+<code class="descname">turbidity</code><a class="headerlink" href="#honeybee.radiance.parameters.gensky.GenskyParameters.turbidity" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-t trb] A float number to indicate turbidity.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gensky.GenskyParameters.latitude">
+<code class="descname">latitude</code><a class="headerlink" href="#honeybee.radiance.parameters.gensky.GenskyParameters.latitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-a lat] A float number to indicate site altitude. Negative
+angle indicates south latitude.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gensky.GenskyParameters.longitude">
+<code class="descname">longitude</code><a class="headerlink" href="#honeybee.radiance.parameters.gensky.GenskyParameters.longitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-o lon] A float number to indicate site latitude. Negative
+angle indicates east longitude.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gensky.GenskyParameters.meridian">
+<code class="descname">meridian</code><a class="headerlink" href="#honeybee.radiance.parameters.gensky.GenskyParameters.meridian" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-m mer] A float number to indicate site meridian west of</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">Greenwich.</code></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* For the full list of attributes try self.keys</code></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">** values between []'s indicate Radiance equivalent keys for advanced users</code></dt>
+<dd></dd></dl>
+
+<p>Usage:</p>
+<blockquote>
+<div><p># generate sky matrix with default values
+gnskyparam = GenskyParameters()</p>
+<p># check the current values
+print(gnskyparam.to_rad_string())
+&gt; -g 0.5</p>
+<p># set altitude and azimuth angle values
+gnsky.altitude_azimuth = (12,31)</p>
+<p>#check the new values added.
+print(gnskyparam.to_rad_string())
+&gt; -g 0.5 -ang 12.0 31.0</p>
+</div></blockquote>
+<dl class="attribute">
+<dt>
+<code class="descname">altitude_azimuth</code><em class="property"> = None</em></dt>
+<dd><p>[-ang] A tuple corresponding to altitude and azimuth
+angle.This input can be used instead of specifying the monthDayTime.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">cloudy_sky</code><em class="property"> = None</em></dt>
+<dd><p>[-c] A boolean value to generate cloudy sky</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.parameters.gensky.GenskyParameters.freeze">
+<code class="descname">freeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.gensky.GenskyParameters.freeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">ground_reflect</code><em class="property"> = None</em></dt>
+<dd><p>[-g rfl] A float number to indicate ground reflectance</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">interm_sky</code><em class="property"> = None</em></dt>
+<dd><p>[-i|+i] A boolean value to generate intermediate sky with or without
+sun. Set to True to generate an intermediate sky with sun, Fasle to
+generate a intermediate sky without sun (Default: None)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">latitude</code><em class="property"> = None</em></dt>
+<dd><p>[-a lat] A float number to indicate site altitude. Negative angle
+indicates south latitude.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">longitude</code><em class="property"> = None</em></dt>
+<dd><p>[-o lon] A float number to indicate site latitude. Negative angle
+indicates east longitude.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">meridian</code><em class="property"> = None</em></dt>
+<dd><p>[-m mer] A float number to indicate site meridian west of
+Greenwich.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">solar_rad</code><em class="property"> = None</em></dt>
+<dd><p>[-r rad] A float number to indicate solar radiance in
+watts/steradians/meter-sq.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">solar_rad_horz_diff</code><em class="property"> = None</em></dt>
+<dd><p>[-R irrad] A float number to indicate solar radiance from horizontal
+direct irradiance in watts/meter-sq.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">sunny_sky</code><em class="property"> = None</em></dt>
+<dd><p>[-s|+s] A boolean value to generate sunny sky with or without sun.
+Set to True to generate a sunnny sky with sun, Fasle to generate a sunny
+sky without sun (Default: None)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">turbidity</code><em class="property"> = None</em></dt>
+<dd><p>[-t trb] A float number to indicate turbidity.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.parameters.gensky.GenskyParameters.unfreeze">
+<code class="descname">unfreeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.gensky.GenskyParameters.unfreeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">uniform_cloudy_sky</code><em class="property"> = None</em></dt>
+<dd><p>[-u] A boolean value to generate Uniform cloudy sky.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">zenith_bright</code><em class="property"> = None</em></dt>
+<dd><p>[-b brt] A float number to indicate zenith brightness in
+watts/steradian/meter-sq.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">zenith_bright_horz_diff</code><em class="property"> = None</em></dt>
+<dd><p>[-B irrad] A float number to indicate zenith  brightness from
+horizontal diffuse irradiance in watts/meter-sq.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.parameters.gridbased">
+<span id="honeybee-radiance-parameters-gridbased-module"></span><h2>honeybee.radiance.parameters.gridbased module<a class="headerlink" href="#module-honeybee.radiance.parameters.gridbased" title="Permalink to this headline">¶</a></h2>
+<p>Radiance raytracing Parameters.</p>
+<dl class="class">
+<dt id="honeybee.radiance.parameters.gridbased.GridBasedParameters">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.parameters.gridbased.</code><code class="descname">GridBasedParameters</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/parameters/gridbased.html#GridBasedParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.parameters._advancedparametersbase.AdvancedRadianceParameters</span></code></p>
+<p>Radiance Parameters for grid based analysis.</p>
+<p>For the full list of attributes try self.keys</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gridbased.GridBasedParameters.quality">
+<code class="descname">quality</code><a class="headerlink" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters.quality" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer between 0-2 (0:low, 1: medium or 2: high quality)</p>
+</dd></dl>
+
+<p>Usage:</p>
+<blockquote>
+<div><p>rp = GridBasedParameters(0)
+print(rp.to_rad_string())</p>
+<dl class="docutils">
+<dt>&gt; -aa 0.25 -ab 2 -ad 512 -dc 0.25 -st 0.85 -lw 0.05 -as 128 -ar 16 -lr 4</dt>
+<dd>-dt 0.5 -dr 0 -ds 0.5 -dp 64</dd>
+</dl>
+<p>rp = GridBasedParameters(1)
+print(rp.to_rad_string())</p>
+<dl class="docutils">
+<dt>&gt; -aa 0.2 -ab 3 -ad 2048 -dc 0.5 -st 0.5 -lw 0.01 -as 2048 -ar 64 -lr 6</dt>
+<dd>-dt 0.25 -dr 1 -ds 0.25 -dp 256</dd>
+</dl>
+<p>rp = GridBasedParameters(2)
+print(rp.to_rad_string())
+&gt; -aa 0.1 -ab 6 -ad 4096 -dc 0.75 -st 0.15 -lw 0.005 -as 4096 -ar 128</p>
+<blockquote>
+<div>-lr 8 -dt 0.15 -dr 3 -ds 0.05 -dp 512</div></blockquote>
+<p>rp.ab = 5
+rp.u = True
+print(rp.to_rad_string())</p>
+<dl class="docutils">
+<dt>&gt; -aa 0.1 -ab 5 -dj 0.7 -ad 4096 -dc 0.75 -st 0.15 -lw 0.005 -as 4096</dt>
+<dd>-ar 128 -lr 8 -dt 0.15 -dr 3 -ds 0.05 -dp 512 -u</dd>
+</dl>
+</div></blockquote>
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gridbased.GridBasedParameters.ambient_accuracy">
+<code class="descname">ambient_accuracy</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters.ambient_accuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of ambient accuracy. This value will approximately equal the
+error from indirect illuminance interpolation. A value of zero implies
+no interpolation.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gridbased.GridBasedParameters.ambient_bounces">
+<code class="descname">ambient_bounces</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters.ambient_bounces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of ambient bounces. This is the maximum number of diffuse
+bounces computed by the indirect calculation. A value of zero
+implies no indirect calculation.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gridbased.GridBasedParameters.ambient_divisions">
+<code class="descname">ambient_divisions</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters.ambient_divisions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of ambient divisions. The error in the Monte Carlo calculation
+of indirect illuminance will be inversely proportional to the square
+root of this number. A value of zero implies no indirect calculation.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gridbased.GridBasedParameters.ambient_resolution">
+<code class="descname">ambient_resolution</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters.ambient_resolution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of ambient resolution. This number will determine the maximum
+density of ambient values used in interpolation. Error will start to
+increase on surfaces spaced closer than the scene size divided by the
+ambient resolution. The maximum ambient value density is the scene
+size times the ambient accuracy.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gridbased.GridBasedParameters.ambient_supersamples">
+<code class="descname">ambient_supersamples</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters.ambient_supersamples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of ambient super-samples. Super-samples are applied only to
+the ambient divisions which show a significant change.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gridbased.GridBasedParameters.direct_certainty">
+<code class="descname">direct_certainty</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters.direct_certainty" title="Permalink to this definition">¶</a></dt>
+<dd><p>-dc frac</p>
+<p>Set the direct certainty to frac. A value of one guarantees that the
+absolute accuracy of the direct calculation will be equal to or better
+than that given in the -dt specification. A value of zero only insures
+that all shadow lines resulting in a contrast change greater than the
+-dt specification will be calculated.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gridbased.GridBasedParameters.direct_jitter">
+<code class="descname">direct_jitter</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters.direct_jitter" title="Permalink to this definition">¶</a></dt>
+<dd><p>-dj frac
+Set the direct jittering to frac. A value of zero samples each source
+at specific sample points (see the -ds option below), giving a smoother
+but somewhat less accurate rendering. A positive value causes rays to
+be distributed over each source sample according to its size,
+resulting in more accurate penumbras. This option should never be
+greater than 1, and may even cause problems (such as speckle)when the
+value is smaller. A warning about aiming failure will issued if frac is
+too large. It is usually wise to turn off image sampling when using
+direct jitter by setting -ps to 1.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gridbased.GridBasedParameters.direct_presamp_density">
+<code class="descname">direct_presamp_density</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters.direct_presamp_density" title="Permalink to this definition">¶</a></dt>
+<dd><p>-dp D</p>
+<p>Set the secondary source presampling density to D. This is the number of
+samples per steradian that will be used to determine ahead of time
+whether or not it is worth following shadow rays through all the
+reflections and/or transmissions associated with a secondary source path.
+A value of 0 means that the full secondary source path will always be
+tested for shadows if it is tested at all.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gridbased.GridBasedParameters.direct_sampling">
+<code class="descname">direct_sampling</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters.direct_sampling" title="Permalink to this definition">¶</a></dt>
+<dd><p>-ds frac
+Set the direct sampling ratio to frac. A light source will be subdivided
+until the width of each sample area divided by the distance to the
+illuminated point is below this ratio. This assures accuracy in regions
+close to large area sources at a slight computational expense. A value
+of zero turns source subdivision off, sending at most one shadow ray to
+each light source.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gridbased.GridBasedParameters.direct_sec_relays">
+<code class="descname">direct_sec_relays</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters.direct_sec_relays" title="Permalink to this definition">¶</a></dt>
+<dd><p>-dr N</p>
+<p>Set the number of relays for secondary sources to N. A value of 0 means
+that secondary sources will be ignored. A value of 1 means that sources
+will be made into first generation secondary sources; a value of 2 means
+that first generation secondary sources will also be made into second
+generation secondary sources, and so on.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gridbased.GridBasedParameters.direct_threshold">
+<code class="descname">direct_threshold</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters.direct_threshold" title="Permalink to this definition">¶</a></dt>
+<dd><p>-dt frac</p>
+<p>Set the direct threshold to frac. Shadow testing will stop when the
+potential contribution of at least the next and at most all remaining
+light source samples is less than this fraction of the accumulated value.
+The remaining light source contributions are approximated statistically.
+A value of zero means that all light source samples will be tested for
+shadow.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.parameters.gridbased.GridBasedParameters.freeze">
+<code class="descname">freeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters.freeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.parameters.gridbased.GridBasedParameters.get_parameter_default_value_based_on_quality">
+<code class="descname">get_parameter_default_value_based_on_quality</code><span class="sig-paren">(</span><em>parameter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/parameters/gridbased.html#GridBasedParameters.get_parameter_default_value_based_on_quality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters.get_parameter_default_value_based_on_quality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get parameter value based on quality.</p>
+<p>You can change this value by using self.parameter = value (e.g. self.ab=5)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>parameter</strong> – Radiance parameter as an string (e.g “ab”)</td>
+</tr>
+</tbody>
+</table>
+<p>Usage:</p>
+<blockquote>
+<div>rp = LowQuality()
+print rp.getParameterValue(“ab”)
+&gt;&gt; 2</div></blockquote>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gridbased.GridBasedParameters.i_irradiance_calc">
+<code class="descname">i_irradiance_calc</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters.i_irradiance_calc" title="Permalink to this definition">¶</a></dt>
+<dd><p>-i</p>
+<p>Boolean switch to compute irradiance rather than radiance values. This
+only affects the final result, substituting a Lambertian surface and
+multiplying the radiance by pi. Glass and other transparent surfaces are
+ignored during this stage. Light sources still appear with their original
+radiance values, though the -dv option (below) may be used to override
+this. This option is especially useful in conjunction with ximage(1)
+for computing illuminance at scene points</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gridbased.GridBasedParameters.irradiance_calc">
+<code class="descname">irradiance_calc</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters.irradiance_calc" title="Permalink to this definition">¶</a></dt>
+<dd><p>-I</p>
+<p>Boolean switch to compute irradiance rather than radiance, with the
+input origin and direction interpreted instead as measurement point and
+orientation. -h Boolean switch for information header on output. The
+radiance default value for this option is False.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gridbased.GridBasedParameters.isGridBasedRadianceParameters">
+<code class="descname">isGridBasedRadianceParameters</code><a class="headerlink" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters.isGridBasedRadianceParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True to indicate this object is a RadianceParameters.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gridbased.GridBasedParameters.limit_reflections">
+<code class="descname">limit_reflections</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters.limit_reflections" title="Permalink to this definition">¶</a></dt>
+<dd><p>-lr N
+Limit reflections to a maximum of N, if N is a positive integer. If N
+is zero, then Russian roulette is used for ray termination, and the
+-lw setting (below) must be positive. If N is a negative integer, then
+this sets the upper limit of reflections past which Russian roulette
+will be used. In scenes with dielectrics and total internal reflection,
+a setting of 0 (no limit) may cause a stack overflow.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gridbased.GridBasedParameters.limit_weight">
+<code class="descname">limit_weight</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters.limit_weight" title="Permalink to this definition">¶</a></dt>
+<dd><p>-lw frac</p>
+<p>Limit the weight of each ray to a minimum of frac. During ray-tracing,
+a record is kept of the estimated contribution (weight) a ray would have
+in the image. If this weight is less than the specified minimum and the
+-lr setting (above) is positive, the ray is not traced. Otherwise,
+Russian roulette is used to continue rays with a probability equal to
+the ray weight divided by the given frac.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gridbased.GridBasedParameters.output_data_format">
+<code class="descname">output_data_format</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters.output_data_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>-f[io]</p>
+<p>Format input according to the character i and output according to the
+character o. Rtrace understands the following input and output formats:
+‘a’ for ascii, ‘f’ for single-precision floating point, and ‘d’ for
+double-precision floating point. In addition to these three choices, the
+character ‘c’ may be used to denote 4-byte floating point (Radiance) color
+format for the output of values only (-ov option, below). If the output
+character is missing, the input format is used.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">quality</code></dt>
+<dd><p><a href="#id1"><span class="problematic" id="id2">**</span></a>An integer between 0-2 (0* – low, 1* – medium or 2: high quality)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gridbased.GridBasedParameters.specular_sampling">
+<code class="descname">specular_sampling</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters.specular_sampling" title="Permalink to this definition">¶</a></dt>
+<dd><p>-ss samp</p>
+<p>Set the specular sampling to samp. For values less than 1, this is the
+degree to which the highlights are sampled for rough specular materials.
+A value greater than one causes multiple ray samples to be sent to reduce
+noise at a commmesurate cost. A value of zero means that no jittering
+will take place, and all reflections will appear sharp even when they
+should be diffuse. This may be desirable when used in combination with
+image sampling to obtain faster renderings.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gridbased.GridBasedParameters.specular_threshold">
+<code class="descname">specular_threshold</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters.specular_threshold" title="Permalink to this definition">¶</a></dt>
+<dd><p>-st frac</p>
+<p>Set the specular sampling threshold to frac. This is the minimum
+fraction of reflection or transmission, under which no specular sampling
+is performed. A value of zero means that highlights will always be
+sampled by tracing reflected or transmitted rays. A value of one means
+that specular sampling is never used. Highlights from light sources
+will always be correct, but reflections from other surfaces will be
+approximated using an ambient value. A sampling threshold between zero
+and one offers a compromise between image accuracy and rendering time.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.gridbased.GridBasedParameters.uncor_rand_samp">
+<code class="descname">uncor_rand_samp</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters.uncor_rand_samp" title="Permalink to this definition">¶</a></dt>
+<dd><p>-u</p>
+<p>Boolean switch to control uncorrelated random sampling. When “off”, a
+low-discrepancy sequence is used, which reduces variance but can result
+in a brushed appearance in specular highlights. When “on”, pure Monte
+Carlo sampling is used in all calculations.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.parameters.gridbased.GridBasedParameters.unfreeze">
+<code class="descname">unfreeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters.unfreeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.radiance.parameters.gridbased.HighQuality">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.parameters.gridbased.</code><code class="descname">HighQuality</code><a class="reference internal" href="_modules/honeybee/radiance/parameters/gridbased.html#HighQuality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.gridbased.HighQuality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters" title="honeybee.radiance.parameters.gridbased.GridBasedParameters"><code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.parameters.gridbased.GridBasedParameters</span></code></a></p>
+<p>High quality radiance parameters.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.radiance.parameters.gridbased.LowQuality">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.parameters.gridbased.</code><code class="descname">LowQuality</code><a class="reference internal" href="_modules/honeybee/radiance/parameters/gridbased.html#LowQuality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.gridbased.LowQuality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters" title="honeybee.radiance.parameters.gridbased.GridBasedParameters"><code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.parameters.gridbased.GridBasedParameters</span></code></a></p>
+<p>Radiance parmaters for a quick analysis.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.radiance.parameters.gridbased.MediumQuality">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.parameters.gridbased.</code><code class="descname">MediumQuality</code><a class="reference internal" href="_modules/honeybee/radiance/parameters/gridbased.html#MediumQuality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.gridbased.MediumQuality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters" title="honeybee.radiance.parameters.gridbased.GridBasedParameters"><code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.parameters.gridbased.GridBasedParameters</span></code></a></p>
+<p>Medium quality Radiance parmaters.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.parameters.imagebased">
+<span id="honeybee-radiance-parameters-imagebased-module"></span><h2>honeybee.radiance.parameters.imagebased module<a class="headerlink" href="#module-honeybee.radiance.parameters.imagebased" title="Permalink to this headline">¶</a></h2>
+<p>Radiance rpict Parameters.</p>
+<dl class="class">
+<dt id="honeybee.radiance.parameters.imagebased.HighQuality">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.parameters.imagebased.</code><code class="descname">HighQuality</code><a class="reference internal" href="_modules/honeybee/radiance/parameters/imagebased.html#HighQuality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.HighQuality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters" title="honeybee.radiance.parameters.imagebased.ImageBasedParameters"><code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.parameters.imagebased.ImageBasedParameters</span></code></a></p>
+<p>High quality radiance parameters.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.parameters.imagebased.</code><code class="descname">ImageBasedParameters</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/parameters/imagebased.html#ImageBasedParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.parameters._advancedparametersbase.AdvancedRadianceParameters</span></code></p>
+<p>Radiance Parameters for generating images.</p>
+<p>For the full list of attributes try self.keys</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.quality">
+<code class="descname">quality</code><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.quality" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer between 0-2 (0:low, 1: medium or 2: high quality)</p>
+</dd></dl>
+
+<p>Usage:</p>
+<blockquote>
+<div><p>rp = ImageBasedParameters(0)
+print(rp.to_rad_string())</p>
+<dl class="docutils">
+<dt>&gt; -aa 0.25 -ab 2 -ad 512 -dc 0.25 -st 0.85 -lw 0.05 -as 128 -ar 16 -lr 4 -dt 0.5</dt>
+<dd>-dr 0 -ds 0.5 -dp 64</dd>
+</dl>
+<p>rp = ImageBasedParameters(1)
+print(rp.to_rad_string())</p>
+<dl class="docutils">
+<dt>&gt; -aa 0.2 -ab 3 -ad 2048 -dc 0.5 -st 0.5 -lw 0.01 -as 2048 -ar 64 -lr 6 -dt 0.25</dt>
+<dd>-dr 1 -ds 0.25 -dp 256</dd>
+</dl>
+<p>rp = ImageBasedParameters(2)
+print(rp.to_rad_string())
+&gt; -aa 0.1 -ab 6 -ad 4096 -dc 0.75 -st 0.15 -lw 0.005 -as 4096 -ar 128 -lr 8</p>
+<blockquote>
+<div>-dt 0.15 -dr 3 -ds 0.05 -dp 512</div></blockquote>
+<p>rp.ab = 5
+rp.u = True
+print(rp.to_rad_string())</p>
+<dl class="docutils">
+<dt>&gt; -aa 0.1 -ab 5 -dj 0.7 -ad 4096 -dc 0.75 -st 0.15 -lw 0.005 -as 4096 -ar 128</dt>
+<dd>-lr 8 -dt 0.15 -dr 3 -ds 0.05 -dp 512 -u</dd>
+</dl>
+</div></blockquote>
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.ambient_accuracy">
+<code class="descname">ambient_accuracy</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.ambient_accuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of ambient accuracy. This value will approximately equal the
+error from indirect illuminance interpolation. A value of zero implies
+no interpolation.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.ambient_bounces">
+<code class="descname">ambient_bounces</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.ambient_bounces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of ambient bounces. This is the maximum number of diffuse
+bounces computed by the indirect calculation. A value of zero
+implies no indirect calculation.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.ambient_divisions">
+<code class="descname">ambient_divisions</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.ambient_divisions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of ambient divisions. The error in the Monte Carlo calculation
+of indirect illuminance will be inversely proportional to the square
+root of this number. A value of zero implies no indirect calculation.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.ambient_resolution">
+<code class="descname">ambient_resolution</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.ambient_resolution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of ambient resolution. This number will determine the maximum
+density of ambient values used in interpolation. Error will start to
+increase on surfaces spaced closer than the scene size divided by the
+ambient resolution. The maximum ambient value density is the scene
+size times the ambient accuracy.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.ambient_supersamples">
+<code class="descname">ambient_supersamples</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.ambient_supersamples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of ambient super-samples. Super-samples are applied only to
+the ambient divisions which show a significant change.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.ambient_value">
+<code class="descname">ambient_value</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.ambient_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>-av red grn blu</p>
+<p>Set the ambient value to a radiance of red grn blu . This is the final
+value used in place of an indirect light calculation. If the number of
+ambient bounces is one or greater and the ambient value weight is non-zero ,
+this value may be modified by the computed indirect values to improve
+overall accuracy.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.ambient_weight">
+<code class="descname">ambient_weight</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.ambient_weight" title="Permalink to this definition">¶</a></dt>
+<dd><p>-aw N</p>
+<p>Set the relative weight of the ambient value given with the -av option
+to N. As new indirect irradiances are computed, they will modify the
+default ambient value in a moving average, with the specified weight
+assigned to the initial value given on the command and all other weights
+set to 1. If a value of 0 is given with this option, then the initial
+ambient value is never modified. This is the safest value for scenes
+with large differences in indirect contributions, such as when both
+indoor and outdoor (daylight) areas are visible</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.back_face_visibility">
+<code class="descname">back_face_visibility</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.back_face_visibility" title="Permalink to this definition">¶</a></dt>
+<dd><p>-bv</p>
+<p>Boolean switch for back face visibility. With this switch off, back
+faces of opaque objects will be invisible to all rays. This is dangerous
+unless the model was constructed such that all surface normals on opaque
+objects face outward. Although turning off back face visibility does not
+save much computation time under most circumstances, it may be useful
+as a tool for scene debugging, or for seeing through one-sided walls
+from the outside. This option has no effect on transparent or translucent
+materials.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.direct_certainty">
+<code class="descname">direct_certainty</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.direct_certainty" title="Permalink to this definition">¶</a></dt>
+<dd><p>-dc frac</p>
+<p>Set the direct certainty to frac. A value of one guarantees that the
+absolute accuracy of the direct calculation will be equal to or better
+than that given in the -dt specification. A value of zero only insures
+that all shadow lines resulting in a contrast change greater than the
+-dt specification will be calculated.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.direct_jitter">
+<code class="descname">direct_jitter</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.direct_jitter" title="Permalink to this definition">¶</a></dt>
+<dd><p>-dj frac
+Set the direct jittering to frac. A value of zero samples each source
+at specific sample points (see the -ds option below), giving a smoother
+but somewhat less accurate rendering. A positive value causes rays to
+be distributed over each source sample according to its size,
+resulting in more accurate penumbras. This option should never be
+greater than 1, and may even cause problems (such as speckle)when the
+value is smaller. A warning about aiming failure will issued if frac is
+too large. It is usually wise to turn off image sampling when using
+direct jitter by setting -ps to 1.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.direct_presamp_density">
+<code class="descname">direct_presamp_density</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.direct_presamp_density" title="Permalink to this definition">¶</a></dt>
+<dd><p>-dp D</p>
+<p>Set the secondary source presampling density to D. This is the number of
+samples per steradian that will be used to determine ahead of time
+whether or not it is worth following shadow rays through all the
+reflections and/or transmissions associated with a secondary source path.
+A value of 0 means that the full secondary source path will always be
+tested for shadows if it is tested at all.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.direct_sampling">
+<code class="descname">direct_sampling</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.direct_sampling" title="Permalink to this definition">¶</a></dt>
+<dd><p>-ds frac
+Set the direct sampling ratio to frac. A light source will be subdivided
+until the width of each sample area divided by the distance to the
+illuminated point is below this ratio. This assures accuracy in regions
+close to large area sources at a slight computational expense. A value
+of zero turns source subdivision off, sending at most one shadow ray to
+each light source.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.direct_sec_relays">
+<code class="descname">direct_sec_relays</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.direct_sec_relays" title="Permalink to this definition">¶</a></dt>
+<dd><p>-dr N</p>
+<p>Set the number of relays for secondary sources to N. A value of 0 means
+that secondary sources will be ignored. A value of 1 means that sources
+will be made into first generation secondary sources; a value of 2 means
+that first generation secondary sources will also be made into second
+generation secondary sources, and so on.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.direct_threshold">
+<code class="descname">direct_threshold</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.direct_threshold" title="Permalink to this definition">¶</a></dt>
+<dd><p>-dt frac</p>
+<p>Set the direct threshold to frac. Shadow testing will stop when the
+potential contribution of at least the next and at most all remaining
+light source samples is less than this fraction of the accumulated value.
+The remaining light source contributions are approximated statistically.
+A value of zero means that all light source samples will be tested for
+shadow.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.direct_visibility">
+<code class="descname">direct_visibility</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.direct_visibility" title="Permalink to this definition">¶</a></dt>
+<dd><p>-dv</p>
+<p>Boolean switch for light source visibility. With this switch off,
+sources will be black when viewed directly although they will still
+participate in the direct calculation. This option may be desirable in
+conjunction with the -i option so that light sources do not appear in
+the output.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.freeze">
+<code class="descname">freeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.freeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.get_parameter_default_value_based_on_quality">
+<code class="descname">get_parameter_default_value_based_on_quality</code><span class="sig-paren">(</span><em>parameter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/parameters/imagebased.html#ImageBasedParameters.get_parameter_default_value_based_on_quality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.get_parameter_default_value_based_on_quality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get parameter value based on quality.</p>
+<p>You can change this value by using self.parameter = value (e.g. self.ab=5)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>parameter</strong> – Radiance parameter as an string (e.g “ab”)</td>
+</tr>
+</tbody>
+</table>
+<p>Usage:</p>
+<blockquote>
+<div>rp = low_quality()
+print(rp.getParameterValue(“ab”))
+&gt;&gt; 2</div></blockquote>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.high_quality">
+<em class="property">classmethod </em><code class="descname">high_quality</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/parameters/imagebased.html#ImageBasedParameters.high_quality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.high_quality" title="Permalink to this definition">¶</a></dt>
+<dd><p>High quality radiance parameters.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.irradiance_calc">
+<code class="descname">irradiance_calc</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.irradiance_calc" title="Permalink to this definition">¶</a></dt>
+<dd><p>-i</p>
+<p>Boolean switch to compute irradiance rather than radiance values.
+This only affects the final result, substituting a Lambertian surface
+and multiplying the radiance by pi. Glass and other transparent surfaces
+are ignored during this stage. Light sources still appear with their
+original radiance values, though the -dv option (above) may be used
+to override this. The radiance default value for this option is False.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.isImageBasedRadianceParameters">
+<code class="descname">isImageBasedRadianceParameters</code><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.isImageBasedRadianceParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True to indicate this object is a RadianceParameters.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.limit_reflections">
+<code class="descname">limit_reflections</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.limit_reflections" title="Permalink to this definition">¶</a></dt>
+<dd><p>-lr N
+Limit reflections to a maximum of N, if N is a positive integer. If N
+is zero, then Russian roulette is used for ray termination, and the
+-lw setting (below) must be positive. If N is a negative integer, then
+this sets the upper limit of reflections past which Russian roulette
+will be used. In scenes with dielectrics and total internal reflection,
+a setting of 0 (no limit) may cause a stack overflow.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.limit_weight">
+<code class="descname">limit_weight</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.limit_weight" title="Permalink to this definition">¶</a></dt>
+<dd><p>-lw frac</p>
+<p>Limit the weight of each ray to a minimum of frac. During ray-tracing,
+a record is kept of the estimated contribution (weight) a ray would have
+in the image. If this weight is less than the specified minimum and the
+-lr setting (above) is positive, the ray is not traced. Otherwise,
+Russian roulette is used to continue rays with a probability equal to
+the ray weight divided by the given frac.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.low_quality">
+<em class="property">classmethod </em><code class="descname">low_quality</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/parameters/imagebased.html#ImageBasedParameters.low_quality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.low_quality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radiance parmaters for a quick analysis.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.medium_quality">
+<em class="property">classmethod </em><code class="descname">medium_quality</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/parameters/imagebased.html#ImageBasedParameters.medium_quality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.medium_quality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Medium quality Radiance parmaters.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.pixel_aspect_ratio">
+<code class="descname">pixel_aspect_ratio</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.pixel_aspect_ratio" title="Permalink to this definition">¶</a></dt>
+<dd><p>-pa rat</p>
+<p>Set the pixel aspect ratio (height over width) to rat. Either the x or
+the y resolution will be reduced so that the pixels have this ratio for
+the specified view. If rat is zero, then the x and y resolutions will
+adhere to the given maxima.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.pixel_depth_of_field">
+<code class="descname">pixel_depth_of_field</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.pixel_depth_of_field" title="Permalink to this definition">¶</a></dt>
+<dd><p>-pd dia</p>
+<p>Set the pixel depth-of-field aperture to a diameter of dia (in world
+coordinates). This will be used in conjunction with the view focal
+distance, indicated by the length of the view direction vector given
+in the -vd option. It is not advisable to use this option in combination
+with the pdfblur(1) program, since one takes the place of the other.
+However, it may improve results with pdfblur to use a very small
+fraction with the -pd option, to avoid the ghosting effect of too
+few samples.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.pixel_jitter">
+<code class="descname">pixel_jitter</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.pixel_jitter" title="Permalink to this definition">¶</a></dt>
+<dd><p>-pj frac</p>
+<p>Set the pixel sample jitter to frac. Distributed ray-tracing performs
+anti-aliasing by randomly sampling over pixels. A value of one will
+randomly distribute samples over full pixels. A value of zero samples
+pixel centers only. A value between zero and one is usually best for
+low-resolution images.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.pixel_motion_blur">
+<code class="descname">pixel_motion_blur</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.pixel_motion_blur" title="Permalink to this definition">¶</a></dt>
+<dd><p>-pm frac</p>
+<p>Set the pixel motion blur to frac. In an animated sequence, the exact
+view will be blurred between the previous view and the next view as
+though a shutter were open this fraction of a frame time. (See the
+-S option regarding animated sequences.) The first view will be blurred
+according to the difference between the initial view set on the command
+line and the first view taken from the standard input. It is not
+advisable to use this option in combination with the pmblur(1) program,
+since one takes the place of the other. However, it may improve
+results with pmblur to use a very small fraction with the -pm option,
+to avoid the ghosting effect of too few time samples.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.pixel_sampling">
+<code class="descname">pixel_sampling</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.pixel_sampling" title="Permalink to this definition">¶</a></dt>
+<dd><p>-ps size</p>
+<p>Set the pixel sample spacing to the integer size. This specifies the
+sample spacing (in pixels) for adaptive subdivision on the image plane.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.pixel_tolerance">
+<code class="descname">pixel_tolerance</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.pixel_tolerance" title="Permalink to this definition">¶</a></dt>
+<dd><p>-pt frac</p>
+<p>Set the pixel sample tolerance to frac. If two samples differ by more
+than this amount, a third sample is taken between them.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">quality</code></dt>
+<dd><p><a href="#id3"><span class="problematic" id="id4">**</span></a>An integer between 0-2 (0* – low, 1* – medium or 2: high quality)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.specular_sampling">
+<code class="descname">specular_sampling</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.specular_sampling" title="Permalink to this definition">¶</a></dt>
+<dd><p>-ss samp</p>
+<p>Set the specular sampling to samp. For values less than 1, this is the
+degree to which the highlights are sampled for rough specular materials.
+A value greater than one causes multiple ray samples to be sent to reduce
+noise at a commmesurate cost. A value of zero means that no jittering
+will take place, and all reflections will appear sharp even when they
+should be diffuse. This may be desirable when used in combination with
+image sampling to obtain faster renderings.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.specular_threshold">
+<code class="descname">specular_threshold</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.specular_threshold" title="Permalink to this definition">¶</a></dt>
+<dd><p>-st frac</p>
+<p>Set the specular sampling threshold to frac. This is the minimum
+fraction of reflection or transmission, under which no specular sampling
+is performed. A value of zero means that highlights will always be
+sampled by tracing reflected or transmitted rays. A value of one means
+that specular sampling is never used. Highlights from light sources
+will always be correct, but reflections from other surfaces will be
+approximated using an ambient value. A sampling threshold between zero
+and one offers a compromise between image accuracy and rendering time.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.uncor_rand_samp">
+<code class="descname">uncor_rand_samp</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.uncor_rand_samp" title="Permalink to this definition">¶</a></dt>
+<dd><p>-u</p>
+<p>Boolean switch to control uncorrelated random sampling. When “off”, a
+low-discrepancy sequence is used, which reduces variance but can result
+in a brushed appearance in specular highlights. When “on”, pure Monte
+Carlo sampling is used in all calculations.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.unfreeze">
+<code class="descname">unfreeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.unfreeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.x_resolution">
+<code class="descname">x_resolution</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.x_resolution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the maximum x resolution.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.imagebased.ImageBasedParameters.y_resolution">
+<code class="descname">y_resolution</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters.y_resolution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the maximum y resolution.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.radiance.parameters.imagebased.LowQuality">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.parameters.imagebased.</code><code class="descname">LowQuality</code><a class="reference internal" href="_modules/honeybee/radiance/parameters/imagebased.html#LowQuality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.LowQuality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters" title="honeybee.radiance.parameters.imagebased.ImageBasedParameters"><code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.parameters.imagebased.ImageBasedParameters</span></code></a></p>
+<p>Radiance parmaters for a quick analysis.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.radiance.parameters.imagebased.MediumQuality">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.parameters.imagebased.</code><code class="descname">MediumQuality</code><a class="reference internal" href="_modules/honeybee/radiance/parameters/imagebased.html#MediumQuality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.imagebased.MediumQuality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.radiance.parameters.imagebased.ImageBasedParameters" title="honeybee.radiance.parameters.imagebased.ImageBasedParameters"><code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.parameters.imagebased.ImageBasedParameters</span></code></a></p>
+<p>Medium quality Radiance parmaters.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.parameters.oconv">
+<span id="honeybee-radiance-parameters-oconv-module"></span><h2>honeybee.radiance.parameters.oconv module<a class="headerlink" href="#module-honeybee.radiance.parameters.oconv" title="Permalink to this headline">¶</a></h2>
+<p>Radiance oconv Parameters.</p>
+<dl class="class">
+<dt id="honeybee.radiance.parameters.oconv.OconvParameters">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.parameters.oconv.</code><code class="descname">OconvParameters</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/parameters/oconv.html#OconvParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.oconv.OconvParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.parameters._advancedparametersbase.AdvancedRadianceParameters</span></code></p>
+<p>Radiance Parameters for rcontrib command including rtrace parameters.</p>
+<p>Read more:
+<a class="reference external" href="https://www.radiance-online.org/learning/documentation/manual-pages/pdfs/oconv.pdf">https://www.radiance-online.org/learning/documentation/manual-pages/pdfs/oconv.pdf</a></p>
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.oconv.OconvParameters.frozen">
+<code class="descname">frozen</code><a class="headerlink" href="#honeybee.radiance.parameters.oconv.OconvParameters.frozen" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-f] A Boolean to produce “a frozen octree containing all the scene
+information. Normally, only a reference to the scene files is stored
+in the octree, and changes to those files may invalidate the result.
+The freeze option is useful when the octree file’s integrity and
+loading speed is more important than its size, or when the octree is
+to be relocated to another directory, and is especially useful for
+creating library objects for the “instance” primitive type. If the
+input octree is frozen, the output will be also. (default: True)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.oconv.OconvParameters.resolution">
+<code class="descname">resolution</code><a class="headerlink" href="#honeybee.radiance.parameters.oconv.OconvParameters.resolution" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-r] An integer that “specifies the maximum octree resolution.
+This should be greater than or equal to the ratio of the largest and
+smallest dimensions in the scene (ie. surface size or distance between
+surfaces)” (default:16384)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.oconv.OconvParameters.max_set_size">
+<code class="descname">max_set_size</code><a class="headerlink" href="#honeybee.radiance.parameters.oconv.OconvParameters.max_set_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-n] An integer that “specifies the maximum surface set size
+for each voxel. Larger numbers result in quicker octree generation,
+but potentially slower rendering. Smaller values may or may not
+produce faster renderings, since the default number (6) is close to
+optimal for most scenes (Default: 6).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.oconv.OconvParameters.turn_off_warns">
+<code class="descname">turn_off_warns</code><a class="headerlink" href="#honeybee.radiance.parameters.oconv.OconvParameters.turn_off_warns" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-w] A Boolean to suppress warnings (Default: False).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* For the full list of attributes try self.parameters</code></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">** values between []'s indicate Radiance equivalent keys for advanced users</code></dt>
+<dd></dd></dl>
+
+<p>Usage:</p>
+<blockquote>
+<div><p># generate default oconv parameters
+ocvp = OconvParameters()</p>
+<p># default values.
+print ocvp.to_rad_string()
+&gt; -f</p>
+<p># add modifiers file
+ocvp.turn_off_warns = True</p>
+<p># check radiance parameters with the new values
+print ocvp.to_rad_string()
+&gt; -f -w</p>
+</div></blockquote>
+<dl class="method">
+<dt id="honeybee.radiance.parameters.oconv.OconvParameters.freeze">
+<code class="descname">freeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.oconv.OconvParameters.freeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">frozen</code><em class="property"> = None</em></dt>
+<dd><p>[-f] A Boolean to produce “a frozen octree containing all the scene
+information. Normally, only a reference to the scene files is stored
+in the octree, and changes to those files may invalidate the result.
+The freeze option is useful when the octree file’s integrity and
+loading speed is more important than its size, or when the octree is
+to be relocated to another directory, and is especially useful for
+creating library objects for the “instance” primitive type. If the
+input octree is frozen, the output will be also. (default: True)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">max_set_size</code><em class="property"> = None</em></dt>
+<dd><p>[-n] An integer that “specifies the maximum surface set size
+for each voxel. Larger numbers result in quicker octree generation,
+but potentially slower rendering. Smaller values may or may not
+produce faster renderings, since the default number (6) is close to
+optimal for most scenes (Default: 6).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">resolution</code><em class="property"> = None</em></dt>
+<dd><p>[-r] An integer that “specifies the maximum octree resolution.
+This should be greater than or equal to the ratio of the largest and
+smallest dimensions in the scene (ie. surface size or distance between
+surfaces)” (default:16384)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">turn_off_warns</code><em class="property"> = None</em></dt>
+<dd><p><em>[-w] A Boolean to suppress warnings (Default</em> – False).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.parameters.oconv.OconvParameters.unfreeze">
+<code class="descname">unfreeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.oconv.OconvParameters.unfreeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.parameters.pcomb">
+<span id="honeybee-radiance-parameters-pcomb-module"></span><h2>honeybee.radiance.parameters.pcomb module<a class="headerlink" href="#module-honeybee.radiance.parameters.pcomb" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.radiance.parameters.pcomb.PcombParameters">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.parameters.pcomb.</code><code class="descname">PcombParameters</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/parameters/pcomb.html#PcombParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.pcomb.PcombParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.parameters._advancedparametersbase.AdvancedRadianceParameters</span></code></p>
+<dl class="method">
+<dt id="honeybee.radiance.parameters.pcomb.PcombParameters.freeze">
+<code class="descname">freeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.pcomb.PcombParameters.freeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.parameters.pcomb.PcombParameters.unfreeze">
+<code class="descname">unfreeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.pcomb.PcombParameters.unfreeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.parameters.raBmp">
+<span id="honeybee-radiance-parameters-rabmp-module"></span><h2>honeybee.radiance.parameters.raBmp module<a class="headerlink" href="#module-honeybee.radiance.parameters.raBmp" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.radiance.parameters.raBmp.RaBmpParameters">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.parameters.raBmp.</code><code class="descname">RaBmpParameters</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/parameters/raBmp.html#RaBmpParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.raBmp.RaBmpParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.parameters._advancedparametersbase.AdvancedRadianceParameters</span></code></p>
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.raBmp.RaBmpParameters.create_grayscale">
+<code class="descname">create_grayscale</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.raBmp.RaBmpParameters.create_grayscale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an eight bit grayscale image instead of a color image.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.raBmp.RaBmpParameters.crt_primaries">
+<code class="descname">crt_primaries</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.raBmp.RaBmpParameters.crt_primaries" title="Permalink to this definition">¶</a></dt>
+<dd><p>CRT color output primaries.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.raBmp.RaBmpParameters.exposure">
+<code class="descname">exposure</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.raBmp.RaBmpParameters.exposure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specify tonemapping method or exposure value. Accepted tone mapping methods
+are ‘auto’, ‘human’ or ‘linear. Accepted exposure values are any number prefixed
+with a + or - sign (e.g. -1.2, +1.4, -3.4 etc).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.parameters.raBmp.RaBmpParameters.freeze">
+<code class="descname">freeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.raBmp.RaBmpParameters.freeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.raBmp.RaBmpParameters.gamma">
+<code class="descname">gamma</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.raBmp.RaBmpParameters.gamma" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gamma correction for the monitor. Default value is 2.2</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.raBmp.RaBmpParameters.reverse_conversion">
+<code class="descname">reverse_conversion</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.raBmp.RaBmpParameters.reverse_conversion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do a reverse conversion and convert bitmap to hdr</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.parameters.raBmp.RaBmpParameters.unfreeze">
+<code class="descname">unfreeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.raBmp.RaBmpParameters.unfreeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.parameters.raTiff">
+<span id="honeybee-radiance-parameters-ratiff-module"></span><h2>honeybee.radiance.parameters.raTiff module<a class="headerlink" href="#module-honeybee.radiance.parameters.raTiff" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.radiance.parameters.raTiff.RaTiffParameters">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.parameters.raTiff.</code><code class="descname">RaTiffParameters</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/parameters/raTiff.html#RaTiffParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.raTiff.RaTiffParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.parameters._advancedparametersbase.AdvancedRadianceParameters</span></code></p>
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.raTiff.RaTiffParameters.compression_type">
+<code class="descname">compression_type</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.raTiff.RaTiffParameters.compression_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compression type for the output TIFF file. Accepted values are z,L,l,f and w
+for LZW,SIGLOG,SIGLOG24,IEEE-floating-point and 16bit formats respectively.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.raTiff.RaTiffParameters.create_grayscale">
+<code class="descname">create_grayscale</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.raTiff.RaTiffParameters.create_grayscale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an eight bit grayscale image instead of a color image.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.raTiff.RaTiffParameters.exposure">
+<code class="descname">exposure</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.raTiff.RaTiffParameters.exposure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specify tonemapping method or exposure value. Accepted tone mapping methods
+are ‘auto’, ‘human’ or ‘linear. Accepted exposure values are any number prefixed
+with a + or - sign (e.g. -1.2, +1.4, -3.4 etc).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.parameters.raTiff.RaTiffParameters.freeze">
+<code class="descname">freeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.raTiff.RaTiffParameters.freeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.raTiff.RaTiffParameters.gamma">
+<code class="descname">gamma</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.raTiff.RaTiffParameters.gamma" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gamma correction for the monitor. Default value is 2.2</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.raTiff.RaTiffParameters.reverse_conversion">
+<code class="descname">reverse_conversion</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.raTiff.RaTiffParameters.reverse_conversion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do a reverse conversion and convert bitmap to hdr</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.parameters.raTiff.RaTiffParameters.unfreeze">
+<code class="descname">unfreeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.raTiff.RaTiffParameters.unfreeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.raTiff.RaTiffParameters.xyze_output_type">
+<code class="descname">xyze_output_type</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.raTiff.RaTiffParameters.xyze_output_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an xyzeOutput format file.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.parameters.rcalc">
+<span id="honeybee-radiance-parameters-rcalc-module"></span><h2>honeybee.radiance.parameters.rcalc module<a class="headerlink" href="#module-honeybee.radiance.parameters.rcalc" title="Permalink to this headline">¶</a></h2>
+<p>Radiance rcalc parameters</p>
+<dl class="class">
+<dt id="honeybee.radiance.parameters.rcalc.RcalcParameters">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.parameters.rcalc.</code><code class="descname">RcalcParameters</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/parameters/rcalc.html#RcalcParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.rcalc.RcalcParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.parameters._advancedparametersbase.AdvancedRadianceParameters</span></code></p>
+<dl class="method">
+<dt id="honeybee.radiance.parameters.rcalc.RcalcParameters.freeze">
+<code class="descname">freeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.rcalc.RcalcParameters.freeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.parameters.rcalc.RcalcParameters.unfreeze">
+<code class="descname">unfreeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.rcalc.RcalcParameters.unfreeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.parameters.rcollate">
+<span id="honeybee-radiance-parameters-rcollate-module"></span><h2>honeybee.radiance.parameters.rcollate module<a class="headerlink" href="#module-honeybee.radiance.parameters.rcollate" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.radiance.parameters.rcollate.RcollateParameters">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.parameters.rcollate.</code><code class="descname">RcollateParameters</code><span class="sig-paren">(</span><em>remove_header=None</em>, <em>warnings_off=None</em>, <em>output_format=None</em>, <em>transpose=None</em>, <em>input_columns=None</em>, <em>output_columns=None</em>, <em>input_rows=None</em>, <em>output_rows=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/parameters/rcollate.html#RcollateParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.rcollate.RcollateParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.parameters._advancedparametersbase.AdvancedRadianceParameters</span></code></p>
+<p>Radiance parameters for rcollate.</p>
+<p>Note: As on Apr-10-2016, this class has been implemented to facilitate
+it’s use for 3-Phase and 5-Phase method calculations. Not all the possible
+options of rcollate have been added at present.</p>
+<p>Read more:
+<a class="reference external" href="http://www.radiance-online.org/learning/documentation/manual-pages">http://www.radiance-online.org/learning/documentation/manual-pages</a>    pdfs/rcollate.pdf</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.rcollate.RcollateParameters.remove_header">
+<code class="descname">remove_header</code><a class="headerlink" href="#honeybee.radiance.parameters.rcollate.RcollateParameters.remove_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-h[io]] -hi turns input header off, -ho turns ouput
+header off. -h turns both off.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.rcollate.RcollateParameters.warnings_off">
+<code class="descname">warnings_off</code><a class="headerlink" href="#honeybee.radiance.parameters.rcollate.RcollateParameters.warnings_off" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-w] turn off non fatal warnings.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.rcollate.RcollateParameters.output_format">
+<code class="descname">output_format</code><a class="headerlink" href="#honeybee.radiance.parameters.rcollate.RcollateParameters.output_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-f[afdb[N]]. Specify an output format.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.rcollate.RcollateParameters.transpose">
+<code class="descname">transpose</code><a class="headerlink" href="#honeybee.radiance.parameters.rcollate.RcollateParameters.transpose" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-t] Transpose the matrix.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.rcollate.RcollateParameters.input_columns">
+<code class="descname">input_columns</code><a class="headerlink" href="#honeybee.radiance.parameters.rcollate.RcollateParameters.input_columns" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-ic col] Size of the columns of the input matrix.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.rcollate.RcollateParameters.output_columns">
+<code class="descname">output_columns</code><a class="headerlink" href="#honeybee.radiance.parameters.rcollate.RcollateParameters.output_columns" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-oc col] Size of the columns of the output matrix.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.rcollate.RcollateParameters.input_rows">
+<code class="descname">input_rows</code><a class="headerlink" href="#honeybee.radiance.parameters.rcollate.RcollateParameters.input_rows" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-ir row] Size of the rows of the input matrix.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.rcollate.RcollateParameters.output_rows">
+<code class="descname">output_rows</code><a class="headerlink" href="#honeybee.radiance.parameters.rcollate.RcollateParameters.output_rows" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-or row] Size of the rows of output matrix.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* For the full list of attributes try self.keys</code></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">** values between []'s indicate Radiance equivalent keys for advanced users</code></dt>
+<dd></dd></dl>
+
+<p>Usage:</p>
+<blockquote>
+<div><p>#Rearrange an input 10x10 matrix to 20x5 matrix.
+rcolparam = RcollateParameters()</p>
+<p>rcolparam.input_columns = 10
+rcolpara.input_rows = 10</p>
+<p>rcolparam.output_rows = 20
+rcolparam.output_columns = 5</p>
+<p>#Check the values.
+print(rcolparam.to_rad_string())
+&gt; -ic 10 -ir 10 -oc 5 -or 20</p>
+</div></blockquote>
+<dl class="attribute">
+<dt>
+<code class="descname">input_columns</code><em class="property"> = None</em></dt>
+<dd><p><em>input_columns</em> – [-ic col] Size of the columns of the input matrix.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">input_rows</code><em class="property"> = None</em></dt>
+<dd><p><em>input_rows</em> – [-ir row] Size of the rows of the input matrix.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">output_columns</code><em class="property"> = None</em></dt>
+<dd><p><em>output_columns</em> – [-oc col] Size of the columns of the output matrix.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">output_format</code><em class="property"> = None</em></dt>
+<dd><p><em>output_format</em> – [-f[afdb[N]]. Specify an output format.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">output_rows</code><em class="property"> = None</em></dt>
+<dd><p><em>output_rows</em> – [-or row] Size of the rows of output matrix.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">remove_header</code><em class="property"> = None</em></dt>
+<dd><p><em>remove_header</em> – [-h[io]] -hi turns input header off, -ho turns ouput
+header off. -h turns both off.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">transpose</code><em class="property"> = None</em></dt>
+<dd><p><em>transpose</em> – [-t] Transpose the matrix.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">warnings_off</code><em class="property"> = None</em></dt>
+<dd><p><em>warnings_off</em> – [-w] turn off non fatal warnings.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.parameters.rcontrib">
+<span id="honeybee-radiance-parameters-rcontrib-module"></span><h2>honeybee.radiance.parameters.rcontrib module<a class="headerlink" href="#module-honeybee.radiance.parameters.rcontrib" title="Permalink to this headline">¶</a></h2>
+<p>Radiance rcontrib Parameters.</p>
+<dl class="class">
+<dt id="honeybee.radiance.parameters.rcontrib.RcontribParameters">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.parameters.rcontrib.</code><code class="descname">RcontribParameters</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/parameters/rcontrib.html#RcontribParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.rcontrib.RcontribParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters" title="honeybee.radiance.parameters.gridbased.GridBasedParameters"><code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.parameters.gridbased.GridBasedParameters</span></code></a></p>
+<p>Radiance Parameters for rcontrib command including rtrace parameters.</p>
+<p>Read more:
+<a class="reference external" href="https://www.radiance-online.org/learning/documentation/manual-pages/pdfs/rcontrib.pdf">https://www.radiance-online.org/learning/documentation/manual-pages/pdfs/rcontrib.pdf</a></p>
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.rcontrib.RcontribParameters.mod_file">
+<code class="descname">mod_file</code><a class="headerlink" href="#honeybee.radiance.parameters.rcontrib.RcontribParameters.mod_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-M file] File path to a file with a list of modifiers
+(Default: None)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* For the full list of attributes try self.parameters</code></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">** values between []'s indicate Radiance equivalent keys for advanced users</code></dt>
+<dd></dd></dl>
+
+<p>Usage:</p>
+<blockquote>
+<div><p># generate sky matrix with default values
+rcp = RcontribParameters()</p>
+<p># paramters returns an empty string which means rcontrib will use
+# default values.
+print(rcp.to_rad_string())
+&gt;</p>
+<p># add modifiers file
+rcp.mod_file = “c:/ladybug/suns.txt”</p>
+<p># set number of ambient bounces and ambient divisions
+# these are rtrace (gridbased) paramters
+rcp.ab = 0
+rcp.ad = 10000
+rcp.I = True</p>
+<p># check radiance parameters with the new values
+print(rcp.to_rad_string())
+&gt; -ab 0 -ad 10000 -M c:/ladybug/suns.txt -I</p>
+<p># or you can set all the parameter for rtrace based on quality
+rcp.quality = 1
+print(rcp.to_rad_string())
+&gt; -aa 0.2 -ab 0 -ad 10000 -M c:/ladybug/suns.txt -I -dc 0.5 -st 0.5 -lw 0.01</p>
+<blockquote>
+<div>-as 2048 -ar 64 -lr 6 -dt 0.25 -dr 1 -ds 0.25 -dp 256</div></blockquote>
+</div></blockquote>
+<dl class="method">
+<dt id="honeybee.radiance.parameters.rcontrib.RcontribParameters.freeze">
+<code class="descname">freeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.rcontrib.RcontribParameters.freeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">mod_file</code><em class="property"> = None</em></dt>
+<dd><p>[-M file] File path to a file with a list of modifiers
+(Default: None)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.rcontrib.RcontribParameters.output_filename_format">
+<code class="descname">output_filename_format</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.rcontrib.RcontribParameters.output_filename_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-0 str] output format e.g. %04f.hdr.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.parameters.rcontrib.RcontribParameters.unfreeze">
+<code class="descname">unfreeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.rcontrib.RcontribParameters.unfreeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.rcontrib.RcontribParameters.x_dimension">
+<code class="descname">x_dimension</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.rcontrib.RcontribParameters.x_dimension" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-x int] X dimension of an image.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.rcontrib.RcontribParameters.y_dimension">
+<code class="descname">y_dimension</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.rcontrib.RcontribParameters.y_dimension" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-y int] Y dimension of an image or number of total points in points file.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.parameters.rfluxmtx">
+<span id="honeybee-radiance-parameters-rfluxmtx-module"></span><h2>honeybee.radiance.parameters.rfluxmtx module<a class="headerlink" href="#module-honeybee.radiance.parameters.rfluxmtx" title="Permalink to this headline">¶</a></h2>
+<p>Radiance rfluxmtx parameters.</p>
+<dl class="class">
+<dt id="honeybee.radiance.parameters.rfluxmtx.RfluxmtxParameters">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.parameters.rfluxmtx.</code><code class="descname">RfluxmtxParameters</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/parameters/rfluxmtx.html#RfluxmtxParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.rfluxmtx.RfluxmtxParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.radiance.parameters.gridbased.GridBasedParameters" title="honeybee.radiance.parameters.gridbased.GridBasedParameters"><code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.parameters.gridbased.GridBasedParameters</span></code></a></p>
+<p>Rfluxmtx parameters.</p>
+<dl class="method">
+<dt id="honeybee.radiance.parameters.rfluxmtx.RfluxmtxParameters.freeze">
+<code class="descname">freeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.rfluxmtx.RfluxmtxParameters.freeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.rfluxmtx.RfluxmtxParameters.sampling_rays_count">
+<code class="descname">sampling_rays_count</code><a class="headerlink" href="#honeybee.radiance.parameters.rfluxmtx.RfluxmtxParameters.sampling_rays_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>-c int Number of sampling ray counts.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.parameters.rfluxmtx.RfluxmtxParameters.unfreeze">
+<code class="descname">unfreeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.rfluxmtx.RfluxmtxParameters.unfreeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.parameters.rmtxop">
+<span id="honeybee-radiance-parameters-rmtxop-module"></span><h2>honeybee.radiance.parameters.rmtxop module<a class="headerlink" href="#module-honeybee.radiance.parameters.rmtxop" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.radiance.parameters.rmtxop.RmtxopParameters">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.parameters.rmtxop.</code><code class="descname">RmtxopParameters</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/parameters/rmtxop.html#RmtxopParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.rmtxop.RmtxopParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.parameters._advancedparametersbase.AdvancedRadianceParameters</span></code></p>
+<p>Radiance parameters for the command rmtxop.</p>
+<p>Read more:
+<a class="reference external" href="http://www.radiance-online.org/learning/documentation">http://www.radiance-online.org/learning/documentation</a>    manual-pages/pdfs/rmtxop.pdf</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.rmtxop.RmtxopParameters.verbose_reporting">
+<code class="descname">verbose_reporting</code><a class="headerlink" href="#honeybee.radiance.parameters.rmtxop.RmtxopParameters.verbose_reporting" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-v] Boolean option to print each operation to stdout.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.rmtxop.RmtxopParameters.output_format">
+<code class="descname">output_format</code><a class="headerlink" href="#honeybee.radiance.parameters.rmtxop.RmtxopParameters.output_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>[-f[a|c|d|f]] Format in which the output data should be
+written.</p>
+</dd></dl>
+
+<dl class="docutils">
+<dt>Usage:</dt>
+<dd><p class="first">#generate rmtxop with default parameters.
+rmtx = RmtxopParameters()</p>
+<p>#check current values
+print(rmtx.to_rad_string())
+&gt;</p>
+<p>#add verbose flag.
+rmtx.verbose_reporting = True</p>
+<p class="last">#check values again.
+print(rmtx.to_rad_string())
+&gt; -v</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="honeybee.radiance.parameters.rmtxop.RmtxopParameters.freeze">
+<code class="descname">freeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.rmtxop.RmtxopParameters.freeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">output_format</code><em class="property"> = None</em></dt>
+<dd><p>Specify the output format. Output formats correspond to a for ASCII,
+d for binary doubles, f for floats and c for RGBE colors.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.parameters.rmtxop.RmtxopParameters.transpose_matrix">
+<code class="descname">transpose_matrix</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.parameters.rmtxop.RmtxopParameters.transpose_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>This boolean option transposes the matrix.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.parameters.rmtxop.RmtxopParameters.unfreeze">
+<code class="descname">unfreeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.rmtxop.RmtxopParameters.unfreeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">verbose_reporting</code><em class="property"> = None</em></dt>
+<dd><p>This boolean option turns on verbose reporting, which announces each
+operation of rmtxop</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.parameters.vwrays">
+<span id="honeybee-radiance-parameters-vwrays-module"></span><h2>honeybee.radiance.parameters.vwrays module<a class="headerlink" href="#module-honeybee.radiance.parameters.vwrays" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.radiance.parameters.vwrays.VwraysParameters">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.parameters.vwrays.</code><code class="descname">VwraysParameters</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/parameters/vwrays.html#VwraysParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.vwrays.VwraysParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.parameters._advancedparametersbase.AdvancedRadianceParameters</span></code></p>
+<dl class="method">
+<dt id="honeybee.radiance.parameters.vwrays.VwraysParameters.freeze">
+<code class="descname">freeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.vwrays.VwraysParameters.freeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.parameters.vwrays.VwraysParameters.unfreeze">
+<code class="descname">unfreeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.vwrays.VwraysParameters.unfreeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.parameters.xform">
+<span id="honeybee-radiance-parameters-xform-module"></span><h2>honeybee.radiance.parameters.xform module<a class="headerlink" href="#module-honeybee.radiance.parameters.xform" title="Permalink to this headline">¶</a></h2>
+<p>Radiance xform parameters</p>
+<dl class="class">
+<dt id="honeybee.radiance.parameters.xform.XformParameters">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.parameters.xform.</code><code class="descname">XformParameters</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/parameters/xform.html#XformParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.parameters.xform.XformParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.parameters._advancedparametersbase.AdvancedRadianceParameters</span></code></p>
+<dl class="method">
+<dt id="honeybee.radiance.parameters.xform.XformParameters.freeze">
+<code class="descname">freeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.xform.XformParameters.freeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.parameters.xform.XformParameters.unfreeze">
+<code class="descname">unfreeze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.radiance.parameters.xform.XformParameters.unfreeze" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.parameters">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-honeybee.radiance.parameters" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/honeybee.radiance.parameters.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,526 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.recipe.solaraccess.gridbased &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../../index.html">
+    <img class="logo" src="../../../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.recipe.solaraccess.gridbased</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Radiance Solar Access Grid-based Analysis Recipe.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">.._gridbasedbase</span> <span class="k">import</span> <span class="n">GenericGridBased</span>
+<span class="kn">from</span> <span class="nn">..recipeutil</span> <span class="k">import</span> <span class="n">write_rad_files</span><span class="p">,</span> <span class="n">write_extra_files</span>
+<span class="kn">from</span> <span class="nn">..recipedcutil</span> <span class="k">import</span> <span class="n">rgb_matrix_file_to_ill</span>
+<span class="kn">from</span> <span class="nn">...parameters.rcontrib</span> <span class="k">import</span> <span class="n">RcontribParameters</span>
+<span class="kn">from</span> <span class="nn">...command.oconv</span> <span class="k">import</span> <span class="n">Oconv</span>
+<span class="kn">from</span> <span class="nn">...command.rcontrib</span> <span class="k">import</span> <span class="n">Rcontrib</span>
+<span class="kn">from</span> <span class="nn">...analysisgrid</span> <span class="k">import</span> <span class="n">AnalysisGrid</span>
+<span class="kn">from</span> <span class="nn">....futil</span> <span class="k">import</span> <span class="n">write_to_file</span>
+<span class="kn">from</span> <span class="nn">....vectormath.euclid</span> <span class="k">import</span> <span class="n">Vector3</span>
+<span class="kn">from</span> <span class="nn">....hbsurface</span> <span class="k">import</span> <span class="n">HBSurface</span>
+
+<span class="kn">from</span> <span class="nn">ladybug.sunpath</span> <span class="k">import</span> <span class="n">Sunpath</span>
+<span class="kn">from</span> <span class="nn">ladybug.location</span> <span class="k">import</span> <span class="n">Location</span>
+<span class="kn">from</span> <span class="nn">ladybug.legendparameters</span> <span class="k">import</span> <span class="n">LegendParameters</span>
+<span class="kn">from</span> <span class="nn">ladybug.color</span> <span class="k">import</span> <span class="n">Colorset</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<div class="viewcode-block" id="SolarAccessGridBased"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.solaraccess.html#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased">[docs]</a><span class="k">class</span> <span class="nc">SolarAccessGridBased</span><span class="p">(</span><span class="n">GenericGridBased</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Solar access recipe.</span>
+
+<span class="sd">    This class calculates number of sunlight hours for a group of test points.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        sun_vectors: A list of ladybug sun vectors as (x, y, z) values. Z value</span>
+<span class="sd">            for sun vectors should be negative (coming from sun toward earth)</span>
+<span class="sd">        hoys: A list of hours of the year for each sun vector.</span>
+<span class="sd">        analysis_grids: List of analysis grids.</span>
+<span class="sd">        timestep: The number of timesteps per hour for sun vectors. This number</span>
+<span class="sd">            should be smaller than 60 and divisible by 60. The default is set to</span>
+<span class="sd">            1 such that one sun vector is generated for each hour (Default: 1).</span>
+<span class="sd">        hb_objects: An optional list of Honeybee surfaces or zones (Default: None).</span>
+<span class="sd">        sub_folder: Analysis subfolder for this recipe. (Default: &quot;sunlighthours&quot;)</span>
+
+<span class="sd">    Usage:</span>
+<span class="sd">        # initiate analysis_recipe</span>
+<span class="sd">        analysis_recipe = SolarAccess(sun_vectors, analysis_grids)</span>
+
+<span class="sd">        # add honeybee object</span>
+<span class="sd">        analysis_recipe.hb_objects = HBObjs</span>
+
+<span class="sd">        # write analysis files to local drive</span>
+<span class="sd">        analysis_recipe.write_to_file(_folder_, _name_)</span>
+
+<span class="sd">        # run the analysis</span>
+<span class="sd">        analysis_recipe.run(debaug=False)</span>
+
+<span class="sd">        # get the results</span>
+<span class="sd">        print(analysis_recipe.results())</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sun_vectors</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">analysis_grids</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">hb_objects</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">sub_folder</span><span class="o">=</span><span class="s1">&#39;solaraccess&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create sunlighthours recipe.&quot;&quot;&quot;</span>
+        <span class="n">GenericGridBased</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">analysis_grids</span><span class="p">,</span> <span class="n">hb_objects</span><span class="p">,</span> <span class="n">sub_folder</span>
+        <span class="p">)</span>
+
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">hoys</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">sun_vectors</span><span class="p">),</span> \
+            <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;Length of sun_vectors [] must be equall to &#39;</span>
+                <span class="s1">&#39;the length of hoys []&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sun_vectors</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">hoys</span><span class="p">))</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sun_vectors</span> <span class="o">=</span> <span class="n">sun_vectors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hoys</span> <span class="o">=</span> <span class="n">hoys</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timestep</span> <span class="o">=</span> <span class="n">timestep</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_radiance_parameters</span> <span class="o">=</span> <span class="n">RcontribParameters</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_radiance_parameters</span><span class="o">.</span><span class="n">irradiance_calc</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_radiance_parameters</span><span class="o">.</span><span class="n">ambient_bounces</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_radiance_parameters</span><span class="o">.</span><span class="n">direct_certainty</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_radiance_parameters</span><span class="o">.</span><span class="n">direct_threshold</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_radiance_parameters</span><span class="o">.</span><span class="n">direct_jitter</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="SolarAccessGridBased.from_json"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.solaraccess.html#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.from_json">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_json</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">rec_json</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create the solar access recipe from json.</span>
+<span class="sd">            {</span>
+<span class="sd">              &quot;id&quot;: 0, // do NOT overwrite this id</span>
+<span class="sd">              &quot;location&quot;: null, // a honeybee location - see below</span>
+<span class="sd">              &quot;hoys&quot;: [], // list of hours of the year</span>
+<span class="sd">              &quot;surfaces&quot;: [], // list of honeybee surfaces</span>
+<span class="sd">              &quot;analysis_grids&quot;: [] // list of analysis grids</span>
+<span class="sd">              &quot;sun_vectors&quot;: [] // list of sun vectors if location is not provided</span>
+<span class="sd">            }</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">hoys</span> <span class="o">=</span> <span class="n">rec_json</span><span class="p">[</span><span class="s2">&quot;hoys&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;sun_vectors&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">rec_json</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">rec_json</span><span class="p">[</span><span class="s1">&#39;sun_vectors&#39;</span><span class="p">]:</span>
+            <span class="c1"># create sun vectors from location inputs</span>
+            <span class="n">loc</span> <span class="o">=</span> <span class="n">Location</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">rec_json</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">])</span>
+            <span class="n">sp</span> <span class="o">=</span> <span class="n">Sunpath</span><span class="o">.</span><span class="n">from_location</span><span class="p">(</span><span class="n">loc</span><span class="p">)</span>
+            <span class="n">suns</span> <span class="o">=</span> <span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">calculate_sun_from_hoy</span><span class="p">(</span><span class="n">hoy</span><span class="p">)</span> <span class="k">for</span> <span class="n">hoy</span> <span class="ow">in</span> <span class="n">hoys</span><span class="p">)</span>
+            <span class="n">sun_vectors</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">sun_vector</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">suns</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">is_during_day</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sun_vectors</span> <span class="o">=</span> <span class="n">rec_json</span><span class="p">[</span><span class="s1">&#39;sun_vectors&#39;</span><span class="p">]</span>
+
+        <span class="n">analysis_grids</span> <span class="o">=</span> \
+            <span class="nb">tuple</span><span class="p">(</span><span class="n">AnalysisGrid</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">ag</span><span class="p">)</span> <span class="k">for</span> <span class="n">ag</span> <span class="ow">in</span> <span class="n">rec_json</span><span class="p">[</span><span class="s2">&quot;analysis_grids&quot;</span><span class="p">])</span>
+        <span class="n">hb_objects</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">HBSurface</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">srf</span><span class="p">)</span> <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="n">rec_json</span><span class="p">[</span><span class="s2">&quot;surfaces&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">sun_vectors</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">analysis_grids</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">hb_objects</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SolarAccessGridBased.from_points_and_vectors"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.solaraccess.html#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.from_points_and_vectors">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_points_and_vectors</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">sun_vectors</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">point_groups</span><span class="p">,</span> <span class="n">vector_groups</span><span class="o">=</span><span class="p">[],</span>
+                                <span class="n">timestep</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">hb_objects</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sub_folder</span><span class="o">=</span><span class="s1">&#39;sunlighthour&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create sunlighthours recipe from points and vectors.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            sun_vectors: A list of ladybug sun vectors as (x, y, z) values. Z value</span>
+<span class="sd">                for sun vectors should be negative (coming from sun toward earth)</span>
+<span class="sd">            hoys: A list of hours of the year for each sun vector.</span>
+<span class="sd">            point_groups: A list of (x, y, z) test points or lists of (x, y, z) test</span>
+<span class="sd">                points. Each list of test points will be converted to a</span>
+<span class="sd">                TestPointGroup. If testPts is a single flattened list only one</span>
+<span class="sd">                TestPointGroup will be created.</span>
+<span class="sd">            vector_groups: An optional list of (x, y, z) vectors. Each vector</span>
+<span class="sd">                represents direction of corresponding point in testPts. If the</span>
+<span class="sd">                vector is not provided (0, 0, 1) will be assigned.</span>
+<span class="sd">            timestep: The number of timesteps per hour for sun vectors. This number</span>
+<span class="sd">                should be smaller than 60 and divisible by 60. The default is set to</span>
+<span class="sd">                1 such that one sun vector is generated for each hour (Default: 1).</span>
+<span class="sd">            hb_objects: An optional list of Honeybee surfaces or zones (Default: None).</span>
+<span class="sd">            sub_folder: Analysis subfolder for this recipe. (Default: &quot;sunlighthours&quot;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">analysis_grids</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">analysis_grids_from_points_and_vectors</span><span class="p">(</span><span class="n">point_groups</span><span class="p">,</span>
+                                                                    <span class="n">vector_groups</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">sun_vectors</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">analysis_grids</span><span class="p">,</span> <span class="n">timestep</span><span class="p">,</span> <span class="n">hb_objects</span><span class="p">,</span> <span class="n">sub_folder</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SolarAccessGridBased.from_suns"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.solaraccess.html#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.from_suns">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_suns</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">suns</span><span class="p">,</span> <span class="n">point_groups</span><span class="p">,</span> <span class="n">vector_groups</span><span class="o">=</span><span class="p">[],</span> <span class="n">timestep</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                  <span class="n">hb_objects</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sub_folder</span><span class="o">=</span><span class="s1">&#39;sunlighthour&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create sunlighthours recipe from LB sun objects.</span>
+
+<span class="sd">        Attributes:</span>
+<span class="sd">            suns: A list of ladybug suns.</span>
+<span class="sd">            point_groups: A list of (x, y, z) test points or lists of (x, y, z) test</span>
+<span class="sd">                points. Each list of test points will be converted to a</span>
+<span class="sd">                TestPointGroup. If testPts is a single flattened list only one</span>
+<span class="sd">                TestPointGroup will be created.</span>
+<span class="sd">            vector_groups: An optional list of (x, y, z) vectors. Each vector</span>
+<span class="sd">                represents direction of corresponding point in testPts. If the</span>
+<span class="sd">                vector is not provided (0, 0, 1) will be assigned.</span>
+<span class="sd">            timestep: The number of timesteps per hour for sun vectors. This number</span>
+<span class="sd">                should be smaller than 60 and divisible by 60. The default is set to</span>
+<span class="sd">                1 such that one sun vector is generated for each hour (Default: 1).</span>
+<span class="sd">            hb_objects: An optional list of Honeybee surfaces or zones (Default: None).</span>
+<span class="sd">            sub_folder: Analysis subfolder for this recipe. (Default: &quot;sunlighthours&quot;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">sun_vectors</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">sun_vector</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">suns</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">is_during_day</span><span class="p">)</span>
+            <span class="n">hoys</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">hoy</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">suns</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">is_during_day</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;The input is not a valid LBSun.&#39;</span><span class="p">)</span>
+
+        <span class="n">analysis_grids</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">analysis_grids_from_points_and_vectors</span><span class="p">(</span><span class="n">point_groups</span><span class="p">,</span>
+                                                                    <span class="n">vector_groups</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">sun_vectors</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">analysis_grids</span><span class="p">,</span> <span class="n">timestep</span><span class="p">,</span> <span class="n">hb_objects</span><span class="p">,</span> <span class="n">sub_folder</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SolarAccessGridBased.from_location_and_hoys"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.solaraccess.html#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.from_location_and_hoys">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_location_and_hoys</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">point_groups</span><span class="p">,</span> <span class="n">vector_groups</span><span class="o">=</span><span class="p">[],</span>
+                               <span class="n">timestep</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">hb_objects</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sub_folder</span><span class="o">=</span><span class="s1">&#39;sunlighthour&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create sunlighthours recipe from Location and hours of year.&quot;&quot;&quot;</span>
+        <span class="n">sp</span> <span class="o">=</span> <span class="n">Sunpath</span><span class="o">.</span><span class="n">from_location</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+
+        <span class="n">suns</span> <span class="o">=</span> <span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">calculate_sun_from_hoy</span><span class="p">(</span><span class="n">hoy</span><span class="p">)</span> <span class="k">for</span> <span class="n">hoy</span> <span class="ow">in</span> <span class="n">hoys</span><span class="p">)</span>
+
+        <span class="n">sun_vectors</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">sun_vector</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">suns</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">is_during_day</span><span class="p">)</span>
+
+        <span class="n">analysis_grids</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">analysis_grids_from_points_and_vectors</span><span class="p">(</span><span class="n">point_groups</span><span class="p">,</span>
+                                                                    <span class="n">vector_groups</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">sun_vectors</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">analysis_grids</span><span class="p">,</span> <span class="n">timestep</span><span class="p">,</span> <span class="n">hb_objects</span><span class="p">,</span> <span class="n">sub_folder</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SolarAccessGridBased.from_location_and_analysis_period"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.solaraccess.html#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.from_location_and_analysis_period">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_location_and_analysis_period</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">analysis_period</span><span class="p">,</span> <span class="n">point_groups</span><span class="p">,</span> <span class="n">vector_groups</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">hb_objects</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sub_folder</span><span class="o">=</span><span class="s1">&#39;sunlighthour&#39;</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create sunlighthours recipe from Location and analysis period.&quot;&quot;&quot;</span>
+        <span class="n">vector_groups</span> <span class="o">=</span> <span class="n">vector_groups</span> <span class="ow">or</span> <span class="p">()</span>
+
+        <span class="n">sp</span> <span class="o">=</span> <span class="n">Sunpath</span><span class="o">.</span><span class="n">from_location</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+
+        <span class="n">suns</span> <span class="o">=</span> <span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">calculate_sun_from_hoy</span><span class="p">(</span><span class="n">hoy</span><span class="p">)</span> <span class="k">for</span> <span class="n">hoy</span> <span class="ow">in</span> <span class="n">analysis_period</span><span class="o">.</span><span class="n">float_hoys</span><span class="p">)</span>
+
+        <span class="n">sun_vectors</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">sun_vector</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">suns</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">is_during_day</span><span class="p">)</span>
+        <span class="n">hoys</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">hoy</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">suns</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">is_during_day</span><span class="p">)</span>
+
+        <span class="n">analysis_grids</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">analysis_grids_from_points_and_vectors</span><span class="p">(</span><span class="n">point_groups</span><span class="p">,</span>
+                                                                    <span class="n">vector_groups</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">sun_vectors</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">analysis_grids</span><span class="p">,</span> <span class="n">analysis_period</span><span class="o">.</span><span class="n">timestep</span><span class="p">,</span>
+                   <span class="n">hb_objects</span><span class="p">,</span> <span class="n">sub_folder</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">hoys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return list of hours of the year.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hoys</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sun_vectors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A list of ladybug sun vectors as (x, y, z) values.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sun_vectors</span>
+
+    <span class="nd">@sun_vectors</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">sun_vectors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vectors</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sun_vectors</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">Vector3</span><span class="p">(</span><span class="o">*</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">flipped</span><span class="p">()</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vectors</span>
+                                      <span class="k">if</span> <span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sun_vectors</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">Vector3</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">Y</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">Z</span><span class="p">)</span><span class="o">.</span><span class="n">flipped</span><span class="p">()</span>
+                                      <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vectors</span> <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">Z</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Failed to create the sun vectors!&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sun_vectors</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">vectors</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1"> vectors with positive z value are found and removed &#39;</span>
+                  <span class="s1">&#39;from sun vectors&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vectors</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sun_vectors</span><span class="p">)))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">timestep</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;An intger for the number of timesteps per hour for sun vectors.</span>
+
+<span class="sd">        This number should be smaller than 60 and divisible by 60.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timestep</span>
+
+    <span class="nd">@timestep</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">timestep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ts</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_timestep</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ts</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_timestep</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timestep</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;ValueError: TimeStep cannot be 0.&#39;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">legend_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Legend parameters for solar access analysis.&quot;&quot;&quot;</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="n">Colorset</span><span class="o">.</span><span class="n">ecotect</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">LegendParameters</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">],</span> <span class="n">colors</span><span class="o">=</span><span class="n">col</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SolarAccessGridBased.write_suns"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.solaraccess.html#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.write_suns">[docs]</a>    <span class="k">def</span> <span class="nf">write_suns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">project_name</span><span class="p">,</span> <span class="n">mkdir</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write sunlist, sun geometry and sun material files.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            target_dir: Path to project directory (e.g. c:/ladybug)</span>
+<span class="sd">            project_name: Project name as string. Suns will be saved as</span>
+<span class="sd">                project_name.sun</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A tuple of paths to sunlist file, sun materials and sun geometries</span>
+
+<span class="sd">        Exceptions:</span>
+<span class="sd">            ValueError if target_dir doesn&#39;t exist and mkdir is False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">project_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="s2">&quot;project_name should be a string.&quot;</span>
+
+        <span class="n">_suns</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sun_vectors</span><span class="p">))</span>
+        <span class="n">_mat</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sun_vectors</span><span class="p">))</span>
+        <span class="n">_geo</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sun_vectors</span><span class="p">))</span>
+
+        <span class="c1"># create data</span>
+        <span class="k">for</span> <span class="n">count</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sun_vectors</span><span class="p">):</span>
+            <span class="n">_suns</span><span class="p">[</span><span class="n">count</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;solar</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">count</span>
+            <span class="n">_mat</span><span class="p">[</span><span class="n">count</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;void light solar</span><span class="si">%d</span><span class="s1"> 0 0 3 1.0 1.0 1.0&#39;</span> <span class="o">%</span> <span class="n">count</span>
+            <span class="n">_geo</span><span class="p">[</span><span class="n">count</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="s1">&#39;solar</span><span class="si">{0}</span><span class="s1"> source sun</span><span class="si">{0}</span><span class="s1"> 0 0 4 </span><span class="si">{1}</span><span class="s1"> </span><span class="si">{2}</span><span class="s1"> </span><span class="si">{3}</span><span class="s1"> 0.533&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">count</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">Y</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">Z</span><span class="p">)</span>
+
+        <span class="n">_sunsf</span> <span class="o">=</span> <span class="n">write_to_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">project_name</span> <span class="o">+</span> <span class="s1">&#39;.sun&#39;</span><span class="p">),</span>
+                               <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_suns</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">mkdir</span><span class="p">)</span>
+        <span class="n">_matf</span> <span class="o">=</span> <span class="n">write_to_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">project_name</span> <span class="o">+</span> <span class="s1">&#39;_suns.mat&#39;</span><span class="p">),</span>
+                              <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_mat</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">mkdir</span><span class="p">)</span>
+        <span class="n">_geof</span> <span class="o">=</span> <span class="n">write_to_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">project_name</span> <span class="o">+</span> <span class="s1">&#39;_suns.rad&#39;</span><span class="p">),</span>
+                              <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_geo</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">mkdir</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">_sunsf</span> <span class="ow">and</span> <span class="n">_matf</span> <span class="ow">and</span> <span class="n">_geof</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_sunsf</span><span class="p">,</span> <span class="n">_matf</span><span class="p">,</span> <span class="n">_geof</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Failed to write sun vectors!&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SolarAccessGridBased.write"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.solaraccess.html#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_folder</span><span class="p">,</span> <span class="n">project_name</span><span class="o">=</span><span class="s1">&#39;untitled&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write analysis files to target folder.</span>
+
+<span class="sd">        Files for sunlight hours analysis are:</span>
+<span class="sd">            test points &lt;project_name.pts&gt;: List of analysis points.</span>
+<span class="sd">            suns file &lt;*.sun&gt;: list of sun sources .</span>
+<span class="sd">            suns material file &lt;*_suns.mat&gt;: Radiance materials for sun sources.</span>
+<span class="sd">            suns geometry file &lt;*_suns.rad&gt;: Radiance geometries for sun sources.</span>
+<span class="sd">            material file &lt;*.mat&gt;: Radiance materials. Will be empty if hb_objects is</span>
+<span class="sd">                None.</span>
+<span class="sd">            geometry file &lt;*.rad&gt;: Radiance geometries. Will be empty if hb_objects is</span>
+<span class="sd">                None.</span>
+<span class="sd">            batch file &lt;*.bat&gt;: An executable batch file which has the list of commands.</span>
+<span class="sd">                oconv [material file] [geometry file] [sun materials file] [sun</span>
+<span class="sd">                    geometries file] &gt; [octree file]</span>
+<span class="sd">                rcontrib -ab 0 -ad 10000 -I -M [sunlist.txt] -dc 1 [octree file]&lt; [pts</span>
+<span class="sd">                    file] &gt; [rcontrib results file]</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            target_folder: Path to parent folder. Files will be created under</span>
+<span class="sd">                target_folder/gridbased. use self.sub_folder to change subfolder name.</span>
+<span class="sd">            project_name: Name of this project as a string.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            True in case of success.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># 0.prepare target folder</span>
+        <span class="c1"># create main folder target_folder/project_name</span>
+        <span class="n">project_folder</span> <span class="o">=</span> \
+            <span class="nb">super</span><span class="p">(</span><span class="n">GenericGridBased</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">write_content</span><span class="p">(</span><span class="n">target_folder</span><span class="p">,</span> <span class="n">project_name</span><span class="p">)</span>
+
+        <span class="c1"># write geometry and material files</span>
+        <span class="n">opqfiles</span><span class="p">,</span> <span class="n">glzfiles</span><span class="p">,</span> <span class="n">wgsfiles</span> <span class="o">=</span> <span class="n">write_rad_files</span><span class="p">(</span>
+            <span class="n">project_folder</span> <span class="o">+</span> <span class="s1">&#39;/scene&#39;</span><span class="p">,</span> <span class="n">project_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">opaque_rad_file</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">glazing_rad_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">window_groups_rad_files</span>
+        <span class="p">)</span>
+        <span class="c1"># additional radiance files added to the recipe as scene</span>
+        <span class="n">extrafiles</span> <span class="o">=</span> <span class="n">write_extra_files</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="p">,</span> <span class="n">project_folder</span> <span class="o">+</span> <span class="s1">&#39;/scene&#39;</span><span class="p">)</span>
+
+        <span class="c1"># 1.write points</span>
+        <span class="n">points_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_analysis_grids</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="n">project_name</span><span class="p">)</span>
+
+        <span class="c1"># 2.write sun files</span>
+        <span class="n">sunsList</span><span class="p">,</span> <span class="n">sunsMat</span><span class="p">,</span> <span class="n">sunsGeo</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">write_suns</span><span class="p">(</span><span class="n">project_folder</span> <span class="o">+</span> <span class="s1">&#39;/sky&#39;</span><span class="p">,</span> <span class="n">project_name</span><span class="p">)</span>
+
+        <span class="c1"># 2.1.add sun list to modifiers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_radiance_parameters</span><span class="o">.</span><span class="n">mod_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">sunsList</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_radiance_parameters</span><span class="o">.</span><span class="n">y_dimension</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_point_count</span>
+
+        <span class="c1"># 3.write batch file</span>
+        <span class="k">if</span> <span class="n">header</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="n">project_folder</span><span class="p">))</span>
+
+        <span class="c1"># TODO(Mostapha): add window_groups here if any!</span>
+        <span class="c1"># # 4.1.prepare oconv</span>
+        <span class="n">oct_scene_files</span> <span class="o">=</span> <span class="n">opqfiles</span> <span class="o">+</span> <span class="n">glzfiles</span> <span class="o">+</span> <span class="n">wgsfiles</span> <span class="o">+</span> <span class="p">[</span><span class="n">sunsMat</span><span class="p">,</span> <span class="n">sunsGeo</span><span class="p">]</span> <span class="o">+</span> \
+            <span class="n">extrafiles</span><span class="o">.</span><span class="n">fp</span>
+
+        <span class="n">oc</span> <span class="o">=</span> <span class="n">Oconv</span><span class="p">(</span><span class="n">project_name</span><span class="p">)</span>
+        <span class="n">oc</span><span class="o">.</span><span class="n">scene_files</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">oct_scene_files</span><span class="p">)</span>
+
+        <span class="c1"># # 4.2.prepare Rcontrib</span>
+        <span class="n">rct</span> <span class="o">=</span> <span class="n">Rcontrib</span><span class="p">(</span><span class="s1">&#39;result/&#39;</span> <span class="o">+</span> <span class="n">project_name</span><span class="p">,</span>
+                       <span class="n">rcontrib_parameters</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_radiance_parameters</span><span class="p">)</span>
+        <span class="n">rct</span><span class="o">.</span><span class="n">octree_file</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">oc</span><span class="o">.</span><span class="n">output_file</span><span class="p">)</span>
+        <span class="n">rct</span><span class="o">.</span><span class="n">points_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">points_file</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">)</span>
+
+        <span class="n">batch_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="s2">&quot;commands.bat&quot;</span><span class="p">)</span>
+        <span class="n">rmtx</span> <span class="o">=</span> <span class="n">rgb_matrix_file_to_ill</span><span class="p">((</span><span class="nb">str</span><span class="p">(</span><span class="n">rct</span><span class="o">.</span><span class="n">output_file</span><span class="p">),),</span>
+                                      <span class="s1">&#39;result/</span><span class="si">{}</span><span class="s1">.ill&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">project_name</span><span class="p">))</span>
+        <span class="c1"># # 4.3 write batch file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">oc</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rct</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rmtx</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_result_files</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">rmtx</span><span class="o">.</span><span class="n">output_file</span><span class="p">))</span>
+
+        <span class="n">batch_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="s2">&quot;commands.bat&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">write_to_file</span><span class="p">(</span><span class="n">batch_file</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="SolarAccessGridBased.results"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.solaraccess.html#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.results">[docs]</a>    <span class="k">def</span> <span class="nf">results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return results for this analysis.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_isCalculated</span><span class="p">,</span> \
+            <span class="s2">&quot;You haven&#39;t run the Recipe yet. Use self.run &quot;</span> <span class="o">+</span> \
+            <span class="s2">&quot;to run the analysis before loading the results.&quot;</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Unloading the current values from the analysis grids.&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ag</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_grids</span><span class="p">:</span>
+            <span class="n">ag</span><span class="o">.</span><span class="n">unload</span><span class="p">()</span>
+
+        <span class="n">hours</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">timestep</span> <span class="o">*</span> <span class="n">h</span><span class="p">)</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hoys</span><span class="p">)</span>
+        <span class="n">rf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result_files</span>
+        <span class="n">start_line</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">count</span><span class="p">,</span> <span class="n">analysisGrid</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">analysis_grids</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">count</span><span class="p">:</span>
+                <span class="n">start_line</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">analysis_grids</span><span class="p">[</span><span class="n">count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+
+            <span class="n">analysisGrid</span><span class="o">.</span><span class="n">set_values_from_file</span><span class="p">(</span>
+                <span class="n">rf</span><span class="p">,</span> <span class="n">hours</span><span class="p">,</span> <span class="n">start_line</span><span class="o">=</span><span class="n">start_line</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">check_point_count</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">mode</span><span class="o">=</span><span class="mi">1</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_grids</span></div>
+
+<div class="viewcode-block" id="SolarAccessGridBased.to_json"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.solaraccess.html#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.to_json">[docs]</a>    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create the solar access recipe from json.</span>
+<span class="sd">            {</span>
+<span class="sd">              &quot;id&quot;: 0, // do NOT overwrite this id</span>
+<span class="sd">              &quot;location&quot;: null, // a honeybee location - see below</span>
+<span class="sd">              &quot;hoys&quot;: [], // list of hours of the year</span>
+<span class="sd">              &quot;surfaces&quot;: [], // list of honeybee surfaces</span>
+<span class="sd">              &quot;analysis_grids&quot;: [], // list of analysis grids</span>
+<span class="sd">              &quot;sun_vectors&quot;: []</span>
+<span class="sd">            }</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;hoys&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">hoys</span><span class="p">,</span>
+            <span class="s2">&quot;surfaces&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">srf</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span> <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hb_objects</span><span class="p">],</span>
+            <span class="s2">&quot;analysis_grids&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">ag</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span> <span class="k">for</span> <span class="n">ag</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_grids</span><span class="p">],</span>
+            <span class="s2">&quot;sun_vectors&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sun_vectors</span><span class="p">]</span>
+        <span class="p">}</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

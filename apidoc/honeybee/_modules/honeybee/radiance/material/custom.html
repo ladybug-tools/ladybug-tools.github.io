@@ -1,0 +1,179 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.material.custom &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../index.html">
+    <img class="logo" src="../../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.material.custom</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Radiance Custom Material (e.g plastic, glass, etc.).</span>
+
+<span class="sd">Use this class to create any type of radiance materials.</span>
+<span class="sd">http://radsite.lbl.gov/radiance/refer/ray.html#Materials</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">_materialbase</span> <span class="k">import</span> <span class="n">RadianceMaterial</span>
+
+
+<div class="viewcode-block" id="CustomMaterial"><a class="viewcode-back" href="../../../../honeybee.radiance.material.html#honeybee.radiance.material.custom.CustomMaterial">[docs]</a><span class="k">class</span> <span class="nc">CustomMaterial</span><span class="p">(</span><span class="n">RadianceMaterial</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Custom Radiance material.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        name: Material name as a string. Do not use white space and special character.</span>
+<span class="sd">        material_type: One of Radiance standard Material types (e.g. glass, plastic, etc)</span>
+<span class="sd">        values: A dictionary of material data. key is line number and item is the list</span>
+<span class="sd">            of values {0: [], 1: [], 2: [&#39;0.500&#39;, &#39;0.500&#39;, &#39;0.500&#39;, &#39;0.000&#39;, &#39;0.050&#39;]}</span>
+<span class="sd">        modifier: Material modifier. Default is void</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">material_type</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">{},</span> <span class="n">modifier</span><span class="o">=</span><span class="s2">&quot;void&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create custom radiance material.&quot;&quot;&quot;</span>
+        <span class="n">RadianceMaterial</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">material_type</span><span class="p">,</span> <span class="n">modifier</span><span class="o">=</span><span class="s2">&quot;void&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="n">values</span>
+        <span class="sd">&quot;&quot;&quot; A dictionary of material data. key is line number and item is the list of values</span>
+<span class="sd">              {0: [], 1: [], 2: [&#39;0.500&#39;, &#39;0.500&#39;, &#39;0.500&#39;, &#39;0.000&#39;, &#39;0.050&#39;]}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="CustomMaterial.modify_values"><a class="viewcode-back" href="../../../../honeybee.radiance.material.html#honeybee.radiance.material.custom.CustomMaterial.modify_values">[docs]</a>    <span class="k">def</span> <span class="nf">modify_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line_count</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Modify values for the current material.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">           line_count: An integer between 0-2 that represnt the line number.</span>
+<span class="sd">           values: Values as a list of string</span>
+<span class="sd">         Usage:</span>
+<span class="sd">            # This line will assign 9 values to line 0 of the material</span>
+<span class="sd">            material.modify_values(0, [&quot;0.5&quot;, &quot;0.5&quot;, &quot;0.5&quot;,</span>
+<span class="sd">                &quot;/usr/local/lib/ray/oakfloor.pic&quot;, &quot;.&quot;, &quot;frac(U)&quot;,</span>
+<span class="sd">                &quot;frac(V)&quot;, &quot;-s&quot;, &quot;1.1667&quot;])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">line_count</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;line_count should be between 0-2.&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">line_count</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span></div>
+
+<div class="viewcode-block" id="CustomMaterial.to_rad_string"><a class="viewcode-back" href="../../../../honeybee.radiance.material.html#honeybee.radiance.material.custom.CustomMaterial.to_rad_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_rad_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">minimal</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return full radiance definition.&quot;&quot;&quot;</span>
+        <span class="n">material</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">head_line</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">line_count</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">line_count</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># line will be printed as 0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">count</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">))]</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">count</span> <span class="o">+</span> <span class="n">values</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
+                <span class="n">material</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">material</span><span class="p">)</span> <span class="k">if</span> <span class="n">minimal</span> <span class="k">else</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">material</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

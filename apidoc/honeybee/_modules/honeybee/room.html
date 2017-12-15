@@ -1,0 +1,330 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.room &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.room</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Honeybee test room.</span>
+
+<span class="sd">This class generates prototype rooms.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">.hbsurface</span> <span class="k">import</span> <span class="n">HBSurface</span>
+<span class="kn">from</span> <span class="nn">.hbzone</span> <span class="k">import</span> <span class="n">HBZone</span>
+<span class="kn">from</span> <span class="nn">.vectormath.euclid</span> <span class="k">import</span> <span class="n">Point3</span><span class="p">,</span> <span class="n">Vector3</span>
+<span class="kn">from</span> <span class="nn">.radiance.view</span> <span class="k">import</span> <span class="n">View</span>
+
+
+<span class="c1"># TODO: Room should be re-calculated on change of origin, width, depth, height,</span>
+<span class="c1"># and rotationAngle</span>
+<div class="viewcode-block" id="Room"><a class="viewcode-back" href="../../honeybee.html#honeybee.room.Room">[docs]</a><span class="k">class</span> <span class="nc">Room</span><span class="p">(</span><span class="n">HBZone</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Honeybee room.</span>
+
+<span class="sd">    Attribute:</span>
+<span class="sd">        origin: Origin of the room as a tuple (default: (0, 0, 0)).</span>
+<span class="sd">        width: Room width.</span>
+<span class="sd">        depth: Room depth.</span>
+<span class="sd">        height: Room height.</span>
+<span class="sd">        rotationAngle: Clock-wise rotation angle of the room from YAxis.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">width</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">3.2</span><span class="p">,</span>
+                 <span class="n">rotation_angle</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init room.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="n">Point3</span><span class="p">(</span><span class="o">*</span><span class="nb">tuple</span><span class="p">(</span><span class="n">origin</span><span class="p">))</span> <span class="k">if</span> <span class="n">origin</span> <span class="k">else</span> <span class="n">Point3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">width</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">depth</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">height</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rotationAngle</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">rotation_angle</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_z_axis</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_x_axis</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">rotate_around</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_zAxis</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">rotation_angle</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_y_axis</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">rotate_around</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_zAxis</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">rotation_angle</span><span class="p">))</span>
+
+        <span class="c1"># create 8 points</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__calculate_vertices</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__create_hb_surfaces</span><span class="p">()</span>
+
+        <span class="n">HBZone</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;HBRoom&#39;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">origin</span><span class="p">)</span>
+
+        <span class="c1"># add honeybee surfaces</span>
+        <span class="k">for</span> <span class="n">surface</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__surfaces</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_surface</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Room.add_fenestration_surface"><a class="viewcode-back" href="../../honeybee.html#honeybee.room.Room.add_fenestration_surface">[docs]</a>    <span class="k">def</span> <span class="nf">add_fenestration_surface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wall_name</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">sill_height</span><span class="p">,</span>
+                                 <span class="n">radiance_material</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sa">u</span><span class="sd">&quot;&quot;&quot;Add rectangular fenestration surface to surface.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            wall_name: Target wall name (back, right, front, left)</span>
+<span class="sd">            width: Opening width. Opening will be centered in HBSurface.</span>
+<span class="sd">            height: Opening height.</span>
+<span class="sd">            sill_height: Sill height (default: 1).</span>
+<span class="sd">            radiance_material: Optional radiance material for this fenestration.</span>
+
+<span class="sd">        Usage:</span>
+
+<span class="sd">            r = Room()</span>
+<span class="sd">            for pt in r.generate_test_points():</span>
+<span class="sd">                print(pt)</span>
+<span class="sd">            r.add_fenestration_surface(&#39;back&#39;, 2, 2, .7)</span>
+<span class="sd">            r.add_fenestration_surface(&#39;right&#39;, 4, 1.5, .5)</span>
+<span class="sd">            r.add_fenestration_surface(&#39;right&#39;, 4, 0.5, 2.2)</span>
+<span class="sd">            with open(&#39;c:/ladybug/room.rad&#39;, &#39;wb&#39;) as outf:</span>
+<span class="sd">                outf.write(r.to_rad_string(include_materials=True))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># find the wall</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">wall</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">srf</span> <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">surfaces</span>
+                         <span class="k">if</span> <span class="n">srf</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">Wall&#39;</span> <span class="o">%</span> <span class="n">wall_name</span><span class="o">.</span><span class="n">lower</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Cannot find </span><span class="si">{}</span><span class="s1"> wall&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">wall_name</span><span class="p">))</span>
+
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">Glazing_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">wall_name</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+                                     <span class="nb">len</span><span class="p">(</span><span class="n">wall</span><span class="o">.</span><span class="n">children_surfaces</span><span class="p">))</span>
+
+        <span class="n">wall</span><span class="o">.</span><span class="n">add_fenestration_surface_by_size</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">sill_height</span><span class="p">,</span>
+                                              <span class="n">radiance_material</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Room.generate_test_points"><a class="viewcode-back" href="../../honeybee.html#honeybee.room.Room.generate_test_points">[docs]</a>    <span class="k">def</span> <span class="nf">generate_test_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.75</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate a grid of test points in the room.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            grid_size: Size of test grid.</span>
+<span class="sd">            height: Test points height.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># find number of divisions in width</span>
+        <span class="n">u_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">/</span> <span class="n">grid_size</span><span class="p">)</span>
+        <span class="n">u_step</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">u_count</span>
+        <span class="n">u_values</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">((</span><span class="n">i</span> <span class="o">*</span> <span class="n">u_step</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">grid_size</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">))</span>
+                         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">u_count</span><span class="p">))</span>
+
+        <span class="c1"># find number of divisions in depth</span>
+        <span class="n">v_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">/</span> <span class="n">grid_size</span><span class="p">)</span>
+        <span class="n">v_step</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">v_count</span>
+        <span class="n">v_values</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">((</span><span class="n">i</span> <span class="o">*</span> <span class="n">v_step</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">grid_size</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">))</span>
+                         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">v_count</span><span class="p">))</span>
+
+        <span class="n">z</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">height</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span>
+
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_location</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+                     <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">v_values</span>
+                     <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">u_values</span>
+                     <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Room.get_location"><a class="viewcode-back" href="../../honeybee.html#honeybee.room.Room.get_location">[docs]</a>    <span class="k">def</span> <span class="nf">get_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get location as a point based on u, v, z.</span>
+
+<span class="sd">        u, v, z must be between 0..1.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">u</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_xAxis</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">v</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_yAxis</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">z</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_zAxis</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">origin</span> <span class="o">+</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">+</span> <span class="n">z</span></div>
+
+<div class="viewcode-block" id="Room.generate_interior_view"><a class="viewcode-back" href="../../honeybee.html#honeybee.room.Room.generate_interior_view">[docs]</a>    <span class="k">def</span> <span class="nf">generate_interior_view</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                               <span class="n">view_up_vector</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">view_type</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">view_h_size</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
+                               <span class="n">view_v_size</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">x_resolution</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">y_resolution</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+                               <span class="n">view_shift</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">view_lift</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sa">u</span><span class="sd">&quot;&quot;&quot;Generate an inetrior view.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            angle: Rotation angle from back wall.</span>
+<span class="sd">            view_up_vector: Set the view up (-vu) vector (vertical direction) to</span>
+<span class="sd">                (x, y, z).cDefault: (0, 0, 1)</span>
+<span class="sd">            view_type: Set view type (-vt) to one of the choices below.</span>
+<span class="sd">                    0: Perspective (v)</span>
+<span class="sd">                    1: Hemispherical fisheye (h)</span>
+<span class="sd">                    2: Parallel (l)</span>
+<span class="sd">                    3: Cylindrical panorma (c)</span>
+<span class="sd">                    4: Angular fisheye (a)</span>
+<span class="sd">                    5: Planisphere [stereographic] projection (s)</span>
+<span class="sd">                For more detailed description about view types check rpict manual</span>
+<span class="sd">                page: (http://radsite.lbl.gov/radiance/man_html/rpict.1.html)</span>
+<span class="sd">            view_h_size: Set the view horizontal size (-vs). For a perspective</span>
+<span class="sd">                projection (including fisheye views), val is the horizontal field</span>
+<span class="sd">                of view (in degrees). For a parallel projection, val is the view</span>
+<span class="sd">                width in world coordinates.</span>
+<span class="sd">            view_v_size: Set the view vertical size (-vv). For a perspective</span>
+<span class="sd">                projection (including fisheye views), val is the horizontal field</span>
+<span class="sd">                of view (in degrees). For a parallel projection, val is the view</span>
+<span class="sd">                width in world coordinates.</span>
+<span class="sd">            x_resolution: Set the maximum x resolution (-x) to an integer.</span>
+<span class="sd">            y_resolution: Set the maximum y resolution (-y) to an integer.</span>
+<span class="sd">            view_shift: Set the view shift (-vs). This is the amount the actual</span>
+<span class="sd">                image will be shifted to the right of the specified view. This</span>
+<span class="sd">                option is useful for generating skewed perspectives or rendering</span>
+<span class="sd">                an image a piece at a time. A value of 1 means that the rendered</span>
+<span class="sd">                image starts just to the right of the normal view. A value of −1</span>
+<span class="sd">                would be to the left. Larger or fractional values are permitted</span>
+<span class="sd">                as well.</span>
+<span class="sd">            view_lift: Set the view lift (-vl) to a value. This is the amount the</span>
+<span class="sd">                actual image will be lifted up from the specified view.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">View</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_location</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">z</span><span class="p">),</span>
+                 <span class="bp">self</span><span class="o">.</span><span class="n">_yAxis</span><span class="o">.</span><span class="n">rotate_around</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_zAxis</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">angle</span><span class="p">)),</span>
+                 <span class="n">view_up_vector</span><span class="p">,</span> <span class="n">view_type</span><span class="p">,</span> <span class="n">view_h_size</span><span class="p">,</span> <span class="n">view_v_size</span><span class="p">,</span>
+                 <span class="n">x_resolution</span><span class="p">,</span> <span class="n">y_resolution</span><span class="p">,</span> <span class="n">view_shift</span><span class="p">,</span> <span class="n">view_lift</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">v</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">vertices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the room vertices.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pt0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt3</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pt4</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt5</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt6</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt7</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">__surfaces</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return room surfaces.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">floor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ceiling</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">backWall</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rightWall</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">frontWall</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">leftWall</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__calculate_vertices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pt0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">origin</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pt1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">origin</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_xAxis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pt2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_yAxis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pt3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">origin</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_yAxis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pt4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_zAxis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pt5</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_zAxis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pt6</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_zAxis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pt7</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt3</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_zAxis</span>
+
+    <span class="k">def</span> <span class="nf">__create_hb_surfaces</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">floor</span> <span class="o">=</span> <span class="n">HBSurface</span><span class="p">(</span>
+            <span class="s1">&#39;floor&#39;</span><span class="p">,</span> <span class="n">sorted_points</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pt0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt1</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ceiling</span> <span class="o">=</span> <span class="n">HBSurface</span><span class="p">(</span>
+            <span class="s1">&#39;ceiling&#39;</span><span class="p">,</span> <span class="n">sorted_points</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pt4</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt5</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt6</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt7</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">backWall</span> <span class="o">=</span> <span class="n">HBSurface</span><span class="p">(</span>
+            <span class="s1">&#39;backWall&#39;</span><span class="p">,</span> <span class="n">sorted_points</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pt0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt5</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt4</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">rightWall</span> <span class="o">=</span> <span class="n">HBSurface</span><span class="p">(</span>
+            <span class="s1">&#39;rightWall&#39;</span><span class="p">,</span> <span class="n">sorted_points</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pt1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt6</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt5</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">frontWall</span> <span class="o">=</span> <span class="n">HBSurface</span><span class="p">(</span>
+            <span class="s1">&#39;frontWall&#39;</span><span class="p">,</span> <span class="n">sorted_points</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pt2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt7</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt6</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">leftWall</span> <span class="o">=</span> <span class="n">HBSurface</span><span class="p">(</span>
+            <span class="s1">&#39;leftWall&#39;</span><span class="p">,</span> <span class="n">sorted_points</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pt0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt4</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt7</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pt3</span><span class="p">))</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

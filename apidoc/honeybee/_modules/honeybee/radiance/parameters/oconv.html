@@ -1,0 +1,219 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.parameters.oconv &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../index.html">
+    <img class="logo" src="../../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.parameters.oconv</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="sd">&quot;&quot;&quot;Radiance oconv Parameters.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">._advancedparametersbase</span> <span class="k">import</span> <span class="n">AdvancedRadianceParameters</span>
+<span class="kn">from</span> <span class="nn">._frozen</span> <span class="k">import</span> <span class="n">frozen</span>
+
+
+<span class="c1"># TODO: Implement -i and -b</span>
+<div class="viewcode-block" id="OconvParameters"><a class="viewcode-back" href="../../../../honeybee.radiance.parameters.html#honeybee.radiance.parameters.oconv.OconvParameters">[docs]</a><span class="nd">@frozen</span>
+<span class="k">class</span> <span class="nc">OconvParameters</span><span class="p">(</span><span class="n">AdvancedRadianceParameters</span><span class="p">):</span>
+    <span class="sa">u</span><span class="sd">&quot;&quot;&quot;Radiance Parameters for rcontrib command including rtrace parameters.</span>
+
+<span class="sd">    Read more:</span>
+<span class="sd">    https://www.radiance-online.org/learning/documentation/manual-pages/pdfs/oconv.pdf</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        frozen: [-f] A Boolean to produce &quot;a frozen octree containing all the scene</span>
+<span class="sd">            information. Normally, only a reference to the scene files is stored</span>
+<span class="sd">            in the octree, and changes to those files may invalidate the result.</span>
+<span class="sd">            The freeze option is useful when the octree file&#39;s integrity and</span>
+<span class="sd">            loading speed is more important than its size, or when the octree is</span>
+<span class="sd">            to be relocated to another directory, and is especially useful for</span>
+<span class="sd">            creating library objects for the &quot;instance&quot; primitive type. If the</span>
+<span class="sd">            input octree is frozen, the output will be also. (default: True)</span>
+<span class="sd">        resolution: [-r] An integer that &quot;specifies the maximum octree resolution.</span>
+<span class="sd">            This should be greater than or equal to the ratio of the largest and</span>
+<span class="sd">            smallest dimensions in the scene (ie. surface size or distance between</span>
+<span class="sd">            surfaces)&quot; (default:16384)</span>
+<span class="sd">        max_set_size: [-n] An integer that &quot;specifies the maximum surface set size</span>
+<span class="sd">            for each voxel. Larger numbers result in quicker octree generation,</span>
+<span class="sd">            but potentially slower rendering. Smaller values may or may not</span>
+<span class="sd">            produce faster renderings, since the default number (6) is close to</span>
+<span class="sd">            optimal for most scenes (Default: 6).</span>
+<span class="sd">        turn_off_warns: [-w] A Boolean to suppress warnings (Default: False).</span>
+
+<span class="sd">        * For the full list of attributes try self.parameters</span>
+<span class="sd">        ** values between []&#39;s indicate Radiance equivalent keys for advanced users</span>
+
+<span class="sd">    Usage:</span>
+
+<span class="sd">        # generate default oconv parameters</span>
+<span class="sd">        ocvp = OconvParameters()</span>
+
+<span class="sd">        # default values.</span>
+<span class="sd">        print ocvp.to_rad_string()</span>
+<span class="sd">        &gt; -f</span>
+
+<span class="sd">        # add modifiers file</span>
+<span class="sd">        ocvp.turn_off_warns = True</span>
+
+<span class="sd">        # check radiance parameters with the new values</span>
+<span class="sd">        print ocvp.to_rad_string()</span>
+<span class="sd">        &gt; -f -w</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_set_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">turn_off_warns</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init paramters.&quot;&quot;&quot;</span>
+        <span class="n">AdvancedRadianceParameters</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1"># add parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_bool_flag</span><span class="p">(</span><span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;freeze octree&#39;</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;frozen&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frozen</span> <span class="o">=</span> <span class="n">frozen</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        [-f] A Boolean to produce &quot;a frozen octree containing all the scene</span>
+<span class="sd">        information. Normally, only a reference to the scene files is stored</span>
+<span class="sd">        in the octree, and changes to those files may invalidate the result.</span>
+<span class="sd">        The freeze option is useful when the octree file&#39;s integrity and</span>
+<span class="sd">        loading speed is more important than its size, or when the octree is</span>
+<span class="sd">        to be relocated to another directory, and is especially useful for</span>
+<span class="sd">        creating library objects for the &quot;instance&quot; primitive type. If the</span>
+<span class="sd">        input octree is frozen, the output will be also. (default: True)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;maximum octree resolution&#39;</span><span class="p">,</span>
+                                 <span class="n">check_positive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;resolution&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        [-r] An integer that &quot;specifies the maximum octree resolution.</span>
+<span class="sd">        This should be greater than or equal to the ratio of the largest and</span>
+<span class="sd">        smallest dimensions in the scene (ie. surface size or distance between</span>
+<span class="sd">        surfaces)&quot; (default:16384)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;maximum surface set size for each voxel&#39;</span><span class="p">,</span>
+                                 <span class="n">check_positive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;max_set_size&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_set_size</span> <span class="o">=</span> <span class="n">max_set_size</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        [-n] An integer that &quot;specifies the maximum surface set size</span>
+<span class="sd">        for each voxel. Larger numbers result in quicker octree generation,</span>
+<span class="sd">        but potentially slower rendering. Smaller values may or may not</span>
+<span class="sd">        produce faster renderings, since the default number (6) is close to</span>
+<span class="sd">        optimal for most scenes (Default: 6).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_bool_flag</span><span class="p">(</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="s1">&#39;suppress warnings&#39;</span><span class="p">,</span>
+                                    <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;turn_off_warns&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">turn_off_warns</span> <span class="o">=</span> <span class="n">turn_off_warns</span>
+        <span class="sd">&quot;&quot;&quot;[-w] A Boolean to suppress warnings (Default: False).&quot;&quot;&quot;</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

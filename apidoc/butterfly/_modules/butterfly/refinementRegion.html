@@ -1,0 +1,286 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>butterfly.refinementRegion &#8212; Butterfly 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/butterfly.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Butterfly is a python library to create and run advanced computational fluid dynamic (CFD) simulations using OpenFOAM.</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=butterfly&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../butterfly.html">butterfly package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for butterfly.refinementRegion</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="sd">&quot;&quot;&quot;Butterfly refinement region.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">.geometry</span> <span class="k">import</span> <span class="n">_BFMesh</span>
+<span class="kn">from</span> <span class="nn">.geometry</span> <span class="k">import</span> <span class="n">bf_geometry_from_stl_file</span>
+
+
+<div class="viewcode-block" id="RefinementRegion"><a class="viewcode-back" href="../../butterfly.html#butterfly.refinementRegion.RefinementRegion">[docs]</a><span class="k">class</span> <span class="nc">RefinementRegion</span><span class="p">(</span><span class="n">_BFMesh</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Butterfly refinement region.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        name: Name as a string (A-Z a-z 0-9 _).</span>
+<span class="sd">        vertices: A flatten list of (x, y, z) for vertices.</span>
+<span class="sd">        face_indices: A flatten list of (a, b, c) for indices for each face.</span>
+<span class="sd">        normals: A flatten list of (x, y, z) for face normals.</span>
+<span class="sd">        refinement_mode: Refinement mode (0: inside, 1: outside, 2: distance)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">face_indices</span><span class="p">,</span> <span class="n">normals</span><span class="p">,</span> <span class="n">refinement_mode</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init Butterfly geometry.&quot;&quot;&quot;</span>
+        <span class="n">_BFMesh</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">face_indices</span><span class="p">,</span> <span class="n">normals</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refinement_mode</span> <span class="o">=</span> <span class="n">refinement_mode</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">isRefinementRegion</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True for Butterfly refinement region.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">refinement_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Boundary condition.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__refinement_mode</span>
+
+    <span class="nd">@refinement_mode</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">refinement_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rm</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">rm</span><span class="p">,</span> <span class="s1">&#39;isRefinementMode&#39;</span><span class="p">),</span> \
+            <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not a Butterfly refinement mode.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rm</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__refinement_mode</span> <span class="o">=</span> <span class="n">rm</span></div>
+
+
+<span class="k">class</span> <span class="nc">_RefinementMode</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for refinement modes.</span>
+
+<span class="sd">    Inside, outside, distance</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        levels: A list of (x, y) values for levels.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">levels</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">levels</span> <span class="o">=</span> <span class="n">levels</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">isRefinementMode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True for Butterfly refinement mode.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">levels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set and get levels for refinment region.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__levels</span>
+
+    <span class="nd">@levels</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">levels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lev</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lev</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> \
+                <span class="s1">&#39;Length of each level (</span><span class="si">{}</span><span class="s1">) should be 2.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">))</span>
+
+        <span class="c1"># sort levels based on first item for distance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__levels</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">5</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">lev</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">to_openfoam_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return data as a dictionary.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;mode&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+                <span class="s1">&#39;levels&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)}</span>
+
+    <span class="k">def</span> <span class="nf">duplicate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a copy of this object.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">ToString</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwrite ToString .NET method.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;representation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;mode: </span><span class="si">{}</span><span class="s1">, levels: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+            <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="Distance"><a class="viewcode-back" href="../../butterfly.html#butterfly.refinementRegion.Distance">[docs]</a><span class="k">class</span> <span class="nc">Distance</span><span class="p">(</span><span class="n">_RefinementMode</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Distance refinement mode.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        levels: A list of (x, y) values for levels. &#39;levels&#39; specifies per</span>
+<span class="sd">            distance to the geometry the wanted refinement level.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Inside"><a class="viewcode-back" href="../../butterfly.html#butterfly.refinementRegion.Inside">[docs]</a><span class="k">class</span> <span class="nc">Inside</span><span class="p">(</span><span class="n">_RefinementMode</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Inside refinement mode.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        level: Refinement level as an integer. All cells inside the geometry get</span>
+<span class="sd">            refined up to the level. The geometry needs to be closed for this to</span>
+<span class="sd">            be possible.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create an Inside RefinementMode.&quot;&quot;&quot;</span>
+        <span class="c1"># 1.0 will be ignored</span>
+        <span class="n">_RefinementMode</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">((</span><span class="mf">1.0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">level</span><span class="p">)),))</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;representation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;mode: </span><span class="si">{}</span><span class="s1">, level: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">levels</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="Outside"><a class="viewcode-back" href="../../butterfly.html#butterfly.refinementRegion.Outside">[docs]</a><span class="k">class</span> <span class="nc">Outside</span><span class="p">(</span><span class="n">Inside</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Outside refinement mode.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        level: Refinement level as an integer. All cells inside the geometry get</span>
+<span class="sd">            refined up to the level. The geometry needs to be closed for this to</span>
+<span class="sd">            be possible.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="refinement_mode_from_dict"><a class="viewcode-back" href="../../butterfly.html#butterfly.refinementRegion.refinement_mode_from_dict">[docs]</a><span class="k">def</span> <span class="nf">refinement_mode_from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a Refinement mode from a python dictionary.</span>
+
+<span class="sd">    The dictionary should have two keys for model and levels.</span>
+<span class="sd">    {&#39;levels&#39;: &#39;((1.0 4) )&#39;, &#39;mode&#39;: &#39;inside&#39;}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mode</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;mode&#39;</span><span class="p">]</span>
+
+    <span class="n">levels</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;levels&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;( (&#39;</span><span class="p">,</span> <span class="s1">&#39;((&#39;</span><span class="p">)</span> \
+        <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;) )&#39;</span><span class="p">,</span> <span class="s1">&#39;))&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+
+    <span class="n">levels</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">levels</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;inside&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Inside</span><span class="p">(</span><span class="n">levels</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;outside&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Outside</span><span class="p">(</span><span class="n">levels</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;distance&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Distance</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="refinementRegions_from_stl_file"><a class="viewcode-back" href="../../butterfly.html#butterfly.refinementRegion.refinementRegions_from_stl_file">[docs]</a><span class="k">def</span> <span class="nf">refinementRegions_from_stl_file</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">refinement_mode</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a RefinementRegion form an stl file.&quot;&quot;&quot;</span>
+    <span class="n">geos</span> <span class="o">=</span> <span class="n">bf_geometry_from_stl_file</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">RefinementRegion</span><span class="p">(</span><span class="n">geo</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">geo</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span> <span class="n">geo</span><span class="o">.</span><span class="n">face_indices</span><span class="p">,</span>
+                                  <span class="n">geo</span><span class="o">.</span><span class="n">normals</span><span class="p">,</span> <span class="n">refinement_mode</span><span class="p">)</span>
+                 <span class="k">for</span> <span class="n">geo</span> <span class="ow">in</span> <span class="n">geos</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

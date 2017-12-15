@@ -1,0 +1,245 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.command.rtrace &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../index.html">
+    <img class="logo" src="../../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.command.rtrace</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">._commandbase</span> <span class="k">import</span> <span class="n">RadianceCommand</span>
+<span class="kn">from</span> <span class="nn">..parameters.gridbased</span> <span class="k">import</span> <span class="n">LowQuality</span>
+<span class="kn">from</span> <span class="nn">..datatype</span> <span class="k">import</span> <span class="n">RadiancePath</span>
+
+
+<div class="viewcode-block" id="Rtrace"><a class="viewcode-back" href="../../../../honeybee.radiance.command.html#honeybee.radiance.command.rtrace.Rtrace">[docs]</a><span class="k">class</span> <span class="nc">Rtrace</span><span class="p">(</span><span class="n">RadianceCommand</span><span class="p">):</span>
+    <span class="sa">u</span><span class="sd">&quot;&quot;&quot;Create a grid-based Radiance ray-tracer.</span>
+
+<span class="sd">    Read more at: http://radsite.lbl.gov/radiance/man_html/rtrace.1.html</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        output_name: Name of output file (Default: untitled).</span>
+<span class="sd">        octree_file: Full path to input oct files (Default: None)</span>
+<span class="sd">        points_file: Full path to input pt files (Default: None)</span>
+<span class="sd">        simulation_type: An integer to define type of analysis.</span>
+<span class="sd">            0: Illuminance (lux), 1: Radiation (kWh), 2: Luminance (Candela)</span>
+<span class="sd">            (Default: 0)</span>
+<span class="sd">        radiance_parameters: Radiance parameters for this analysis.</span>
+<span class="sd">            (Default: girdbased.LowQuality)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">output_file</span> <span class="o">=</span> <span class="n">RadiancePath</span><span class="p">(</span><span class="s2">&quot;res&quot;</span><span class="p">,</span> <span class="s2">&quot;results file&quot;</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="s2">&quot;.res&quot;</span><span class="p">)</span>
+    <span class="n">octree_file</span> <span class="o">=</span> <span class="n">RadiancePath</span><span class="p">(</span><span class="s2">&quot;oct&quot;</span><span class="p">,</span> <span class="s2">&quot;octree file&quot;</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="s2">&quot;.oct&quot;</span><span class="p">)</span>
+    <span class="n">points_file</span> <span class="o">=</span> <span class="n">RadiancePath</span><span class="p">(</span><span class="s2">&quot;points&quot;</span><span class="p">,</span> <span class="s2">&quot;test point file&quot;</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="s2">&quot;.pts&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_name</span><span class="o">=</span><span class="s1">&#39;untitled&#39;</span><span class="p">,</span> <span class="n">octree_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">points_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">simulation_type</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">radiance_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize the class.&quot;&quot;&quot;</span>
+        <span class="c1"># Initialize base class to make sure path to radiance is set correctly</span>
+        <span class="n">RadianceCommand</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="n">output_name</span> <span class="k">if</span> <span class="n">output_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.res&quot;</span><span class="p">)</span> \
+            <span class="k">else</span> <span class="n">output_name</span> <span class="o">+</span> <span class="s2">&quot;.res&quot;</span>
+        <span class="sd">&quot;&quot;&quot;oct file name which is usually the same as the project name</span>
+<span class="sd">        (Default: untitled)&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">octree_file</span> <span class="o">=</span> <span class="n">octree_file</span>
+        <span class="sd">&quot;&quot;&quot;Full path to input oct file.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">points_file</span> <span class="o">=</span> <span class="n">points_file</span>
+        <span class="sd">&quot;&quot;&quot;Full path to input points file.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">radiance_parameters</span> <span class="o">=</span> <span class="n">radiance_parameters</span>
+        <span class="sd">&quot;&quot;&quot;Radiance parameters for this analysis</span>
+<span class="sd">        (Default: RadianceParameters.LowQuality).&quot;&quot;&quot;</span>
+
+        <span class="c1"># add -h to parameters to get no header, True is no header</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radiance_parameters</span><span class="o">.</span><span class="n">add_radiance_bool_flag</span><span class="p">(</span><span class="s2">&quot;h&quot;</span><span class="p">,</span> <span class="s2">&quot;output header switch&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radiance_parameters</span><span class="o">.</span><span class="n">h</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># add error file as an extra parameter for rtrace.</span>
+        <span class="c1"># this can be added under default radiance parameters later.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radiance_parameters</span><span class="o">.</span><span class="n">add_radiance_value</span><span class="p">(</span><span class="s2">&quot;e&quot;</span><span class="p">,</span> <span class="s2">&quot;error output file&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radiance_parameters</span><span class="o">.</span><span class="n">e</span> <span class="o">=</span> <span class="s2">&quot;error.txt&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Error log file.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">simulation_type</span> <span class="o">=</span> <span class="n">simulation_type</span>
+        <span class="sd">&quot;&quot;&quot;Simulation type: 0: Illuminance(lux), 1: Radiation (kWh), 2: Luminance (Candela)</span>
+<span class="sd">            (Default: 0)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">simulation_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get/set simulation Type.</span>
+
+<span class="sd">        0: Illuminance(lux), 1: Radiation (kWh), 2: Luminance (Candela) (Default: 0)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simType</span>
+
+    <span class="nd">@simulation_type</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">simulation_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">,</span> \
+            <span class="s2">&quot;Simulation type should be between 0-2. Current value: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_simType</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="c1"># trun on/off I paramter</span>
+        <span class="c1"># -I &gt; Boolean switch to compute irradiance rather than radiance, with</span>
+        <span class="c1"># the input origin and direction interpreted instead as measurement point</span>
+        <span class="c1"># and orientation.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simType</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">radiance_parameters</span><span class="o">.</span><span class="n">irradiance_calc</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># luminance</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">radiance_parameters</span><span class="o">.</span><span class="n">irradiance_calc</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">radiance_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get and set Radiance parameters.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rad_parameters</span>
+
+    <span class="nd">@radiance_parameters</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">radiance_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rad_parameters</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">rad_parameters</span><span class="p">:</span>
+            <span class="n">rad_parameters</span> <span class="o">=</span> <span class="n">LowQuality</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">rad_parameters</span><span class="p">,</span> <span class="s1">&#39;isGridBasedRadianceParameters&#39;</span><span class="p">),</span> \
+            <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> is not a radiance parameters.&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">rad_parameters</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rad_parameters</span> <span class="o">=</span> <span class="n">rad_parameters</span>
+
+    <span class="c1"># TODO: Implement relative path</span>
+<div class="viewcode-block" id="Rtrace.to_rad_string"><a class="viewcode-back" href="../../../../honeybee.radiance.command.html#honeybee.radiance.command.rtrace.Rtrace.to_rad_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_rad_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">relative_path</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return full command as a string.&quot;&quot;&quot;</span>
+        <span class="n">rad_string</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> &lt; </span><span class="si">%s</span><span class="s2"> &gt; </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">normspace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radbin_path</span><span class="p">,</span> <span class="s2">&quot;rtrace&quot;</span><span class="p">)),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">radiance_parameters</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">normspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">octree_file</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">normspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">points_file</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">normspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_file</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+        <span class="p">)</span>
+
+        <span class="c1"># make sure input files are set by user</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_input_files</span><span class="p">(</span><span class="n">rad_string</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">rad_string</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">input_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Input files for this command.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">octree_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">points_file</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

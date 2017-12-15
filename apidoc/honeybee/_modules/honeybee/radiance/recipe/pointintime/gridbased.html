@@ -1,0 +1,441 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.recipe.pointintime.gridbased &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../../index.html">
+    <img class="logo" src="../../../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.recipe.pointintime.gridbased</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Radiance Grid-based Analysis Recipe.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">.._gridbasedbase</span> <span class="k">import</span> <span class="n">GenericGridBased</span>
+<span class="kn">from</span> <span class="nn">..recipeutil</span> <span class="k">import</span> <span class="n">write_rad_files</span><span class="p">,</span> <span class="n">write_extra_files</span>
+<span class="kn">from</span> <span class="nn">...parameters.gridbased</span> <span class="k">import</span> <span class="n">LowQuality</span>
+<span class="kn">from</span> <span class="nn">...command.oconv</span> <span class="k">import</span> <span class="n">Oconv</span>
+<span class="kn">from</span> <span class="nn">...command.rtrace</span> <span class="k">import</span> <span class="n">Rtrace</span>
+<span class="kn">from</span> <span class="nn">...command.rcalc</span> <span class="k">import</span> <span class="n">Rcalc</span>
+<span class="kn">from</span> <span class="nn">....futil</span> <span class="k">import</span> <span class="n">write_to_file</span>
+<span class="kn">from</span> <span class="nn">...analysisgrid</span> <span class="k">import</span> <span class="n">AnalysisGrid</span>
+<span class="kn">from</span> <span class="nn">....hbsurface</span> <span class="k">import</span> <span class="n">HBSurface</span>
+<span class="kn">from</span> <span class="nn">...sky.cie</span> <span class="k">import</span> <span class="n">CIE</span>
+
+<span class="kn">from</span> <span class="nn">ladybug.dt</span> <span class="k">import</span> <span class="n">DateTime</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<div class="viewcode-block" id="GridBased"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.pointintime.html#honeybee.radiance.recipe.pointintime.gridbased.GridBased">[docs]</a><span class="k">class</span> <span class="nc">GridBased</span><span class="p">(</span><span class="n">GenericGridBased</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Grid base analysis base class.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        sky: A honeybee sky for the analysis</span>
+<span class="sd">        analysis_grids: List of analysis grids.</span>
+<span class="sd">        simulation_type: 0: Illuminance(lux), 1: Radiation (kWh), 2: Luminance (Candela)</span>
+<span class="sd">            (Default: 0)</span>
+<span class="sd">        rad_parameters: Radiance parameters for grid based analysis (rtrace).</span>
+<span class="sd">            (Default: gridbased.LowQuality)</span>
+<span class="sd">        hb_objects: An optional list of Honeybee surfaces or zones (Default: None).</span>
+<span class="sd">        sub_folder: Analysis subfolder for this recipe. (Default: &quot;gridbased&quot;)</span>
+
+<span class="sd">    Usage:</span>
+<span class="sd">        # create the sky</span>
+<span class="sd">        sky = SkyWithCertainIlluminanceLevel(2000)</span>
+
+<span class="sd">        # initiate analysis_recipe</span>
+<span class="sd">        analysis_recipe = GridBased(</span>
+<span class="sd">            sky, testPoints, ptsVectors, simType</span>
+<span class="sd">            )</span>
+
+<span class="sd">        # add honeybee object</span>
+<span class="sd">        analysis_recipe.hb_objects = HBObjs</span>
+
+<span class="sd">        # write analysis files to local drive</span>
+<span class="sd">        analysis_recipe.write(_folder_, _name_)</span>
+
+<span class="sd">        # run the analysis</span>
+<span class="sd">        analysis_recipe.run(debaug=False)</span>
+
+<span class="sd">        # get the results</span>
+<span class="sd">        print(analysis_recipe.results())</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># TODO: implemnt isChanged at AnalysisRecipe level to reload the results</span>
+    <span class="c1"># if there has been no changes in inputs.</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sky</span><span class="p">,</span> <span class="n">analysis_grids</span><span class="p">,</span> <span class="n">simulation_type</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">rad_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">hb_objects</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sub_folder</span><span class="o">=</span><span class="s2">&quot;gridbased&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create grid-based recipe.&quot;&quot;&quot;</span>
+        <span class="n">GenericGridBased</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">analysis_grids</span><span class="p">,</span> <span class="n">hb_objects</span><span class="p">,</span> <span class="n">sub_folder</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sky</span> <span class="o">=</span> <span class="n">sky</span>
+        <span class="sd">&quot;&quot;&quot;A honeybee sky for the analysis.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">radiance_parameters</span> <span class="o">=</span> <span class="n">rad_parameters</span>
+        <span class="sd">&quot;&quot;&quot;Radiance parameters for grid based analysis (rtrace).</span>
+<span class="sd">            (Default: gridbased.LowQuality)&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">simulation_type</span> <span class="o">=</span> <span class="n">simulation_type</span>
+        <span class="sd">&quot;&quot;&quot;Simulation type: 0: Illuminance(lux), 1: Radiation (wh),</span>
+<span class="sd">           2: Luminance (Candela) (Default: 0)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="GridBased.from_json"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.pointintime.html#honeybee.radiance.recipe.pointintime.gridbased.GridBased.from_json">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_json</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">rec_json</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create the solar access recipe from json.</span>
+<span class="sd">        {</span>
+<span class="sd">          &quot;id&quot;: 1, // do NOT overwrite this id</span>
+<span class="sd">          &quot;sky&quot;: null, // a honeybee sky</span>
+<span class="sd">          &quot;surfaces&quot;: [], // list of honeybee surfaces</span>
+<span class="sd">          &quot;analysis_grids&quot;: [] // list of analysis grids</span>
+<span class="sd">          // [0] illuminance(lux), [1] radiation (kwh), [2] luminance (Candela).</span>
+<span class="sd">          &quot;analysis_type&quot;: 0</span>
+<span class="sd">        }</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sky</span> <span class="o">=</span> <span class="n">CIE</span><span class="o">.</span><span class="n">fromJson</span><span class="p">(</span><span class="n">rec_json</span><span class="p">[</span><span class="s1">&#39;sky&#39;</span><span class="p">])</span>
+        <span class="n">analysis_grids</span> <span class="o">=</span> \
+            <span class="nb">tuple</span><span class="p">(</span><span class="n">AnalysisGrid</span><span class="o">.</span><span class="n">fromJson</span><span class="p">(</span><span class="n">ag</span><span class="p">)</span> <span class="k">for</span> <span class="n">ag</span> <span class="ow">in</span> <span class="n">rec_json</span><span class="p">[</span><span class="s1">&#39;analysis_grids&#39;</span><span class="p">])</span>
+        <span class="n">hb_objects</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">HBSurface</span><span class="o">.</span><span class="n">fromJson</span><span class="p">(</span><span class="n">srf</span><span class="p">)</span> <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="n">rec_json</span><span class="p">[</span><span class="s1">&#39;surfaces&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">sky</span><span class="p">,</span> <span class="n">analysis_grids</span><span class="p">,</span> <span class="n">rec_json</span><span class="p">[</span><span class="s1">&#39;analysis_type&#39;</span><span class="p">],</span> <span class="kc">None</span><span class="p">,</span> <span class="n">hb_objects</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GridBased.from_points_and_vectors"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.pointintime.html#honeybee.radiance.recipe.pointintime.gridbased.GridBased.from_points_and_vectors">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_points_and_vectors</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">sky</span><span class="p">,</span> <span class="n">point_groups</span><span class="p">,</span> <span class="n">vector_groups</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                <span class="n">simulation_type</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">rad_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                <span class="n">hb_objects</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sub_folder</span><span class="o">=</span><span class="s2">&quot;gridbased&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create grid based recipe from points and vectors.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            sky: A honeybee sky for the analysis</span>
+<span class="sd">            point_groups: A list of (x, y, z) test points or lists of (x, y, z)</span>
+<span class="sd">                test points. Each list of test points will be converted to a</span>
+<span class="sd">                TestPointGroup. If testPts is a single flattened list only one</span>
+<span class="sd">                TestPointGroup will be created.</span>
+<span class="sd">            vector_groups: An optional list of (x, y, z) vectors. Each vector</span>
+<span class="sd">                represents direction of corresponding point in testPts. If the</span>
+<span class="sd">                vector is not provided (0, 0, 1) will be assigned.</span>
+<span class="sd">            simulation_type: 0: Illuminance(lux), 1: Radiation (kWh), 2: Luminance</span>
+<span class="sd">                (Candela) (Default: 0).</span>
+<span class="sd">            rad_parameters: Radiance parameters for grid based analysis (rtrace).</span>
+<span class="sd">                (Default: gridbased.LowQuality)</span>
+<span class="sd">            hb_objects: An optional list of Honeybee surfaces or zones (Default: None).</span>
+<span class="sd">            sub_folder: Analysis subfolder for this recipe. (Default: &quot;gridbased&quot;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">analysis_grids</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">analysis_grids_from_points_and_vectors</span><span class="p">(</span><span class="n">point_groups</span><span class="p">,</span>
+                                                                    <span class="n">vector_groups</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">sky</span><span class="p">,</span> <span class="n">analysis_grids</span><span class="p">,</span> <span class="n">simulation_type</span><span class="p">,</span> <span class="n">rad_parameters</span><span class="p">,</span> <span class="n">hb_objects</span><span class="p">,</span>
+                   <span class="n">sub_folder</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">simulation_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get/set simulation Type.</span>
+
+<span class="sd">        0: Illuminance(lux), 1: Radiation (kWh), 2: Luminance (Candela) (Default: 0)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simType</span>
+
+    <span class="nd">@simulation_type</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">simulation_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">,</span> \
+            <span class="s2">&quot;Simulation type should be between 0-2. Current value: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="c1"># If this is a radiation analysis make sure the sky is climate-based</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky</span><span class="o">.</span><span class="n">is_climate_based</span><span class="p">,</span> \
+                <span class="s2">&quot;The sky for radition analysis should be climate-based.&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_simType</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky</span><span class="o">.</span><span class="n">is_climate_based</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sky</span><span class="o">.</span><span class="n">sky_type</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sky</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get and set sky definition.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sky</span>
+
+    <span class="nd">@sky</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">sky</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_sky</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">new_sky</span><span class="p">,</span> <span class="s1">&#39;isRadianceSky&#39;</span><span class="p">),</span> \
+            <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> is not a valid Honeybee sky.&#39;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">new_sky</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">new_sky</span><span class="o">.</span><span class="n">is_point_in_time</span><span class="p">,</span> \
+            <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Sky must be one of the point-in-time skies.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sky</span> <span class="o">=</span> <span class="n">new_sky</span><span class="o">.</span><span class="n">duplicate</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">radiance_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get and set Radiance parameters.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_radiance_parameters</span>
+
+    <span class="nd">@radiance_parameters</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">radiance_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rad_parameters</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">rad_parameters</span><span class="p">:</span>
+            <span class="n">rad_parameters</span> <span class="o">=</span> <span class="n">LowQuality</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">rad_parameters</span><span class="p">,</span> <span class="s2">&quot;isRadianceParameters&quot;</span><span class="p">),</span> \
+            <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> is not a radiance parameters.&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">rad_parameters</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_radiance_parameters</span> <span class="o">=</span> <span class="n">rad_parameters</span>
+
+<div class="viewcode-block" id="GridBased.write"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.pointintime.html#honeybee.radiance.recipe.pointintime.gridbased.GridBased.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_folder</span><span class="p">,</span> <span class="n">project_name</span><span class="o">=</span><span class="s1">&#39;untitled&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write analysis files to target folder.</span>
+
+<span class="sd">        Files for a grid based analysis are:</span>
+<span class="sd">            test points &lt;project_name.pts&gt;: List of analysis points.</span>
+<span class="sd">            sky file &lt;*.sky&gt;: Radiance sky for this analysis.</span>
+<span class="sd">            material file &lt;*.mat&gt;: Radiance materials. Will be empty if hb_objects</span>
+<span class="sd">                is None.</span>
+<span class="sd">            geometry file &lt;*.rad&gt;: Radiance geometries. Will be empty if hb_objects</span>
+<span class="sd">                is None.</span>
+<span class="sd">            sky file &lt;*.sky&gt;: Radiance sky for this analysis.</span>
+<span class="sd">            batch file &lt;*.bat&gt;: An executable batch file which has the list of commands.</span>
+<span class="sd">                oconve &lt;*.sky&gt; &lt;project_name.mat&gt; &lt;project_name.rad&gt;</span>
+<span class="sd">                &lt;additional rad_files&gt; &gt; &lt;project_name.oct&gt;</span>
+<span class="sd">                rtrace &lt;radiance_parameters&gt; &lt;project_name.oct&gt; &gt; &lt;project_name.res&gt;</span>
+<span class="sd">            results file &lt;*.res&gt;: Results file once the analysis is over.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            target_folder: Path to parent folder. Files will be created under</span>
+<span class="sd">                target_folder/gridbased. use self.sub_folder to change subfolder name.</span>
+<span class="sd">            project_name: Name of this project as a string.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Full path to command.bat</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># 0.prepare target folder</span>
+        <span class="c1"># create main folder target_folder/project_name</span>
+        <span class="n">project_folder</span> <span class="o">=</span> \
+            <span class="nb">super</span><span class="p">(</span><span class="n">GenericGridBased</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">write_content</span><span class="p">(</span><span class="n">target_folder</span><span class="p">,</span> <span class="n">project_name</span><span class="p">)</span>
+
+        <span class="c1"># write geometry and material files</span>
+        <span class="n">opqfiles</span><span class="p">,</span> <span class="n">glzfiles</span><span class="p">,</span> <span class="n">wgsfiles</span> <span class="o">=</span> <span class="n">write_rad_files</span><span class="p">(</span>
+            <span class="n">project_folder</span> <span class="o">+</span> <span class="s1">&#39;/scene&#39;</span><span class="p">,</span> <span class="n">project_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">opaque_rad_file</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">glazing_rad_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">window_groups_rad_files</span>
+        <span class="p">)</span>
+        <span class="c1"># additional radiance files added to the recipe as scene</span>
+        <span class="n">extrafiles</span> <span class="o">=</span> <span class="n">write_extra_files</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="p">,</span> <span class="n">project_folder</span> <span class="o">+</span> <span class="s1">&#39;/scene&#39;</span><span class="p">)</span>
+
+        <span class="c1"># 1.write points</span>
+        <span class="n">points_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_analysis_grids</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="n">project_name</span><span class="p">)</span>
+
+        <span class="c1"># 2.write batch file</span>
+        <span class="k">if</span> <span class="n">header</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="n">project_folder</span><span class="p">))</span>
+
+        <span class="c1"># 3.write sky file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sky</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">(</span><span class="n">folder</span><span class="o">=</span><span class="s1">&#39;sky&#39;</span><span class="p">))</span>
+
+        <span class="c1"># 3.1. write ground and sky materials</span>
+        <span class="n">skyground</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky</span><span class="o">.</span><span class="n">write_sky_ground</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="s1">&#39;sky&#39;</span><span class="p">))</span>
+
+        <span class="c1"># TODO(Mostapha): add window_groups here if any!</span>
+        <span class="c1"># # 4.1.prepare oconv</span>
+        <span class="n">oct_scene_files</span> <span class="o">=</span> \
+            <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sky</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s1">&#39;sky&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">output_file</span><span class="p">)),</span>
+             <span class="n">skyground</span><span class="p">]</span> <span class="o">+</span> <span class="n">opqfiles</span> <span class="o">+</span> <span class="n">glzfiles</span> <span class="o">+</span> <span class="n">wgsfiles</span> <span class="o">+</span> <span class="n">extrafiles</span><span class="o">.</span><span class="n">fp</span>
+
+        <span class="n">oc</span> <span class="o">=</span> <span class="n">Oconv</span><span class="p">(</span><span class="n">project_name</span><span class="p">)</span>
+        <span class="n">oc</span><span class="o">.</span><span class="n">scene_files</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">oct_scene_files</span><span class="p">)</span>
+
+        <span class="c1"># # 4.2.prepare rtrace</span>
+        <span class="n">rt</span> <span class="o">=</span> <span class="n">Rtrace</span><span class="p">(</span><span class="s1">&#39;result/&#39;</span> <span class="o">+</span> <span class="n">project_name</span><span class="p">,</span>
+                    <span class="n">simulation_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_type</span><span class="p">,</span>
+                    <span class="n">radiance_parameters</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">radiance_parameters</span><span class="p">)</span>
+        <span class="n">rt</span><span class="o">.</span><span class="n">radiance_parameters</span><span class="o">.</span><span class="n">h</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">rt</span><span class="o">.</span><span class="n">octree_file</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">oc</span><span class="o">.</span><span class="n">output_file</span><span class="p">)</span>
+        <span class="n">rt</span><span class="o">.</span><span class="n">points_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">points_file</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">)</span>
+
+        <span class="c1"># # 4.3. add rcalc to convert rgb values to irradiance</span>
+        <span class="n">rc</span> <span class="o">=</span> <span class="n">Rcalc</span><span class="p">(</span><span class="s1">&#39;result/</span><span class="si">{}</span><span class="s1">.ill&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">project_name</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">rt</span><span class="o">.</span><span class="n">output_file</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;nt&#39;</span><span class="p">:</span>
+            <span class="n">rc</span><span class="o">.</span><span class="n">rcalc_parameters</span><span class="o">.</span><span class="n">expression</span> <span class="o">=</span> <span class="s1">&#39;&quot;$1=(0.265*$1+0.67*$2+0.065*$3)*179&quot;&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rc</span><span class="o">.</span><span class="n">rcalc_parameters</span><span class="o">.</span><span class="n">expression</span> <span class="o">=</span> <span class="s2">&quot;&#39;$1=(0.265*$1+0.67*$2+0.065*$3)*179&#39;&quot;</span>
+
+        <span class="c1"># # 4.4 write batch file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">oc</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rt</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rc</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+
+        <span class="n">batch_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="s2">&quot;commands.bat&quot;</span><span class="p">)</span>
+
+        <span class="n">write_to_file</span><span class="p">(</span><span class="n">batch_file</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_result_files</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">rc</span><span class="o">.</span><span class="n">output_file</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">batch_file</span></div>
+
+<div class="viewcode-block" id="GridBased.results"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.pointintime.html#honeybee.radiance.recipe.pointintime.gridbased.GridBased.results">[docs]</a>    <span class="k">def</span> <span class="nf">results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return results for this analysis.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_isCalculated</span><span class="p">,</span> \
+            <span class="s2">&quot;You haven&#39;t run the Recipe yet. Use self.run &quot;</span> <span class="o">+</span> \
+            <span class="s2">&quot;to run the analysis before loading the results.&quot;</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Unloading the current values from the analysis grids.&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ag</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_grids</span><span class="p">:</span>
+            <span class="n">ag</span><span class="o">.</span><span class="n">unload</span><span class="p">()</span>
+
+        <span class="n">sky</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky</span>
+        <span class="n">dt</span> <span class="o">=</span> <span class="n">DateTime</span><span class="p">(</span><span class="n">sky</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">sky</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">sky</span><span class="o">.</span><span class="n">hour</span><span class="p">),</span>
+                      <span class="nb">int</span><span class="p">(</span><span class="mi">60</span> <span class="o">*</span> <span class="p">(</span><span class="n">sky</span><span class="o">.</span><span class="n">hour</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="n">sky</span><span class="o">.</span><span class="n">hour</span><span class="p">))))</span>
+
+        <span class="n">rf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result_files</span>
+        <span class="n">start_line</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">mode</span> <span class="o">=</span> <span class="mi">179</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_type</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">count</span><span class="p">,</span> <span class="n">analysisGrid</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">analysis_grids</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">count</span><span class="p">:</span>
+                <span class="n">start_line</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">analysis_grids</span><span class="p">[</span><span class="n">count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+
+            <span class="n">analysisGrid</span><span class="o">.</span><span class="n">set_values_from_file</span><span class="p">(</span>
+                <span class="n">rf</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">dt</span><span class="o">.</span><span class="n">hoy</span><span class="p">),),</span> <span class="n">start_line</span><span class="o">=</span><span class="n">start_line</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_grids</span></div>
+
+<div class="viewcode-block" id="GridBased.ToString"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.pointintime.html#honeybee.radiance.recipe.pointintime.gridbased.GridBased.ToString">[docs]</a>    <span class="k">def</span> <span class="nf">ToString</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwrite .NET ToString method.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="GridBased.to_json"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.pointintime.html#honeybee.radiance.recipe.pointintime.gridbased.GridBased.to_json">[docs]</a>    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create point-in-time recipe from json.</span>
+<span class="sd">            {</span>
+<span class="sd">              &quot;id&quot;: 1, // do NOT overwrite this id</span>
+<span class="sd">              &quot;sky&quot;: null, // a honeybee sky</span>
+<span class="sd">              &quot;surfaces&quot;: [], // list of honeybee surfaces</span>
+<span class="sd">              &quot;analysis_grids&quot;: [] // list of analysis grids</span>
+<span class="sd">              // [0] illuminance(lux), [1] radiation (kwh), [2] luminance (Candela).</span>
+<span class="sd">              &quot;analysis_type&quot;: 0</span>
+<span class="sd">            }</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;sky&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky</span><span class="o">.</span><span class="n">to_json</span><span class="p">(),</span>
+            <span class="s2">&quot;surfaces&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">srf</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span> <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hb_objects</span><span class="p">],</span>
+            <span class="s2">&quot;analysis_grids&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">ag</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span> <span class="k">for</span> <span class="n">ag</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_grids</span><span class="p">],</span>
+            <span class="s2">&quot;analysis_type&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_type</span>
+        <span class="p">}</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Represent grid based recipe.&quot;&quot;&quot;</span>
+        <span class="n">_analysisType</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;Illuminance&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;Radiation&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;Luminance&quot;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">#PointGroups: </span><span class="si">%d</span><span class="s2"> #Points: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> \
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+             <span class="n">_analysisType</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_type</span><span class="p">],</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">analysis_grid_count</span><span class="p">,</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">total_point_count</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

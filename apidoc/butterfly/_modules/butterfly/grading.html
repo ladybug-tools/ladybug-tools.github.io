@@ -1,0 +1,329 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>butterfly.grading &#8212; Butterfly 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/butterfly.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Butterfly is a python library to create and run advanced computational fluid dynamic (CFD) simulations using OpenFOAM.</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=butterfly&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../butterfly.html">butterfly package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for butterfly.grading</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="sd">&quot;&quot;&quot;Butterfly grading class for blockMeshDict.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">deepcopy</span>
+
+
+<div class="viewcode-block" id="SimpleGrading"><a class="viewcode-back" href="../../butterfly.html#butterfly.grading.SimpleGrading">[docs]</a><span class="k">class</span> <span class="nc">SimpleGrading</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Block simpleGrading in blockMeshDict.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        x_grading: Grading for X. The input can be a Grading or a MultiGrading</span>
+<span class="sd">            (default: 1).</span>
+<span class="sd">        y_grading: Grading for Y. The input can be a Grading or a MultiGrading</span>
+<span class="sd">            (default: 1).</span>
+<span class="sd">        z_grading: Grading for Z. The input can be a Grading or a MultiGrading</span>
+<span class="sd">            (default: 1).</span>
+
+<span class="sd">    Usage:</span>
+<span class="sd">        x_grading = Grading.from_expansion_ratio(1)</span>
+<span class="sd">        y_grading = Grading.from_expansion_ratio(1)</span>
+<span class="sd">        z_grading = MultiGrading(</span>
+<span class="sd">            (Grading(0.2, 0.3, 4),</span>
+<span class="sd">            Grading(0.6, 0.4, 1),</span>
+<span class="sd">            Grading(0.2, 0.3, 0.25))</span>
+<span class="sd">        )</span>
+
+<span class="sd">        print(simpleGrading(x_grading, y_grading, z_grading))</span>
+
+<span class="sd">        &gt;&gt; simpleGrading (</span>
+<span class="sd">            1.0</span>
+<span class="sd">            1.0</span>
+<span class="sd">            (</span>
+<span class="sd">                (0.2 0.3 4.0)</span>
+<span class="sd">                (0.6 0.4 1.0)</span>
+<span class="sd">                (0.2 0.3 0.25)</span>
+<span class="sd">            )</span>
+<span class="sd">            )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_grading</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">y_grading</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">z_grading</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init simpleGrading class.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_grading</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_try_read_grading</span><span class="p">(</span><span class="n">x_grading</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_grading</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_try_read_grading</span><span class="p">(</span><span class="n">y_grading</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">z_grading</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_try_read_grading</span><span class="p">(</span><span class="n">z_grading</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">isSimpleGrading</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">_try_read_grading</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Try to convert input value to grading.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="s1">&#39;isGrading&#39;</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="n">g</span><span class="o">.</span><span class="n">is_valid</span><span class="p">,</span> \
+                <span class="s1">&#39;You cannot use grading </span><span class="si">{}</span><span class="s1"> as a single grading.&#39;</span> \
+                <span class="s1">&#39;Use this grading to create a MultiGrading and then use&#39;</span> \
+                <span class="s1">&#39;MultiGrading to create simpleGrading.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">g</span>
+        <span class="k">elif</span> <span class="nb">str</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+            <span class="c1"># create grading from a single value as expansion ratio</span>
+            <span class="k">return</span> <span class="n">Grading</span><span class="o">.</span><span class="n">from_expansion_ratio</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">Grading</span><span class="p">(</span><span class="o">*</span><span class="nb">tuple</span><span class="p">(</span><span class="n">g</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid input (</span><span class="si">{}</span><span class="s1">). Grading should be a number &#39;</span>
+                                 <span class="s1">&#39;or a tuple of numeric values.</span><span class="se">\n</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+
+<div class="viewcode-block" id="SimpleGrading.to_openfoam"><a class="viewcode-back" href="../../butterfly.html#butterfly.grading.SimpleGrading.to_openfoam">[docs]</a>    <span class="k">def</span> <span class="nf">to_openfoam</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get blockMeshDict string.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            vertices: list of vertices for all the geometries in the case.</span>
+<span class="sd">            tolerance: Distance tolerance between input vertices and blockMesh</span>
+<span class="sd">                vertices.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_body</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">simpleGrading (</span><span class="se">\n\t</span><span class="si">{}</span><span class="se">\n\t</span><span class="si">{}</span><span class="se">\n\t</span><span class="si">{}</span><span class="se">\n\t</span><span class="s2">)&quot;</span>
+
+        <span class="k">return</span> <span class="n">_body</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_grading</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_grading</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_grading</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SimpleGrading.duplicate"><a class="viewcode-back" href="../../butterfly.html#butterfly.grading.SimpleGrading.duplicate">[docs]</a>    <span class="k">def</span> <span class="nf">duplicate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a copy of this object.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SimpleGrading.ToString"><a class="viewcode-back" href="../../butterfly.html#butterfly.grading.SimpleGrading.ToString">[docs]</a>    <span class="k">def</span> <span class="nf">ToString</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwrite .NET ToString method.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;OpenFOAM blockMeshDict boundary.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_openfoam</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="MultiGrading"><a class="viewcode-back" href="../../butterfly.html#butterfly.grading.MultiGrading">[docs]</a><span class="k">class</span> <span class="nc">MultiGrading</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;MultiGrading.</span>
+
+<span class="sd">    Use this object to create MultiGrading like the example below.</span>
+<span class="sd">        (0.2 0.3 4)    // 20% y-dir, 30% cells, expansion = 4</span>
+<span class="sd">        (0.6 0.4 1)    // 60% y-dir, 40% cells, expansion = 1</span>
+<span class="sd">        (0.2 0.3 0.25) // 20% y-dir, 30% cells, expansion = 0.25 (1/4)</span>
+<span class="sd">    Read more at section 5.3.1.3: http://cfd.direct/openfoam/user-guide/blockmesh/</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        gradings: A list of minimum two OpenFOAM Gradings. All the gradings</span>
+<span class="sd">            should have percentage_length and percentage_cells values.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradings</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init MultiGrading.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">gradings</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Length of gradings should be at least 2.&#39;</span>
+
+        <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">gradings</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="s1">&#39;isGrading&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">g</span><span class="o">.</span><span class="n">percentage_cells</span> \
+                <span class="ow">and</span> <span class="n">g</span><span class="o">.</span><span class="n">percentage_length</span><span class="p">,</span> <span class="s1">&#39;Invalid input: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gradings</span> <span class="o">=</span> <span class="n">gradings</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">gradings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get gradings in this MultiGrading.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__gradings</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">isGrading</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">isMultiGrading</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="MultiGrading.duplicate"><a class="viewcode-back" href="../../butterfly.html#butterfly.grading.MultiGrading.duplicate">[docs]</a>    <span class="k">def</span> <span class="nf">duplicate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a copy of this object.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MultiGrading.ToString"><a class="viewcode-back" href="../../butterfly.html#butterfly.grading.MultiGrading.ToString">[docs]</a>    <span class="k">def</span> <span class="nf">ToString</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwrite .NET ToString method.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;MultiGrading.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;(</span><span class="se">\n\t\t</span><span class="si">{}</span><span class="se">\n\t</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\t\t</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gradings</span><span class="p">)))</span></div>
+
+
+<div class="viewcode-block" id="Grading"><a class="viewcode-back" href="../../butterfly.html#butterfly.grading.Grading">[docs]</a><span class="k">class</span> <span class="nc">Grading</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;OpenFOAM grading.</span>
+
+<span class="sd">    Use this class to create OpenFOAM grading with either a single expansion</span>
+<span class="sd">    ration or (percentage_length, percentage_cells, expansion_ratio).</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        percentage_length: Percentage of length of the block.</span>
+<span class="sd">        percentage_cells: Percentage of cells to be included in this segment.</span>
+<span class="sd">        expansion_ratio: Expansion ration in this segment (default: 1).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">percentage_length</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">percentage_cells</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">expansion_ratio</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init a grading.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">percentage_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_values</span><span class="p">(</span><span class="n">percentage_length</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">percentage_cells</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_values</span><span class="p">(</span><span class="n">percentage_cells</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">expansion_ratio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_values</span><span class="p">(</span><span class="n">expansion_ratio</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Grading.from_expansion_ratio"><a class="viewcode-back" href="../../butterfly.html#butterfly.grading.Grading.from_expansion_ratio">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_expansion_ratio</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">expansion_ratio</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a grading with only expansion_ratio.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">expansion_ratio</span><span class="o">=</span><span class="n">expansion_ratio</span><span class="p">)</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_check_values</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">v</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">isGrading</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True if grading is just an expansion_ratio.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">percentage_cells</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">percentage_length</span>
+
+<div class="viewcode-block" id="Grading.duplicate"><a class="viewcode-back" href="../../butterfly.html#butterfly.grading.Grading.duplicate">[docs]</a>    <span class="k">def</span> <span class="nf">duplicate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a copy of this object.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Grading.ToString"><a class="viewcode-back" href="../../butterfly.html#butterfly.grading.Grading.ToString">[docs]</a>    <span class="k">def</span> <span class="nf">ToString</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwrite .NET ToString method.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Grading.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">percentage_cells</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">percentage_length</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">expansion_ratio</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;(</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">percentage_length</span><span class="p">,</span>
+                                       <span class="bp">self</span><span class="o">.</span><span class="n">percentage_cells</span><span class="p">,</span>
+                                       <span class="bp">self</span><span class="o">.</span><span class="n">expansion_ratio</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

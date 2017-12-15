@@ -1,0 +1,752 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.material package &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="honeybee.radiance.parameters package" href="honeybee.radiance.parameters.html" />
+    <link rel="prev" title="honeybee.radiance.command.pyRad.pyRadLib package" href="honeybee.radiance.command.pyRad.pyRadLib.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="honeybee.html">honeybee package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="honeybee.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="honeybee.energyplus.html">honeybee.energyplus package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="honeybee.radiance.html">honeybee.radiance package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="honeybee.radiance.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.analysisgrid">honeybee.radiance.analysisgrid module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.analysispoint">honeybee.radiance.analysispoint module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.datatype">honeybee.radiance.datatype module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.filemanager">honeybee.radiance.filemanager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.geometry">honeybee.radiance.geometry module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.imagecollection">honeybee.radiance.imagecollection module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.properties">honeybee.radiance.properties module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.radfile">honeybee.radiance.radfile module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.runmanager">honeybee.radiance.runmanager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.scene">honeybee.radiance.scene module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.view">honeybee.radiance.view module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.server.html">honeybee.server package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.vectormath.html">honeybee.vectormath package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.config">honeybee.config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.dataoperation">honeybee.dataoperation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.futil">honeybee.futil module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.geometryoperation">honeybee.geometryoperation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbdynamicsurface">honeybee.hbdynamicsurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbfensurface">honeybee.hbfensurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbobject">honeybee.hbobject module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbshadesurface">honeybee.hbshadesurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbsurface">honeybee.hbsurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbzone">honeybee.hbzone module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.room">honeybee.room module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.schedule">honeybee.schedule module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.surfaceproperties">honeybee.surfaceproperties module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.surfacetype">honeybee.surfacetype module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.utilcol">honeybee.utilcol module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="honeybee.html">honeybee package</a><ul>
+  <li><a href="honeybee.radiance.html">honeybee.radiance package</a><ul>
+      <li>Previous: <a href="honeybee.radiance.command.pyRad.pyRadLib.html" title="previous chapter">honeybee.radiance.command.pyRad.pyRadLib package</a></li>
+      <li>Next: <a href="honeybee.radiance.parameters.html" title="next chapter">honeybee.radiance.parameters package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="honeybee-radiance-material-package">
+<h1>honeybee.radiance.material package<a class="headerlink" href="#honeybee-radiance-material-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-honeybee.radiance.material.bsdf">
+<span id="honeybee-radiance-material-bsdf-module"></span><h2>honeybee.radiance.material.bsdf module<a class="headerlink" href="#module-honeybee.radiance.material.bsdf" title="Permalink to this headline">¶</a></h2>
+<p>Radiance BSDF Material.</p>
+<p><a class="reference external" href="http://radsite.lbl.gov/radiance/refer/ray.html#Glass">http://radsite.lbl.gov/radiance/refer/ray.html#Glass</a></p>
+<dl class="class">
+<dt id="honeybee.radiance.material.bsdf.BSDFMaterial">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.material.bsdf.</code><code class="descname">BSDFMaterial</code><span class="sig-paren">(</span><em>xmlfile</em>, <em>up_orientation=None</em>, <em>thickness=None</em>, <em>modifier='void'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/material/bsdf.html#BSDFMaterial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.material.bsdf.BSDFMaterial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.material._materialbase.RadianceMaterial</span></code></p>
+<p>Radiance BSDF material.</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.material.bsdf.BSDFMaterial.xmlfile">
+<code class="descname">xmlfile</code><a class="headerlink" href="#honeybee.radiance.material.bsdf.BSDFMaterial.xmlfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to an xml file. Data will not be cached in memory.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.bsdf.BSDFMaterial.up_orientation">
+<code class="descname">up_orientation</code><a class="headerlink" href="#honeybee.radiance.material.bsdf.BSDFMaterial.up_orientation" title="Permalink to this definition">¶</a></dt>
+<dd><p>(x, y ,z) vector that sets the hemisphere that the
+BSDF material faces.  For materials that are symmetrical about
+the HBSrf plane (like non-angled venitian blinds), this can be
+any vector that is not perfectly normal to the HBSrf. For
+asymmetrical materials like angled veneitan blinds, this variable
+should be coordinated with the direction the HBSrfs are facing.
+The default is set to (0.01, 0.01, 1.00), which should hopefully
+not be perpendicular to any typical HBSrf.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.bsdf.BSDFMaterial.thickness">
+<code class="descname">thickness</code><a class="headerlink" href="#honeybee.radiance.material.bsdf.BSDFMaterial.thickness" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optional number to set the thickness of the BSDF material.
+(default: 0)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.bsdf.BSDFMaterial.modifier">
+<code class="descname">modifier</code><a class="headerlink" href="#honeybee.radiance.material.bsdf.BSDFMaterial.modifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Material modifier (Default: “void”).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.bsdf.BSDFMaterial.isGlassMaterial">
+<code class="descname">isGlassMaterial</code><a class="headerlink" href="#honeybee.radiance.material.bsdf.BSDFMaterial.isGlassMaterial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicate if this object has glass Material.</p>
+<p>This property will be used to separate the glass surfaces in a separate
+file than the opaque surfaces.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.material.bsdf.BSDFMaterial.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>minimal=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/material/bsdf.html#BSDFMaterial.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.material.bsdf.BSDFMaterial.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return full radiance definition.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.material.custom">
+<span id="honeybee-radiance-material-custom-module"></span><h2>honeybee.radiance.material.custom module<a class="headerlink" href="#module-honeybee.radiance.material.custom" title="Permalink to this headline">¶</a></h2>
+<p>Radiance Custom Material (e.g plastic, glass, etc.).</p>
+<p>Use this class to create any type of radiance materials.
+<a class="reference external" href="http://radsite.lbl.gov/radiance/refer/ray.html#Materials">http://radsite.lbl.gov/radiance/refer/ray.html#Materials</a></p>
+<dl class="class">
+<dt id="honeybee.radiance.material.custom.CustomMaterial">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.material.custom.</code><code class="descname">CustomMaterial</code><span class="sig-paren">(</span><em>name</em>, <em>material_type</em>, <em>values={}</em>, <em>modifier='void'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/material/custom.html#CustomMaterial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.material.custom.CustomMaterial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.material._materialbase.RadianceMaterial</span></code></p>
+<p>Custom Radiance material.</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.material.custom.CustomMaterial.name">
+<code class="descname">name</code><a class="headerlink" href="#honeybee.radiance.material.custom.CustomMaterial.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Material name as a string. Do not use white space and special character.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.custom.CustomMaterial.material_type">
+<code class="descname">material_type</code><a class="headerlink" href="#honeybee.radiance.material.custom.CustomMaterial.material_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>One of Radiance standard Material types (e.g. glass, plastic, etc)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.custom.CustomMaterial.values">
+<code class="descname">values</code><a class="headerlink" href="#honeybee.radiance.material.custom.CustomMaterial.values" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary of material data. key is line number and item is the list
+of values {0: [], 1: [], 2: [‘0.500’, ‘0.500’, ‘0.500’, ‘0.000’, ‘0.050’]}</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.custom.CustomMaterial.modifier">
+<code class="descname">modifier</code><a class="headerlink" href="#honeybee.radiance.material.custom.CustomMaterial.modifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Material modifier. Default is void</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.material.custom.CustomMaterial.modify_values">
+<code class="descname">modify_values</code><span class="sig-paren">(</span><em>line_count</em>, <em>values</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/material/custom.html#CustomMaterial.modify_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.material.custom.CustomMaterial.modify_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify values for the current material.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>line_count</strong> – An integer between 0-2 that represnt the line number.</li>
+<li><strong>values</strong> – <p>Values as a list of string</p>
+<dl class="docutils">
+<dt>Usage:</dt>
+<dd># This line will assign 9 values to line 0 of the material
+material.modify_values(0, [“0.5”, “0.5”, “0.5”,<blockquote class="last">
+<div>”/usr/local/lib/ray/oakfloor.pic”, “.”, “frac(U)”,
+“frac(V)”, “-s”, “1.1667”])</div></blockquote>
+</dd>
+</dl>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.material.custom.CustomMaterial.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>minimal=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/material/custom.html#CustomMaterial.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.material.custom.CustomMaterial.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return full radiance definition.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">values</code><em class="property"> = None</em></dt>
+<dd><p>A dictionary of material data. key is line number and item is the list of values
+{0: [], 1: [], 2: [‘0.500’, ‘0.500’, ‘0.500’, ‘0.000’, ‘0.050’]}</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.material.glass">
+<span id="honeybee-radiance-material-glass-module"></span><h2>honeybee.radiance.material.glass module<a class="headerlink" href="#module-honeybee.radiance.material.glass" title="Permalink to this headline">¶</a></h2>
+<p>Radiance Glass Material.</p>
+<p><a class="reference external" href="http://radsite.lbl.gov/radiance/refer/ray.html#Glass">http://radsite.lbl.gov/radiance/refer/ray.html#Glass</a></p>
+<dl class="class">
+<dt id="honeybee.radiance.material.glass.GlassMaterial">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.material.glass.</code><code class="descname">GlassMaterial</code><span class="sig-paren">(</span><em>name</em>, <em>r_transmittance=0</em>, <em>g_transmittance=0</em>, <em>b_transmittance=0</em>, <em>refraction=1.52</em>, <em>modifier='void'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/material/glass.html#GlassMaterial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.material.glass.GlassMaterial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.material._materialbase.RadianceMaterial</span></code></p>
+<p>Radiance glass material.</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.material.glass.GlassMaterial.average_transmittance">
+<code class="descname">average_transmittance</code><a class="headerlink" href="#honeybee.radiance.material.glass.GlassMaterial.average_transmittance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate average transmittance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.glass.GlassMaterial.b_transmittance">
+<code class="descname">b_transmittance</code><a class="headerlink" href="#honeybee.radiance.material.glass.GlassMaterial.b_transmittance" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Transmittance for blue. The value should be between 0 and 1 (Default</em> – 0).</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.radiance.material.glass.GlassMaterial.by_single_trans_value">
+<em class="property">classmethod </em><code class="descname">by_single_trans_value</code><span class="sig-paren">(</span><em>name</em>, <em>rgb_transmittance=0</em>, <em>refraction=1.52</em>, <em>modifier='void'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/material/glass.html#GlassMaterial.by_single_trans_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.material.glass.GlassMaterial.by_single_trans_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create glass material with single transmittance value.</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.material.glass.GlassMaterial.name">
+<code class="descname">name</code><a class="headerlink" href="#honeybee.radiance.material.glass.GlassMaterial.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Material name as a string. Do not use white space and special
+character.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.glass.GlassMaterial.rgb_transmittance">
+<code class="descname">rgb_transmittance</code><a class="headerlink" href="#honeybee.radiance.material.glass.GlassMaterial.rgb_transmittance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transmittance for red, green and blue. The value should be
+between 0 and 1 (Default: 0).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.glass.GlassMaterial.refraction">
+<code class="descname">refraction</code><a class="headerlink" href="#honeybee.radiance.material.glass.GlassMaterial.refraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Index of refraction. 1.52 for glass and 1.4 for ETFE
+(Default: 1.52).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.glass.GlassMaterial.modifier">
+<code class="descname">modifier</code><a class="headerlink" href="#honeybee.radiance.material.glass.GlassMaterial.modifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Material modifier (Default: “void”).</p>
+</dd></dl>
+
+<dl class="docutils">
+<dt>Usage:</dt>
+<dd>glassMaterial = GlassMaterial.by_single_trans_value(“generic glass”, .65)
+print(glassMaterial)</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.glass.GlassMaterial.g_transmittance">
+<code class="descname">g_transmittance</code><a class="headerlink" href="#honeybee.radiance.material.glass.GlassMaterial.g_transmittance" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Transmittance for green. The value should be between 0 and 1 (Default</em> – 0).</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="honeybee.radiance.material.glass.GlassMaterial.get_transmissivity">
+<em class="property">static </em><code class="descname">get_transmissivity</code><span class="sig-paren">(</span><em>transmittance</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/material/glass.html#GlassMaterial.get_transmissivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.material.glass.GlassMaterial.get_transmissivity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate transmissivity based on transmittance value.</p>
+<p>“Transmissivity is the amount of light not absorbed in one traversal of
+the material. Transmittance – the value usually measured - is the total
+light transmitted through the pane including multiple reflections.”</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.glass.GlassMaterial.isGlassMaterial">
+<code class="descname">isGlassMaterial</code><a class="headerlink" href="#honeybee.radiance.material.glass.GlassMaterial.isGlassMaterial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicate if this object has glass Material.</p>
+<p>This property will be used to separate the glass surfaces in a separate
+file than the opaque surfaces.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.glass.GlassMaterial.r_transmittance">
+<code class="descname">r_transmittance</code><a class="headerlink" href="#honeybee.radiance.material.glass.GlassMaterial.r_transmittance" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Transmittance for red. The value should be between 0 and 1 (Default</em> – 0).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.glass.GlassMaterial.refractionIndex">
+<code class="descname">refractionIndex</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.material.glass.GlassMaterial.refractionIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Index of refraction. 1.52 for glass and 1.4 for ETFE (Default</em> – 1.52).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.material.glass.GlassMaterial.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>minimal=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/material/glass.html#GlassMaterial.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.material.glass.GlassMaterial.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return full radiance definition.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.material.glow">
+<span id="honeybee-radiance-material-glow-module"></span><h2>honeybee.radiance.material.glow module<a class="headerlink" href="#module-honeybee.radiance.material.glow" title="Permalink to this headline">¶</a></h2>
+<p>Radiance Glow Material.</p>
+<p><a class="reference external" href="http://radsite.lbl.gov/radiance/refer/ray.html#Glow">http://radsite.lbl.gov/radiance/refer/ray.html#Glow</a></p>
+<dl class="class">
+<dt id="honeybee.radiance.material.glow.GlowMaterial">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.material.glow.</code><code class="descname">GlowMaterial</code><span class="sig-paren">(</span><em>name</em>, <em>red=0</em>, <em>green=0</em>, <em>blue=0</em>, <em>max_radius=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/material/glow.html#GlowMaterial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.material.glow.GlowMaterial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.material._materialbase.RadianceMaterial</span></code></p>
+<p>Create glow material.</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.material.glow.GlowMaterial.name">
+<code class="descname">name</code><a class="headerlink" href="#honeybee.radiance.material.glow.GlowMaterial.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Material name as a string. The name should not have whitespaces or
+special characters.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.glow.GlowMaterial.red">
+<code class="descname">red</code><a class="headerlink" href="#honeybee.radiance.material.glow.GlowMaterial.red" title="Permalink to this definition">¶</a></dt>
+<dd><p>A positive value for the Red channel of the glow</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.glow.GlowMaterial.green">
+<code class="descname">green</code><a class="headerlink" href="#honeybee.radiance.material.glow.GlowMaterial.green" title="Permalink to this definition">¶</a></dt>
+<dd><p>A positive value for the Green channel of the glow</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.glow.GlowMaterial.blue">
+<code class="descname">blue</code><a class="headerlink" href="#honeybee.radiance.material.glow.GlowMaterial.blue" title="Permalink to this definition">¶</a></dt>
+<dd><p>A positive value for the Blue channel of the glow</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.glow.GlowMaterial.max_radius">
+<code class="descname">max_radius</code><a class="headerlink" href="#honeybee.radiance.material.glow.GlowMaterial.max_radius" title="Permalink to this definition">¶</a></dt>
+<dd><p>—.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">blue</code></dt>
+<dd><p>A positive value for the Blue channel of the glow</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">green</code></dt>
+<dd><p>A positive value for the Green channel of the glow</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">max_radius</code></dt>
+<dd><p>Maximum radius for shadow testing</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">red</code></dt>
+<dd><p>A positive value for the Red channel of the glow</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.material.glow.GlowMaterial.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>minimal=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/material/glow.html#GlowMaterial.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.material.glow.GlowMaterial.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return full Radiance definition</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.radiance.material.glow.WhiteGlowMaterial">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.material.glow.</code><code class="descname">WhiteGlowMaterial</code><span class="sig-paren">(</span><em>name='white_glow'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/material/glow.html#WhiteGlowMaterial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.material.glow.WhiteGlowMaterial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.radiance.material.glow.GlowMaterial" title="honeybee.radiance.material.glow.GlowMaterial"><code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.material.glow.GlowMaterial</span></code></a></p>
+<p>A white glow material.</p>
+<p>Use this material for multi-phase daylight studies.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.material.light">
+<span id="honeybee-radiance-material-light-module"></span><h2>honeybee.radiance.material.light module<a class="headerlink" href="#module-honeybee.radiance.material.light" title="Permalink to this headline">¶</a></h2>
+<p>Radiance Light Material.</p>
+<p><a class="reference external" href="http://radsite.lbl.gov/radiance/refer/ray.html#Light">http://radsite.lbl.gov/radiance/refer/ray.html#Light</a></p>
+<dl class="class">
+<dt id="honeybee.radiance.material.light.LightMaterial">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.material.light.</code><code class="descname">LightMaterial</code><span class="sig-paren">(</span><em>name</em>, <em>red=0</em>, <em>green=0</em>, <em>blue=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/material/light.html#LightMaterial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.material.light.LightMaterial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.material._materialbase.RadianceMaterial</span></code></p>
+<dl class="attribute">
+<dt id="honeybee.radiance.material.light.LightMaterial.blue">
+<code class="descname">blue</code><a class="headerlink" href="#honeybee.radiance.material.light.LightMaterial.blue" title="Permalink to this definition">¶</a></dt>
+<dd><p>A positive value for the Blue channel of the light</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.light.LightMaterial.green">
+<code class="descname">green</code><a class="headerlink" href="#honeybee.radiance.material.light.LightMaterial.green" title="Permalink to this definition">¶</a></dt>
+<dd><p>A positive value for the Green channel of the light</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.light.LightMaterial.red">
+<code class="descname">red</code><a class="headerlink" href="#honeybee.radiance.material.light.LightMaterial.red" title="Permalink to this definition">¶</a></dt>
+<dd><p>A positive value for the Red channel of the light</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.material.light.LightMaterial.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>minimal=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/material/light.html#LightMaterial.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.material.light.LightMaterial.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return full Radiance definition</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.material.metal">
+<span id="honeybee-radiance-material-metal-module"></span><h2>honeybee.radiance.material.metal module<a class="headerlink" href="#module-honeybee.radiance.material.metal" title="Permalink to this headline">¶</a></h2>
+<p>Radiance Metal Material.</p>
+<p><a class="reference external" href="http://radsite.lbl.gov/radiance/refer/ray.html#Metal">http://radsite.lbl.gov/radiance/refer/ray.html#Metal</a></p>
+<dl class="class">
+<dt id="honeybee.radiance.material.metal.MetalMaterial">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.material.metal.</code><code class="descname">MetalMaterial</code><span class="sig-paren">(</span><em>name</em>, <em>r_reflectance=0</em>, <em>g_reflectance=0</em>, <em>b_reflectance=0</em>, <em>specularity=0</em>, <em>roughness=0</em>, <em>modifier='void'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/material/metal.html#MetalMaterial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.material.metal.MetalMaterial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.material._materialbase.RadianceMaterial</span></code></p>
+<p>Radiance metal material.</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.material.metal.MetalMaterial.average_reflectance">
+<code class="descname">average_reflectance</code><a class="headerlink" href="#honeybee.radiance.material.metal.MetalMaterial.average_reflectance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate average reflectance of metal material.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.metal.MetalMaterial.b_reflectance">
+<code class="descname">b_reflectance</code><a class="headerlink" href="#honeybee.radiance.material.metal.MetalMaterial.b_reflectance" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Reflectance for blue. The value should be between 0 and 1 (Default</em> – 0).</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.radiance.material.metal.MetalMaterial.by_single_reflect_value">
+<em class="property">classmethod </em><code class="descname">by_single_reflect_value</code><span class="sig-paren">(</span><em>name</em>, <em>rgb_reflectance=0</em>, <em>specularity=0</em>, <em>roughness=0</em>, <em>modifier='void'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/material/metal.html#MetalMaterial.by_single_reflect_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.material.metal.MetalMaterial.by_single_reflect_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create metal material with single reflectance value.</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.material.metal.MetalMaterial.name">
+<code class="descname">name</code><a class="headerlink" href="#honeybee.radiance.material.metal.MetalMaterial.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Material name as a string. Do not use white space and special
+character.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.metal.MetalMaterial.rgb_reflectance">
+<code class="descname">rgb_reflectance</code><a class="headerlink" href="#honeybee.radiance.material.metal.MetalMaterial.rgb_reflectance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reflectance for red, green and blue. The value should be
+between 0 and 1 (Default: 0).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.metal.MetalMaterial.specularity">
+<code class="descname">specularity</code><a class="headerlink" href="#honeybee.radiance.material.metal.MetalMaterial.specularity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fraction of specularity. Specularity fractions greater than 0.1
+are not realistic (Default: 0).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.metal.MetalMaterial.roughness">
+<code class="descname">roughness</code><a class="headerlink" href="#honeybee.radiance.material.metal.MetalMaterial.roughness" title="Permalink to this definition">¶</a></dt>
+<dd><p>Roughness is specified as the rms slope of surface facets. A value
+of 0 corresponds to a perfectly smooth surface, and a value of 1 would be
+a very rough surface. Roughness values greater than 0.2 are not very
+realistic. (Default: 0).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.metal.MetalMaterial.modifier">
+<code class="descname">modifier</code><a class="headerlink" href="#honeybee.radiance.material.metal.MetalMaterial.modifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Material modifier (Default: “void”).</p>
+</dd></dl>
+
+<dl class="docutils">
+<dt>Usage:</dt>
+<dd>wallMaterial = MetalMaterial.by_single_reflect_value(“generic wall”, .55)
+print(wallMaterial)</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.metal.MetalMaterial.g_reflectance">
+<code class="descname">g_reflectance</code><a class="headerlink" href="#honeybee.radiance.material.metal.MetalMaterial.g_reflectance" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Reflectance for green. The value should be between 0 and 1 (Default</em> – 0).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.metal.MetalMaterial.r_reflectance">
+<code class="descname">r_reflectance</code><a class="headerlink" href="#honeybee.radiance.material.metal.MetalMaterial.r_reflectance" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Reflectance for red. The value should be between 0 and 1 (Default</em> – 0).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">roughness</code></dt>
+<dd><p>Roughness is specified as the rms slope of surface facets. A value of 0
+corresponds to a perfectly smooth surface, and a value of 1 would be a very
+rough surface. Roughness values greater than 0.2 are not very realistic.
+(Default: 0).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">specularity</code></dt>
+<dd><p>Fraction of specularity. Specularity fractions greater than 0.1 are not
+realistic (Default: 0).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.material.metal.MetalMaterial.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>minimal=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/material/metal.html#MetalMaterial.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.material.metal.MetalMaterial.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return full radiance definition.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.material.plastic">
+<span id="honeybee-radiance-material-plastic-module"></span><h2>honeybee.radiance.material.plastic module<a class="headerlink" href="#module-honeybee.radiance.material.plastic" title="Permalink to this headline">¶</a></h2>
+<p>Radiance Plastic Material.</p>
+<p><a class="reference external" href="http://radsite.lbl.gov/radiance/refer/ray.html#Plastic">http://radsite.lbl.gov/radiance/refer/ray.html#Plastic</a></p>
+<dl class="class">
+<dt id="honeybee.radiance.material.plastic.BlackMaterial">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.material.plastic.</code><code class="descname">BlackMaterial</code><span class="sig-paren">(</span><em>name='black'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/material/plastic.html#BlackMaterial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.material.plastic.BlackMaterial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.radiance.material.plastic.PlasticMaterial" title="honeybee.radiance.material.plastic.PlasticMaterial"><code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.material.plastic.PlasticMaterial</span></code></a></p>
+<p>Radiance black plastic material.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.radiance.material.plastic.PlasticMaterial">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.material.plastic.</code><code class="descname">PlasticMaterial</code><span class="sig-paren">(</span><em>name</em>, <em>r_reflectance=0</em>, <em>g_reflectance=0</em>, <em>b_reflectance=0</em>, <em>specularity=0</em>, <em>roughness=0</em>, <em>modifier='void'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/material/plastic.html#PlasticMaterial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.material.plastic.PlasticMaterial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.material._materialbase.RadianceMaterial</span></code></p>
+<p>Radiance plastic material.</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.material.plastic.PlasticMaterial.average_reflectance">
+<code class="descname">average_reflectance</code><a class="headerlink" href="#honeybee.radiance.material.plastic.PlasticMaterial.average_reflectance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate average reflectance of plastic material.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.plastic.PlasticMaterial.b_reflectance">
+<code class="descname">b_reflectance</code><a class="headerlink" href="#honeybee.radiance.material.plastic.PlasticMaterial.b_reflectance" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Reflectance for blue. The value should be between 0 and 1 (Default</em> – 0).</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.radiance.material.plastic.PlasticMaterial.by_single_reflect_value">
+<em class="property">classmethod </em><code class="descname">by_single_reflect_value</code><span class="sig-paren">(</span><em>name</em>, <em>rgb_reflectance=0</em>, <em>specularity=0</em>, <em>roughness=0</em>, <em>modifier='void'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/material/plastic.html#PlasticMaterial.by_single_reflect_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.material.plastic.PlasticMaterial.by_single_reflect_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create plastic material with single reflectance value.</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.material.plastic.PlasticMaterial.name">
+<code class="descname">name</code><a class="headerlink" href="#honeybee.radiance.material.plastic.PlasticMaterial.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Material name as a string. Do not use white space and special character</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.plastic.PlasticMaterial.rgb_reflectance">
+<code class="descname">rgb_reflectance</code><a class="headerlink" href="#honeybee.radiance.material.plastic.PlasticMaterial.rgb_reflectance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reflectance for red, green and blue. The value should be
+between 0 and 1 (Default: 0).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.plastic.PlasticMaterial.specularity">
+<code class="descname">specularity</code><a class="headerlink" href="#honeybee.radiance.material.plastic.PlasticMaterial.specularity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fraction of specularity. Specularity fractions greater than 0.1
+are not realistic (Default: 0).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.plastic.PlasticMaterial.roughness">
+<code class="descname">roughness</code><a class="headerlink" href="#honeybee.radiance.material.plastic.PlasticMaterial.roughness" title="Permalink to this definition">¶</a></dt>
+<dd><p>Roughness is specified as the rms slope of surface facets. A value
+of 0 corresponds to a perfectly smooth surface, and a value of 1 would be
+a very rough surface. Roughness values greater than 0.2 are not very
+realistic. (Default: 0).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.plastic.PlasticMaterial.modifier">
+<code class="descname">modifier</code><a class="headerlink" href="#honeybee.radiance.material.plastic.PlasticMaterial.modifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Material modifier (Default: “void”).</p>
+</dd></dl>
+
+<dl class="docutils">
+<dt>Usage:</dt>
+<dd>wallMaterial = PlasticMaterial.by_single_reflect_value(“generic wall”, .55)
+print(wallMaterial)</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.plastic.PlasticMaterial.g_reflectance">
+<code class="descname">g_reflectance</code><a class="headerlink" href="#honeybee.radiance.material.plastic.PlasticMaterial.g_reflectance" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Reflectance for green. The value should be between 0 and 1 (Default</em> – 0).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.material.plastic.PlasticMaterial.r_reflectance">
+<code class="descname">r_reflectance</code><a class="headerlink" href="#honeybee.radiance.material.plastic.PlasticMaterial.r_reflectance" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Reflectance for red. The value should be between 0 and 1 (Default</em> – 0).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">roughness</code></dt>
+<dd><p>Roughness is specified as the rms slope of surface facets. A value of 0
+corresponds to a perfectly smooth surface, and a value of 1 would be a
+very rough surface. Roughness values greater than 0.2 are not very realistic.
+(Default: 0).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">specularity</code></dt>
+<dd><p>Fraction of specularity. Specularity fractions greater than 0.1 are not
+realistic (Default: 0).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.material.plastic.PlasticMaterial.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>minimal=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/material/plastic.html#PlasticMaterial.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.material.plastic.PlasticMaterial.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return full radiance definition.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.material">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-honeybee.radiance.material" title="Permalink to this headline">¶</a></h2>
+<p>Radiance Materials.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/honeybee.radiance.material.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

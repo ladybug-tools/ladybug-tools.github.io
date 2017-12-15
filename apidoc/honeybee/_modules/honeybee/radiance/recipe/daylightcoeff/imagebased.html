@@ -1,0 +1,697 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.recipe.daylightcoeff.imagebased &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../../index.html">
+    <img class="logo" src="../../../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.recipe.daylightcoeff.imagebased</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Radiance Daylight Coefficient Image-Based Analysis Recipe.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">..recipeutil</span> <span class="k">import</span> <span class="n">write_extra_files</span><span class="p">,</span> <span class="n">glz_srf_to_window_group</span>
+<span class="kn">from</span> <span class="nn">..recipedcutil</span> <span class="k">import</span> <span class="n">write_rad_files_daylight_coeff</span><span class="p">,</span> <span class="n">create_reference_map_command</span>
+<span class="kn">from</span> <span class="nn">..recipedcutil</span> <span class="k">import</span> <span class="n">image_based_view_sampling_commands</span><span class="p">,</span> \
+    <span class="n">image_based_view_coeff_matrix_commands</span><span class="p">,</span> <span class="n">imaged_based_sun_coeff_matrix_commands</span>
+<span class="kn">from</span> <span class="nn">...command.oconv</span> <span class="k">import</span> <span class="n">Oconv</span>
+<span class="kn">from</span> <span class="nn">...command.pcomb</span> <span class="k">import</span> <span class="n">Pcomb</span><span class="p">,</span> <span class="n">PcombImage</span>
+<span class="kn">from</span> <span class="nn">...parameters.pcomb</span> <span class="k">import</span> <span class="n">PcombParameters</span>
+<span class="kn">from</span> <span class="nn">..parameters</span> <span class="k">import</span> <span class="n">get_radiance_parameters_image_based</span>
+<span class="kn">from</span> <span class="nn">..recipedcutil</span> <span class="k">import</span> <span class="n">image_based_view_matrix_calculation</span>
+<span class="kn">from</span> <span class="nn">..recipedcutil</span> <span class="k">import</span> <span class="n">sky_receiver</span><span class="p">,</span> <span class="n">get_commands_sky</span>
+<span class="kn">from</span> <span class="nn">.._imagebasedbase</span> <span class="k">import</span> <span class="n">GenericImageBased</span>
+<span class="kn">from</span> <span class="nn">...parameters.vwrays</span> <span class="k">import</span> <span class="n">VwraysParameters</span>
+<span class="kn">from</span> <span class="nn">...imagecollection</span> <span class="k">import</span> <span class="n">ImageCollection</span>
+<span class="kn">from</span> <span class="nn">....futil</span> <span class="k">import</span> <span class="n">write_to_file</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">izip</span>
+
+
+<div class="viewcode-block" id="DaylightCoeffImageBased"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.daylightcoeff.html#honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased">[docs]</a><span class="k">class</span> <span class="nc">DaylightCoeffImageBased</span><span class="p">(</span><span class="n">GenericImageBased</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Daylight Coefficient Image-Based.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        sky_mtx: A honeybee sky for the analysis</span>
+<span class="sd">        views: List of views.</span>
+<span class="sd">        simulation_type: 0: Illuminance(lux), 1: Radiation (kWh), 2: Luminance (Candela)</span>
+<span class="sd">            (Default: 2)</span>
+<span class="sd">        rad_parameters: Radiance parameters for grid based analysis (rtrace).</span>
+<span class="sd">            (Default: imagebased.LowQualityImage)</span>
+<span class="sd">        hb_objects: An optional list of Honeybee surfaces or zones (Default: None).</span>
+<span class="sd">        sub_folder: Analysis subfolder for this recipe. (Default: &quot;gridbased&quot;)</span>
+
+<span class="sd">    Usage:</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># TODO: implemnt isChanged at AnalysisRecipe level to reload the results</span>
+    <span class="c1"># if there has been no changes in inputs.</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sky_mtx</span><span class="p">,</span> <span class="n">views</span><span class="p">,</span> <span class="n">simulation_type</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">daylight_mtx_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">vwrays_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reuse_daylight_mtx</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">hb_objects</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">sub_folder</span><span class="o">=</span><span class="s2">&quot;imagebased_daylightcoeff&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create grid-based recipe.&quot;&quot;&quot;</span>
+        <span class="n">GenericImageBased</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">views</span><span class="p">,</span> <span class="n">hb_objects</span><span class="p">,</span> <span class="n">sub_folder</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sky_matrix</span> <span class="o">=</span> <span class="n">sky_mtx</span>
+        <span class="sd">&quot;&quot;&quot;A honeybee sky for the analysis.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">simulation_type</span> <span class="o">=</span> <span class="n">simulation_type</span>
+        <span class="sd">&quot;&quot;&quot;Simulation type: 0: Illuminance(lux), 1: Radiation (kWh),</span>
+<span class="sd">           2: Luminance (Candela) (Default: 2)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">daylight_mtx_parameters</span> <span class="o">=</span> <span class="n">daylight_mtx_parameters</span>
+        <span class="sd">&quot;&quot;&quot;Radiance parameters for image based analysis (rfluxmtx).</span>
+<span class="sd">            (Default: imagebased.LowQualityImage)&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">vwrays_parameters</span> <span class="o">=</span> <span class="n">vwrays_parameters</span>
+        <span class="sd">&quot;&quot;&quot;Radiance parameters for vwrays.</span>
+<span class="sd">            (Default: imagebased.LowQualityImage)&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reuse_daylight_mtx</span> <span class="o">=</span> <span class="n">reuse_daylight_mtx</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">simulation_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get/set simulation Type.</span>
+
+<span class="sd">        0: Illuminance(lux), 1: Radiation (kWh), 2: Luminance (Candela) (Default: 0)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simType</span>
+
+    <span class="nd">@simulation_type</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">simulation_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">,</span> \
+            <span class="s2">&quot;Simulation type should be between 0-2. Current value: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="c1"># If this is a radiation analysis make sure the sky is climate-based</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky_matrix</span><span class="o">.</span><span class="n">is_climate_based</span><span class="p">,</span> \
+                <span class="s2">&quot;The sky for radition analysis should be climate-based.&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_simType</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sky_matrix</span><span class="o">.</span><span class="n">sky_type</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sky_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get and set sky definition.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sky_matrix</span>
+
+    <span class="nd">@sky_matrix</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">sky_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_sky</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">new_sky</span><span class="p">,</span> <span class="s1">&#39;isRadianceSky&#39;</span><span class="p">),</span> \
+            <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> is not a valid Honeybee sky.&#39;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">new_sky</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="n">new_sky</span><span class="o">.</span><span class="n">is_point_in_time</span><span class="p">,</span> \
+            <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Sky for daylight coefficient recipe must be a sky matrix.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sky_matrix</span> <span class="o">=</span> <span class="n">new_sky</span><span class="o">.</span><span class="n">duplicate</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sky_density</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Radiance sky type e.g. r1, r2, r4.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;r</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sky_matrix</span><span class="o">.</span><span class="n">sky_density</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">daylight_mtx_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get and set Radiance parameters.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_daylight_mtx_parameters</span>
+
+    <span class="nd">@daylight_mtx_parameters</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">daylight_mtx_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">par</span><span class="p">:</span>
+            <span class="c1"># set RfluxmtxParameters as default radiance parameter for annual analysis</span>
+            <span class="n">par</span> <span class="o">=</span> <span class="n">get_radiance_parameters_image_based</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">dmtx</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="s1">&#39;isRfluxmtxParameters&#39;</span><span class="p">),</span> \
+                <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Expected RfluxmtxParameters not </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">par</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_daylight_mtx_parameters</span> <span class="o">=</span> <span class="n">par</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">vwrays_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get and set Radiance parameters.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vwrays_parameters</span>
+
+    <span class="nd">@vwrays_parameters</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">vwrays_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">par</span><span class="p">:</span>
+            <span class="c1"># set VwraysParameters as default radiance parameter for annual analysis</span>
+            <span class="n">par</span> <span class="o">=</span> <span class="n">VwraysParameters</span><span class="p">()</span>
+            <span class="n">par</span><span class="o">.</span><span class="n">sampling_rays_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">daylight_mtx_parameters</span><span class="o">.</span><span class="n">sampling_rays_count</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="s1">&#39;isVwraysParameters&#39;</span><span class="p">),</span> \
+                <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Expected VwraysParameters not </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">par</span><span class="p">)))</span>
+        <span class="k">assert</span> <span class="n">par</span><span class="o">.</span><span class="n">sampling_rays_count</span> <span class="o">==</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">daylight_mtx_parameters</span><span class="o">.</span><span class="n">sampling_rays_count</span><span class="p">,</span> \
+            <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;Number of sampling_rays_count should be equal between &#39;</span>
+                <span class="s1">&#39;daylight_mtx_parameters [</span><span class="si">{}</span><span class="s1">] and vwrays_parameters [</span><span class="si">{}</span><span class="s1">].&#39;</span>
+                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">daylight_mtx_parameters</span><span class="o">.</span><span class="n">sampling_rays_count</span><span class="p">,</span>
+                        <span class="n">par</span><span class="o">.</span><span class="n">sampling_rays_count</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vwrays_parameters</span> <span class="o">=</span> <span class="n">par</span>
+
+<div class="viewcode-block" id="DaylightCoeffImageBased.is_daylight_mtx_created"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.daylightcoeff.html#honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.is_daylight_mtx_created">[docs]</a>    <span class="k">def</span> <span class="nf">is_daylight_mtx_created</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">study_folder</span><span class="p">,</span> <span class="n">view</span><span class="p">,</span> <span class="n">wg</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if hdr images for daylight matrix are already created.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">144</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sky_matrix</span><span class="o">.</span><span class="n">sky_density</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)):</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;total&#39;</span><span class="p">,</span> <span class="s1">&#39;direct&#39;</span><span class="p">):</span>
+                <span class="n">fp</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="n">study_folder</span><span class="p">,</span> <span class="s1">&#39;result/dc/</span><span class="si">%s</span><span class="s1">/</span><span class="si">%03d</span><span class="s1">_</span><span class="si">%s</span><span class="s1">..</span><span class="si">%s</span><span class="s1">..</span><span class="si">%s</span><span class="s1">.hdr&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                        <span class="n">t</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">view</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">wg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="p">)</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">265</span><span class="p">:</span>
+                    <span class="c1"># file doesn&#39;t exist or is smaller than 265 bytes</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="DaylightCoeffImageBased.is_sun_mtx_created"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.daylightcoeff.html#honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.is_sun_mtx_created">[docs]</a>    <span class="k">def</span> <span class="nf">is_sun_mtx_created</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">study_folder</span><span class="p">,</span> <span class="n">view</span><span class="p">,</span> <span class="n">wg</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if hdr images for daylight matrix are already created.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">count</span><span class="p">,</span> <span class="n">h</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sky_matrix</span><span class="o">.</span><span class="n">hoys</span><span class="p">):</span>
+            <span class="n">fp</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">study_folder</span><span class="p">,</span> <span class="s1">&#39;result/dc/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">.hdr&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="s1">&#39;isun&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%04d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">count</span><span class="p">,</span> <span class="n">view</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">wg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">265</span><span class="p">:</span>
+                <span class="c1"># file doesn&#39;t exist or is smaller than 265 bytes</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="DaylightCoeffImageBased.is_hdr_mtx_created"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.daylightcoeff.html#honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.is_hdr_mtx_created">[docs]</a>    <span class="k">def</span> <span class="nf">is_hdr_mtx_created</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">study_folder</span><span class="p">,</span> <span class="n">view</span><span class="p">,</span> <span class="n">wg</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">stype</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if hourly hdr images for daylight matrix are already created.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">count</span><span class="p">,</span> <span class="n">h</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sky_matrix</span><span class="o">.</span><span class="n">hoys</span><span class="p">):</span>
+            <span class="n">fp</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">study_folder</span><span class="p">,</span> <span class="s1">&#39;result/hdr/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">.hdr&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">stype</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%04d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">view</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">wg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">265</span><span class="p">:</span>
+                <span class="c1"># file doesn&#39;t exist or is smaller than 265 bytes</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="DaylightCoeffImageBased.write"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.daylightcoeff.html#honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_folder</span><span class="p">,</span> <span class="n">project_name</span><span class="o">=</span><span class="s1">&#39;untitled&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write analysis files to target folder.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            target_folder: Path to parent folder. Files will be created under</span>
+<span class="sd">                target_folder/gridbased. use self.sub_folder to change subfolder name.</span>
+<span class="sd">            project_name: Name of this project as a string.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Full path to command.bat</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># 0.prepare target folder</span>
+        <span class="c1"># create main folder target_folder/project_name</span>
+        <span class="n">project_folder</span> <span class="o">=</span> \
+            <span class="nb">super</span><span class="p">(</span><span class="n">GenericImageBased</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">write_content</span><span class="p">(</span>
+                <span class="n">target_folder</span><span class="p">,</span> <span class="n">project_name</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="n">subfolders</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;view&#39;</span><span class="p">,</span> <span class="s1">&#39;result/dc&#39;</span><span class="p">,</span> <span class="s1">&#39;result/hdr&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;result/dc/total&#39;</span><span class="p">,</span> <span class="s1">&#39;result/dc/direct&#39;</span><span class="p">,</span> <span class="s1">&#39;result/dc/isun&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;result/dc/refmap&#39;</span><span class="p">,</span> <span class="s1">&#39;result/hdr/total&#39;</span><span class="p">,</span> <span class="s1">&#39;result/hdr/direct&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;result/hdr/sun&#39;</span><span class="p">,</span> <span class="s1">&#39;result/hdr/combined&#39;</span><span class="p">,</span> <span class="s1">&#39;result/hdr/isun&#39;</span><span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="c1"># write geometry and material files</span>
+        <span class="n">opqfiles</span><span class="p">,</span> <span class="n">glzfiles</span><span class="p">,</span> <span class="n">wgsfiles</span> <span class="o">=</span> <span class="n">write_rad_files_daylight_coeff</span><span class="p">(</span>
+            <span class="n">project_folder</span> <span class="o">+</span> <span class="s1">&#39;/scene&#39;</span><span class="p">,</span> <span class="n">project_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">opaque_rad_file</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">glazing_rad_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">window_groups_rad_files</span>
+        <span class="p">)</span>
+        <span class="c1"># additional radiance files added to the recipe as scene</span>
+        <span class="n">extrafiles</span> <span class="o">=</span> <span class="n">write_extra_files</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="p">,</span> <span class="n">project_folder</span> <span class="o">+</span> <span class="s1">&#39;/scene&#39;</span><span class="p">)</span>
+
+        <span class="c1"># reset self.result_files</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_result_files</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">view_count</span><span class="p">)]</span>
+
+        <span class="c1"># 1.write views</span>
+        <span class="n">view_files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_views</span><span class="p">(</span><span class="n">project_folder</span> <span class="o">+</span> <span class="s1">&#39;/view&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">header</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="n">project_folder</span><span class="p">))</span>
+
+        <span class="c1"># # 2.1.Create sky matrix.</span>
+        <span class="c1"># # 2.2. Create sun matrix</span>
+        <span class="n">skycommands</span><span class="p">,</span> <span class="n">skyfiles</span> <span class="o">=</span> <span class="n">get_commands_sky</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky_matrix</span><span class="p">,</span>
+                                                 <span class="n">reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">sky_mtx_total</span><span class="p">,</span> <span class="n">sky_mtx_direct</span><span class="p">,</span> <span class="n">analemma</span><span class="p">,</span> <span class="n">sunlist</span><span class="p">,</span> <span class="n">analemmaMtx</span> <span class="o">=</span> <span class="n">skyfiles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">skycommands</span><span class="p">)</span>
+
+        <span class="c1"># for each window group - calculate total, direct and direct-analemma results</span>
+        <span class="c1"># I can just add fenestration rad files here and that will work!</span>
+
+        <span class="c1"># calculate the contribution of glazing if any with all window groups blacked</span>
+        <span class="c1"># this is a hack. A better solution is to create a HBDynamicSurface from glazing</span>
+        <span class="c1"># surfaces. The current limitation is that HBDynamicSurface can&#39;t have several</span>
+        <span class="c1"># surfaces with different materials.</span>
+        <span class="n">all_window_groups</span> <span class="o">=</span> <span class="p">[</span><span class="n">glz_srf_to_window_group</span><span class="p">()]</span>
+        <span class="n">all_window_groups</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window_groups</span><span class="p">)</span>
+        <span class="n">all_wgs_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">glzfiles</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">wgsfiles</span><span class="p">)</span>
+
+        <span class="c1"># create the base octree for the scene</span>
+        <span class="c1"># TODO(mostapha): this should be fine for most of the cases but</span>
+        <span class="c1"># if one of the window groups has major material change in a step</span>
+        <span class="c1"># that won&#39;t be included in this step.</span>
+        <span class="c1"># add material file</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">blkmaterial</span> <span class="o">=</span> <span class="p">[</span><span class="n">wgsfiles</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">fpblk</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+            <span class="c1"># no window groups</span>
+            <span class="n">blkmaterial</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># add all the blacked window groups but the one in use</span>
+        <span class="c1"># and finally add non-window group glazing as black</span>
+        <span class="n">wgsblacked</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">fpblk</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">wgsfiles</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">glzfiles</span><span class="o">.</span><span class="n">fpblk</span><span class="p">)</span>
+
+        <span class="n">scene_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">filegroups</span> <span class="ow">in</span> <span class="p">(</span><span class="n">opqfiles</span><span class="o">.</span><span class="n">fp</span><span class="p">,</span> <span class="n">glzfiles</span><span class="o">.</span><span class="n">fp</span><span class="p">,</span> <span class="n">extrafiles</span><span class="o">.</span><span class="n">fp</span><span class="p">)</span>
+                       <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">filegroups</span><span class="p">]</span>
+        <span class="n">oct_scene_files</span> <span class="o">=</span> <span class="n">scene_files</span> <span class="o">+</span> <span class="n">blkmaterial</span> <span class="o">+</span> <span class="n">wgsblacked</span>
+
+        <span class="n">oc</span> <span class="o">=</span> <span class="n">Oconv</span><span class="p">(</span><span class="n">project_name</span><span class="p">)</span>
+        <span class="n">oc</span><span class="o">.</span><span class="n">scene_files</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">)</span>
+                               <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">oct_scene_files</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">oc</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+
+        <span class="c1"># # 4.2.prepare vwray</span>
+        <span class="k">for</span> <span class="n">viewCount</span><span class="p">,</span> <span class="p">(</span><span class="n">view</span><span class="p">,</span> <span class="n">view_file</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">izip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">views</span><span class="p">,</span> <span class="n">view_files</span><span class="p">)):</span>
+            <span class="c1"># create the reference map file</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;:: calculation for view: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">view</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;:: 0 reference map&#39;</span><span class="p">)</span>
+
+            <span class="n">refmapfilename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_map.hdr&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">view</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">refmapfilepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;result/dc/refmap&#39;</span><span class="p">,</span> <span class="n">refmapfilename</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">reuse_daylight_mtx</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_name</span><span class="p">,</span> <span class="s1">&#39;result/dc/refmap&#39;</span><span class="p">,</span> <span class="n">refmapfilename</span><span class="p">)):</span>
+                <span class="n">rfm</span> <span class="o">=</span> <span class="n">create_reference_map_command</span><span class="p">(</span>
+                    <span class="n">view</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">view_file</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">),</span>
+                    <span class="s1">&#39;result/dc/refmap&#39;</span><span class="p">,</span> <span class="n">oc</span><span class="o">.</span><span class="n">output_file</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rfm</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+            <span class="c1"># Step1: Create the view matrix.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;:: 1 view sampling&#39;</span><span class="p">)</span>
+            <span class="n">view_info_file</span><span class="p">,</span> <span class="n">vwr_samp</span> <span class="o">=</span> <span class="n">image_based_view_sampling_commands</span><span class="p">(</span>
+                <span class="n">project_folder</span><span class="p">,</span> <span class="n">view</span><span class="p">,</span> <span class="n">view_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vwrays_parameters</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vwr_samp</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+
+            <span class="c1"># set up the geometries</span>
+            <span class="k">for</span> <span class="n">count</span><span class="p">,</span> <span class="n">wg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">all_window_groups</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">wgsfiles</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">blkmaterial</span> <span class="o">=</span> <span class="p">[</span><span class="n">wgsfiles</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">fpblk</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+                        <span class="n">wgsblacked</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">fpblk</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">wgsfiles</span><span class="p">)]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">blkmaterial</span> <span class="o">=</span> <span class="p">[]</span>
+                        <span class="n">wgsblacked</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># add material file</span>
+                    <span class="n">blkmaterial</span> <span class="o">=</span> <span class="p">[</span><span class="n">all_wgs_files</span><span class="p">[</span><span class="n">count</span><span class="p">]</span><span class="o">.</span><span class="n">fpblk</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+                    <span class="c1"># add all the blacked window groups but the one in use</span>
+                    <span class="c1"># and finally add non-window group glazing as black</span>
+                    <span class="n">wgsblacked</span> <span class="o">=</span> \
+                        <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">fpblk</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">wgsfiles</span><span class="p">)</span>
+                         <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="n">count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">glzfiles</span><span class="o">.</span><span class="n">fpblk</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">scount</span><span class="p">,</span> <span class="n">state</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">wg</span><span class="o">.</span><span class="n">states</span><span class="p">):</span>
+                    <span class="c1"># 2.3.Generate daylight coefficients using rfluxmtx</span>
+                    <span class="c1"># collect list of radiance files in the scene for both total</span>
+                    <span class="c1"># and direct</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">:: calculation for </span><span class="si">{}</span><span class="s1"> window group </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">wg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                                                         <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="c1"># normal glazing</span>
+                        <span class="n">non_blacked_wgfiles</span> <span class="o">=</span> <span class="n">all_wgs_files</span><span class="p">[</span><span class="n">count</span><span class="p">]</span><span class="o">.</span><span class="n">fp</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">non_blacked_wgfiles</span> <span class="o">=</span> <span class="p">(</span><span class="n">all_wgs_files</span><span class="p">[</span><span class="n">count</span><span class="p">]</span><span class="o">.</span><span class="n">fp</span><span class="p">[</span><span class="n">scount</span><span class="p">],)</span>
+
+                    <span class="n">rflux_scene</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">f</span> <span class="k">for</span> <span class="n">fl</span> <span class="ow">in</span>
+                        <span class="p">(</span><span class="n">non_blacked_wgfiles</span><span class="p">,</span> <span class="n">opqfiles</span><span class="o">.</span><span class="n">fp</span><span class="p">,</span> <span class="n">extrafiles</span><span class="o">.</span><span class="n">fp</span><span class="p">,</span>
+                         <span class="n">blkmaterial</span><span class="p">,</span> <span class="n">wgsblacked</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fl</span><span class="p">)</span>
+
+                    <span class="n">rflux_scene_blacked</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">f</span> <span class="k">for</span> <span class="n">fl</span> <span class="ow">in</span>
+                        <span class="p">(</span><span class="n">non_blacked_wgfiles</span><span class="p">,</span> <span class="n">opqfiles</span><span class="o">.</span><span class="n">fpblk</span><span class="p">,</span> <span class="n">extrafiles</span><span class="o">.</span><span class="n">fpblk</span><span class="p">,</span>
+                         <span class="n">blkmaterial</span><span class="p">,</span> <span class="n">wgsblacked</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fl</span><span class="p">)</span>
+
+                    <span class="n">sender</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
+
+                    <span class="n">ground_file_format</span> <span class="o">=</span> <span class="s1">&#39;result/dc/total/</span><span class="si">%03d</span><span class="s1">_</span><span class="si">%s</span><span class="s1">..</span><span class="si">%s</span><span class="s1">..</span><span class="si">%s</span><span class="s1">.hdr&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                        <span class="mi">1</span> <span class="o">+</span> <span class="mi">144</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sky_matrix</span><span class="o">.</span><span class="n">sky_density</span> <span class="o">**</span> <span class="mi">2</span><span class="p">),</span>
+                        <span class="n">view</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">wg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span>
+                    <span class="p">)</span>
+
+                    <span class="n">sky_file_format</span> <span class="o">=</span> <span class="s1">&#39;result/dc/total/</span><span class="si">%03d</span><span class="s1">_</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">.hdr&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">view</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">wg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+                    <span class="n">receiver</span> <span class="o">=</span> <span class="n">sky_receiver</span><span class="p">(</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                            <span class="n">project_folder</span><span class="p">,</span>
+                            <span class="s1">&#39;sky/rfluxSkyTotal..</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">.rad&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                <span class="n">wg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">)),</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">sky_matrix</span><span class="o">.</span><span class="n">sky_density</span><span class="p">,</span> <span class="n">ground_file_format</span><span class="p">,</span> <span class="n">sky_file_format</span>
+                    <span class="p">)</span>
+
+                    <span class="n">ground_file_format</span> <span class="o">=</span> <span class="s1">&#39;result/dc/direct/</span><span class="si">%03d</span><span class="s1">_</span><span class="si">%s</span><span class="s1">..</span><span class="si">%s</span><span class="s1">..</span><span class="si">%s</span><span class="s1">.hdr&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                        <span class="mi">1</span> <span class="o">+</span> <span class="mi">144</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sky_matrix</span><span class="o">.</span><span class="n">sky_density</span> <span class="o">**</span> <span class="mi">2</span><span class="p">),</span>
+                        <span class="n">view</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">wg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span>
+                    <span class="p">)</span>
+
+                    <span class="n">sky_file_format</span> <span class="o">=</span> <span class="s1">&#39;result/dc/direct/</span><span class="si">%03d</span><span class="s1">_</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">.hdr&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">view</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">wg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+                    <span class="n">receiver_dir</span> <span class="o">=</span> <span class="n">sky_receiver</span><span class="p">(</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span>
+                                     <span class="s1">&#39;sky/rfluxSkyDirect..</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">.rad&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                         <span class="n">wg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">)),</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">sky_matrix</span><span class="o">.</span><span class="n">sky_density</span><span class="p">,</span> <span class="n">ground_file_format</span><span class="p">,</span> <span class="n">sky_file_format</span>
+                    <span class="p">)</span>
+
+                    <span class="n">rad_files_blacked</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">)</span>
+                                              <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">rflux_scene_blacked</span><span class="p">)</span>
+                    <span class="c1"># Daylight matrix</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">reuse_daylight_mtx</span> <span class="ow">or</span> <span class="ow">not</span> \
+                            <span class="bp">self</span><span class="o">.</span><span class="n">is_daylight_mtx_created</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="n">view</span><span class="p">,</span> <span class="n">wg</span><span class="p">,</span>
+                                                         <span class="n">state</span><span class="p">):</span>
+
+                        <span class="bp">self</span><span class="o">.</span><span class="n">reuse_daylight_mtx</span> <span class="o">=</span> <span class="kc">False</span>
+
+                        <span class="n">rad_files</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">)</span>
+                                          <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">rflux_scene</span><span class="p">)</span>
+
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                            <span class="s1">&#39;:: :: 1. daylight matrix </span><span class="si">{}</span><span class="s1">, </span><span class="si">{}</span><span class="s1"> &gt; state </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                <span class="n">view</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">wg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                        <span class="p">)</span>
+
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;:: :: 1.1 scene daylight matrix&#39;</span><span class="p">)</span>
+
+                        <span class="c1"># output pattern is set in receiver</span>
+                        <span class="n">rflux</span> <span class="o">=</span> <span class="n">image_based_view_coeff_matrix_commands</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">receiver</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">),</span>
+                            <span class="n">rad_files</span><span class="p">,</span> <span class="n">sender</span><span class="p">,</span> <span class="n">view_info_file</span><span class="p">,</span>
+                            <span class="n">view_file</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">vwr_samp</span><span class="o">.</span><span class="n">output_file</span><span class="p">),</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">daylight_mtx_parameters</span><span class="p">)</span>
+
+                        <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rflux</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span>
+                            <span class="s1">&#39;reusing the dalight matrix for </span><span class="si">{}</span><span class="s1">:</span><span class="si">{}</span><span class="s1"> from &#39;</span>
+                            <span class="s1">&#39;the previous study.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">wg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+
+                    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">reuse_daylight_mtx</span> <span class="ow">or</span> <span class="ow">not</span> \
+                            <span class="bp">self</span><span class="o">.</span><span class="n">is_sun_mtx_created</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="n">view</span><span class="p">,</span> <span class="n">wg</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;:: :: 1.2 blacked scene daylight matrix&#39;</span><span class="p">)</span>
+
+                        <span class="n">ab</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">daylight_mtx_parameters</span><span class="o">.</span><span class="n">ambient_bounces</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">daylight_mtx_parameters</span><span class="o">.</span><span class="n">ambient_bounces</span> <span class="o">=</span> <span class="mi">1</span>
+
+                        <span class="c1"># output pattern is set in receiver</span>
+                        <span class="n">rflux_direct</span> <span class="o">=</span> <span class="n">image_based_view_coeff_matrix_commands</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">receiver_dir</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">),</span>
+                            <span class="n">rad_files_blacked</span><span class="p">,</span> <span class="n">sender</span><span class="p">,</span> <span class="n">view_info_file</span><span class="p">,</span>
+                            <span class="n">view_file</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">vwr_samp</span><span class="o">.</span><span class="n">output_file</span><span class="p">),</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">daylight_mtx_parameters</span><span class="p">)</span>
+
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rflux_direct</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;:: :: 1.3 blacked scene analemma matrix&#39;</span><span class="p">)</span>
+
+                        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;nt&#39;</span><span class="p">:</span>
+                            <span class="n">output_filename_format</span> <span class="o">=</span> \
+                                <span class="s1">&#39; result/dc/isun/</span><span class="si">%%</span><span class="s1">04d_</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">.hdr&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                    <span class="n">view</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">wg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">output_filename_format</span> <span class="o">=</span> \
+                                <span class="s1">&#39; result/dc/isun/</span><span class="si">%04d</span><span class="s1">_</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">.hdr&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                    <span class="n">view</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">wg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+                        <span class="n">sun_commands</span> <span class="o">=</span> <span class="n">imaged_based_sun_coeff_matrix_commands</span><span class="p">(</span>
+                            <span class="n">output_filename_format</span><span class="p">,</span> <span class="n">view</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">vwr_samp</span><span class="o">.</span><span class="n">output_file</span><span class="p">),</span>
+                            <span class="n">rad_files_blacked</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">analemma</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">),</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">sunlist</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">))</span>
+
+                        <span class="c1"># delete the files if they are already created</span>
+                        <span class="c1"># rcontrib won&#39;t overwrite the files if they already exist</span>
+                        <span class="k">for</span> <span class="n">hourcount</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sky_matrix</span><span class="o">.</span><span class="n">hoys</span><span class="p">)):</span>
+                            <span class="n">sf</span> <span class="o">=</span> <span class="s1">&#39;result/dc/isun/</span><span class="si">{:04d}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">.hdr&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                <span class="n">hourcount</span><span class="p">,</span> <span class="n">view</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">wg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span>
+                            <span class="p">)</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">fp</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="n">sf</span><span class="p">)</span>
+                                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+                            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                                <span class="c1"># failed to delete the file</span>
+                                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fp</span><span class="p">):</span>
+                                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Failed to remove </span><span class="si">{}</span><span class="s1">:</span><span class="se">\n</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sf</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+                                              <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="n">sun_commands</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">daylight_mtx_parameters</span><span class="o">.</span><span class="n">ambient_bounces</span> <span class="o">=</span> <span class="n">ab</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span>
+                            <span class="s1">&#39;reusing the sun matrix for </span><span class="si">{}</span><span class="s1">:</span><span class="si">{}</span><span class="s1"> from &#39;</span>
+                            <span class="s1">&#39;the previous study.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">wg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+
+                    <span class="c1"># generate hourly images</span>
+                    <span class="k">if</span> <span class="n">skycommands</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">reuse_daylight_mtx</span> <span class="ow">or</span> <span class="ow">not</span> \
+                        <span class="bp">self</span><span class="o">.</span><span class="n">is_hdr_mtx_created</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="n">view</span><span class="p">,</span> <span class="n">wg</span><span class="p">,</span>
+                                                <span class="n">state</span><span class="p">,</span> <span class="s1">&#39;total&#39;</span><span class="p">):</span>
+                        <span class="c1"># Generate resultsFile</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                            <span class="s1">&#39;:: :: 2.1.0 total daylight matrix calculations&#39;</span><span class="p">)</span>
+                        <span class="n">dct</span> <span class="o">=</span> <span class="n">image_based_view_matrix_calculation</span><span class="p">(</span>
+                            <span class="n">view</span><span class="p">,</span> <span class="n">wg</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">sky_mtx_total</span><span class="p">,</span> <span class="s1">&#39;total&#39;</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dct</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span>
+                            <span class="s1">&#39;reusing the total dalight matrix for </span><span class="si">{}</span><span class="s1">:</span><span class="si">{}</span><span class="s1"> from &#39;</span>
+                            <span class="s1">&#39;the previous study.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">wg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+
+                    <span class="k">if</span> <span class="n">skycommands</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">reuse_daylight_mtx</span> <span class="ow">or</span> <span class="ow">not</span> \
+                        <span class="bp">self</span><span class="o">.</span><span class="n">is_hdr_mtx_created</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="n">view</span><span class="p">,</span> <span class="n">wg</span><span class="p">,</span>
+                                                <span class="n">state</span><span class="p">,</span> <span class="s1">&#39;direct&#39;</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;:: :: 2.2.0 direct matrix calculations&#39;</span><span class="p">)</span>
+                        <span class="n">dct_direct</span> <span class="o">=</span> <span class="n">image_based_view_matrix_calculation</span><span class="p">(</span>
+                            <span class="n">view</span><span class="p">,</span> <span class="n">wg</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">sky_mtx_direct</span><span class="p">,</span> <span class="s1">&#39;direct&#39;</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dct_direct</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span>
+                            <span class="s1">&#39;reusing the direct dalight matrix for </span><span class="si">{}</span><span class="s1">:</span><span class="si">{}</span><span class="s1"> from &#39;</span>
+                            <span class="s1">&#39;the previous study.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">wg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+
+                    <span class="k">if</span> <span class="n">skycommands</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">reuse_daylight_mtx</span> <span class="ow">or</span> <span class="ow">not</span> \
+                        <span class="bp">self</span><span class="o">.</span><span class="n">is_hdr_mtx_created</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="n">view</span><span class="p">,</span> <span class="n">wg</span><span class="p">,</span>
+                                                <span class="n">state</span><span class="p">,</span> <span class="s1">&#39;sun&#39;</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                            <span class="s1">&#39;:: :: 2.3.0 enhanced direct matrix calculations&#39;</span><span class="p">)</span>
+                        <span class="n">dct_sun</span> <span class="o">=</span> <span class="n">image_based_view_matrix_calculation</span><span class="p">(</span>
+                            <span class="n">view</span><span class="p">,</span> <span class="n">wg</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">analemmaMtx</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">),</span> <span class="s1">&#39;isun&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dct_sun</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+
+                        <span class="c1"># multiply the sun matrix with the reference map</span>
+                        <span class="c1"># TODO: move this to a separate function</span>
+                        <span class="c1"># TODO: write the loop as a for loop in bat/bash file</span>
+                        <span class="n">par</span> <span class="o">=</span> <span class="n">PcombParameters</span><span class="p">()</span>
+                        <span class="n">refmap_image</span> <span class="o">=</span> <span class="n">PcombImage</span><span class="p">(</span><span class="n">input_image_file</span><span class="o">=</span><span class="n">refmapfilepath</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;nt&#39;</span><span class="p">:</span>
+                            <span class="n">par</span><span class="o">.</span><span class="n">expression</span> <span class="o">=</span> <span class="s1">&#39;&quot;lo=li(1)*li(2)&quot;&#39;</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">par</span><span class="o">.</span><span class="n">expression</span> <span class="o">=</span> <span class="s2">&quot;&#39;lo=li(1)*li(2)&#39;&quot;</span>
+
+                        <span class="k">for</span> <span class="n">hourcount</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sky_matrix</span><span class="o">.</span><span class="n">hoys</span><span class="p">)):</span>
+                            <span class="n">inp</span> <span class="o">=</span> <span class="s1">&#39;result/hdr/isun/</span><span class="si">{:04d}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">.hdr&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                <span class="n">hourcount</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">view</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">wg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span>
+                            <span class="p">)</span>
+                            <span class="n">out</span> <span class="o">=</span> <span class="s1">&#39;result/hdr/sun/</span><span class="si">{:04d}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">.hdr&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                <span class="n">hourcount</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">view</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">wg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span>
+                            <span class="p">)</span>
+                            <span class="n">images</span> <span class="o">=</span> <span class="n">PcombImage</span><span class="p">(</span><span class="n">input_image_file</span><span class="o">=</span><span class="n">inp</span><span class="p">),</span> <span class="n">refmap_image</span>
+
+                            <span class="n">pcb</span> <span class="o">=</span> <span class="n">Pcomb</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">par</span><span class="p">)</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pcb</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span>
+                            <span class="s1">&#39;reusing the enhanced direct dalight matrix for &#39;</span>
+                            <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:</span><span class="si">{}</span><span class="s1"> from the previous study.&#39;</span>
+                            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">wg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+
+                    <span class="n">result_files</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                        <span class="n">project_folder</span><span class="p">,</span>
+                        <span class="s1">&#39;result/hdr/</span><span class="si">%s</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">.hdr&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="s1">&#39;</span><span class="si">%04d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">view</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">wg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+                        <span class="k">for</span> <span class="n">count</span><span class="p">,</span> <span class="n">h</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sky_matrix</span><span class="o">.</span><span class="n">hoys</span><span class="p">)</span>
+                    <span class="p">)</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_result_files</span><span class="p">[</span><span class="n">viewCount</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="p">(</span><span class="n">wg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">result_files</span><span class="p">))</span>
+
+        <span class="c1"># # 4.3 write batch file</span>
+        <span class="n">batch_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="s2">&quot;commands.bat&quot;</span><span class="p">)</span>
+
+        <span class="n">write_to_file</span><span class="p">(</span><span class="n">batch_file</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="p">))</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Files are written to: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">project_folder</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">batch_file</span></div>
+
+<div class="viewcode-block" id="DaylightCoeffImageBased.results"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.daylightcoeff.html#honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.results">[docs]</a>    <span class="k">def</span> <span class="nf">results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return results for this analysis.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_isCalculated</span><span class="p">,</span> \
+            <span class="s2">&quot;You haven&#39;t run the Recipe yet. Use self.run &quot;</span> <span class="o">+</span> \
+            <span class="s2">&quot;to run the analysis before loading the results.&quot;</span>
+        <span class="n">hoys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky_matrix</span><span class="o">.</span><span class="n">hoys</span>
+
+        <span class="k">for</span> <span class="n">viewCount</span><span class="p">,</span> <span class="n">viewResults</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_result_files</span><span class="p">):</span>
+            <span class="n">imgc</span> <span class="o">=</span> <span class="n">ImageCollection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">views</span><span class="p">[</span><span class="n">viewCount</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">source</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">viewResults</span><span class="p">:</span>
+            <span class="n">source_files</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+                <span class="n">fpt</span> <span class="o">=</span> <span class="n">i</span> <span class="o">%</span> <span class="s1">&#39;total&#39;</span>
+                <span class="n">fpd</span> <span class="o">=</span> <span class="n">i</span> <span class="o">%</span> <span class="s1">&#39;direct&#39;</span>
+                <span class="n">fps</span> <span class="o">=</span> <span class="n">i</span> <span class="o">%</span> <span class="s1">&#39;sun&#39;</span>
+                <span class="n">source_files</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">fpt</span><span class="p">,</span> <span class="n">fpd</span><span class="p">,</span> <span class="n">fps</span><span class="p">))</span>
+
+            <span class="n">imgc</span><span class="o">.</span><span class="n">add_coupled_image_files</span><span class="p">(</span><span class="n">source_files</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+
+        <span class="c1"># TODO(mostapha): Add properties to the class for output file addresses</span>
+        <span class="n">imgc</span><span class="o">.</span><span class="n">output_folder</span> <span class="o">=</span> <span class="n">fpt</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;result/hdr&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;result/hdr/combined&#39;</span>
+        <span class="k">yield</span> <span class="n">imgc</span></div>
+
+<div class="viewcode-block" id="DaylightCoeffImageBased.ToString"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.daylightcoeff.html#honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.ToString">[docs]</a>    <span class="k">def</span> <span class="nf">ToString</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwrite .NET ToString method.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Represent grid based recipe.&quot;&quot;&quot;</span>
+        <span class="n">_analysisType</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;Illuminance&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;Radiation&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;Luminance&quot;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">#Views: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> \
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+             <span class="n">_analysisType</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_type</span><span class="p">],</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">view_count</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

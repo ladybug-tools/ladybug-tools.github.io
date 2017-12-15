@@ -1,0 +1,547 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.command.rfluxmtx &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../index.html">
+    <img class="logo" src="../../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.command.rfluxmtx</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+
+<span class="kn">from</span> <span class="nn">._commandbase</span> <span class="k">import</span> <span class="n">RadianceCommand</span>
+<span class="kn">from</span> <span class="nn">..datatype</span> <span class="k">import</span> <span class="n">RadiancePath</span><span class="p">,</span> <span class="n">RadianceValue</span><span class="p">,</span> <span class="n">RadianceNumber</span>
+<span class="kn">from</span> <span class="nn">..datatype</span> <span class="k">import</span> <span class="n">RadianceBoolFlag</span>
+<span class="kn">from</span> <span class="nn">..parameters.rfluxmtx</span> <span class="k">import</span> <span class="n">RfluxmtxParameters</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<span class="c1"># TODO (sarith and mostapha): move parameters such as output_data_format to command</span>
+<span class="c1"># parameters. They are not command inputs.</span>
+<div class="viewcode-block" id="Rfluxmtx"><a class="viewcode-back" href="../../../../honeybee.radiance.command.html#honeybee.radiance.command.rfluxmtx.Rfluxmtx">[docs]</a><span class="k">class</span> <span class="nc">Rfluxmtx</span><span class="p">(</span><span class="n">RadianceCommand</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Radiance Rfluxmtx matrix.&quot;&quot;&quot;</span>
+
+    <span class="n">ground_string</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    void glow ground_glow</span>
+<span class="s2">    0</span>
+<span class="s2">    0</span>
+<span class="s2">    4 1 1 1 0</span>
+
+<span class="s2">    ground_glow source ground</span>
+<span class="s2">    0</span>
+<span class="s2">    0</span>
+<span class="s2">    4 0 0 -1 180</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+    <span class="n">sky_string</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    void glow sky_glow</span>
+<span class="s2">    0</span>
+<span class="s2">    0</span>
+<span class="s2">    4 1 1 1 0</span>
+
+<span class="s2">    sky_glow source sky</span>
+<span class="s2">    0</span>
+<span class="s2">    0</span>
+<span class="s2">    4 0 0 1 180</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Rfluxmtx.control_parameters"><a class="viewcode-back" href="../../../../honeybee.radiance.command.html#honeybee.radiance.command.rfluxmtx.Rfluxmtx.control_parameters">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">control_parameters</span><span class="p">(</span><span class="n">hemi_type</span><span class="o">=</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="n">hemi_up_direction</span><span class="o">=</span><span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Rfluxmtx ControlParameters.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">RfluxmtxControlParameters</span><span class="p">(</span><span class="n">hemi_type</span><span class="p">,</span> <span class="n">hemi_up_direction</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Rfluxmtx.default_sky_ground"><a class="viewcode-back" href="../../../../honeybee.radiance.command.html#honeybee.radiance.command.rfluxmtx.Rfluxmtx.default_sky_ground">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">default_sky_ground</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">sky_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sky_file_format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">ground_file_format</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file_name:This should be the name of the file to which the sky defintion</span>
+<span class="sd">                should be written to.</span>
+
+<span class="sd">            sky_type:The acceptable inputs for hemisphere type are:</span>
+<span class="sd">                    u for uniform.(Usually applicable for ground).\n</span>
+<span class="sd">                    kf for klems full.\n</span>
+<span class="sd">                    kh for klems half.\n</span>
+<span class="sd">                    kq for klems quarter.\n</span>
+<span class="sd">                    rN for Reinhart - Tregenza type skies. N stands for</span>
+<span class="sd">                        subdivisions and defaults to 1.\n</span>
+<span class="sd">                    scN for shirley-chiu subdivisions.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            file_name: Passes back the same file_name that was provided as input.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">sky_param</span> <span class="o">=</span> <span class="n">Rfluxmtx</span><span class="o">.</span><span class="n">control_parameters</span><span class="p">(</span><span class="n">hemi_type</span><span class="o">=</span><span class="n">sky_type</span> <span class="ow">or</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span>
+                                                <span class="n">output_file</span><span class="o">=</span><span class="n">sky_file_format</span><span class="p">)</span>
+
+        <span class="n">ground_param</span> <span class="o">=</span> <span class="n">Rfluxmtx</span><span class="o">.</span><span class="n">control_parameters</span><span class="p">(</span><span class="n">hemi_type</span><span class="o">=</span><span class="s1">&#39;u&#39;</span><span class="p">,</span>
+                                                   <span class="n">output_file</span><span class="o">=</span><span class="n">ground_file_format</span><span class="p">)</span>
+
+        <span class="n">ground_string</span> <span class="o">=</span> <span class="n">Rfluxmtx</span><span class="o">.</span><span class="n">add_control_parameters</span><span class="p">(</span><span class="n">Rfluxmtx</span><span class="o">.</span><span class="n">ground_string</span><span class="p">,</span>
+                                                        <span class="p">{</span><span class="s1">&#39;ground_glow&#39;</span><span class="p">:</span> <span class="n">ground_param</span><span class="p">})</span>
+        <span class="n">sky_string</span> <span class="o">=</span> <span class="n">Rfluxmtx</span><span class="o">.</span><span class="n">add_control_parameters</span><span class="p">(</span><span class="n">Rfluxmtx</span><span class="o">.</span><span class="n">sky_string</span><span class="p">,</span>
+                                                     <span class="p">{</span><span class="s1">&#39;sky_glow&#39;</span><span class="p">:</span> <span class="n">sky_param</span><span class="p">})</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span><span class="k">as</span> <span class="n">skyFile</span><span class="p">:</span>
+            <span class="n">skyFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ground_string</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">sky_string</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">file_name</span></div>
+
+<div class="viewcode-block" id="Rfluxmtx.add_control_parameters"><a class="viewcode-back" href="../../../../honeybee.radiance.command.html#honeybee.radiance.command.rfluxmtx.Rfluxmtx.add_control_parameters">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">add_control_parameters</span><span class="p">(</span><span class="n">input_string</span><span class="p">,</span> <span class="n">modifier_dict</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">input_string</span><span class="p">):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">input_string</span><span class="p">)</span><span class="k">as</span> <span class="n">fileString</span><span class="p">:</span>
+                <span class="n">file_data</span> <span class="o">=</span> <span class="n">fileString</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">file_data</span> <span class="o">=</span> <span class="n">input_string</span>
+
+        <span class="n">output_string</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">check_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">modifier_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">lines</span> <span class="ow">in</span> <span class="n">file_data</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">modifier_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">lines</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">check_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="ow">and</span> \
+                        <span class="ow">not</span> <span class="n">lines</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">):</span>
+                    <span class="n">output_string</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+                    <span class="n">check_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">output_string</span> <span class="o">+=</span> <span class="n">lines</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">check_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">assert</span> <span class="n">value</span><span class="p">,</span> <span class="s2">&quot;The modifier </span><span class="si">%s</span><span class="s2"> was not found in the string specified&quot;</span> <span class="o">%</span> <span class="n">key</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">input_string</span><span class="p">):</span>
+            <span class="n">new_output_file</span> <span class="o">=</span> <span class="n">input_string</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_cp_added&#39;</span> <span class="o">+</span> <span class="n">input_string</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">new_output_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">newoutput</span><span class="p">:</span>
+                <span class="n">newoutput</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">output_string</span><span class="p">)</span>
+            <span class="n">output_string</span> <span class="o">=</span> <span class="n">new_output_file</span>
+
+        <span class="k">return</span> <span class="n">output_string</span></div>
+
+<div class="viewcode-block" id="Rfluxmtx.check_for_rflux_parameters"><a class="viewcode-back" href="../../../../honeybee.radiance.command.html#honeybee.radiance.command.rfluxmtx.Rfluxmtx.check_for_rflux_parameters">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">check_for_rflux_parameters</span><span class="p">(</span><span class="n">file_val</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_val</span><span class="p">)</span><span class="k">as</span> <span class="n">rfluxFile</span><span class="p">:</span>
+            <span class="n">rflux_string</span> <span class="o">=</span> <span class="n">rfluxFile</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="s1">&#39;#@rfluxmtx&#39;</span> <span class="ow">in</span> <span class="n">rflux_string</span><span class="p">,</span> \
+            <span class="s2">&quot;The file </span><span class="si">%s</span><span class="s2"> does not have any rfluxmtx control parameters.&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+    <span class="c1"># sender = RadiancePath(&#39;sender&#39;,&#39;sender file&#39;)</span>
+    <span class="n">receiver_file</span> <span class="o">=</span> <span class="n">RadiancePath</span><span class="p">(</span><span class="s1">&#39;receiver&#39;</span><span class="p">,</span> <span class="s1">&#39;receiver file&#39;</span><span class="p">)</span>
+    <span class="n">octree_file</span> <span class="o">=</span> <span class="n">RadiancePath</span><span class="p">(</span><span class="s1">&#39;octree&#39;</span><span class="p">,</span> <span class="s1">&#39;octree file&#39;</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="s1">&#39;.oct&#39;</span><span class="p">)</span>
+    <span class="n">output_matrix</span> <span class="o">=</span> <span class="n">RadiancePath</span><span class="p">(</span><span class="s1">&#39;output_matrix&#39;</span><span class="p">,</span> <span class="s1">&#39;output Matrix File&#39;</span><span class="p">)</span>
+    <span class="n">view_rays_file</span> <span class="o">=</span> <span class="n">RadiancePath</span><span class="p">(</span><span class="s1">&#39;view_rays_file&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;file containing ray samples generated by vwrays&#39;</span><span class="p">)</span>
+    <span class="n">output_data_format</span> <span class="o">=</span> <span class="n">RadianceValue</span><span class="p">(</span><span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;output data format&#39;</span><span class="p">,</span> <span class="n">is_joined</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">verbose</span> <span class="o">=</span> <span class="n">RadianceBoolFlag</span><span class="p">(</span><span class="s1">&#39;v&#39;</span><span class="p">,</span> <span class="s1">&#39;verbose commands in stdout&#39;</span><span class="p">)</span>
+    <span class="n">num_processors</span> <span class="o">=</span> <span class="n">RadianceNumber</span><span class="p">(</span><span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;number of processors&#39;</span><span class="p">,</span> <span class="n">num_type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="c1"># TODO: This method misses RfluxmtxParameters as an input.</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">receiver_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">octree_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">rad_files</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">points_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_matrix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">view_rays_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">view_info_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_filename_format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">num_processors</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="n">RadianceCommand</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sender</span> <span class="o">=</span> <span class="n">sender</span>
+        <span class="sd">&quot;&quot;&quot;Sender file will be either a rad file containing rfluxmtx variables</span>
+<span class="sd">         or just a - &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">receiver_file</span> <span class="o">=</span> <span class="n">receiver_file</span>
+        <span class="sd">&quot;&quot;&quot;Receiver file will usually be the sky file containing rfluxmtx</span>
+<span class="sd">        variables&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">octree_file</span> <span class="o">=</span> <span class="n">octree_file</span>
+        <span class="sd">&quot;&quot;&quot;Octree file containing the other rad file in the scene.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">rad_files</span> <span class="o">=</span> <span class="n">rad_files</span>
+        <span class="sd">&quot;&quot;&quot;Rad files other than the sender and receiver that are a part of the</span>
+<span class="sd">          scene.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">points_file</span> <span class="o">=</span> <span class="n">points_file</span>
+        <span class="sd">&quot;&quot;&quot;The points file or input vwrays for which the illuminance/luminance</span>
+<span class="sd">        value are to be calculated.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">number_of_points</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="sd">&quot;&quot;&quot;Number of test points. Initially set to 0.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_matrix</span> <span class="o">=</span> <span class="n">output_matrix</span>
+        <span class="sd">&quot;&quot;&quot;The flux matrix file that will be created by rfluxmtx.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">view_rays_file</span> <span class="o">=</span> <span class="n">view_rays_file</span>
+        <span class="sd">&quot;&quot;&quot;File containing ray samples generated from vwrays&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">view_info_file</span> <span class="o">=</span> <span class="n">view_info_file</span>
+        <span class="sd">&quot;&quot;&quot;File containing view dimensions calculated from vwrays.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_filename_format</span> <span class="o">=</span> <span class="n">output_filename_format</span>
+        <span class="sd">&quot;&quot;&quot;Filename format&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_processors</span> <span class="o">=</span> <span class="n">num_processors</span>
+        <span class="sd">&quot;&quot;&quot;Number of processors&quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">output_filename_format</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_filename_format</span>
+
+    <span class="nd">@output_filename_format</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">output_filename_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="c1"># TODO: Add testing logic for this !</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_filename_format</span> <span class="o">=</span> <span class="n">value</span> <span class="ow">or</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">view_info_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_view_info_file</span>
+
+    <span class="nd">@view_info_file</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">view_info_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            The input for this setter is a file containing the view dimensions</span>
+<span class="sd">            calculated through the -d option in rfluxmtx.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">file_name</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">file_name</span><span class="p">),</span>\
+                <span class="s2">&quot;The file </span><span class="si">%s</span><span class="s2"> specified as view_info_file does not exist.&quot;</span> <span class="o">%</span> <span class="n">file_name</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_view_info_file</span> <span class="o">=</span> <span class="n">file_name</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">view_fileName</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_view_fileDimensions</span> <span class="o">=</span> <span class="n">view_fileName</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_view_info_file</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_view_fileDimensions</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">points_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_points_file</span>
+
+    <span class="nd">@points_file</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">points_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">pfile</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">number_of_points</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">pfile</span> <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_points</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: Failed to find the points_file at &quot;</span><span class="si">{}</span><span class="s1">&quot;.&#39;</span>
+                      <span class="s1">&#39; Use number_of_points method to set the number_of_points&#39;</span>
+                      <span class="s1">&#39;separately.&#39;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_points_file</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_points_file</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">rad_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get and set scene files.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rad_files</span>
+
+    <span class="nd">@rad_files</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">rad_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">files</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__rad_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__rad_files</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">rfluxmtx_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rfluxmtx_parameters</span>
+
+    <span class="nd">@rfluxmtx_parameters</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">rfluxmtx_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__rfluxmtx_parameters</span> <span class="o">=</span> <span class="n">parameters</span> <span class="ow">or</span> <span class="n">RfluxmtxParameters</span><span class="p">()</span>
+
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rfluxmtx_parameters</span><span class="p">,</span> <span class="s2">&quot;isRfluxmtxParameters&quot;</span><span class="p">),</span> \
+            <span class="s2">&quot;input rfluxmtx_parameters is not a valid parameters type.&quot;</span>
+
+<div class="viewcode-block" id="Rfluxmtx.to_rad_string"><a class="viewcode-back" href="../../../../honeybee.radiance.command.html#honeybee.radiance.command.rfluxmtx.Rfluxmtx.to_rad_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_rad_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">relative_path</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">octree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">octree_file</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+        <span class="n">octree</span> <span class="o">=</span> <span class="s1">&#39;-i </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">normspace</span><span class="p">(</span><span class="n">octree</span><span class="p">)</span> <span class="k">if</span> <span class="n">octree</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">output_data_format</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_data_format</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+        <span class="n">verbose</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+
+        <span class="n">number_of_processors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_processors</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+        <span class="n">number_of_points</span> <span class="o">=</span> <span class="s1">&#39;-y </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_points</span> \
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_points</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">points_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">points_file</span><span class="p">)</span>
+        <span class="n">points_file</span> <span class="o">=</span> <span class="s1">&#39;&lt; </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">points_file</span> <span class="k">if</span> <span class="n">points_file</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="n">view_file_samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">view_rays_file</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+        <span class="n">view_file_samples</span> <span class="o">=</span> <span class="s1">&#39;&lt; </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">view_file_samples</span> <span class="k">if</span> <span class="n">view_file_samples</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="k">assert</span> <span class="ow">not</span> <span class="p">(</span><span class="n">points_file</span> <span class="ow">and</span> <span class="n">view_file_samples</span><span class="p">),</span>\
+            <span class="s1">&#39;View file and points file cannot be specified at the same time!&#39;</span>
+
+        <span class="n">input_rays</span> <span class="o">=</span> <span class="n">points_file</span> <span class="ow">or</span> <span class="n">view_file_samples</span>
+
+        <span class="n">output_matrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_matrix</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+        <span class="n">output_matrix</span> <span class="o">=</span> <span class="s2">&quot;&gt; </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">output_matrix</span> <span class="k">if</span> <span class="n">output_matrix</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="n">output_filename_format</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_filename_format</span>
+        <span class="n">output_filename_format</span> <span class="o">=</span> <span class="s2">&quot;-o </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">output_filename_format</span> <span class="k">if</span> \
+            <span class="n">output_filename_format</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="c1"># method for adding an input or nothing to the command</span>
+        <span class="k">def</span> <span class="nf">add_to_str</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="n">val</span> <span class="k">if</span> <span class="n">val</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="c1"># Creating the string this way because it might change again in the</span>
+        <span class="c1"># future.</span>
+        <span class="n">rad_string</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">normspace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radbin_path</span><span class="p">,</span> <span class="s1">&#39;rfluxmtx&#39;</span><span class="p">))]</span>
+        <span class="n">rad_string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">add_to_str</span><span class="p">(</span><span class="n">output_data_format</span><span class="p">))</span>
+        <span class="n">rad_string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">add_to_str</span><span class="p">(</span><span class="n">verbose</span><span class="p">))</span>
+        <span class="n">rad_string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">add_to_str</span><span class="p">(</span><span class="n">number_of_processors</span><span class="p">))</span>
+        <span class="n">rad_string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">add_to_str</span><span class="p">(</span><span class="n">number_of_points</span><span class="p">))</span>
+        <span class="n">rad_string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">add_to_str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_view_fileDimensions</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sender</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
+            <span class="n">rad_string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">add_to_str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rfluxmtx_parameters</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># -I and -i options are only valid for pass-through cases</span>
+            <span class="n">rflux_par</span> <span class="o">=</span> <span class="n">add_to_str</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">rfluxmtx_parameters</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="s1">&#39;-I&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="n">rad_string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rflux_par</span><span class="p">)</span>
+        <span class="n">rad_string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">add_to_str</span><span class="p">(</span><span class="n">output_filename_format</span><span class="p">))</span>
+        <span class="n">rad_string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">add_to_str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sender</span><span class="p">))</span>
+        <span class="n">rad_string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">add_to_str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">normspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">receiver_file</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())))</span>
+        <span class="n">rad_string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">add_to_str</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rad_files</span><span class="p">)))</span>
+        <span class="n">rad_string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">add_to_str</span><span class="p">(</span><span class="n">octree</span><span class="p">))</span>
+        <span class="n">rad_string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">add_to_str</span><span class="p">(</span><span class="n">input_rays</span><span class="p">))</span>
+        <span class="n">rad_string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">add_to_str</span><span class="p">(</span><span class="n">output_matrix</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rad_string</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">input_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">receiver_file</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">rad_files</span></div>
+
+
+<div class="viewcode-block" id="RfluxmtxControlParameters"><a class="viewcode-back" href="../../../../honeybee.radiance.command.html#honeybee.radiance.command.rfluxmtx.RfluxmtxControlParameters">[docs]</a><span class="k">class</span> <span class="nc">RfluxmtxControlParameters</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Rfluxmtx ControlParameters.</span>
+
+<span class="sd">    Set the values for hemispheretype, hemisphere up direction and output file</span>
+<span class="sd">    location (optional).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hemi_type</span><span class="o">=</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="n">hemi_up_direction</span><span class="o">=</span><span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init class.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hemisphere_type</span> <span class="o">=</span> <span class="n">hemi_type</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            The acceptable inputs for hemisphere type are:</span>
+<span class="sd">                u for uniform.(Usually applicable for ground).</span>
+<span class="sd">                kf for klems full.</span>
+<span class="sd">                kh for klems half.</span>
+<span class="sd">                kq for klems quarter.</span>
+<span class="sd">                rN for Reinhart - Tregenza type skies. N stands for subdivisions</span>
+<span class="sd">                    and defaults to 1.</span>
+<span class="sd">                scN for shirley-chiu subdivisions.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hemisphere_up_direction</span> <span class="o">=</span> <span class="n">hemi_up_direction</span>
+        <span class="sd">&quot;&quot;&quot;The acceptable inputs for hemisphere direction are %s&quot;&quot;&quot;</span> <span class="o">%</span> \
+            <span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="s1">&#39;-X&#39;</span><span class="p">,</span> <span class="s1">&#39;-Y&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;-Z&#39;</span><span class="p">,</span> <span class="s1">&#39;-x&#39;</span><span class="p">,</span> <span class="s1">&#39;-y&#39;</span><span class="p">,</span> <span class="s1">&#39;-z&#39;</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="n">output_file</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">hemisphere_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hemisphereType</span>
+
+    <span class="nd">@hemisphere_type</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">hemisphere_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Hemisphere type.</span>
+
+<span class="sd">        The acceptable inputs for hemisphere type are:</span>
+<span class="sd">            u for uniform.(Usually applicable for ground).</span>
+<span class="sd">            kf for klems full.</span>
+<span class="sd">            kh for klems half.</span>
+<span class="sd">            kq for klems quarter.</span>
+<span class="sd">            rN for Reinhart - Tregenza type skies. N stands for subdivisions and</span>
+<span class="sd">                defaults to 1.</span>
+<span class="sd">            scN for shirley-chiu subdivisions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;kf&#39;</span><span class="p">,</span> <span class="s1">&#39;kh&#39;</span><span class="p">,</span> <span class="s1">&#39;kq&#39;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_hemisphereType</span> <span class="o">=</span> <span class="n">value</span>
+                <span class="k">return</span>
+            <span class="k">elif</span> <span class="n">value</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">num</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                            <span class="s2">&quot;The format reinhart tregenza type skies is rN .&quot;</span>
+                            <span class="s2">&quot;The value entered was </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">value</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">num</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_hemisphereType</span> <span class="o">=</span> <span class="s1">&#39;r&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">value</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;sc&#39;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">num</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
+                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                            <span class="s2">&quot;The format for ShirleyChiu type values is scN.&quot;</span>
+                            <span class="s2">&quot;The value entered was </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">value</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                        <span class="s2">&quot;The format for ShirleyChiu type values is scN.&quot;</span>
+                        <span class="s2">&quot;The value entered was </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">value</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_hemisphereType</span> <span class="o">=</span> <span class="s1">&#39;sc&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">except_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                The acceptable inputs for hemisphere type are:</span>
+<span class="s2">                    u for uniform.(Usually applicable for ground).</span>
+<span class="s2">                    kf for klems full.</span>
+<span class="s2">                    kh for klems half.</span>
+<span class="s2">                    kq for klems quarter.</span>
+<span class="s2">                    rN for Reinhart - Tregenza type skies. N stands for</span>
+<span class="s2">                        subdivisions and defaults to 1.</span>
+<span class="s2">                    scN for shirley-chiu subdivisions.</span>
+<span class="s2">                The value entered was </span><span class="si">%s</span><span class="s2"></span>
+<span class="s2">                &quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">except_str</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">hemisphere_up_direction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hemisphere_upDirection</span>
+
+    <span class="nd">@hemisphere_up_direction</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">hemisphere_up_direction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;hemisphere direction.</span>
+
+<span class="sd">        The acceptable inputs for hemisphere direction are a tuple with 3 values</span>
+<span class="sd">        or &#39;X&#39;, &#39;Y&#39;, &#39;Z&#39;, &#39;x&#39;, &#39;y&#39;, &#39;z&#39;, &#39;-X&#39;, &#39;-Y&#39;,&#39;-Z&#39;, &#39;-x&#39;, &#39;-y&#39;,&#39;-z&#39;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">allowed_values</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="s1">&#39;-X&#39;</span><span class="p">,</span> <span class="s1">&#39;-Y&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;-Z&#39;</span><span class="p">,</span> <span class="s1">&#39;-x&#39;</span><span class="p">,</span> <span class="s1">&#39;-y&#39;</span><span class="p">,</span> <span class="s1">&#39;-z&#39;</span><span class="p">,</span> <span class="s2">&quot;+X&quot;</span><span class="p">,</span> <span class="s2">&quot;+Y&quot;</span><span class="p">,</span> <span class="s2">&quot;+Z&quot;</span><span class="p">,</span>
+                          <span class="s1">&#39;+x&#39;</span><span class="p">,</span> <span class="s2">&quot;+y&quot;</span><span class="p">,</span> <span class="s2">&quot;+z&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span> \
+                <span class="s1">&#39;Length of emisphereUpDirection vector should be 3.&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hemisphere_upDirection</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="p">))</span>
+
+        <span class="k">elif</span> <span class="n">value</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">allowed_values</span><span class="p">,</span> <span class="s2">&quot;The value for hemisphere_upDirection&quot;</span> \
+                <span class="s2">&quot;should be one of the following: </span><span class="si">%s</span><span class="s2">&quot;</span> \
+                <span class="o">%</span> <span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">allowed_values</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hemisphere_upDirection</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hemisphere_upDirection</span> <span class="o">=</span> <span class="s1">&#39;+Z&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">output_file_spec</span> <span class="o">=</span> <span class="s2">&quot;o=</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">return</span> <span class="s2">&quot;#@rfluxmtx h=</span><span class="si">%s</span><span class="s2"> u=</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hemisphere_type</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">hemisphere_up_direction</span><span class="p">,</span>
+                                            <span class="n">output_file_spec</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

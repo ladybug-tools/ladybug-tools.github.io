@@ -1,0 +1,313 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>butterfly.gradingutil &#8212; Butterfly 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/butterfly.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Butterfly is a python library to create and run advanced computational fluid dynamic (CFD) simulations using OpenFOAM.</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=butterfly&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../butterfly.html">butterfly package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for butterfly.gradingutil</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
+
+
+<div class="viewcode-block" id="secant"><a class="viewcode-back" href="../../butterfly.html#butterfly.gradingutil.secant">[docs]</a><span class="k">def</span> <span class="nf">secant</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">eps</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">ln</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The secant method to solve nonlinear equation to find expansion ratio.</span>
+
+<span class="sd">    From:</span>
+<span class="sd">    http://hplgit.github.io/Programming-for-Computations/pub/p4c/p4c-sphinx-Python/</span>
+<span class="sd">    ._pylight007.html</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">f_x0</span> <span class="o">=</span> <span class="n">find_cc_ratio</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">ln</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">f_x1</span> <span class="o">=</span> <span class="n">find_cc_ratio</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">ln</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">iteration_counter</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="nb">abs</span><span class="p">(</span><span class="n">f_x1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">eps</span> <span class="ow">and</span> <span class="n">iteration_counter</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">denominator</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">f_x1</span> <span class="o">-</span> <span class="n">f_x0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">x1</span> <span class="o">-</span> <span class="n">x0</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="n">f_x1</span><span class="p">)</span> <span class="o">/</span> <span class="n">denominator</span>
+        <span class="k">except</span> <span class="ne">ZeroDivisionError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ZeroDivisionError</span><span class="p">(</span><span class="s1">&#39;Error: denominator zero for x = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="n">x0</span> <span class="o">=</span> <span class="n">x1</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="n">f_x0</span> <span class="o">=</span> <span class="n">f_x1</span>
+        <span class="n">f_x1</span> <span class="o">=</span> <span class="n">find_cc_ratio</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">ln</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+        <span class="n">iteration_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="c1"># Here, either a solution is found, or too many iterations</span>
+    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">f_x1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">eps</span><span class="p">:</span>
+        <span class="n">iteration_counter</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">iteration_counter</span></div>
+
+
+<div class="viewcode-block" id="find_cc_ratio"><a class="viewcode-back" href="../../butterfly.html#butterfly.gradingutil.find_cc_ratio">[docs]</a><span class="k">def</span> <span class="nf">find_cc_ratio</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">ln</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">ds</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">k</span> <span class="o">**</span> <span class="n">n</span><span class="p">)</span> <span class="o">-</span> <span class="n">ln</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">k</span><span class="p">)</span></div>
+
+
+<span class="n">GradientProperties</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;GradientProperties&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;ln&#39;</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;ds&#39;</span><span class="p">,</span> <span class="s1">&#39;de&#39;</span><span class="p">])</span>
+
+
+<div class="viewcode-block" id="grading_by_ds_ccratio_count"><a class="viewcode-back" href="../../butterfly.html#butterfly.gradingutil.grading_by_ds_ccratio_count">[docs]</a><span class="k">def</span> <span class="nf">grading_by_ds_ccratio_count</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate grading properties.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ds: Start cell size</span>
+<span class="sd">        k: Cell-to-cell expansion (or geometric growth ratio)</span>
+<span class="sd">        n: Number of cells</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        grading properties as a namedtuple.</span>
+<span class="sd">            ln: Total length</span>
+<span class="sd">            k: Cell-to-cell expansion (or geometric growth ratio)</span>
+<span class="sd">            r: Total expansion ratio (=bias factor in Ansys Meshing)</span>
+<span class="sd">            n: Number of cells</span>
+<span class="sd">            ds: Start cell size</span>
+<span class="sd">            de: End cell size</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ln</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">ds</span> <span class="o">*</span> <span class="n">k</span> <span class="o">**</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">k</span> <span class="o">**</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">de</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="n">ds</span>
+    <span class="k">return</span> <span class="n">GradientProperties</span><span class="p">(</span><span class="n">ln</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">de</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="grading_by_length_ds_ccratio"><a class="viewcode-back" href="../../butterfly.html#butterfly.gradingutil.grading_by_length_ds_ccratio">[docs]</a><span class="k">def</span> <span class="nf">grading_by_length_ds_ccratio</span><span class="p">(</span><span class="n">ln</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate grading properties.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ln: Total length</span>
+<span class="sd">        ds: Start cell size</span>
+<span class="sd">        k: Cell-to-cell expansion (or geometric growth ratio)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        grading properties as a namedtuple.</span>
+<span class="sd">            ln: Total length</span>
+<span class="sd">            k: Cell-to-cell expansion (or geometric growth ratio)</span>
+<span class="sd">            r: Total expansion ratio (=bias factor in Ansys Meshing)</span>
+<span class="sd">            n: Number of cells</span>
+<span class="sd">            ds: Start cell size</span>
+<span class="sd">            de: End cell size</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">tl</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">tl</span> <span class="o">&lt;</span> <span class="n">ln</span><span class="p">:</span>
+        <span class="n">tl</span> <span class="o">+=</span> <span class="n">ds</span> <span class="o">*</span> <span class="n">k</span> <span class="o">**</span> <span class="n">n</span>
+        <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">n</span> <span class="o">-=</span> <span class="mi">1</span>
+    <span class="n">de</span> <span class="o">=</span> <span class="n">ds</span> <span class="o">*</span> <span class="n">k</span> <span class="o">**</span> <span class="n">n</span>
+    <span class="k">return</span> <span class="n">grading_by_length_ds_de</span><span class="p">(</span><span class="n">ln</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">de</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="grading_by_length_de_ccratio"><a class="viewcode-back" href="../../butterfly.html#butterfly.gradingutil.grading_by_length_de_ccratio">[docs]</a><span class="k">def</span> <span class="nf">grading_by_length_de_ccratio</span><span class="p">(</span><span class="n">ln</span><span class="p">,</span> <span class="n">de</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">min_ds</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate grading properties.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ln: Total length</span>
+<span class="sd">        de: End cell size</span>
+<span class="sd">        k: Cell-to-cell expansion (or geometric growth ratio)</span>
+<span class="sd">        min_ds: Minimum size for start cell size.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        grading properties as a namedtuple.</span>
+<span class="sd">            ln: Total length</span>
+<span class="sd">            k: Cell-to-cell expansion (or geometric growth ratio)</span>
+<span class="sd">            r: Total expansion ratio (=bias factor in Ansys Meshing)</span>
+<span class="sd">            n: Number of cells</span>
+<span class="sd">            ds: Start cell size</span>
+<span class="sd">            de: End cell size</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">k_rev</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">k</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">tl</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">min_ds</span> <span class="o">+</span> <span class="mf">1.0</span>  <span class="c1"># initial value to start the calculation</span>
+    <span class="k">while</span> <span class="n">tl</span> <span class="o">&lt;</span> <span class="n">ln</span> <span class="ow">and</span> <span class="n">ds</span> <span class="o">&gt;</span> <span class="n">min_ds</span><span class="p">:</span>
+        <span class="n">tl</span> <span class="o">+=</span> <span class="n">de</span> <span class="o">*</span> <span class="n">k_rev</span> <span class="o">**</span> <span class="n">n</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">k</span> <span class="o">**</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">de</span> <span class="o">/</span> <span class="n">r</span>
+        <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">n</span> <span class="o">-=</span> <span class="mi">1</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">k</span> <span class="o">**</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">de</span> <span class="o">/</span> <span class="n">r</span>
+    <span class="k">return</span> <span class="n">grading_by_length_ds_de</span><span class="p">(</span><span class="n">ln</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">de</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="grading_by_length_ds_de"><a class="viewcode-back" href="../../butterfly.html#butterfly.gradingutil.grading_by_length_ds_de">[docs]</a><span class="k">def</span> <span class="nf">grading_by_length_ds_de</span><span class="p">(</span><span class="n">ln</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">de</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate grading properties.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ln: Total length</span>
+<span class="sd">        ds: Start cell size</span>
+<span class="sd">        de: End cell size</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        grading properties as a namedtuple.</span>
+<span class="sd">            ln: Total length</span>
+<span class="sd">            k: Cell-to-cell expansion (or geometric growth ratio)</span>
+<span class="sd">            r: Total expansion ratio (=bias factor in Ansys Meshing)</span>
+<span class="sd">            n: Number of cells</span>
+<span class="sd">            ds: Start cell size</span>
+<span class="sd">            de: End cell size</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">de</span> <span class="o">/</span> <span class="n">ds</span>
+    <span class="c1"># try to find the cell count to get to this point</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">tl</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="n">tl</span> <span class="o">&lt;</span> <span class="n">ln</span><span class="p">:</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">r</span> <span class="o">**</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">tl</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">ds</span> <span class="o">*</span> <span class="n">k</span> <span class="o">**</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+        <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">n</span> <span class="o">-=</span> <span class="mi">2</span>
+    <span class="c1"># re-calculate the last option with closest length</span>
+    <span class="n">x0</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">k</span>
+    <span class="n">x1</span> <span class="o">=</span> <span class="n">k</span>
+    <span class="n">eps</span> <span class="o">=</span> <span class="mf">1.0e-6</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">new_k</span><span class="p">,</span> <span class="n">no_iterations</span> <span class="o">=</span> <span class="n">secant</span><span class="p">(</span><span class="n">find_cc_ratio</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">eps</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">ln</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">r</span> <span class="o">**</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">no_iterations</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">new_k</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">r</span> <span class="o">**</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">ln</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">ds</span> <span class="o">*</span> <span class="n">k</span> <span class="o">**</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">k</span> <span class="o">**</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">de</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="n">ds</span>
+    <span class="k">return</span> <span class="n">GradientProperties</span><span class="p">(</span><span class="n">ln</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">de</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="c1"># ds = 2</span>
+    <span class="c1"># k = 1.2</span>
+    <span class="c1"># ln = 1000</span>
+    <span class="c1"># res = grading_by_length_ds_ccratio(ln, ds, k)</span>
+    <span class="c1"># print(res)</span>
+
+    <span class="c1"># de = 159</span>
+    <span class="c1"># k = 1.2</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="mf">0.5</span>
+    <span class="n">de</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">ln</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">grading_by_length_ds_de</span><span class="p">(</span><span class="n">ln</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">de</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+    <span class="c1"># ln = 14.12</span>
+    <span class="c1"># de = 1</span>
+    <span class="c1"># res = grading_by_length_de_ccratio(ln, de, 1.0 / 1.2, 0.01)</span>
+    <span class="c1"># print(res)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

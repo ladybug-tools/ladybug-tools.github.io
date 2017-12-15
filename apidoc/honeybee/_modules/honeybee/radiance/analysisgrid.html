@@ -1,0 +1,997 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.analysisgrid &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../index.html">
+    <img class="logo" src="../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.analysisgrid</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Honeybee PointGroup and TestPointGroup.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">..utilcol</span> <span class="k">import</span> <span class="n">random_name</span>
+<span class="kn">from</span> <span class="nn">..dataoperation</span> <span class="k">import</span> <span class="n">match_data</span>
+<span class="kn">from</span> <span class="nn">..schedule</span> <span class="k">import</span> <span class="n">Schedule</span>
+<span class="kn">from</span> <span class="nn">.analysispoint</span> <span class="k">import</span> <span class="n">AnalysisPoint</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">izip</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span><span class="p">,</span> <span class="n">OrderedDict</span>
+
+
+<div class="viewcode-block" id="EmptyFileError"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.analysisgrid.EmptyFileError">[docs]</a><span class="k">class</span> <span class="nc">EmptyFileError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Exception for trying to load results from an empty file.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">file_path</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Failed to load the results form an empty file: </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span> \
+                <span class="s1">&#39;Double check inputs and outputs and make sure &#39;</span> \
+                <span class="s1">&#39;everything is run correctly.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">EmptyFileError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AnalysisGrid"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.analysisgrid.AnalysisGrid">[docs]</a><span class="k">class</span> <span class="nc">AnalysisGrid</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A grid of analysis points.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        analysis_points: A collection of analysis points.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;_analysis_points&#39;</span><span class="p">,</span> <span class="s1">&#39;_name&#39;</span><span class="p">,</span> <span class="s1">&#39;_sources&#39;</span><span class="p">,</span> <span class="s1">&#39;_wgroups&#39;</span><span class="p">,</span> <span class="s1">&#39;_directFiles&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;_totalFiles&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">analysis_points</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">window_groups</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize a AnalysisPointGroup.</span>
+
+<span class="sd">        analysis_points: A collection of AnalysisPoints.</span>
+<span class="sd">        name: A unique name for this AnalysisGrid.</span>
+<span class="sd">        window_groups: A collection of window_groups which contribute to this grid.</span>
+<span class="sd">            This input is only meaningful in studies such as daylight coefficient</span>
+<span class="sd">            and multi-phase studies that the contribution of each source will be</span>
+<span class="sd">            calculated separately (default: None).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="c1"># name of sources and their state. It&#39;s only meaningful in multi-phase daylight</span>
+        <span class="c1"># analysis. In analysis for a single time it will be {None: [None]}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sources</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">window_groups</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_wgroups</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">wg</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">wg</span> <span class="ow">in</span> <span class="n">window_groups</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_wgroups</span> <span class="o">=</span> <span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">ap</span> <span class="ow">in</span> <span class="n">analysis_points</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ap</span><span class="p">,</span> <span class="s1">&#39;_dir&#39;</span><span class="p">),</span> \
+                <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not an AnalysisPoint.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ap</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_analysis_points</span> <span class="o">=</span> <span class="n">analysis_points</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_directFiles</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># list of results files</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_totalFiles</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># list of results files</span>
+
+<div class="viewcode-block" id="AnalysisGrid.from_json"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.analysisgrid.AnalysisGrid.from_json">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_json</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">ag_json</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create an analysis grid from json objects.&quot;&quot;&quot;</span>
+        <span class="n">analysis_points</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">AnalysisPoint</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
+                                <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">ag_json</span><span class="p">[</span><span class="s2">&quot;analysis_points&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">analysis_points</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AnalysisGrid.from_points_and_vectors"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.analysisgrid.AnalysisGrid.from_points_and_vectors">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_points_and_vectors</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">window_groups</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create an analysis grid from points and vectors.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            points: A flatten list of (x, y ,z) points.</span>
+<span class="sd">            vectors: An optional list of (x, y, z) for direction of test points.</span>
+<span class="sd">                If not provided a (0, 0, 1) vector will be assigned.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vectors</span> <span class="o">=</span> <span class="n">vectors</span> <span class="ow">or</span> <span class="p">()</span>
+        <span class="n">points</span><span class="p">,</span> <span class="n">vectors</span> <span class="o">=</span> <span class="n">match_data</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">vectors</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">aps</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">AnalysisPoint</span><span class="p">(</span><span class="n">pt</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">pt</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">izip</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">vectors</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">aps</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">window_groups</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AnalysisGrid.from_file"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.analysisgrid.AnalysisGrid.from_file">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create an analysis grid from a pts file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file_path: Full path to points file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file_path</span><span class="p">),</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;Can&#39;t find </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file_path</span><span class="p">))</span>
+        <span class="n">ap</span> <span class="o">=</span> <span class="n">AnalysisPoint</span>  <span class="c1"># load analysis point locally for better performance</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">inf</span><span class="p">:</span>
+            <span class="n">points</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">ap</span><span class="o">.</span><span class="n">from_raw_values</span><span class="p">(</span><span class="o">*</span><span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">())</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">inf</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">points</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">isAnalysisGrid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True for AnalysisGrid.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;AnalysisGrid name.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
+
+    <span class="nd">@name</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">n</span> <span class="ow">or</span> <span class="n">random_name</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">window_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A list of window group names that are related to this analysis grid.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wgroups</span>
+
+    <span class="nd">@window_groups</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">window_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wgs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wgroups</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">wg</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">wg</span> <span class="ow">in</span> <span class="n">wgs</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">points</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A generator of points as x, y, z.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">ap</span><span class="o">.</span><span class="n">location</span> <span class="k">for</span> <span class="n">ap</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_analysis_points</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">vectors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get generator of vectors as x, y , z.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">ap</span><span class="o">.</span><span class="n">direction</span> <span class="k">for</span> <span class="n">ap</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_analysis_points</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">analysis_points</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a list of analysis points.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_analysis_points</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sources</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get sorted list fo sources.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sources</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">sources</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">srcs</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sources</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sources</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                <span class="n">srcs</span><span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">name</span>
+                <span class="k">return</span> <span class="n">srcs</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">has_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if this analysis grid has result values.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">has_values</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">has_direct_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if direct values are available for this point.</span>
+
+<span class="sd">        In point-in-time and 3phase recipes only total values are available.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">has_direct_values</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">hoys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return hours of the year for results if any.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">hoys</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_results_point_in_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True if the grid has the results only for an hour.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hoys</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">result_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return result files as a list [[total files], [direct files]].&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_totalFiles</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_directFiles</span>
+
+<div class="viewcode-block" id="AnalysisGrid.add_result_files"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.analysisgrid.AnalysisGrid.add_result_files">[docs]</a>    <span class="k">def</span> <span class="nf">add_result_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">start_line</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_direct</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                         <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add new result files to grid.</span>
+
+<span class="sd">        Use this methods if you want to get annual metrics without loading the values</span>
+<span class="sd">        for each point. This method is only useful for cases with no window groups and</span>
+<span class="sd">        dynamic blind states. After adding the files you can call &#39;annualMetrics&#39; method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ResultFile</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span>
+            <span class="s1">&#39;ResultFile&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">,</span> <span class="s1">&#39;hoys&#39;</span><span class="p">,</span> <span class="s1">&#39;start_line&#39;</span><span class="p">,</span> <span class="s1">&#39;header&#39;</span><span class="p">,</span> <span class="s1">&#39;mode&#39;</span><span class="p">))</span>
+
+        <span class="n">inf</span> <span class="o">=</span> <span class="n">ResultFile</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">start_line</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">is_direct</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_directFiles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inf</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_totalFiles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inf</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AnalysisGrid.set_values"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.analysisgrid.AnalysisGrid.set_values">[docs]</a>    <span class="k">def</span> <span class="nf">set_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_direct</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+        <span class="k">pass</span>
+        <span class="c1"># assign the values to points</span>
+        <span class="k">for</span> <span class="n">count</span><span class="p">,</span> <span class="n">hourlyValues</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">analysis_points</span><span class="p">[</span><span class="n">count</span><span class="p">]</span><span class="o">.</span><span class="n">set_values</span><span class="p">(</span>
+                <span class="n">hourlyValues</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">is_direct</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AnalysisGrid.parse_header"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.analysisgrid.AnalysisGrid.parse_header">[docs]</a>    <span class="k">def</span> <span class="nf">parse_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inf</span><span class="p">,</span> <span class="n">start_line</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">check_point_count</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parse radiance matrix header.&quot;&quot;&quot;</span>
+        <span class="c1"># read the header</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">line</span><span class="p">[:</span><span class="mi">6</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;FORMAT&#39;</span><span class="p">:</span>
+                <span class="n">inf</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>  <span class="c1"># pass empty line</span>
+                <span class="k">break</span>  <span class="c1"># done with the header!</span>
+            <span class="k">elif</span> <span class="n">start_line</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">line</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;NROWS&#39;</span><span class="p">:</span>
+                <span class="n">points_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">check_point_count</span><span class="p">:</span>
+                    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_analysis_points</span><span class="p">)</span> <span class="o">==</span> <span class="n">points_count</span><span class="p">,</span> \
+                        <span class="s2">&quot;Length of points [</span><span class="si">{}</span><span class="s2">] must match the number &quot;</span> \
+                        <span class="s2">&quot;of rows [</span><span class="si">{}</span><span class="s2">].&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_analysis_points</span><span class="p">),</span> <span class="n">points_count</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">start_line</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">line</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;NCOLS&#39;</span><span class="p">:</span>
+                <span class="n">hours_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">hoys</span><span class="p">:</span>
+                    <span class="k">assert</span> <span class="n">hours_count</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">hoys</span><span class="p">),</span> \
+                        <span class="s2">&quot;Number of hours [</span><span class="si">{}</span><span class="s2">] must match the &quot;</span> \
+                        <span class="s2">&quot;number of columns [</span><span class="si">{}</span><span class="s2">].&quot;</span> \
+                        <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hoys</span><span class="p">),</span> <span class="n">hours_count</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">hoys</span> <span class="o">=</span> <span class="n">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">hours_count</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">inf</span><span class="p">,</span> <span class="n">hoys</span></div>
+
+<div class="viewcode-block" id="AnalysisGrid.set_values_from_file"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.analysisgrid.AnalysisGrid.set_values_from_file">[docs]</a>    <span class="k">def</span> <span class="nf">set_values_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">hoys</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                             <span class="n">start_line</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_direct</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                             <span class="n">check_point_count</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load values for test points from a file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file_path: Full file path to the result file.</span>
+<span class="sd">            hoys: A collection of hours of the year for the results. If None the</span>
+<span class="sd">                default will be range(0, len(results)).</span>
+<span class="sd">            source: Name of the source.</span>
+<span class="sd">            state: Name of the state.</span>
+<span class="sd">            start_line: Number of start lines after the header from 0 (default: 0).</span>
+<span class="sd">            is_direct: A Boolean to declare if the results is direct illuminance</span>
+<span class="sd">                (default: False).</span>
+<span class="sd">            header: A Boolean to declare if the file has header (default: True).</span>
+<span class="sd">            mode: 0 &gt; load the values 1 &gt; load values as binary. Any non-zero value</span>
+<span class="sd">                will be 1. This is useful for studies such as sunlight hours. 2 &gt;</span>
+<span class="sd">                load the values divided by mode number. Use this mode for daylight</span>
+<span class="sd">                factor or radiation analysis.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">EmptyFileError</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+        <span class="n">st</span> <span class="o">=</span> <span class="n">start_line</span> <span class="ow">or</span> <span class="mi">0</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">inf</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">header</span><span class="p">:</span>
+                <span class="n">inf</span><span class="p">,</span> <span class="n">hoys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_header</span><span class="p">(</span><span class="n">inf</span><span class="p">,</span> <span class="n">st</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">check_point_count</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_result_files</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">st</span><span class="p">,</span> <span class="n">is_direct</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">st</span><span class="p">):</span>
+                <span class="n">inf</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+
+            <span class="n">end</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_analysis_points</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">r</span><span class="p">))</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">inf</span><span class="o">.</span><span class="n">next</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+                          <span class="k">for</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">end</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># binary 0-1</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">inf</span><span class="o">.</span><span class="n">next</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+                          <span class="k">for</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">end</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># divide values by mode (useful for daylight factor calculation)</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">/</span> <span class="n">mode</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">inf</span><span class="o">.</span><span class="n">next</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+                          <span class="k">for</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">end</span><span class="p">))</span>
+
+            <span class="c1"># assign the values to points</span>
+            <span class="k">for</span> <span class="n">count</span><span class="p">,</span> <span class="n">hourlyValues</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">analysis_points</span><span class="p">[</span><span class="n">count</span><span class="p">]</span><span class="o">.</span><span class="n">set_values</span><span class="p">(</span>
+                    <span class="n">hourlyValues</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">is_direct</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AnalysisGrid.set_coupled_values_from_file"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.analysisgrid.AnalysisGrid.set_coupled_values_from_file">[docs]</a>    <span class="k">def</span> <span class="nf">set_coupled_values_from_file</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">total_file_path</span><span class="p">,</span> <span class="n">direct_file_path</span><span class="p">,</span> <span class="n">hoys</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">start_line</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">check_point_count</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load direct and total values for test points from two files.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file_path: Full file path to the result file.</span>
+<span class="sd">            hoys: A collection of hours of the year for the results. If None the</span>
+<span class="sd">                default will be range(0, len(results)).</span>
+<span class="sd">            source: Name of the source.</span>
+<span class="sd">            state: Name of the state.</span>
+<span class="sd">            start_line: Number of start lines after the header from 0 (default: 0).</span>
+<span class="sd">            header: A Boolean to declare if the file has header (default: True).</span>
+<span class="sd">            mode: 0 &gt; load the values 1 &gt; load values as binary. Any non-zero value</span>
+<span class="sd">                will be 1. This is useful for studies such as sunlight hours. 2 &gt;</span>
+<span class="sd">                load the values divided by mode number. Use this mode for daylight</span>
+<span class="sd">                factor or radiation analysis.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">file_path</span> <span class="ow">in</span> <span class="p">(</span><span class="n">total_file_path</span><span class="p">,</span> <span class="n">direct_file_path</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">EmptyFileError</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+        <span class="n">st</span> <span class="o">=</span> <span class="n">start_line</span> <span class="ow">or</span> <span class="mi">0</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">total_file_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">inf</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">direct_file_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">dinf</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">header</span><span class="p">:</span>
+                <span class="n">inf</span><span class="p">,</span> <span class="n">hoys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_header</span><span class="p">(</span><span class="n">inf</span><span class="p">,</span> <span class="n">st</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">check_point_count</span><span class="p">)</span>
+                <span class="n">dinf</span><span class="p">,</span> <span class="n">hoys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_header</span><span class="p">(</span><span class="n">dinf</span><span class="p">,</span> <span class="n">st</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">check_point_count</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_result_files</span><span class="p">(</span><span class="n">total_file_path</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">st</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_result_files</span><span class="p">(</span><span class="n">direct_file_path</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">st</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">st</span><span class="p">):</span>
+                <span class="n">inf</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+                <span class="n">dinf</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+
+            <span class="n">end</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_analysis_points</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">coupled_values</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="nb">tuple</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">r</span><span class="p">)),</span> <span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">)))</span> <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span>
+                          <span class="n">izip</span><span class="p">(</span><span class="n">inf</span><span class="o">.</span><span class="n">next</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span> <span class="n">dinf</span><span class="o">.</span><span class="n">next</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()))</span>
+                    <span class="k">for</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">end</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># binary 0-1</span>
+                <span class="n">coupled_values</span> <span class="o">=</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">(</span>
+                    <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)),</span>
+                     <span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)))</span>
+                    <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">izip</span><span class="p">(</span><span class="n">inf</span><span class="o">.</span><span class="n">next</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span> <span class="n">dinf</span><span class="o">.</span><span class="n">next</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()))</span>
+                    <span class="k">for</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">end</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># divide values by mode (useful for daylight factor calculation)</span>
+                <span class="n">coupled_values</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="nb">tuple</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">/</span> <span class="n">mode</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">/</span> <span class="n">mode</span><span class="p">))</span> <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span>
+                          <span class="n">izip</span><span class="p">(</span><span class="n">inf</span><span class="o">.</span><span class="n">next</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span> <span class="n">dinf</span><span class="o">.</span><span class="n">next</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()))</span>
+                    <span class="k">for</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">end</span><span class="p">))</span>
+
+            <span class="c1"># assign the values to points</span>
+            <span class="k">for</span> <span class="n">count</span><span class="p">,</span> <span class="n">hourlyValues</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">coupled_values</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">analysis_points</span><span class="p">[</span><span class="n">count</span><span class="p">]</span><span class="o">.</span><span class="n">set_coupled_values</span><span class="p">(</span>
+                    <span class="n">hourlyValues</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AnalysisGrid.combined_value_by_id"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.analysisgrid.AnalysisGrid.combined_value_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">combined_value_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hoy</span><span class="p">,</span> <span class="n">blinds_state_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get combined value from all sources based on state_id.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            hoy: hour of the year.</span>
+<span class="sd">            blinds_state_ids: List of state ids for all the sources for an hour. If you</span>
+<span class="sd">                want a source to be removed set the state to -1.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            total, direct values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">digit_sign</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_values_from_files</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">combined_value_by_id</span><span class="p">(</span><span class="n">hoy</span><span class="p">,</span> <span class="n">blinds_state_ids</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AnalysisGrid.combined_values_by_id"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.analysisgrid.AnalysisGrid.combined_values_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">combined_values_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hoys</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">blinds_state_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get combined value from all sources based on state_ids.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            hoys: A collection of hours of the year.</span>
+<span class="sd">            blinds_state_ids: List of state ids for all the sources for input hoys. If</span>
+<span class="sd">                you want a source to be removed set the state to -1.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Return a generator for (total, direct) values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">digit_sign</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_values_from_files</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">combined_value_by_id</span><span class="p">(</span><span class="n">hoys</span><span class="p">,</span> <span class="n">blinds_state_ids</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AnalysisGrid.sum_values_by_id"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.analysisgrid.AnalysisGrid.sum_values_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">sum_values_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hoys</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">blinds_state_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get sum of value for all the hours.</span>
+
+<span class="sd">        This method is mostly useful for radiation and solar access analysis.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            hoys: A collection of hours of the year.</span>
+<span class="sd">            blinds_state_ids: List of state ids for all the sources for input hoys. If</span>
+<span class="sd">                you want a source to be removed set the state to -1.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Return a collection of sum values as (total, direct) values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">digit_sign</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_values_from_files</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">sum_values_by_id</span><span class="p">(</span><span class="n">hoys</span><span class="p">,</span> <span class="n">blinds_state_ids</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AnalysisGrid.max_values_by_id"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.analysisgrid.AnalysisGrid.max_values_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">max_values_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hoys</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">blinds_state_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get maximum value for all the hours.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            hoys: A collection of hours of the year.</span>
+<span class="sd">            blinds_state_ids: List of state ids for all the sources for input hoys. If</span>
+<span class="sd">                you want a source to be removed set the state to -1.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Return a tuple for sum of (total, direct) values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">digit_sign</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_values_from_files</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">max_values_by_id</span><span class="p">(</span><span class="n">hoys</span><span class="p">,</span> <span class="n">blinds_state_ids</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AnalysisGrid.annual_metrics"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.analysisgrid.AnalysisGrid.annual_metrics">[docs]</a>    <span class="k">def</span> <span class="nf">annual_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">da_threshhold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">udi_min_max</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">blinds_state_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                       <span class="n">occ_schedule</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate annual metrics.</span>
+
+<span class="sd">        Daylight autonomy, continious daylight autonomy and useful daylight illuminance.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            da_threshhold: Threshhold for daylight autonomy in lux (default: 300).</span>
+<span class="sd">            udi_min_max: A tuple of min, max value for useful daylight illuminance</span>
+<span class="sd">                (default: (100, 3000)).</span>
+<span class="sd">            blinds_state_ids: List of state ids for all the sources for input hoys. If</span>
+<span class="sd">                you want a source to be removed set the state to -1.</span>
+<span class="sd">            occ_schedule: An annual occupancy schedule.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Daylight autonomy, Continious daylight autonomy, Useful daylight illuminance,</span>
+<span class="sd">            Less than UDI, More than UDI</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">results_loaded</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_values</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No values are assigned to this analysis grid.&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_values</span><span class="p">:</span>
+            <span class="c1"># results are not loaded but are available</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result_files</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> \
+                <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s1">&#39;Annual recipe can currently only handle &#39;</span>
+                    <span class="s1">&#39;a single merged result file.&#39;</span>
+            <span class="p">)</span>
+            <span class="n">results_loaded</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Loading the results from result files.&#39;</span><span class="p">)</span>
+
+        <span class="n">res</span> <span class="o">=</span> <span class="p">([],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[])</span>
+
+        <span class="n">da_threshhold</span> <span class="o">=</span> <span class="n">da_threshhold</span> <span class="ow">or</span> <span class="mf">300.0</span>
+        <span class="n">udi_min_max</span> <span class="o">=</span> <span class="n">udi_min_max</span> <span class="ow">or</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">3000</span><span class="p">)</span>
+        <span class="n">hoys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hoys</span>
+        <span class="n">occ_schedule</span> <span class="o">=</span> <span class="n">occ_schedule</span> <span class="ow">or</span> <span class="n">Schedule</span><span class="o">.</span><span class="n">from_workday_hours</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">results_loaded</span><span class="p">:</span>
+            <span class="n">blinds_state_ids</span> <span class="o">=</span> <span class="n">blinds_state_ids</span> <span class="ow">or</span> <span class="p">[[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sources</span><span class="p">)]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">hoys</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">sensor</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_points</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sensor</span><span class="o">.</span><span class="n">annual_metrics</span><span class="p">(</span><span class="n">da_threshhold</span><span class="p">,</span>
+                                                            <span class="n">udi_min_max</span><span class="p">,</span>
+                                                            <span class="n">blinds_state_ids</span><span class="p">,</span>
+                                                            <span class="n">occ_schedule</span>
+                                                            <span class="p">)):</span>
+                    <span class="n">res</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># This is a method for annual recipe to load the results line by line</span>
+            <span class="c1"># which unlike the other method doesn&#39;t load all the values to the memory</span>
+            <span class="c1"># at once.</span>
+            <span class="n">blinds_state_ids</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sources</span><span class="p">)]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">hoys</span><span class="p">)</span>
+            <span class="n">calculate_annual_metrics</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_calculate_annual_metrics</span>
+
+            <span class="k">for</span> <span class="n">file_data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">file_path</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">start_line</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="n">file_data</span>
+
+                <span class="c1"># read the results line by line and caluclate the values</span>
+                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">EmptyFileError</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+                <span class="k">assert</span> <span class="n">mode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> \
+                    <span class="ne">TypeError</span><span class="p">(</span>
+                        <span class="s1">&#39;Annual results can only be calculated from &#39;</span>
+                        <span class="s1">&#39;illuminance studies.&#39;</span><span class="p">)</span>
+
+                <span class="n">st</span> <span class="o">=</span> <span class="n">start_line</span> <span class="ow">or</span> <span class="mi">0</span>
+
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">inf</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">header</span><span class="p">:</span>
+                        <span class="n">inf</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_header</span><span class="p">(</span><span class="n">inf</span><span class="p">,</span> <span class="n">st</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">st</span><span class="p">):</span>
+                        <span class="n">inf</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+
+                    <span class="n">end</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_analysis_points</span><span class="p">)</span>
+
+                    <span class="c1"># load one line at a time</span>
+                    <span class="k">for</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">end</span><span class="p">):</span>
+                        <span class="n">values</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">r</span><span class="p">))</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">inf</span><span class="o">.</span><span class="n">next</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+                        <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+                            <span class="n">calculate_annual_metrics</span><span class="p">(</span>
+                                <span class="n">values</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">da_threshhold</span><span class="p">,</span> <span class="n">udi_min_max</span><span class="p">,</span>
+                                <span class="n">blinds_state_ids</span><span class="p">,</span> <span class="n">occ_schedule</span><span class="p">)):</span>
+
+                            <span class="n">res</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">res</span></div>
+
+<div class="viewcode-block" id="AnalysisGrid.spatial_daylight_autonomy"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.analysisgrid.AnalysisGrid.spatial_daylight_autonomy">[docs]</a>    <span class="k">def</span> <span class="nf">spatial_daylight_autonomy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">da_threshhold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">blinds_state_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                  <span class="n">occ_schedule</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_area</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate Spatial Daylight Autonomy (sDA).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            target_area: Minimum target area percentage for this grid (default: 50)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">results_loaded</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_values</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No values are assigned to this analysis grid.&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_values</span><span class="p">:</span>
+            <span class="c1"># results are not loaded but are available</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result_files</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> \
+                <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s1">&#39;Annual recipe can currently only handle &#39;</span>
+                    <span class="s1">&#39;a single merged result file.&#39;</span>
+            <span class="p">)</span>
+            <span class="n">results_loaded</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Loading the results from result files.&#39;</span><span class="p">)</span>
+
+        <span class="n">da_threshhold</span> <span class="o">=</span> <span class="n">da_threshhold</span> <span class="ow">or</span> <span class="mf">300.0</span>
+        <span class="n">hoys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hoys</span>
+        <span class="n">occ_schedule</span> <span class="o">=</span> <span class="n">occ_schedule</span> <span class="ow">or</span> <span class="n">Schedule</span><span class="o">.</span><span class="n">from_workday_hours</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">results_loaded</span><span class="p">:</span>
+            <span class="n">blinds_state_ids</span> <span class="o">=</span> <span class="n">blinds_state_ids</span> <span class="ow">or</span> <span class="p">[[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sources</span><span class="p">)]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">hoys</span><span class="p">)</span>
+
+            <span class="c1"># get the annual results for each sensor</span>
+            <span class="n">hourly_results</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">sensor</span><span class="o">.</span><span class="n">combined_values_by_id</span><span class="p">(</span><span class="n">hoys</span><span class="p">,</span> <span class="n">blinds_state_ids</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">sensor</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_points</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">blinds_state_ids</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sources</span><span class="p">)]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">hoys</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">file_data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">file_path</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">start_line</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="n">file_data</span>
+
+                <span class="c1"># read the results line by line and caluclate the values</span>
+                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">EmptyFileError</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+                <span class="k">assert</span> <span class="n">mode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> \
+                    <span class="ne">TypeError</span><span class="p">(</span>
+                        <span class="s1">&#39;Annual results can only be calculated from &#39;</span>
+                        <span class="s1">&#39;illuminance studies.&#39;</span><span class="p">)</span>
+
+                <span class="n">st</span> <span class="o">=</span> <span class="n">start_line</span> <span class="ow">or</span> <span class="mi">0</span>
+
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">inf</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">header</span><span class="p">:</span>
+                        <span class="n">inf</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_header</span><span class="p">(</span><span class="n">inf</span><span class="p">,</span> <span class="n">st</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">st</span><span class="p">):</span>
+                        <span class="n">inf</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+
+                    <span class="n">end</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_analysis_points</span><span class="p">)</span>
+                    <span class="n">hourly_results</span> <span class="o">=</span> \
+                        <span class="nb">tuple</span><span class="p">(</span><span class="nb">tuple</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">r</span><span class="p">)),</span> <span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">inf</span><span class="o">.</span><span class="n">next</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+                              <span class="k">for</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">end</span><span class="p">))</span>
+
+        <span class="c1"># iterate through the results</span>
+        <span class="c1"># find minimum number of points to meet the target_area</span>
+        <span class="n">target_area</span> <span class="o">=</span> <span class="n">target_area</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">analysis_points</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span> <span class="ow">or</span> \
+            <span class="mf">0.50</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">analysis_points</span><span class="p">)</span>
+        <span class="c1"># change target area to an integer to enhance the performance in the loop</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">target_area</span><span class="p">)</span> <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">target_area</span><span class="p">)</span> <span class="o">!=</span> <span class="n">target_area</span> \
+            <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">target_area</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">met_hours</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">problematic_hours</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">hr</span><span class="p">,</span> <span class="n">hrv</span> <span class="ow">in</span> <span class="n">izip</span><span class="p">(</span><span class="n">hoys</span><span class="p">,</span> <span class="n">izip</span><span class="p">(</span><span class="o">*</span><span class="n">hourly_results</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">hr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">occ_schedule</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">da_threshhold</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">hrv</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="n">target</span><span class="p">:</span>
+                <span class="n">met_hours</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">problematic_hours</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hr</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">met_hours</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">occ_schedule</span><span class="o">.</span><span class="n">occupied_hours</span><span class="p">),</span> <span class="n">problematic_hours</span></div>
+
+<div class="viewcode-block" id="AnalysisGrid.annual_solar_exposure"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.analysisgrid.AnalysisGrid.annual_solar_exposure">[docs]</a>    <span class="k">def</span> <span class="nf">annual_solar_exposure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshhold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">blinds_state_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                              <span class="n">occ_schedule</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_hours</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_area</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Annual Solar Exposure (ASE)</span>
+
+<span class="sd">        As per IES-LM-83-12 ase is the percent of sensors that are</span>
+<span class="sd">        found to be exposed to more than 1000lux of direct sunlight for</span>
+<span class="sd">        more than 250hrs per year. For LEED credits No more than 10% of</span>
+<span class="sd">        the points in the grid should fail this measure.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            threshhold: Threshhold for for solar exposure in lux (default: 1000).</span>
+<span class="sd">            blinds_state_ids: List of state ids for all the sources for input hoys.</span>
+<span class="sd">                If you want a source to be removed set the state to -1. ase must</span>
+<span class="sd">                be calculated without dynamic blinds but you can use this option</span>
+<span class="sd">                to study the effect of different blind states.</span>
+<span class="sd">            occ_schedule: An annual occupancy schedule.</span>
+<span class="sd">            target_hours: Minimum targe hours for each point (default: 250).</span>
+<span class="sd">            target_area: Minimum target area percentage for this grid (default: 10)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Success as a Boolean, ase values for each point, Percentage area,</span>
+<span class="sd">            Problematic points, Problematic hours for each point</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">results_loaded</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_direct_values</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_files</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;Direct values are not available to calculate ASE.</span><span class="se">\n</span><span class="s1">In most of the cases&#39;</span>
+                <span class="s1">&#39; this is because you are using a point in time recipe or the three-&#39;</span>
+                <span class="s1">&#39;phase recipe. You should use one of the daylight coefficient based &#39;</span>
+                <span class="s1">&#39;recipes or the 5 phase recipe instead.&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_direct_values</span><span class="p">:</span>
+            <span class="c1"># results are not loaded but are available</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result_files</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> \
+                <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s1">&#39;Annual recipe can currently only handle &#39;</span>
+                    <span class="s1">&#39;a single merged result file.&#39;</span>
+            <span class="p">)</span>
+            <span class="n">results_loaded</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Loading the results from result files.&#39;</span><span class="p">)</span>
+
+        <span class="n">res</span> <span class="o">=</span> <span class="p">([],</span> <span class="p">[],</span> <span class="p">[])</span>
+        <span class="n">threshhold</span> <span class="o">=</span> <span class="n">threshhold</span> <span class="ow">or</span> <span class="mi">1000</span>
+        <span class="n">target_hours</span> <span class="o">=</span> <span class="n">target_hours</span> <span class="ow">or</span> <span class="mi">250</span>
+        <span class="n">target_area</span> <span class="o">=</span> <span class="n">target_area</span> <span class="ow">or</span> <span class="mi">10</span>
+        <span class="n">hoys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hoys</span>
+        <span class="n">occ_schedule</span> <span class="o">=</span> <span class="n">occ_schedule</span> <span class="ow">or</span> <span class="nb">set</span><span class="p">(</span><span class="n">hoys</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">results_loaded</span><span class="p">:</span>
+            <span class="n">blinds_state_ids</span> <span class="o">=</span> <span class="n">blinds_state_ids</span> <span class="ow">or</span> <span class="p">[[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sources</span><span class="p">)]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">hoys</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">sensor</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_points</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sensor</span><span class="o">.</span><span class="n">annual_solar_exposure</span><span class="p">(</span><span class="n">threshhold</span><span class="p">,</span>
+                                                                   <span class="n">blinds_state_ids</span><span class="p">,</span>
+                                                                   <span class="n">occ_schedule</span><span class="p">,</span>
+                                                                   <span class="n">target_hours</span>
+                                                                   <span class="p">)):</span>
+                    <span class="n">res</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># This is a method for annual recipe to load the results line by line</span>
+            <span class="c1"># which unlike the other method doesn&#39;t load all the values to the memory</span>
+            <span class="c1"># at once.</span>
+            <span class="n">blinds_state_ids</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sources</span><span class="p">)]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">hoys</span><span class="p">)</span>
+            <span class="n">calculate_annual_solar_exposure</span> <span class="o">=</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">analysis_points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_calculate_annual_solar_exposure</span>
+
+            <span class="k">for</span> <span class="n">file_data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_files</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">file_path</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">start_line</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="n">file_data</span>
+
+                <span class="c1"># read the results line by line and caluclate the values</span>
+                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">EmptyFileError</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+                <span class="k">assert</span> <span class="n">mode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> \
+                    <span class="ne">TypeError</span><span class="p">(</span>
+                        <span class="s1">&#39;Annual results can only be calculated from &#39;</span>
+                        <span class="s1">&#39;illuminance studies.&#39;</span><span class="p">)</span>
+
+                <span class="n">st</span> <span class="o">=</span> <span class="n">start_line</span> <span class="ow">or</span> <span class="mi">0</span>
+
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">inf</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">header</span><span class="p">:</span>
+                        <span class="n">inf</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_header</span><span class="p">(</span><span class="n">inf</span><span class="p">,</span> <span class="n">st</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">st</span><span class="p">):</span>
+                        <span class="n">inf</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+
+                    <span class="n">end</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_analysis_points</span><span class="p">)</span>
+
+                    <span class="c1"># load one line at a time</span>
+                    <span class="k">for</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">end</span><span class="p">):</span>
+                        <span class="n">values</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">r</span><span class="p">))</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">inf</span><span class="o">.</span><span class="n">next</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+                        <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+                            <span class="n">calculate_annual_solar_exposure</span><span class="p">(</span>
+                                <span class="n">values</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">threshhold</span><span class="p">,</span> <span class="n">blinds_state_ids</span><span class="p">,</span> <span class="n">occ_schedule</span><span class="p">,</span>
+                                <span class="n">target_hours</span><span class="p">)):</span>
+
+                            <span class="n">res</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+        <span class="c1"># calculate ase for the grid</span>
+        <span class="n">ap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_points</span>  <span class="c1"># create a local copy of points for better performance</span>
+        <span class="n">problematic_point_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">problematic_points</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">problematic_hours</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">ase_values</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">success</span><span class="p">,</span> <span class="n">ase</span><span class="p">,</span> <span class="n">pHours</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">izip</span><span class="p">(</span><span class="o">*</span><span class="n">res</span><span class="p">)):</span>
+            <span class="n">ase_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ase</span><span class="p">)</span>  <span class="c1"># collect annual ase values for each point</span>
+            <span class="k">if</span> <span class="n">success</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">problematic_point_count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">problematic_points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ap</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">problematic_hours</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pHours</span><span class="p">)</span>
+
+        <span class="n">per_problematic</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">problematic_point_count</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">ap</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">per_problematic</span> <span class="o">&lt;</span> <span class="n">target_area</span><span class="p">,</span> <span class="n">ase_values</span><span class="p">,</span> <span class="n">per_problematic</span><span class="p">,</span> \
+            <span class="n">problematic_points</span><span class="p">,</span> <span class="n">problematic_hours</span></div>
+
+<div class="viewcode-block" id="AnalysisGrid.parse_blind_states"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.analysisgrid.AnalysisGrid.parse_blind_states">[docs]</a>    <span class="k">def</span> <span class="nf">parse_blind_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blinds_state_ids</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parse input blind states.</span>
+
+<span class="sd">        The method tries to convert each state to a tuple of a list. Use this method</span>
+<span class="sd">        to parse the input from plugins.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            blinds_state_ids: List of state ids for all the sources for an hour. If you</span>
+<span class="sd">                want a source to be removed set the state to -1. If not provided</span>
+<span class="sd">                a longest combination of states from sources (window groups) will</span>
+<span class="sd">                be used. Length of each item in states should be equal to number</span>
+<span class="sd">                of sources.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">parse_blind_states</span><span class="p">(</span><span class="n">blinds_state_ids</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AnalysisGrid.load_values_from_files"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.analysisgrid.AnalysisGrid.load_values_from_files">[docs]</a>    <span class="k">def</span> <span class="nf">load_values_from_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load grid values from self.result_files.&quot;&quot;&quot;</span>
+        <span class="c1"># remove old results</span>
+        <span class="k">for</span> <span class="n">ap</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_analysis_points</span><span class="p">:</span>
+            <span class="n">ap</span><span class="o">.</span><span class="n">_sources</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+            <span class="n">ap</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">r_files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_files</span><span class="p">[</span><span class="mi">0</span><span class="p">][:]</span>
+        <span class="n">d_files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_files</span><span class="p">[</span><span class="mi">1</span><span class="p">][:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_totalFiles</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_directFiles</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># pass</span>
+        <span class="k">if</span> <span class="n">r_files</span> <span class="ow">and</span> <span class="n">d_files</span><span class="p">:</span>
+            <span class="c1"># both results are available</span>
+            <span class="k">for</span> <span class="n">rf</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">izip</span><span class="p">(</span><span class="n">r_files</span><span class="p">,</span> <span class="n">d_files</span><span class="p">):</span>
+                <span class="n">rfPath</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">start_line</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="n">rf</span>
+                <span class="n">dfPath</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">start_line</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="n">df</span>
+                <span class="n">fn</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">rfPath</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span>
+                <span class="n">source</span> <span class="o">=</span> <span class="n">fn</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">state</span> <span class="o">=</span> <span class="n">fn</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">loading total and direct results for </span><span class="si">{}</span><span class="s1"> AnalysisGrid&#39;</span>
+                    <span class="s1">&#39; from </span><span class="si">{}</span><span class="s1">::</span><span class="si">{}</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">rfPath</span><span class="p">,</span> <span class="n">dfPath</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_coupled_values_from_file</span><span class="p">(</span>
+                    <span class="n">rfPath</span><span class="p">,</span> <span class="n">dfPath</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">start_line</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span>
+                    <span class="kc">False</span><span class="p">,</span> <span class="n">mode</span>
+                <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">r_files</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">rf</span> <span class="ow">in</span> <span class="n">r_files</span><span class="p">:</span>
+                <span class="n">rfPath</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">start_line</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="n">rf</span>
+                <span class="n">fn</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">rfPath</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span>
+                <span class="n">source</span> <span class="o">=</span> <span class="n">fn</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">state</span> <span class="o">=</span> <span class="n">fn</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">loading the results for </span><span class="si">{}</span><span class="s1"> AnalysisGrid form </span><span class="si">{}</span><span class="s1">::</span><span class="si">{}</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span>
+                      <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">rfPath</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_values_from_file</span><span class="p">(</span>
+                    <span class="n">rf</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">start_line</span><span class="p">,</span> <span class="n">is_direct</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">,</span> <span class="n">check_point_count</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span>
+                <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">d_files</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">rf</span> <span class="ow">in</span> <span class="n">d_files</span><span class="p">:</span>
+                <span class="n">rfPath</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">start_line</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="n">rf</span>
+                <span class="n">fn</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">rfPath</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span>
+                <span class="n">source</span> <span class="o">=</span> <span class="n">fn</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">state</span> <span class="o">=</span> <span class="n">fn</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">loading the results for </span><span class="si">{}</span><span class="s1"> AnalysisGrid form </span><span class="si">{}</span><span class="s1">::</span><span class="si">{}</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span>
+                      <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">rfPath</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_values_from_file</span><span class="p">(</span>
+                    <span class="n">rf</span><span class="p">,</span> <span class="n">hoys</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">start_line</span><span class="p">,</span> <span class="n">is_direct</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">,</span> <span class="n">check_point_count</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span>
+                <span class="p">)</span></div>
+
+<div class="viewcode-block" id="AnalysisGrid.unload"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.analysisgrid.AnalysisGrid.unload">[docs]</a>    <span class="k">def</span> <span class="nf">unload</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Remove all the sources and values from analysis_points.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_totalFiles</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_directFiles</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">ap</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_analysis_points</span><span class="p">:</span>
+            <span class="n">ap</span><span class="o">.</span><span class="n">_sources</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+            <span class="n">ap</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="AnalysisGrid.duplicate"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.analysisgrid.AnalysisGrid.duplicate">[docs]</a>    <span class="k">def</span> <span class="nf">duplicate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Duplicate AnalysisGrid.&quot;&quot;&quot;</span>
+        <span class="n">aps</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">ap</span><span class="o">.</span><span class="n">duplicate</span><span class="p">()</span> <span class="k">for</span> <span class="n">ap</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_analysis_points</span><span class="p">)</span>
+        <span class="n">dup</span> <span class="o">=</span> <span class="n">AnalysisGrid</span><span class="p">(</span><span class="n">aps</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span>
+        <span class="n">dup</span><span class="o">.</span><span class="n">_sources</span> <span class="o">=</span> <span class="n">aps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_sources</span>
+        <span class="n">dup</span><span class="o">.</span><span class="n">_wgroups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wgroups</span>
+        <span class="k">return</span> <span class="n">dup</span></div>
+
+<div class="viewcode-block" id="AnalysisGrid.to_rad_string"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.analysisgrid.AnalysisGrid.to_rad_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_rad_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return analysis points group as a Radiance string.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">ap</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span> <span class="k">for</span> <span class="n">ap</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_analysis_points</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AnalysisGrid.ToString"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.analysisgrid.AnalysisGrid.ToString">[docs]</a>    <span class="k">def</span> <span class="nf">ToString</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwrite ToString .NET method.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="AnalysisGrid.to_json"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.analysisgrid.AnalysisGrid.to_json">[docs]</a>    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create an analysis grid from json objects.&quot;&quot;&quot;</span>
+        <span class="n">analysis_points</span> <span class="o">=</span> <span class="p">[</span><span class="n">ap</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span> <span class="k">for</span> <span class="n">ap</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_points</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;analysis_points&quot;</span><span class="p">:</span> <span class="n">analysis_points</span><span class="p">}</span></div>
+
+    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add two analysis grids and create a new one.</span>
+
+<span class="sd">        This method won&#39;t duplicate the analysis points.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">AnalysisGrid</span><span class="p">),</span> \
+            <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Expected an AnalysisGrid not </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)))</span>
+
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">hoys</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">hoys</span><span class="p">,</span> \
+            <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Two analysis grid must have the same hoys.&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_values</span><span class="p">:</span>
+            <span class="n">sources</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sources</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">_sources</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sources</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_sources</span><span class="p">,</span> \
+                <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s1">&#39;Two analysis grid with values must have the same window_groups.&#39;</span>
+                <span class="p">)</span>
+            <span class="n">sources</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sources</span>
+
+        <span class="n">points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_points</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">analysis_points</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">+</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">addition</span> <span class="o">=</span> <span class="n">AnalysisGrid</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">addition</span><span class="o">.</span><span class="n">_sources</span> <span class="o">=</span> <span class="n">sources</span>
+
+        <span class="k">return</span> <span class="n">addition</span>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Number of points in this group.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_analysis_points</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get value for an index.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_analysis_points</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Iterate points.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_analysis_points</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;String repr.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">digit_sign</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_values</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result_files</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result_files</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># only x, y, z datat is available</span>
+                <span class="k">return</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># results are available but are not loaded yet</span>
+                <span class="k">return</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_results_point_in_time</span><span class="p">:</span>
+            <span class="c1"># results is loaded for a single hour</span>
+            <span class="k">return</span> <span class="mi">2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># results is loaded for multiple hours</span>
+            <span class="k">return</span> <span class="mi">3</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_sign</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_values</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result_files</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result_files</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># only x, y, z datat is available</span>
+                <span class="k">return</span> <span class="s1">&#39;[.]&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># results are available but are not loaded yet</span>
+                <span class="k">return</span> <span class="s1">&#39;[/]&#39;</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_results_point_in_time</span><span class="p">:</span>
+            <span class="c1"># results is loaded for a single hour</span>
+            <span class="k">return</span> <span class="s1">&#39;[+]&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># results is loaded for multiple hours</span>
+            <span class="k">return</span> <span class="s1">&#39;[*]&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return analysis points and directions.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;AnalysisGrid::</span><span class="si">{}</span><span class="s1">::#</span><span class="si">{}</span><span class="s1">::</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_analysis_points</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sign</span>
+        <span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

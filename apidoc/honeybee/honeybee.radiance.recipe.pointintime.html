@@ -1,0 +1,527 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.recipe.pointintime package &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="honeybee.radiance.recipe.radiation package" href="honeybee.radiance.recipe.radiation.html" />
+    <link rel="prev" title="honeybee.radiance.recipe.fivephase package" href="honeybee.radiance.recipe.fivephase.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="honeybee.html">honeybee package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="honeybee.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="honeybee.energyplus.html">honeybee.energyplus package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="honeybee.radiance.html">honeybee.radiance package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="honeybee.radiance.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.analysisgrid">honeybee.radiance.analysisgrid module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.analysispoint">honeybee.radiance.analysispoint module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.datatype">honeybee.radiance.datatype module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.filemanager">honeybee.radiance.filemanager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.geometry">honeybee.radiance.geometry module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.imagecollection">honeybee.radiance.imagecollection module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.properties">honeybee.radiance.properties module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.radfile">honeybee.radiance.radfile module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.runmanager">honeybee.radiance.runmanager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.scene">honeybee.radiance.scene module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.view">honeybee.radiance.view module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.server.html">honeybee.server package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.vectormath.html">honeybee.vectormath package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.config">honeybee.config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.dataoperation">honeybee.dataoperation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.futil">honeybee.futil module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.geometryoperation">honeybee.geometryoperation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbdynamicsurface">honeybee.hbdynamicsurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbfensurface">honeybee.hbfensurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbobject">honeybee.hbobject module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbshadesurface">honeybee.hbshadesurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbsurface">honeybee.hbsurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbzone">honeybee.hbzone module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.room">honeybee.room module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.schedule">honeybee.schedule module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.surfaceproperties">honeybee.surfaceproperties module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.surfacetype">honeybee.surfacetype module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.utilcol">honeybee.utilcol module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="honeybee.html">honeybee package</a><ul>
+  <li><a href="honeybee.radiance.html">honeybee.radiance package</a><ul>
+  <li><a href="honeybee.radiance.recipe.html">honeybee.radiance.recipe package</a><ul>
+      <li>Previous: <a href="honeybee.radiance.recipe.fivephase.html" title="previous chapter">honeybee.radiance.recipe.fivephase package</a></li>
+      <li>Next: <a href="honeybee.radiance.recipe.radiation.html" title="next chapter">honeybee.radiance.recipe.radiation package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="honeybee-radiance-recipe-pointintime-package">
+<h1>honeybee.radiance.recipe.pointintime package<a class="headerlink" href="#honeybee-radiance-recipe-pointintime-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-honeybee.radiance.recipe.pointintime.gridbased">
+<span id="honeybee-radiance-recipe-pointintime-gridbased-module"></span><h2>honeybee.radiance.recipe.pointintime.gridbased module<a class="headerlink" href="#module-honeybee.radiance.recipe.pointintime.gridbased" title="Permalink to this headline">¶</a></h2>
+<p>Radiance Grid-based Analysis Recipe.</p>
+<dl class="class">
+<dt id="honeybee.radiance.recipe.pointintime.gridbased.GridBased">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.recipe.pointintime.gridbased.</code><code class="descname">GridBased</code><span class="sig-paren">(</span><em>sky</em>, <em>analysis_grids</em>, <em>simulation_type=0</em>, <em>rad_parameters=None</em>, <em>hb_objects=None</em>, <em>sub_folder='gridbased'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/pointintime/gridbased.html#GridBased"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.pointintime.gridbased.GridBased" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.recipe._gridbasedbase.GenericGridBased</span></code></p>
+<p>Grid base analysis base class.</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.pointintime.gridbased.GridBased.sky">
+<code class="descname">sky</code><a class="headerlink" href="#honeybee.radiance.recipe.pointintime.gridbased.GridBased.sky" title="Permalink to this definition">¶</a></dt>
+<dd><p>A honeybee sky for the analysis</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.pointintime.gridbased.GridBased.analysis_grids">
+<code class="descname">analysis_grids</code><a class="headerlink" href="#honeybee.radiance.recipe.pointintime.gridbased.GridBased.analysis_grids" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of analysis grids.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.pointintime.gridbased.GridBased.simulation_type">
+<code class="descname">simulation_type</code><a class="headerlink" href="#honeybee.radiance.recipe.pointintime.gridbased.GridBased.simulation_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>0: Illuminance(lux), 1: Radiation (kWh), 2: Luminance (Candela)
+(Default: 0)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.pointintime.gridbased.GridBased.rad_parameters">
+<code class="descname">rad_parameters</code><a class="headerlink" href="#honeybee.radiance.recipe.pointintime.gridbased.GridBased.rad_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radiance parameters for grid based analysis (rtrace).
+(Default: gridbased.LowQuality)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.pointintime.gridbased.GridBased.hb_objects">
+<code class="descname">hb_objects</code><a class="headerlink" href="#honeybee.radiance.recipe.pointintime.gridbased.GridBased.hb_objects" title="Permalink to this definition">¶</a></dt>
+<dd><p>An optional list of Honeybee surfaces or zones (Default: None).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.pointintime.gridbased.GridBased.sub_folder">
+<code class="descname">sub_folder</code><a class="headerlink" href="#honeybee.radiance.recipe.pointintime.gridbased.GridBased.sub_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Analysis subfolder for this recipe. (Default: “gridbased”)</p>
+</dd></dl>
+
+<dl class="docutils">
+<dt>Usage:</dt>
+<dd><p class="first"># create the sky
+sky = SkyWithCertainIlluminanceLevel(2000)</p>
+<p># initiate analysis_recipe
+analysis_recipe = GridBased(</p>
+<blockquote>
+<div>sky, testPoints, ptsVectors, simType
+)</div></blockquote>
+<p># add honeybee object
+analysis_recipe.hb_objects = HBObjs</p>
+<p># write analysis files to local drive
+analysis_recipe.write(_folder_, _name_)</p>
+<p># run the analysis
+analysis_recipe.run(debaug=False)</p>
+<p class="last"># get the results
+print(analysis_recipe.results())</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="honeybee.radiance.recipe.pointintime.gridbased.GridBased.ToString">
+<code class="descname">ToString</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/pointintime/gridbased.html#GridBased.ToString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.pointintime.gridbased.GridBased.ToString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrite .NET ToString method.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.radiance.recipe.pointintime.gridbased.GridBased.from_json">
+<em class="property">classmethod </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>rec_json</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/pointintime/gridbased.html#GridBased.from_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.pointintime.gridbased.GridBased.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the solar access recipe from json.
+{</p>
+<blockquote>
+<div>“id”: 1, // do NOT overwrite this id
+“sky”: null, // a honeybee sky
+“surfaces”: [], // list of honeybee surfaces
+“analysis_grids”: [] // list of analysis grids
+// [0] illuminance(lux), [1] radiation (kwh), [2] luminance (Candela).
+“analysis_type”: 0</div></blockquote>
+<p>}</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.radiance.recipe.pointintime.gridbased.GridBased.from_points_and_vectors">
+<em class="property">classmethod </em><code class="descname">from_points_and_vectors</code><span class="sig-paren">(</span><em>sky</em>, <em>point_groups</em>, <em>vector_groups=None</em>, <em>simulation_type=0</em>, <em>rad_parameters=None</em>, <em>hb_objects=None</em>, <em>sub_folder='gridbased'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/pointintime/gridbased.html#GridBased.from_points_and_vectors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.pointintime.gridbased.GridBased.from_points_and_vectors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create grid based recipe from points and vectors.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sky</strong> – A honeybee sky for the analysis</li>
+<li><strong>point_groups</strong> – A list of (x, y, z) test points or lists of (x, y, z)
+test points. Each list of test points will be converted to a
+TestPointGroup. If testPts is a single flattened list only one
+TestPointGroup will be created.</li>
+<li><strong>vector_groups</strong> – An optional list of (x, y, z) vectors. Each vector
+represents direction of corresponding point in testPts. If the
+vector is not provided (0, 0, 1) will be assigned.</li>
+<li><strong>simulation_type</strong> – 0: Illuminance(lux), 1: Radiation (kWh), 2: Luminance
+(Candela) (Default: 0).</li>
+<li><strong>rad_parameters</strong> – Radiance parameters for grid based analysis (rtrace).
+(Default: gridbased.LowQuality)</li>
+<li><strong>hb_objects</strong> – An optional list of Honeybee surfaces or zones (Default: None).</li>
+<li><strong>sub_folder</strong> – Analysis subfolder for this recipe. (Default: “gridbased”)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.pointintime.gridbased.GridBased.radiance_parameters">
+<code class="descname">radiance_parameters</code><a class="headerlink" href="#honeybee.radiance.recipe.pointintime.gridbased.GridBased.radiance_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radiance parameters for grid based analysis (rtrace).
+(Default: gridbased.LowQuality)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.recipe.pointintime.gridbased.GridBased.results">
+<code class="descname">results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/pointintime/gridbased.html#GridBased.results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.pointintime.gridbased.GridBased.results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return results for this analysis.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">simulation_type</code></dt>
+<dd><p><a href="#id1"><span class="problematic" id="id2">**</span></a>Simulation type* – 0* – Illuminance(lux), 1: Radiation (wh),
+2: Luminance (Candela) (Default: 0)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">sky</code></dt>
+<dd><p>A honeybee sky for the analysis.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.recipe.pointintime.gridbased.GridBased.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/pointintime/gridbased.html#GridBased.to_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.pointintime.gridbased.GridBased.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create point-in-time recipe from json.
+{</p>
+<blockquote>
+<div>“id”: 1, // do NOT overwrite this id
+“sky”: null, // a honeybee sky
+“surfaces”: [], // list of honeybee surfaces
+“analysis_grids”: [] // list of analysis grids
+// [0] illuminance(lux), [1] radiation (kwh), [2] luminance (Candela).
+“analysis_type”: 0</div></blockquote>
+<p>}</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.recipe.pointintime.gridbased.GridBased.write">
+<code class="descname">write</code><span class="sig-paren">(</span><em>target_folder</em>, <em>project_name='untitled'</em>, <em>header=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/pointintime/gridbased.html#GridBased.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.pointintime.gridbased.GridBased.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write analysis files to target folder.</p>
+<dl class="docutils">
+<dt>Files for a grid based analysis are:</dt>
+<dd><p class="first">test points &lt;project_name.pts&gt;: List of analysis points.
+sky file &lt;<em>.sky&gt;: Radiance sky for this analysis.
+material file &lt;</em>.mat&gt;: Radiance materials. Will be empty if hb_objects</p>
+<blockquote>
+<div>is None.</div></blockquote>
+<dl class="docutils">
+<dt>geometry file &lt;<a href="#id3"><span class="problematic" id="id4">*</span></a>.rad&gt;: Radiance geometries. Will be empty if hb_objects</dt>
+<dd>is None.</dd>
+</dl>
+<p>sky file &lt;<em>.sky&gt;: Radiance sky for this analysis.
+batch file &lt;</em>.bat&gt;: An executable batch file which has the list of commands.</p>
+<blockquote>
+<div>oconve &lt;<a href="#id5"><span class="problematic" id="id6">*</span></a>.sky&gt; &lt;project_name.mat&gt; &lt;project_name.rad&gt;
+&lt;additional rad_files&gt; &gt; &lt;project_name.oct&gt;
+rtrace &lt;radiance_parameters&gt; &lt;project_name.oct&gt; &gt; &lt;project_name.res&gt;</div></blockquote>
+<p class="last">results file &lt;<a href="#id7"><span class="problematic" id="id8">*</span></a>.res&gt;: Results file once the analysis is over.</p>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>target_folder</strong> – Path to parent folder. Files will be created under
+target_folder/gridbased. use self.sub_folder to change subfolder name.</li>
+<li><strong>project_name</strong> – Name of this project as a string.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Full path to command.bat</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.recipe.pointintime.imagebased">
+<span id="honeybee-radiance-recipe-pointintime-imagebased-module"></span><h2>honeybee.radiance.recipe.pointintime.imagebased module<a class="headerlink" href="#module-honeybee.radiance.recipe.pointintime.imagebased" title="Permalink to this headline">¶</a></h2>
+<p>Radiance Grid-based Analysis Recipe.</p>
+<dl class="class">
+<dt id="honeybee.radiance.recipe.pointintime.imagebased.ImageBased">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.recipe.pointintime.imagebased.</code><code class="descname">ImageBased</code><span class="sig-paren">(</span><em>sky</em>, <em>views</em>, <em>simulation_type=2</em>, <em>rad_parameters=None</em>, <em>hb_objects=None</em>, <em>sub_folder='imagebased'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/pointintime/imagebased.html#ImageBased"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.pointintime.imagebased.ImageBased" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.recipe._imagebasedbase.GenericImageBased</span></code></p>
+<p>Grid base analysis base class.</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.pointintime.imagebased.ImageBased.sky">
+<code class="descname">sky</code><a class="headerlink" href="#honeybee.radiance.recipe.pointintime.imagebased.ImageBased.sky" title="Permalink to this definition">¶</a></dt>
+<dd><p>A honeybee sky for the analysis</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.pointintime.imagebased.ImageBased.views">
+<code class="descname">views</code><a class="headerlink" href="#honeybee.radiance.recipe.pointintime.imagebased.ImageBased.views" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of views.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.pointintime.imagebased.ImageBased.simulation_type">
+<code class="descname">simulation_type</code><a class="headerlink" href="#honeybee.radiance.recipe.pointintime.imagebased.ImageBased.simulation_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>0: Illuminance(lux), 1: Radiation (kWh), 2: Luminance (Candela)
+(Default: 0)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.pointintime.imagebased.ImageBased.rad_parameters">
+<code class="descname">rad_parameters</code><a class="headerlink" href="#honeybee.radiance.recipe.pointintime.imagebased.ImageBased.rad_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radiance parameters for grid based analysis (rtrace).
+(Default: imagebased.LowQualityImage)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.pointintime.imagebased.ImageBased.hb_objects">
+<code class="descname">hb_objects</code><a class="headerlink" href="#honeybee.radiance.recipe.pointintime.imagebased.ImageBased.hb_objects" title="Permalink to this definition">¶</a></dt>
+<dd><p>An optional list of Honeybee surfaces or zones (Default: None).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.pointintime.imagebased.ImageBased.sub_folder">
+<code class="descname">sub_folder</code><a class="headerlink" href="#honeybee.radiance.recipe.pointintime.imagebased.ImageBased.sub_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Analysis subfolder for this recipe. (Default: “gridbased”)</p>
+</dd></dl>
+
+<dl class="docutils">
+<dt>Usage:</dt>
+<dd><p class="first"># create the sky
+sky = SkyWithCertainIlluminanceLevel(2000)</p>
+<p># initiate analysis_recipe
+analysis_recipe = ImageBased(</p>
+<blockquote>
+<div>sky, views, simType
+)</div></blockquote>
+<p># add honeybee object
+analysis_recipe.hb_objects = HBObjs</p>
+<p># write analysis files to local drive
+analysis_recipe.write(_folder_, _name_)</p>
+<p># run the analysis
+analysis_recipe.run(debaug=False)</p>
+<p class="last"># get the results
+print(analysis_recipe.results())</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="honeybee.radiance.recipe.pointintime.imagebased.ImageBased.ToString">
+<code class="descname">ToString</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/pointintime/imagebased.html#ImageBased.ToString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.pointintime.imagebased.ImageBased.ToString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrite .NET ToString method.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.pointintime.imagebased.ImageBased.radiance_parameters">
+<code class="descname">radiance_parameters</code><a class="headerlink" href="#honeybee.radiance.recipe.pointintime.imagebased.ImageBased.radiance_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radiance parameters for grid based analysis (rtrace).
+(Default: imagebased.LowQualityImage)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.recipe.pointintime.imagebased.ImageBased.results">
+<code class="descname">results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/pointintime/imagebased.html#ImageBased.results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.pointintime.imagebased.ImageBased.results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return results for this analysis.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">simulation_type</code></dt>
+<dd><p><a href="#id9"><span class="problematic" id="id10">**</span></a>Simulation type* – 0* – Illuminance(lux), 1: Radiation (kWh),
+2: Luminance (Candela) (Default: 0)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">sky</code></dt>
+<dd><p>A honeybee sky for the analysis.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.recipe.pointintime.imagebased.ImageBased.write">
+<code class="descname">write</code><span class="sig-paren">(</span><em>target_folder</em>, <em>project_name='untitled'</em>, <em>header=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/pointintime/imagebased.html#ImageBased.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.pointintime.imagebased.ImageBased.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write analysis files to target folder.</p>
+<dl class="docutils">
+<dt>Files for an image based analysis are:</dt>
+<dd><p class="first">views &lt;<em>.vf&gt;: A radiance view.
+sky file &lt;</em>.sky&gt;: Radiance sky for this analysis.
+material file &lt;<a href="#id11"><span class="problematic" id="id12">*</span></a>.mat&gt;: Radiance materials. Will be empty if hb_objects is</p>
+<blockquote>
+<div>None.</div></blockquote>
+<dl class="docutils">
+<dt>geometry file &lt;<a href="#id13"><span class="problematic" id="id14">*</span></a>.rad&gt;: Radiance geometries. Will be empty if hb_objects is</dt>
+<dd>None.</dd>
+</dl>
+<p>sky file &lt;<em>.sky&gt;: Radiance sky for this analysis.
+batch file &lt;</em>.bat&gt;: An executable batch file which has the list of commands.</p>
+<blockquote>
+<div>oconve &lt;<a href="#id15"><span class="problematic" id="id16">*</span></a>.sky&gt; &lt;project_name.mat&gt; &lt;project_name.rad&gt;
+&lt;additional rad_files&gt; &gt; &lt;project_name.oct&gt;
+rtrace &lt;radiance_parameters&gt; &lt;project_name.oct&gt; &gt; &lt;project_name.res&gt;</div></blockquote>
+<p class="last">results file &lt;<a href="#id17"><span class="problematic" id="id18">*</span></a>.hdr&gt;: Results file once the analysis is over.</p>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>target_folder</strong> – Path to parent folder. Files will be created under
+target_folder/gridbased. use self.sub_folder to change subfolder name.</li>
+<li><strong>project_name</strong> – Name of this project as a string.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Full path to command.bat</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.recipe.pointintime">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-honeybee.radiance.recipe.pointintime" title="Permalink to this headline">¶</a></h2>
+<p>Point-in-time recipes.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/honeybee.radiance.recipe.pointintime.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

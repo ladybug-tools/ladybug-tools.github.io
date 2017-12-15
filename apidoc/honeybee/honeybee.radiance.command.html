@@ -1,0 +1,1932 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.command package &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="honeybee.radiance.command.pyRad package" href="honeybee.radiance.command.pyRad.html" />
+    <link rel="prev" title="honeybee.radiance package" href="honeybee.radiance.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="honeybee.html">honeybee package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="honeybee.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="honeybee.energyplus.html">honeybee.energyplus package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="honeybee.radiance.html">honeybee.radiance package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="honeybee.radiance.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.analysisgrid">honeybee.radiance.analysisgrid module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.analysispoint">honeybee.radiance.analysispoint module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.datatype">honeybee.radiance.datatype module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.filemanager">honeybee.radiance.filemanager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.geometry">honeybee.radiance.geometry module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.imagecollection">honeybee.radiance.imagecollection module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.properties">honeybee.radiance.properties module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.radfile">honeybee.radiance.radfile module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.runmanager">honeybee.radiance.runmanager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.scene">honeybee.radiance.scene module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.view">honeybee.radiance.view module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.server.html">honeybee.server package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.vectormath.html">honeybee.vectormath package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.config">honeybee.config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.dataoperation">honeybee.dataoperation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.futil">honeybee.futil module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.geometryoperation">honeybee.geometryoperation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbdynamicsurface">honeybee.hbdynamicsurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbfensurface">honeybee.hbfensurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbobject">honeybee.hbobject module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbshadesurface">honeybee.hbshadesurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbsurface">honeybee.hbsurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbzone">honeybee.hbzone module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.room">honeybee.room module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.schedule">honeybee.schedule module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.surfaceproperties">honeybee.surfaceproperties module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.surfacetype">honeybee.surfacetype module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.utilcol">honeybee.utilcol module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="honeybee.html">honeybee package</a><ul>
+  <li><a href="honeybee.radiance.html">honeybee.radiance package</a><ul>
+      <li>Previous: <a href="honeybee.radiance.html" title="previous chapter">honeybee.radiance package</a></li>
+      <li>Next: <a href="honeybee.radiance.command.pyRad.html" title="next chapter">honeybee.radiance.command.pyRad package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="honeybee-radiance-command-package">
+<h1>honeybee.radiance.command package<a class="headerlink" href="#honeybee-radiance-command-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="honeybee.radiance.command.pyRad.html">honeybee.radiance.command.pyRad package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.radiance.command.pyRad.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.radiance.command.pyRad.pyRadLib.html">honeybee.radiance.command.pyRad.pyRadLib package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.pyRad.pyRadLib.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.pyRad.pyRadLib.html#module-honeybee.radiance.command.pyRad.pyRadLib.pyrad_proc">honeybee.radiance.command.pyRad.pyRadLib.pyrad_proc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.pyRad.pyRadLib.html#module-honeybee.radiance.command.pyRad.pyRadLib">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.radiance.command.pyRad.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.radiance.command.pyRad.html#honeybee-radiance-command-pyrad-objview-module">honeybee.radiance.command.pyRad.objview module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.radiance.command.pyRad.html#module-honeybee.radiance.command.pyRad">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-honeybee.radiance.command.dctimestep">
+<span id="honeybee-radiance-command-dctimestep-module"></span><h2>honeybee.radiance.command.dctimestep module<a class="headerlink" href="#module-honeybee.radiance.command.dctimestep" title="Permalink to this headline">¶</a></h2>
+<p>dctimestep - transform a RADIANCE scene description</p>
+<dl class="class">
+<dt id="honeybee.radiance.command.dctimestep.Dctimestep">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.command.dctimestep.</code><code class="descname">Dctimestep</code><span class="sig-paren">(</span><em>tmatrix_file=None</em>, <em>dmatrix_file=None</em>, <em>sky_vector_file=None</em>, <em>vmatrix_spec=None</em>, <em>dctimestep_parameters=None</em>, <em>output_filename_format=None</em>, <em>output_name=None</em>, <em>daylight_coeff_spec=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/dctimestep.html#Dctimestep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.dctimestep.Dctimestep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.command._commandbase.RadianceCommand</span></code></p>
+<dl class="attribute">
+<dt id="honeybee.radiance.command.dctimestep.Dctimestep.daylight_coeff_spec">
+<code class="descname">daylight_coeff_spec</code><a class="headerlink" href="#honeybee.radiance.command.dctimestep.Dctimestep.daylight_coeff_spec" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.dctimestep.Dctimestep.dctimestep_parameters">
+<code class="descname">dctimestep_parameters</code><a class="headerlink" href="#honeybee.radiance.command.dctimestep.Dctimestep.dctimestep_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get and set gendaymtx_parameters.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.dctimestep.Dctimestep.dmatrix_file">
+<code class="descname">dmatrix_file</code><a class="headerlink" href="#honeybee.radiance.command.dctimestep.Dctimestep.dmatrix_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.dctimestep.Dctimestep.input_files">
+<code class="descname">input_files</code><a class="headerlink" href="#honeybee.radiance.command.dctimestep.Dctimestep.input_files" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.dctimestep.Dctimestep.output_file">
+<code class="descname">output_file</code><a class="headerlink" href="#honeybee.radiance.command.dctimestep.Dctimestep.output_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.dctimestep.Dctimestep.output_filename_format">
+<code class="descname">output_filename_format</code><a class="headerlink" href="#honeybee.radiance.command.dctimestep.Dctimestep.output_filename_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>-o option in dctimestep.</p>
+<p>The -o option may be used to specify a file or a set of output files to
+use rather than the standard output. If the given specification contains
+a ‘%d’ format string, this will be replaced by the time step index,
+starting from 1. In this way, multiple output pictures may be produced,
+or separate result vectors (one per timestep).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.dctimestep.Dctimestep.sky_vector_file">
+<code class="descname">sky_vector_file</code><a class="headerlink" href="#honeybee.radiance.command.dctimestep.Dctimestep.sky_vector_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.dctimestep.Dctimestep.tmatrix_file">
+<code class="descname">tmatrix_file</code><a class="headerlink" href="#honeybee.radiance.command.dctimestep.Dctimestep.tmatrix_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.dctimestep.Dctimestep.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>relative_path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/dctimestep.html#Dctimestep.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.dctimestep.Dctimestep.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return radiance command line.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.dctimestep.Dctimestep.vmatrix_spec">
+<code class="descname">vmatrix_spec</code><a class="headerlink" href="#honeybee.radiance.command.dctimestep.Dctimestep.vmatrix_spec" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.command.epw2wea">
+<span id="honeybee-radiance-command-epw2wea-module"></span><h2>honeybee.radiance.command.epw2wea module<a class="headerlink" href="#module-honeybee.radiance.command.epw2wea" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.radiance.command.epw2wea.Epw2wea">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.command.epw2wea.</code><code class="descname">Epw2wea</code><span class="sig-paren">(</span><em>epw_file=None</em>, <em>output_wea_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/epw2wea.html#Epw2wea"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.epw2wea.Epw2wea" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.command._commandbase.RadianceCommand</span></code></p>
+<p>epw2wea transforms an EnergyPlus weather data (.epw) file into
+the DAYSIM weather file format, for use with the RADIANCE gendaymtx
+program.</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.command.epw2wea.Epw2wea.epw_file">
+<code class="descname">epw_file</code><a class="headerlink" href="#honeybee.radiance.command.epw2wea.Epw2wea.epw_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filepath of the epw file that is to be converted into wea
+format.</p>
+</dd></dl>
+
+<p>Usage:
+from honeybee.radiance.command.epw2wea import Epw2wea.</p>
+<p>#create an epw2wea command.
+epwWea = Epw2wea(epw_fileName=’c:/ladybug/test.epw’)</p>
+<dl class="attribute">
+<dt>
+<code class="descname">epw_file</code></dt>
+<dd><p>The path of the epw file that is to be converted to a wea file.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.epw2wea.Epw2wea.input_files">
+<code class="descname">input_files</code><a class="headerlink" href="#honeybee.radiance.command.epw2wea.Epw2wea.input_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return input files specified by user.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.epw2wea.Epw2wea.output_wea_file">
+<code class="descname">output_wea_file</code><a class="headerlink" href="#honeybee.radiance.command.epw2wea.Epw2wea.output_wea_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>The path of the output wea file. Note that this path will be created
+if not specified by the user.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.epw2wea.Epw2wea.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>relative_path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/epw2wea.html#Epw2wea.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.epw2wea.Epw2wea.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return full radiance command as string</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.command.falsecolor">
+<span id="honeybee-radiance-command-falsecolor-module"></span><h2>honeybee.radiance.command.falsecolor module<a class="headerlink" href="#module-honeybee.radiance.command.falsecolor" title="Permalink to this headline">¶</a></h2>
+<p>falsecolor - make a falsecolor Radiance picture</p>
+<dl class="class">
+<dt id="honeybee.radiance.command.falsecolor.Falsecolor">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.command.falsecolor.</code><code class="descname">Falsecolor</code><span class="sig-paren">(</span><em>input_image_file=None</em>, <em>output_file=None</em>, <em>falsecolor_parameters=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/falsecolor.html#Falsecolor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.falsecolor.Falsecolor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.command._commandbase.RadianceCommand</span></code></p>
+<p>falsecolor - make a falsecolor Radiance picture</p>
+<dl class="method">
+<dt id="honeybee.radiance.command.falsecolor.Falsecolor.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/falsecolor.html#Falsecolor.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.falsecolor.Falsecolor.execute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.falsecolor.Falsecolor.falsecolor_parameters">
+<code class="descname">falsecolor_parameters</code><a class="headerlink" href="#honeybee.radiance.command.falsecolor.Falsecolor.falsecolor_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Paramters for the falsecolor command.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.falsecolor.Falsecolor.input_files">
+<code class="descname">input_files</code><a class="headerlink" href="#honeybee.radiance.command.falsecolor.Falsecolor.input_files" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.falsecolor.Falsecolor.input_image_file">
+<code class="descname">input_image_file</code><a class="headerlink" href="#honeybee.radiance.command.falsecolor.Falsecolor.input_image_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>The file path for which the falsecolor image is to be created.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.falsecolor.Falsecolor.output_file">
+<code class="descname">output_file</code><a class="headerlink" href="#honeybee.radiance.command.falsecolor.Falsecolor.output_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the output file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.falsecolor.Falsecolor.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>relative_path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/falsecolor.html#Falsecolor.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.falsecolor.Falsecolor.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>“Return full command as string</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.command.genBSDF">
+<span id="honeybee-radiance-command-genbsdf-module"></span><h2>honeybee.radiance.command.genBSDF module<a class="headerlink" href="#module-honeybee.radiance.command.genBSDF" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.radiance.command.genBSDF.GenBSDF">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.command.genBSDF.</code><code class="descname">GenBSDF</code><span class="sig-paren">(</span><em>input_geometry=None</em>, <em>gen_bsdf_parameters=None</em>, <em>grid_based_parameters=None</em>, <em>output_file=None</em>, <em>normal_orientation=None</em>, <em>prepare_geometry=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/genBSDF.html#GenBSDF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.genBSDF.GenBSDF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.command._commandbase.RadianceCommand</span></code></p>
+<dl class="method">
+<dt id="honeybee.radiance.command.genBSDF.GenBSDF.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/genBSDF.html#GenBSDF.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.genBSDF.GenBSDF.execute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.genBSDF.GenBSDF.gen_bsdf_parameters">
+<code class="descname">gen_bsdf_parameters</code><a class="headerlink" href="#honeybee.radiance.command.genBSDF.GenBSDF.gen_bsdf_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>These are parameters specific to genBsdf such as sampling, geometry dimensions
+etc.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.genBSDF.GenBSDF.grid_based_parameters">
+<code class="descname">grid_based_parameters</code><a class="headerlink" href="#honeybee.radiance.command.genBSDF.GenBSDF.grid_based_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>The input for this attribute must be an instance of Grid based parameters</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.genBSDF.GenBSDF.input_files">
+<code class="descname">input_files</code><a class="headerlink" href="#honeybee.radiance.command.genBSDF.GenBSDF.input_files" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.genBSDF.GenBSDF.input_geometry">
+<code class="descname">input_geometry</code><a class="headerlink" href="#honeybee.radiance.command.genBSDF.GenBSDF.input_geometry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rad or mgf files that are inputs for genBSDF</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.genBSDF.GenBSDF.normal_orientation">
+<code class="descname">normal_orientation</code><a class="headerlink" href="#honeybee.radiance.command.genBSDF.GenBSDF.normal_orientation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Direction of the normal surface for the overall input geometry</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.genBSDF.GenBSDF.output_file">
+<code class="descname">output_file</code><a class="headerlink" href="#honeybee.radiance.command.genBSDF.GenBSDF.output_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path name for the XML file created by genBSDF</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.genBSDF.GenBSDF.prepare_geometry">
+<code class="descname">prepare_geometry</code><a class="headerlink" href="#honeybee.radiance.command.genBSDF.GenBSDF.prepare_geometry" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean value to decide if the input geometry needs to be translated and
+rotated before being sent as input to genBSDf</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.genBSDF.GenBSDF.prepare_geometry_for_bsdf">
+<code class="descname">prepare_geometry_for_bsdf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/genBSDF.html#GenBSDF.prepare_geometry_for_bsdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.genBSDF.GenBSDF.prepare_geometry_for_bsdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>A method that will translate and rotate the model properly for genBSDF.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.genBSDF.GenBSDF.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>relative_path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/genBSDF.html#GenBSDF.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.genBSDF.GenBSDF.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.command.gendaylit">
+<span id="honeybee-radiance-command-gendaylit-module"></span><h2>honeybee.radiance.command.gendaylit module<a class="headerlink" href="#module-honeybee.radiance.command.gendaylit" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.radiance.command.gendaylit.Gendaylit">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.command.gendaylit.</code><code class="descname">Gendaylit</code><span class="sig-paren">(</span><em>output_name</em>, <em>month_day_hour</em>, <em>rotation=0</em>, <em>gendaylit_parameters=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/gendaylit.html#Gendaylit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.gendaylit.Gendaylit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.command._commandbase.RadianceCommand</span></code></p>
+<p>gendaylit - Generate an annual Perez sky matrix from a weather tape.</p>
+<p>The attributes for this class and their data descriptors are given below.
+Please note that the first two inputs for each descriptor are for internal
+naming purposes only.</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.command.gendaylit.Gendaylit.output_name">
+<code class="descname">output_name</code><a class="headerlink" href="#honeybee.radiance.command.gendaylit.Gendaylit.output_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>An optional name for output file name (Default: ‘untitled’).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.gendaylit.Gendaylit.month_day_hour">
+<code class="descname">month_day_hour</code><a class="headerlink" href="#honeybee.radiance.command.gendaylit.Gendaylit.month_day_hour" title="Permalink to this definition">¶</a></dt>
+<dd><p>A tuple containing inputs for month, day and hour.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.gendaylit.Gendaylit.gendaylit_parameters">
+<code class="descname">gendaylit_parameters</code><a class="headerlink" href="#honeybee.radiance.command.gendaylit.Gendaylit.gendaylit_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radiance parameters for gendaylit. If None Default
+parameters will be set. You can use self.gendaylit_parameters to view,
+add or remove the parameters before executing the command.</p>
+</dd></dl>
+
+<p>Usage:</p>
+<blockquote>
+<div><p>from honeybee.radiance.parameters.gendaylit import GendaylitParameters
+from honeybee.radiance.command.gendaylit import Gendaylit</p>
+<p># create and modify gendaylit parameters.
+gndayParam = GendaylitParameters()
+gndayParam.dir_norm_dif_horz_irrad = (600,100)</p>
+<p># create the gendaylit Command.
+gnday = Gendaylit(month_day_hour=(1,1,11), gendaylit_parameters=gndayParam,
+output_name = r’d:/sunnyWSun_010111.sky’ )</p>
+<p># run gendaylit
+gnday.execute()</p>
+<p>&gt;</p>
+</div></blockquote>
+<dl class="classmethod">
+<dt id="honeybee.radiance.command.gendaylit.Gendaylit.from_location_direct_and_diffuse_radiation">
+<em class="property">classmethod </em><code class="descname">from_location_direct_and_diffuse_radiation</code><span class="sig-paren">(</span><em>output_name</em>, <em>location</em>, <em>month_day_hour</em>, <em>direct_radiation</em>, <em>diffuse_radiation</em>, <em>rotation=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/gendaylit.html#Gendaylit.from_location_direct_and_diffuse_radiation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.gendaylit.Gendaylit.from_location_direct_and_diffuse_radiation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">gendaylit_parameters</code></dt>
+<dd><p>Get and set gendaylit_parameters.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.gendaylit.Gendaylit.input_files">
+<code class="descname">input_files</code><a class="headerlink" href="#honeybee.radiance.command.gendaylit.Gendaylit.input_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Input files for this command.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">month_day_hour</code></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.gendaylit.Gendaylit.output_file">
+<code class="descname">output_file</code><a class="headerlink" href="#honeybee.radiance.command.gendaylit.Gendaylit.output_file" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>results file for sky (Default</em> – untitled)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.gendaylit.Gendaylit.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>relative_path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/gendaylit.html#Gendaylit.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.gendaylit.Gendaylit.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return full command as a string.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.command.gendaymtx">
+<span id="honeybee-radiance-command-gendaymtx-module"></span><h2>honeybee.radiance.command.gendaymtx module<a class="headerlink" href="#module-honeybee.radiance.command.gendaymtx" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.radiance.command.gendaymtx.Gendaymtx">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.command.gendaymtx.</code><code class="descname">Gendaymtx</code><span class="sig-paren">(</span><em>output_name=None</em>, <em>wea_file=None</em>, <em>gendaymtx_parameters=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/gendaymtx.html#Gendaymtx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.gendaymtx.Gendaymtx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.command._commandbase.RadianceCommand</span></code></p>
+<p>gendaymtx - Generate an annual Perez sky matrix from a weather tape.</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.command.gendaymtx.Gendaymtx.output_name">
+<code class="descname">output_name</code><a class="headerlink" href="#honeybee.radiance.command.gendaymtx.Gendaymtx.output_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>An optional name for output file name. If None the name of
+.epw file will be used.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.gendaymtx.Gendaymtx.wea_file">
+<code class="descname">wea_file</code><a class="headerlink" href="#honeybee.radiance.command.gendaymtx.Gendaymtx.wea_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Full path to input wea file (Default: None).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.gendaymtx.Gendaymtx.gendaymtx_parameters">
+<code class="descname">gendaymtx_parameters</code><a class="headerlink" href="#honeybee.radiance.command.gendaymtx.Gendaymtx.gendaymtx_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radiance parameters for gendaymtx. If None Default
+parameters will be set. You can use self.gendaymtx_parameters to view,
+add or remove the parameters before executing the command.</p>
+</dd></dl>
+
+<p>Usage:</p>
+<blockquote>
+<div><p>from honeybee.radiance.parameters.gendaymtx import GendaymtxParameters
+from honeybee.radiance.command.gendaymtx import Gendaymtx</p>
+<p># create and modify gendaymtx_parameters
+# generate sky matrix with default values
+gmtx = GendaymtxParameters()</p>
+<p># ask only for direct sun
+gmtx.only_direct = True</p>
+<p># create gendaymtx
+dmtx = Gendaymtx(wea_file=”C:/IZMIR_TUR.wea”, gendaymtx_parameters=gmtx)</p>
+<p># run gendaymtx
+dmtx.execute()
+&gt; c:/radiance/bin/gendaymtx: reading weather tape ‘C:/ladybug/IZMIR_TUR.wea’
+&gt; c:/radiance/bin/gendaymtx: location ‘IZMIR_TUR’
+&gt; c:/radiance/bin/gendaymtx: (lat,long)=(38.5,-27.0) degrees north, west
+&gt; c:/radiance/bin/gendaymtx: 146 sky patches per time step
+&gt; c:/radiance/bin/gendaymtx: stepping through month 1…
+&gt; c:/radiance/bin/gendaymtx: stepping through month 2…
+&gt; c:/radiance/bin/gendaymtx: stepping through month 3…
+&gt; c:/radiance/bin/gendaymtx: stepping through month 4…
+&gt; c:/radiance/bin/gendaymtx: stepping through month 5…
+&gt; c:/radiance/bin/gendaymtx: stepping through month 6…
+&gt; c:/radiance/bin/gendaymtx: stepping through month 7…
+&gt; c:/radiance/bin/gendaymtx: stepping through month 8…
+&gt; c:/radiance/bin/gendaymtx: stepping through month 9…
+&gt; c:/radiance/bin/gendaymtx: stepping through month 10…
+&gt; c:/radiance/bin/gendaymtx: stepping through month 11…
+&gt; c:/radiance/bin/gendaymtx: stepping through month 12…
+&gt; c:/radiance/bin/gendaymtx: writing matrix with 8760 time steps…
+&gt; c:/radiance/bin/gendaymtx: done.</p>
+<p># change it not to be verbose
+dmtx.gendaymtx_parameters.verbose_report = False</p>
+<p># run it again
+dmtx.execute()
+&gt;</p>
+</div></blockquote>
+<dl class="attribute">
+<dt>
+<code class="descname">gendaymtx_parameters</code></dt>
+<dd><p>Get and set gendaymtx_parameters.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.gendaymtx.Gendaymtx.input_files">
+<code class="descname">input_files</code><a class="headerlink" href="#honeybee.radiance.command.gendaymtx.Gendaymtx.input_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Input files for this command.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.gendaymtx.Gendaymtx.output_file">
+<code class="descname">output_file</code><a class="headerlink" href="#honeybee.radiance.command.gendaymtx.Gendaymtx.output_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output file address.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.gendaymtx.Gendaymtx.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>relative_path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/gendaymtx.html#Gendaymtx.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.gendaymtx.Gendaymtx.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return full command as a string.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.command.gensky">
+<span id="honeybee-radiance-command-gensky-module"></span><h2>honeybee.radiance.command.gensky module<a class="headerlink" href="#module-honeybee.radiance.command.gensky" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.radiance.command.gensky.Gensky">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.command.gensky.</code><code class="descname">Gensky</code><span class="sig-paren">(</span><em>output_name='untitled'</em>, <em>month_day_hour=None</em>, <em>rotation=0</em>, <em>gensky_parameters=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/gensky.html#Gensky"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.gensky.Gensky" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.command._commandbase.RadianceCommand</span></code></p>
+<p>gensky - Generate an annual Perez sky matrix from a weather tape.</p>
+<p>The attributes for this class and their data descriptors are given below.
+Please note that the first two inputs for each descriptor are for internal
+naming purposes only.</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.command.gensky.Gensky.output_name">
+<code class="descname">output_name</code><a class="headerlink" href="#honeybee.radiance.command.gensky.Gensky.output_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>An optional name for output file name (Default: ‘untitled’).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.gensky.Gensky.month_day_hour">
+<code class="descname">month_day_hour</code><a class="headerlink" href="#honeybee.radiance.command.gensky.Gensky.month_day_hour" title="Permalink to this definition">¶</a></dt>
+<dd><p>A tuple containing inputs for month, day and hour.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.gensky.Gensky.gensky_parameters">
+<code class="descname">gensky_parameters</code><a class="headerlink" href="#honeybee.radiance.command.gensky.Gensky.gensky_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radiance parameters for gensky. If None Default
+parameters will be set. You can use self.gensky_parameters to view,
+add or remove the parameters before executing the command.</p>
+</dd></dl>
+
+<p>Usage:</p>
+<blockquote>
+<div><p>from honeybee.radiance.parameters.gensky import GenSkyParameters
+from honeybee.radiance.command.gensky import GenSky</p>
+<p># create and modify gensky_parameters. In this case a sunny with no sun
+# will be generated.
+gnsky_param = GenSkyParameters()
+gnskyParam.sunny_skyNoSun = True</p>
+<p># create the gensky Command.
+gnsky = GenSky(month_day_hour=(1,1,11), gensky_parameters=gnskyParam,
+output_name = r’d:/sunnyWSun_010111.sky’ )</p>
+<p># run gensky
+gnsky.execute()</p>
+<p>&gt;</p>
+</div></blockquote>
+<dl class="classmethod">
+<dt id="honeybee.radiance.command.gensky.Gensky.from_sky_type">
+<em class="property">classmethod </em><code class="descname">from_sky_type</code><span class="sig-paren">(</span><em>output_name='untitled'</em>, <em>month_day_hour=(9</em>, <em>21</em>, <em>12)</em>, <em>sky_type=0</em>, <em>latitude=None</em>, <em>longitude=None</em>, <em>meridian=None</em>, <em>rotation=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/gensky.html#Gensky.from_sky_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.gensky.Gensky.from_sky_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a sky by sky type.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>output_name</strong> – An optional name for output file name (Default: ‘untitled’).</li>
+<li><strong>month_day_hour</strong> – A tuple containing inputs for month, day and hour.</li>
+<li><strong>sky_type</strong> – An intger between 0-5 for CIE sky type.
+0: [+s] Sunny with sun, 1: [-s] Sunny without sun,
+2: [+i] Intermediate with sun, 3: [-i] Intermediate with no sun,
+4: [-c] Cloudy overcast sky, 5: [-u] Uniform cloudy sky</li>
+<li><strong>latitude</strong> – [-a] A float number to indicate site altitude. Negative
+angle indicates south latitude.</li>
+<li><strong>longitude</strong> – [-o] A float number to indicate site latitude. Negative
+angle indicates east longitude.</li>
+<li><strong>meridian</strong> – [-m] A float number to indicate site meridian west of
+Greenwich.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">gensky_parameters</code></dt>
+<dd><p>Get and set gensky_parameters.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.gensky.Gensky.input_files">
+<code class="descname">input_files</code><a class="headerlink" href="#honeybee.radiance.command.gensky.Gensky.input_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Input files for this command.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">month_day_hour</code></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.gensky.Gensky.output_file">
+<code class="descname">output_file</code><a class="headerlink" href="#honeybee.radiance.command.gensky.Gensky.output_file" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>results file for sky (Default</em> – untitled)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.gensky.Gensky.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/gensky.html#Gensky.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.gensky.Gensky.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return full command as a string.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.radiance.command.gensky.Gensky.uniform_skyfrom_illuminance_value">
+<em class="property">classmethod </em><code class="descname">uniform_skyfrom_illuminance_value</code><span class="sig-paren">(</span><em>output_name='untitled'</em>, <em>illuminance_value=10000</em>, <em>sky_type=4</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/gensky.html#Gensky.uniform_skyfrom_illuminance_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.gensky.Gensky.uniform_skyfrom_illuminance_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uniform CIE sky based on illuminance value.</p>
+<dl class="attribute">
+<dt>
+<code class="descname">output_name</code></dt>
+<dd><p>An optional name for output file name (Default: ‘untitled’).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.gensky.Gensky.illuminance_value">
+<code class="descname">illuminance_value</code><a class="headerlink" href="#honeybee.radiance.command.gensky.Gensky.illuminance_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Desired illuminance value in lux</p>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.command.genskyvec">
+<span id="honeybee-radiance-command-genskyvec-module"></span><h2>honeybee.radiance.command.genskyvec module<a class="headerlink" href="#module-honeybee.radiance.command.genskyvec" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.radiance.command.genskyvec.Genskyvec">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.command.genskyvec.</code><code class="descname">Genskyvec</code><span class="sig-paren">(</span><em>header_suppress=None</em>, <em>sky_subdivision=None</em>, <em>sky_color_rgb=None</em>, <em>sun_only_vector=None</em>, <em>input_sky_file=None</em>, <em>output_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/genskyvec.html#Genskyvec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.genskyvec.Genskyvec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.command._commandbase.RadianceCommand</span></code></p>
+<dl class="attribute">
+<dt id="honeybee.radiance.command.genskyvec.Genskyvec.header_suppress">
+<code class="descname">header_suppress</code><a class="headerlink" href="#honeybee.radiance.command.genskyvec.Genskyvec.header_suppress" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.genskyvec.Genskyvec.input_files">
+<code class="descname">input_files</code><a class="headerlink" href="#honeybee.radiance.command.genskyvec.Genskyvec.input_files" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.genskyvec.Genskyvec.input_sky_file">
+<code class="descname">input_sky_file</code><a class="headerlink" href="#honeybee.radiance.command.genskyvec.Genskyvec.input_sky_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.genskyvec.Genskyvec.output_file">
+<code class="descname">output_file</code><a class="headerlink" href="#honeybee.radiance.command.genskyvec.Genskyvec.output_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.genskyvec.Genskyvec.sky_color_rgb">
+<code class="descname">sky_color_rgb</code><a class="headerlink" href="#honeybee.radiance.command.genskyvec.Genskyvec.sky_color_rgb" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.genskyvec.Genskyvec.sky_subdivision">
+<code class="descname">sky_subdivision</code><a class="headerlink" href="#honeybee.radiance.command.genskyvec.Genskyvec.sky_subdivision" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.genskyvec.Genskyvec.sun_only_vector">
+<code class="descname">sun_only_vector</code><a class="headerlink" href="#honeybee.radiance.command.genskyvec.Genskyvec.sun_only_vector" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.genskyvec.Genskyvec.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>relative_path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/genskyvec.html#Genskyvec.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.genskyvec.Genskyvec.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.command.getbbox">
+<span id="honeybee-radiance-command-getbbox-module"></span><h2>honeybee.radiance.command.getbbox module<a class="headerlink" href="#module-honeybee.radiance.command.getbbox" title="Permalink to this headline">¶</a></h2>
+<p>getbbox - compute bounding box for Radiance rad.</p>
+<dl class="class">
+<dt id="honeybee.radiance.command.getbbox.Getbbox">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.command.getbbox.</code><code class="descname">Getbbox</code><span class="sig-paren">(</span><em>warnings_suppress=None</em>, <em>header_suppress=None</em>, <em>rad_files=None</em>, <em>output_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/getbbox.html#Getbbox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.getbbox.Getbbox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.command._commandbase.RadianceCommand</span></code></p>
+<dl class="attribute">
+<dt id="honeybee.radiance.command.getbbox.Getbbox.header_suppress">
+<code class="descname">header_suppress</code><a class="headerlink" href="#honeybee.radiance.command.getbbox.Getbbox.header_suppress" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.getbbox.Getbbox.input_files">
+<code class="descname">input_files</code><a class="headerlink" href="#honeybee.radiance.command.getbbox.Getbbox.input_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return input files by user.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.getbbox.Getbbox.output_file">
+<code class="descname">output_file</code><a class="headerlink" href="#honeybee.radiance.command.getbbox.Getbbox.output_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.getbbox.Getbbox.rad_files">
+<code class="descname">rad_files</code><a class="headerlink" href="#honeybee.radiance.command.getbbox.Getbbox.rad_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get and set rad files.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.getbbox.Getbbox.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>relative_path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/getbbox.html#Getbbox.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.getbbox.Getbbox.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.getbbox.Getbbox.warnings_suppress">
+<code class="descname">warnings_suppress</code><a class="headerlink" href="#honeybee.radiance.command.getbbox.Getbbox.warnings_suppress" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.command.getinfo">
+<span id="honeybee-radiance-command-getinfo-module"></span><h2>honeybee.radiance.command.getinfo module<a class="headerlink" href="#module-honeybee.radiance.command.getinfo" title="Permalink to this headline">¶</a></h2>
+<p>getinfo - get header information from a RADIANCE file</p>
+<dl class="class">
+<dt id="honeybee.radiance.command.getinfo.Getinfo">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.command.getinfo.</code><code class="descname">Getinfo</code><span class="sig-paren">(</span><em>get_dimensions=None</em>, <em>header_suppress=None</em>, <em>rad_files=None</em>, <em>output_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/getinfo.html#Getinfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.getinfo.Getinfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.command._commandbase.RadianceCommand</span></code></p>
+<dl class="attribute">
+<dt id="honeybee.radiance.command.getinfo.Getinfo.get_dimensions">
+<code class="descname">get_dimensions</code><a class="headerlink" href="#honeybee.radiance.command.getinfo.Getinfo.get_dimensions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.getinfo.Getinfo.input_file">
+<code class="descname">input_file</code><a class="headerlink" href="#honeybee.radiance.command.getinfo.Getinfo.input_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get and set rad files.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.getinfo.Getinfo.input_files">
+<code class="descname">input_files</code><a class="headerlink" href="#honeybee.radiance.command.getinfo.Getinfo.input_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return input files by user.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.getinfo.Getinfo.output_file">
+<code class="descname">output_file</code><a class="headerlink" href="#honeybee.radiance.command.getinfo.Getinfo.output_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.getinfo.Getinfo.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>relative_path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/getinfo.html#Getinfo.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.getinfo.Getinfo.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.command.objview">
+<span id="honeybee-radiance-command-objview-module"></span><h2>honeybee.radiance.command.objview module<a class="headerlink" href="#module-honeybee.radiance.command.objview" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.radiance.command.objview.Objview">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.command.objview.</code><code class="descname">Objview</code><span class="sig-paren">(</span><em>use_open_gl=None</em>, <em>hemisphere_up=None</em>, <em>back_face_visibility=None</em>, <em>view_details=None</em>, <em>num_processors=None</em>, <em>output_device=None</em>, <em>verbose_display=None</em>, <em>disable_warnings=None</em>, <em>gl_rad_full_screen=None</em>, <em>view_file=None</em>, <em>scene_exposure=None</em>, <em>no_lights=None</em>, <em>run_silently=None</em>, <em>print_views=None</em>, <em>scene_files=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/objview.html#Objview"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.objview.Objview" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.command._commandbase.RadianceCommand</span></code></p>
+<dl class="attribute">
+<dt id="honeybee.radiance.command.objview.Objview.back_face_visibility">
+<code class="descname">back_face_visibility</code><a class="headerlink" href="#honeybee.radiance.command.objview.Objview.back_face_visibility" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.objview.Objview.disable_warnings">
+<code class="descname">disable_warnings</code><a class="headerlink" href="#honeybee.radiance.command.objview.Objview.disable_warnings" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.objview.Objview.gl_rad_full_screen">
+<code class="descname">gl_rad_full_screen</code><a class="headerlink" href="#honeybee.radiance.command.objview.Objview.gl_rad_full_screen" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.objview.Objview.hemisphere_up">
+<code class="descname">hemisphere_up</code><a class="headerlink" href="#honeybee.radiance.command.objview.Objview.hemisphere_up" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.objview.Objview.input_files">
+<code class="descname">input_files</code><a class="headerlink" href="#honeybee.radiance.command.objview.Objview.input_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return input files by user.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.objview.Objview.no_lights">
+<code class="descname">no_lights</code><a class="headerlink" href="#honeybee.radiance.command.objview.Objview.no_lights" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.objview.Objview.num_processors">
+<code class="descname">num_processors</code><a class="headerlink" href="#honeybee.radiance.command.objview.Objview.num_processors" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.objview.Objview.output_device">
+<code class="descname">output_device</code><a class="headerlink" href="#honeybee.radiance.command.objview.Objview.output_device" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.objview.Objview.print_views">
+<code class="descname">print_views</code><a class="headerlink" href="#honeybee.radiance.command.objview.Objview.print_views" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.objview.Objview.run_silently">
+<code class="descname">run_silently</code><a class="headerlink" href="#honeybee.radiance.command.objview.Objview.run_silently" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.objview.Objview.scene_exposure">
+<code class="descname">scene_exposure</code><a class="headerlink" href="#honeybee.radiance.command.objview.Objview.scene_exposure" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.objview.Objview.scene_files">
+<code class="descname">scene_files</code><a class="headerlink" href="#honeybee.radiance.command.objview.Objview.scene_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get and set scene files.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.objview.Objview.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>relative_path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/objview.html#Objview.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.objview.Objview.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.objview.Objview.use_open_gl">
+<code class="descname">use_open_gl</code><a class="headerlink" href="#honeybee.radiance.command.objview.Objview.use_open_gl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.objview.Objview.verbose_display">
+<code class="descname">verbose_display</code><a class="headerlink" href="#honeybee.radiance.command.objview.Objview.verbose_display" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.objview.Objview.view_details">
+<code class="descname">view_details</code><a class="headerlink" href="#honeybee.radiance.command.objview.Objview.view_details" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.objview.Objview.view_file">
+<code class="descname">view_file</code><a class="headerlink" href="#honeybee.radiance.command.objview.Objview.view_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.command.oconv">
+<span id="honeybee-radiance-command-oconv-module"></span><h2>honeybee.radiance.command.oconv module<a class="headerlink" href="#module-honeybee.radiance.command.oconv" title="Permalink to this headline">¶</a></h2>
+<p>oconv-create an octree from a RADIANCE scene description.</p>
+<dl class="class">
+<dt id="honeybee.radiance.command.oconv.Oconv">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.command.oconv.</code><code class="descname">Oconv</code><span class="sig-paren">(</span><em>output_name='untitled'</em>, <em>scene_files=[]</em>, <em>oconv_parameters=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/oconv.html#Oconv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.oconv.Oconv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.command._commandbase.RadianceCommand</span></code></p>
+<p>Create a Radiance octree.</p>
+<p>Read more at: <a class="reference external" href="http://radsite.lbl.gov/radiance/man_html/oconv.1.html">http://radsite.lbl.gov/radiance/man_html/oconv.1.html</a></p>
+<dl class="attribute">
+<dt id="honeybee.radiance.command.oconv.Oconv.output_name">
+<code class="descname">output_name</code><a class="headerlink" href="#honeybee.radiance.command.oconv.Oconv.output_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output oct file which is usually the same as the project name
+(Default: untitled)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.oconv.Oconv.scene_files">
+<code class="descname">scene_files</code><a class="headerlink" href="#honeybee.radiance.command.oconv.Oconv.scene_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of radiance files (e.g. sky files, material files,
+geometry files) in the order that they should show up in oconv
+command. Make sure to put files with modifiers (e.g materials,
+sources) before the files that are using them (e.g geometry files).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.oconv.Oconv.oconv_parameters">
+<code class="descname">oconv_parameters</code><a class="headerlink" href="#honeybee.radiance.command.oconv.Oconv.oconv_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radiance parameters for oconv. If None Default
+parameters will be set. You can use self.oconv_parameters to view,
+add or remove the parameters before executing the command.</p>
+</dd></dl>
+
+<p>Usage:</p>
+<blockquote>
+<div><p>from honeybee.radiance.parameters.oconv import OconvParameters
+from honeybee.radiance.command.oconv import Oconv</p>
+<p># generate oconv parameters
+rcp = OconvParameters()</p>
+<p># trun off turn off warnings
+rcp.turn_off_warns = True</p>
+<p># create an oconv command
+oconv = Oconv(output_name=”C:/ladybug/test3/gridbased/test3.oct”,</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>scene_files=((r”C:/ladybug/test3/gridbased/test3.mat”,</dt>
+<dd>r”c:/ladybug/test3/gridbased/test3.rad”)),</dd>
+</dl>
+<p>oconv_parameters=rcp
+)</p>
+</div></blockquote>
+<p># print command line to check
+print(oconv.to_rad_string())
+&gt; c:/radiance/bin/oconv -f C:/ladybug/test3/gridbased/test3.mat</p>
+<blockquote>
+<div>c:/ladybug/test3/gridbased/test3.rad &gt; test3.oct</div></blockquote>
+<p># execute the command
+output_file_path = oconv.execute()</p>
+<p>print(output_filePath)
+&gt; C:/ladybug/test3/gridbased/test3.oct</p>
+</div></blockquote>
+<dl class="method">
+<dt id="honeybee.radiance.command.oconv.Oconv.add_file_to_scene">
+<code class="descname">add_file_to_scene</code><span class="sig-paren">(</span><em>file_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/oconv.html#Oconv.add_file_to_scene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.oconv.Oconv.add_file_to_scene" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a new file to the scene.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.oconv.Oconv.input_files">
+<code class="descname">input_files</code><a class="headerlink" href="#honeybee.radiance.command.oconv.Oconv.input_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return input files by user.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">oconv_parameters</code></dt>
+<dd><p>Radiance parameters for oconv. If None Default parameters will be
+set. You can use self.oconv_parameters to view, add or remove the
+parameters before executing the command.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.oconv.Oconv.output_file">
+<code class="descname">output_file</code><a class="headerlink" href="#honeybee.radiance.command.oconv.Oconv.output_file" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>results file for coefficients (Default</em> – untitled)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">scene_files</code></dt>
+<dd><p><em>Sorted list of full path to input rad files (Default</em> – [])</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.oconv.Oconv.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>relative_path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/oconv.html#Oconv.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.oconv.Oconv.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return full command as a string.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.command.pcomb">
+<span id="honeybee-radiance-command-pcomb-module"></span><h2>honeybee.radiance.command.pcomb module<a class="headerlink" href="#module-honeybee.radiance.command.pcomb" title="Permalink to this headline">¶</a></h2>
+<p>pcomb - combine Radiance pictures</p>
+<dl class="class">
+<dt id="honeybee.radiance.command.pcomb.Pcomb">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.command.pcomb.</code><code class="descname">Pcomb</code><span class="sig-paren">(</span><em>image_list=None</em>, <em>output_file=None</em>, <em>pcomb_parameters=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/pcomb.html#Pcomb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.pcomb.Pcomb" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.command._commandbase.RadianceCommand</span></code></p>
+<dl class="attribute">
+<dt id="honeybee.radiance.command.pcomb.Pcomb.image_list">
+<code class="descname">image_list</code><a class="headerlink" href="#honeybee.radiance.command.pcomb.Pcomb.image_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.pcomb.Pcomb.input_files">
+<code class="descname">input_files</code><a class="headerlink" href="#honeybee.radiance.command.pcomb.Pcomb.input_files" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.pcomb.Pcomb.output_file">
+<code class="descname">output_file</code><a class="headerlink" href="#honeybee.radiance.command.pcomb.Pcomb.output_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.pcomb.Pcomb.pcomb_parameters">
+<code class="descname">pcomb_parameters</code><a class="headerlink" href="#honeybee.radiance.command.pcomb.Pcomb.pcomb_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get and set gendaymtx_parameters.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.pcomb.Pcomb.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>relative_path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/pcomb.html#Pcomb.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.pcomb.Pcomb.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return full command as a string</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.radiance.command.pcomb.PcombImage">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.command.pcomb.</code><code class="descname">PcombImage</code><span class="sig-paren">(</span><em>original_pixel_use=None</em>, <em>scaling_factor=None</em>, <em>rgb_color_multiplier=None</em>, <em>input_image_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/pcomb.html#PcombImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.pcomb.PcombImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.command._commandbase.RadianceCommand</span></code></p>
+<dl class="method">
+<dt id="honeybee.radiance.command.pcomb.PcombImage.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/pcomb.html#PcombImage.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.pcomb.PcombImage.execute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.pcomb.PcombImage.input_files">
+<code class="descname">input_files</code><a class="headerlink" href="#honeybee.radiance.command.pcomb.PcombImage.input_files" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.pcomb.PcombImage.input_image_file">
+<code class="descname">input_image_file</code><a class="headerlink" href="#honeybee.radiance.command.pcomb.PcombImage.input_image_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.pcomb.PcombImage.original_pixel_use">
+<code class="descname">original_pixel_use</code><a class="headerlink" href="#honeybee.radiance.command.pcomb.PcombImage.original_pixel_use" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.pcomb.PcombImage.radbin_path">
+<code class="descname">radbin_path</code><a class="headerlink" href="#honeybee.radiance.command.pcomb.PcombImage.radbin_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get and set path to radiance binaries.
+If you set a new value the value will be changed globally.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.pcomb.PcombImage.rgb_color_multiplier">
+<code class="descname">rgb_color_multiplier</code><a class="headerlink" href="#honeybee.radiance.command.pcomb.PcombImage.rgb_color_multiplier" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.pcomb.PcombImage.scaling_factor">
+<code class="descname">scaling_factor</code><a class="headerlink" href="#honeybee.radiance.command.pcomb.PcombImage.scaling_factor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.pcomb.PcombImage.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>relative_path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/pcomb.html#PcombImage.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.pcomb.PcombImage.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.command.raBmp">
+<span id="honeybee-radiance-command-rabmp-module"></span><h2>honeybee.radiance.command.raBmp module<a class="headerlink" href="#module-honeybee.radiance.command.raBmp" title="Permalink to this headline">¶</a></h2>
+<p>ra_bmp</p>
+<dl class="class">
+<dt id="honeybee.radiance.command.raBmp.RaBmp">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.command.raBmp.</code><code class="descname">RaBmp</code><span class="sig-paren">(</span><em>input_hdr_file=None</em>, <em>output_bmp_file=None</em>, <em>ra_bmp_parameters=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/raBmp.html#RaBmp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.raBmp.RaBmp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.command._commandbase.RadianceCommand</span></code></p>
+<dl class="attribute">
+<dt id="honeybee.radiance.command.raBmp.RaBmp.input_files">
+<code class="descname">input_files</code><a class="headerlink" href="#honeybee.radiance.command.raBmp.RaBmp.input_files" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.raBmp.RaBmp.input_hdr_file">
+<code class="descname">input_hdr_file</code><a class="headerlink" href="#honeybee.radiance.command.raBmp.RaBmp.input_hdr_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path for input HDR file</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.raBmp.RaBmp.output_bmp_file">
+<code class="descname">output_bmp_file</code><a class="headerlink" href="#honeybee.radiance.command.raBmp.RaBmp.output_bmp_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path for output tiff file</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.raBmp.RaBmp.ra_bmp_parameters">
+<code class="descname">ra_bmp_parameters</code><a class="headerlink" href="#honeybee.radiance.command.raBmp.RaBmp.ra_bmp_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of RaBmp parameters</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.raBmp.RaBmp.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>relative_path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/raBmp.html#RaBmp.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.raBmp.RaBmp.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.command.raTiff">
+<span id="honeybee-radiance-command-ratiff-module"></span><h2>honeybee.radiance.command.raTiff module<a class="headerlink" href="#module-honeybee.radiance.command.raTiff" title="Permalink to this headline">¶</a></h2>
+<p>ra_bmp</p>
+<dl class="class">
+<dt id="honeybee.radiance.command.raTiff.RaTiff">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.command.raTiff.</code><code class="descname">RaTiff</code><span class="sig-paren">(</span><em>input_hdr_file=None</em>, <em>output_tiff_file=None</em>, <em>ra_tiff_parameters=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/raTiff.html#RaTiff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.raTiff.RaTiff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.command._commandbase.RadianceCommand</span></code></p>
+<dl class="attribute">
+<dt id="honeybee.radiance.command.raTiff.RaTiff.input_files">
+<code class="descname">input_files</code><a class="headerlink" href="#honeybee.radiance.command.raTiff.RaTiff.input_files" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.raTiff.RaTiff.input_hdr_file">
+<code class="descname">input_hdr_file</code><a class="headerlink" href="#honeybee.radiance.command.raTiff.RaTiff.input_hdr_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path for input HDR file</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.raTiff.RaTiff.output_tiff_file">
+<code class="descname">output_tiff_file</code><a class="headerlink" href="#honeybee.radiance.command.raTiff.RaTiff.output_tiff_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path for output tiff file</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.raTiff.RaTiff.ra_tiff_parameters">
+<code class="descname">ra_tiff_parameters</code><a class="headerlink" href="#honeybee.radiance.command.raTiff.RaTiff.ra_tiff_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of RaTiff parameters</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.raTiff.RaTiff.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>relative_path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/raTiff.html#RaTiff.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.raTiff.RaTiff.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.command.rcalc">
+<span id="honeybee-radiance-command-rcalc-module"></span><h2>honeybee.radiance.command.rcalc module<a class="headerlink" href="#module-honeybee.radiance.command.rcalc" title="Permalink to this headline">¶</a></h2>
+<p>rcalc - transform a RADIANCE scene description</p>
+<dl class="class">
+<dt id="honeybee.radiance.command.rcalc.Rcalc">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.command.rcalc.</code><code class="descname">Rcalc</code><span class="sig-paren">(</span><em>output_file=None</em>, <em>rad_file=None</em>, <em>rcalc_parameters=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/rcalc.html#Rcalc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.rcalc.Rcalc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.command._commandbase.RadianceCommand</span></code></p>
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rcalc.Rcalc.input_files">
+<code class="descname">input_files</code><a class="headerlink" href="#honeybee.radiance.command.rcalc.Rcalc.input_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return input files by the user.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rcalc.Rcalc.output_file">
+<code class="descname">output_file</code><a class="headerlink" href="#honeybee.radiance.command.rcalc.Rcalc.output_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rcalc.Rcalc.rad_file">
+<code class="descname">rad_file</code><a class="headerlink" href="#honeybee.radiance.command.rcalc.Rcalc.rad_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get and set rad files.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rcalc.Rcalc.rcalc_parameters">
+<code class="descname">rcalc_parameters</code><a class="headerlink" href="#honeybee.radiance.command.rcalc.Rcalc.rcalc_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get and set gendaymtx_parameters.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.rcalc.Rcalc.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>relative_path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/rcalc.html#Rcalc.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.rcalc.Rcalc.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return full command as a string.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.command.rcollate">
+<span id="honeybee-radiance-command-rcollate-module"></span><h2>honeybee.radiance.command.rcollate module<a class="headerlink" href="#module-honeybee.radiance.command.rcollate" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.radiance.command.rcollate.Rcollate">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.command.rcollate.</code><code class="descname">Rcollate</code><span class="sig-paren">(</span><em>executable_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/rcollate.html#Rcollate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.rcollate.Rcollate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.command._commandbase.RadianceCommand</span></code></p>
+<p>rcollate - resize or transpose matrix data</p>
+<p>Attributes:</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rcollate.Rcollate.input_files">
+<code class="descname">input_files</code><a class="headerlink" href="#honeybee.radiance.command.rcollate.Rcollate.input_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Input files for this command.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rcollate.Rcollate.matrix_file">
+<code class="descname">matrix_file</code><a class="headerlink" href="#honeybee.radiance.command.rcollate.Rcollate.matrix_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.rcollate.Rcollate.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>relative_path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/rcollate.html#Rcollate.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.rcollate.Rcollate.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.command.rcontrib">
+<span id="honeybee-radiance-command-rcontrib-module"></span><h2>honeybee.radiance.command.rcontrib module<a class="headerlink" href="#module-honeybee.radiance.command.rcontrib" title="Permalink to this headline">¶</a></h2>
+<p>RADIANCE rcontrib command.</p>
+<dl class="class">
+<dt id="honeybee.radiance.command.rcontrib.Rcontrib">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.command.rcontrib.</code><code class="descname">Rcontrib</code><span class="sig-paren">(</span><em>output_name=None</em>, <em>octree_file=None</em>, <em>points_file=None</em>, <em>rcontrib_parameters=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/rcontrib.html#Rcontrib"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.rcontrib.Rcontrib" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.command._commandbase.RadianceCommand</span></code></p>
+<p>rcontrib - Compute contribution coefficients in a RADIANCE scene.</p>
+<p>Read more at:
+<a class="reference external" href="https://www.radiance-online.org/learning/documentation/manual-pages/pdfs/rcontrib.pdf">https://www.radiance-online.org/learning/documentation/manual-pages/pdfs/rcontrib.pdf</a></p>
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rcontrib.Rcontrib.output_name">
+<code class="descname">output_name</code><a class="headerlink" href="#honeybee.radiance.command.rcontrib.Rcontrib.output_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>An optional name for output file name. If None the name of
+.epw file will be used.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rcontrib.Rcontrib.rcontrib_parameters">
+<code class="descname">rcontrib_parameters</code><a class="headerlink" href="#honeybee.radiance.command.rcontrib.Rcontrib.rcontrib_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radiance parameters for rcontrib. If None Default
+parameters will be set. You can use self.rcontrib_parameters to view,
+add or remove the parameters before executing the command.</p>
+</dd></dl>
+
+<p>Usage:</p>
+<blockquote>
+<div><p>from honeybee.radiance.command.rcontrib import Rcontrib</p>
+<dl class="docutils">
+<dt>rcontrib = Rcontrib(output_name=”test3”,</dt>
+<dd>octree_file=r”C:/ladybug/test3/gridbased/test3.oct”,
+points_file=r”C:/ladybug/test3/gridbased/test3.pts”)</dd>
+</dl>
+<p># set up parameters
+rcontrib.rcontrib_parameters.mod_file = r”C:/ladybug/test3/sunlist.txt”
+rcontrib.rcontrib_parameters.I = True
+rcontrib.rcontrib_parameters.ab = 0
+rcontrib.rcontrib_parameters.ad = 10000</p>
+<p>print(rcontrib.to_rad_string())
+&gt; c:/radiance/bin/rcontrib -ab 0 -ad 10000 -M</p>
+<blockquote>
+<div>C:/ladybug/test3/gridbased/sunlist.txt -I
+C:/ladybug/test3/gridbased/test3.oct &lt;
+C:/ladybug/test3/gridbased/test3.pts &gt; test3.dc</div></blockquote>
+<p># run rcontrib
+rcontrib.execute()</p>
+</div></blockquote>
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rcontrib.Rcontrib.input_files">
+<code class="descname">input_files</code><a class="headerlink" href="#honeybee.radiance.command.rcontrib.Rcontrib.input_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Input files for this command.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rcontrib.Rcontrib.octree_file">
+<code class="descname">octree_file</code><a class="headerlink" href="#honeybee.radiance.command.rcontrib.Rcontrib.octree_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Full path to input oct file.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rcontrib.Rcontrib.output_file">
+<code class="descname">output_file</code><a class="headerlink" href="#honeybee.radiance.command.rcontrib.Rcontrib.output_file" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>results file for coefficients (Default</em> – untitled)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rcontrib.Rcontrib.points_file">
+<code class="descname">points_file</code><a class="headerlink" href="#honeybee.radiance.command.rcontrib.Rcontrib.points_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Full path to input points file.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">rcontrib_parameters</code></dt>
+<dd><p>Radiance parameters for rcontrib. If None Default parameters will be
+set. You can use self.rcontrib_parameters to view, add or remove the
+parameters before executing the command.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.rcontrib.Rcontrib.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>relative_path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/rcontrib.html#Rcontrib.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.rcontrib.Rcontrib.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return full command as a string.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.command.rfluxmtx">
+<span id="honeybee-radiance-command-rfluxmtx-module"></span><h2>honeybee.radiance.command.rfluxmtx module<a class="headerlink" href="#module-honeybee.radiance.command.rfluxmtx" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.radiance.command.rfluxmtx.Rfluxmtx">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.command.rfluxmtx.</code><code class="descname">Rfluxmtx</code><span class="sig-paren">(</span><em>sender=None</em>, <em>receiver_file=None</em>, <em>octree_file=None</em>, <em>rad_files=None</em>, <em>points_file=None</em>, <em>output_matrix=None</em>, <em>view_rays_file=None</em>, <em>view_info_file=None</em>, <em>output_filename_format=None</em>, <em>num_processors=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/rfluxmtx.html#Rfluxmtx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.rfluxmtx.Rfluxmtx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.command._commandbase.RadianceCommand</span></code></p>
+<p>Radiance Rfluxmtx matrix.</p>
+<dl class="staticmethod">
+<dt id="honeybee.radiance.command.rfluxmtx.Rfluxmtx.add_control_parameters">
+<em class="property">static </em><code class="descname">add_control_parameters</code><span class="sig-paren">(</span><em>input_string</em>, <em>modifier_dict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/rfluxmtx.html#Rfluxmtx.add_control_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.rfluxmtx.Rfluxmtx.add_control_parameters" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="honeybee.radiance.command.rfluxmtx.Rfluxmtx.check_for_rflux_parameters">
+<em class="property">static </em><code class="descname">check_for_rflux_parameters</code><span class="sig-paren">(</span><em>file_val</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/rfluxmtx.html#Rfluxmtx.check_for_rflux_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.rfluxmtx.Rfluxmtx.check_for_rflux_parameters" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="honeybee.radiance.command.rfluxmtx.Rfluxmtx.control_parameters">
+<em class="property">static </em><code class="descname">control_parameters</code><span class="sig-paren">(</span><em>hemi_type='u'</em>, <em>hemi_up_direction='Y'</em>, <em>output_file=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/rfluxmtx.html#Rfluxmtx.control_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.rfluxmtx.Rfluxmtx.control_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rfluxmtx ControlParameters.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="honeybee.radiance.command.rfluxmtx.Rfluxmtx.default_sky_ground">
+<em class="property">static </em><code class="descname">default_sky_ground</code><span class="sig-paren">(</span><em>file_name</em>, <em>sky_type=None</em>, <em>sky_file_format=None</em>, <em>ground_file_format=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/rfluxmtx.html#Rfluxmtx.default_sky_ground"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.rfluxmtx.Rfluxmtx.default_sky_ground" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>file_name</strong> – This should be the name of the file to which the sky defintion
+should be written to.</li>
+<li><strong>sky_type</strong> – <p>The acceptable inputs for hemisphere type are:
+u for uniform.(Usually applicable for ground).</p>
+<p>kf for klems full.</p>
+<p>kh for klems half.</p>
+<p>kq for klems quarter.</p>
+<dl class="docutils">
+<dt>rN for Reinhart - Tregenza type skies. N stands for</dt>
+<dd>subdivisions and defaults to 1.</dd>
+</dl>
+<p>scN for shirley-chiu subdivisions.</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Passes back the same file_name that was provided as input.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">file_name</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rfluxmtx.Rfluxmtx.ground_string">
+<code class="descname">ground_string</code><em class="property"> = '\n    void glow ground_glow\n    0\n    0\n    4 1 1 1 0\n\n    ground_glow source ground\n    0\n    0\n    4 0 0 -1 180\n    '</em><a class="headerlink" href="#honeybee.radiance.command.rfluxmtx.Rfluxmtx.ground_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rfluxmtx.Rfluxmtx.input_files">
+<code class="descname">input_files</code><a class="headerlink" href="#honeybee.radiance.command.rfluxmtx.Rfluxmtx.input_files" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rfluxmtx.Rfluxmtx.num_processors">
+<code class="descname">num_processors</code><a class="headerlink" href="#honeybee.radiance.command.rfluxmtx.Rfluxmtx.num_processors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of processors</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rfluxmtx.Rfluxmtx.number_of_points">
+<code class="descname">number_of_points</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.command.rfluxmtx.Rfluxmtx.number_of_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of test points. Initially set to 0.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rfluxmtx.Rfluxmtx.octree_file">
+<code class="descname">octree_file</code><a class="headerlink" href="#honeybee.radiance.command.rfluxmtx.Rfluxmtx.octree_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Octree file containing the other rad file in the scene.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rfluxmtx.Rfluxmtx.output_data_format">
+<code class="descname">output_data_format</code><a class="headerlink" href="#honeybee.radiance.command.rfluxmtx.Rfluxmtx.output_data_format" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rfluxmtx.Rfluxmtx.output_filename_format">
+<code class="descname">output_filename_format</code><a class="headerlink" href="#honeybee.radiance.command.rfluxmtx.Rfluxmtx.output_filename_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filename format</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rfluxmtx.Rfluxmtx.output_matrix">
+<code class="descname">output_matrix</code><a class="headerlink" href="#honeybee.radiance.command.rfluxmtx.Rfluxmtx.output_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>The flux matrix file that will be created by rfluxmtx.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rfluxmtx.Rfluxmtx.points_file">
+<code class="descname">points_file</code><a class="headerlink" href="#honeybee.radiance.command.rfluxmtx.Rfluxmtx.points_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>The points file or input vwrays for which the illuminance/luminance
+value are to be calculated.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rfluxmtx.Rfluxmtx.rad_files">
+<code class="descname">rad_files</code><a class="headerlink" href="#honeybee.radiance.command.rfluxmtx.Rfluxmtx.rad_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rad files other than the sender and receiver that are a part of the
+scene.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rfluxmtx.Rfluxmtx.receiver_file">
+<code class="descname">receiver_file</code><a class="headerlink" href="#honeybee.radiance.command.rfluxmtx.Rfluxmtx.receiver_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Receiver file will usually be the sky file containing rfluxmtx
+variables</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rfluxmtx.Rfluxmtx.rfluxmtx_parameters">
+<code class="descname">rfluxmtx_parameters</code><a class="headerlink" href="#honeybee.radiance.command.rfluxmtx.Rfluxmtx.rfluxmtx_parameters" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rfluxmtx.Rfluxmtx.sender">
+<code class="descname">sender</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.radiance.command.rfluxmtx.Rfluxmtx.sender" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sender file will be either a rad file containing rfluxmtx variables
+or just a -</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rfluxmtx.Rfluxmtx.sky_string">
+<code class="descname">sky_string</code><em class="property"> = '\n    void glow sky_glow\n    0\n    0\n    4 1 1 1 0\n\n    sky_glow source sky\n    0\n    0\n    4 0 0 1 180\n    '</em><a class="headerlink" href="#honeybee.radiance.command.rfluxmtx.Rfluxmtx.sky_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.rfluxmtx.Rfluxmtx.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>relative_path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/rfluxmtx.html#Rfluxmtx.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.rfluxmtx.Rfluxmtx.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rfluxmtx.Rfluxmtx.verbose">
+<code class="descname">verbose</code><a class="headerlink" href="#honeybee.radiance.command.rfluxmtx.Rfluxmtx.verbose" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rfluxmtx.Rfluxmtx.view_info_file">
+<code class="descname">view_info_file</code><a class="headerlink" href="#honeybee.radiance.command.rfluxmtx.Rfluxmtx.view_info_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>File containing view dimensions calculated from vwrays.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rfluxmtx.Rfluxmtx.view_rays_file">
+<code class="descname">view_rays_file</code><a class="headerlink" href="#honeybee.radiance.command.rfluxmtx.Rfluxmtx.view_rays_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>File containing ray samples generated from vwrays</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.radiance.command.rfluxmtx.RfluxmtxControlParameters">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.command.rfluxmtx.</code><code class="descname">RfluxmtxControlParameters</code><span class="sig-paren">(</span><em>hemi_type='u'</em>, <em>hemi_up_direction='Y'</em>, <em>output_file=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/rfluxmtx.html#RfluxmtxControlParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.rfluxmtx.RfluxmtxControlParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Rfluxmtx ControlParameters.</p>
+<p>Set the values for hemispheretype, hemisphere up direction and output file
+location (optional).</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rfluxmtx.RfluxmtxControlParameters.hemisphere_type">
+<code class="descname">hemisphere_type</code><a class="headerlink" href="#honeybee.radiance.command.rfluxmtx.RfluxmtxControlParameters.hemisphere_type" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>The acceptable inputs for hemisphere type are</em> – u for uniform.(Usually applicable for ground).
+kf for klems full.
+kh for klems half.
+kq for klems quarter.
+rN for Reinhart - Tregenza type skies. N stands for subdivisions</p>
+<blockquote>
+<div>and defaults to 1.</div></blockquote>
+<p>scN for shirley-chiu subdivisions.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rfluxmtx.RfluxmtxControlParameters.hemisphere_up_direction">
+<code class="descname">hemisphere_up_direction</code><a class="headerlink" href="#honeybee.radiance.command.rfluxmtx.RfluxmtxControlParameters.hemisphere_up_direction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.command.rmtxop">
+<span id="honeybee-radiance-command-rmtxop-module"></span><h2>honeybee.radiance.command.rmtxop module<a class="headerlink" href="#module-honeybee.radiance.command.rmtxop" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.radiance.command.rmtxop.Rmtxop">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.command.rmtxop.</code><code class="descname">Rmtxop</code><span class="sig-paren">(</span><em>matrix_files=None</em>, <em>rmtxop_matrices=None</em>, <em>output_file=None</em>, <em>rmtxop_parameters=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/rmtxop.html#Rmtxop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.rmtxop.Rmtxop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.command._commandbase.RadianceCommand</span></code></p>
+<p>rmtxop - concatenate, add, transpose, scale, and convert matrices</p>
+<p>rmtxop [ -v ][ -f[afdc] ][ -t ][ -s sf .. ][ -c ce .. ] m1 [ + ] ..</p>
+<p>#Simple usage (for just adding stuff):
+mtx = Rmtxop()
+mtx.matrix_files = [matrix_filePath1, matrix_filePath2]
+mtx.output_file = output_matrixFilePath
+#Then to_rad_string will be:</p>
+<blockquote>
+<div>‘rmtxop matrix_filesPath1 + matrix_filePath2 &gt; output_matrixFilePath’</div></blockquote>
+<p>#Advanced usage with transformations and such. In this case I am subtracting one
+# matrix and adding another.
+final_matrix = Rmtxop()</p>
+<p>#std. dc matrix.
+dc_matrix = RmtxopMatrix()
+dc_matrix.matrix_file = x.ill</p>
+<p>#direct dc matrix. -1 indicates that this one is being subtracted from dc matrix.
+dc_direct_matrix = RmtxopMatrix()
+dc_direct_matrix.matrix_file = y.ill
+dc_direct_matrix.scalar_factors = [-1]</p>
+<p>#Sun coefficient matrix.
+sun_coeff_matrix = RmtxopMatrix()
+sun_coeff_matrix.matrix_file = z.ill</p>
+<p>#combine the matrices together. Sequence is extremely important
+final_matrix.rmtxop_matrices  = [dc_matrix,dc_direct_matrix,sun_coeff_matrix]
+final_matrix.output_file = res.ill</p>
+<dl class="docutils">
+<dt>#Then the to_rad_string will be:</dt>
+<dd>c:/radiance/bin/rmtxop     x.ill + -s -1 y.ill + z.ill &gt; res.ill</dd>
+</dl>
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rmtxop.Rmtxop.input_files">
+<code class="descname">input_files</code><a class="headerlink" href="#honeybee.radiance.command.rmtxop.Rmtxop.input_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Input files.</p>
+<p>For this command are actually None as the files are
+specified as inputs using the matrices input</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rmtxop.Rmtxop.matrix_files">
+<code class="descname">matrix_files</code><a class="headerlink" href="#honeybee.radiance.command.rmtxop.Rmtxop.matrix_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get and set scene files.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rmtxop.Rmtxop.output_file">
+<code class="descname">output_file</code><a class="headerlink" href="#honeybee.radiance.command.rmtxop.Rmtxop.output_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rmtxop.Rmtxop.rmtxop_matrices">
+<code class="descname">rmtxop_matrices</code><a class="headerlink" href="#honeybee.radiance.command.rmtxop.Rmtxop.rmtxop_matrices" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rmtxop.Rmtxop.rmtxop_parameters">
+<code class="descname">rmtxop_parameters</code><a class="headerlink" href="#honeybee.radiance.command.rmtxop.Rmtxop.rmtxop_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get and set rmtxop_parameters.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.rmtxop.Rmtxop.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>relative_path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/rmtxop.html#Rmtxop.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.rmtxop.Rmtxop.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return full command as string.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.radiance.command.rmtxop.RmtxopMatrix">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.command.rmtxop.</code><code class="descname">RmtxopMatrix</code><span class="sig-paren">(</span><em>transpose=None</em>, <em>scalar_factors=None</em>, <em>transform_coefficients=None</em>, <em>matrix_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/rmtxop.html#RmtxopMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.rmtxop.RmtxopMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.command._commandbase.RadianceCommand</span></code></p>
+<dl class="method">
+<dt id="honeybee.radiance.command.rmtxop.RmtxopMatrix.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/rmtxop.html#RmtxopMatrix.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.rmtxop.RmtxopMatrix.execute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rmtxop.RmtxopMatrix.input_files">
+<code class="descname">input_files</code><a class="headerlink" href="#honeybee.radiance.command.rmtxop.RmtxopMatrix.input_files" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rmtxop.RmtxopMatrix.matrix_file">
+<code class="descname">matrix_file</code><a class="headerlink" href="#honeybee.radiance.command.rmtxop.RmtxopMatrix.matrix_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rmtxop.RmtxopMatrix.radbin_path">
+<code class="descname">radbin_path</code><a class="headerlink" href="#honeybee.radiance.command.rmtxop.RmtxopMatrix.radbin_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get and set path to radiance binaries.
+If you set a new value the value will be changed globally.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rmtxop.RmtxopMatrix.scalar_factors">
+<code class="descname">scalar_factors</code><a class="headerlink" href="#honeybee.radiance.command.rmtxop.RmtxopMatrix.scalar_factors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scalar values for resizing the elements of the matrix. If a single value is
+specified then it will be applied across the board.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.rmtxop.RmtxopMatrix.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>relative_path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/rmtxop.html#RmtxopMatrix.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.rmtxop.RmtxopMatrix.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rmtxop.RmtxopMatrix.transform_coefficients">
+<code class="descname">transform_coefficients</code><a class="headerlink" href="#honeybee.radiance.command.rmtxop.RmtxopMatrix.transform_coefficients" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rmtxop.RmtxopMatrix.transpose">
+<code class="descname">transpose</code><a class="headerlink" href="#honeybee.radiance.command.rmtxop.RmtxopMatrix.transpose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set this to true to transpose the matrix</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.command.rpict">
+<span id="honeybee-radiance-command-rpict-module"></span><h2>honeybee.radiance.command.rpict module<a class="headerlink" href="#module-honeybee.radiance.command.rpict" title="Permalink to this headline">¶</a></h2>
+<p>RADIANCE rcontrib command.</p>
+<dl class="class">
+<dt id="honeybee.radiance.command.rpict.Rpict">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.command.rpict.</code><code class="descname">Rpict</code><span class="sig-paren">(</span><em>output_name='untitled'</em>, <em>octree_file=None</em>, <em>view=None</em>, <em>view_file=None</em>, <em>simulation_type=2</em>, <em>rpict_parameters=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/rpict.html#Rpict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.rpict.Rpict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.command._commandbase.RadianceCommand</span></code></p>
+<p>Rpict command.</p>
+<dl class="method">
+<dt id="honeybee.radiance.command.rpict.Rpict.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/rpict.html#Rpict.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.rpict.Rpict.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute the command.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rpict.Rpict.input_files">
+<code class="descname">input_files</code><a class="headerlink" href="#honeybee.radiance.command.rpict.Rpict.input_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of input files that should be checked before running the analysis.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rpict.Rpict.octree_file">
+<code class="descname">octree_file</code><a class="headerlink" href="#honeybee.radiance.command.rpict.Rpict.octree_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rpict.Rpict.output_file">
+<code class="descname">output_file</code><a class="headerlink" href="#honeybee.radiance.command.rpict.Rpict.output_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rpict.Rpict.rpict_parameters">
+<code class="descname">rpict_parameters</code><a class="headerlink" href="#honeybee.radiance.command.rpict.Rpict.rpict_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get and set image parameters for rendering.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rpict.Rpict.simulation_type">
+<code class="descname">simulation_type</code><a class="headerlink" href="#honeybee.radiance.command.rpict.Rpict.simulation_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get/set simulation Type.</p>
+<p>0: Illuminance(lux), 1: Radiation (kWh), 2: Luminance (Candela) (Default: 0)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.rpict.Rpict.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>relative_path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/rpict.html#Rpict.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.rpict.Rpict.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return full command as string.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rpict.Rpict.view">
+<code class="descname">view</code><a class="headerlink" href="#honeybee.radiance.command.rpict.Rpict.view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get and set view for rpict.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rpict.Rpict.view_file">
+<code class="descname">view_file</code><a class="headerlink" href="#honeybee.radiance.command.rpict.Rpict.view_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.command.rtrace">
+<span id="honeybee-radiance-command-rtrace-module"></span><h2>honeybee.radiance.command.rtrace module<a class="headerlink" href="#module-honeybee.radiance.command.rtrace" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.radiance.command.rtrace.Rtrace">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.command.rtrace.</code><code class="descname">Rtrace</code><span class="sig-paren">(</span><em>output_name='untitled'</em>, <em>octree_file=None</em>, <em>points_file=None</em>, <em>simulation_type=0</em>, <em>radiance_parameters=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/rtrace.html#Rtrace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.rtrace.Rtrace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.command._commandbase.RadianceCommand</span></code></p>
+<p>Create a grid-based Radiance ray-tracer.</p>
+<p>Read more at: <a class="reference external" href="http://radsite.lbl.gov/radiance/man_html/rtrace.1.html">http://radsite.lbl.gov/radiance/man_html/rtrace.1.html</a></p>
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rtrace.Rtrace.output_name">
+<code class="descname">output_name</code><a class="headerlink" href="#honeybee.radiance.command.rtrace.Rtrace.output_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of output file (Default: untitled).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rtrace.Rtrace.octree_file">
+<code class="descname">octree_file</code><a class="headerlink" href="#honeybee.radiance.command.rtrace.Rtrace.octree_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Full path to input oct files (Default: None)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rtrace.Rtrace.points_file">
+<code class="descname">points_file</code><a class="headerlink" href="#honeybee.radiance.command.rtrace.Rtrace.points_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Full path to input pt files (Default: None)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rtrace.Rtrace.simulation_type">
+<code class="descname">simulation_type</code><a class="headerlink" href="#honeybee.radiance.command.rtrace.Rtrace.simulation_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer to define type of analysis.
+0: Illuminance (lux), 1: Radiation (kWh), 2: Luminance (Candela)
+(Default: 0)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rtrace.Rtrace.radiance_parameters">
+<code class="descname">radiance_parameters</code><a class="headerlink" href="#honeybee.radiance.command.rtrace.Rtrace.radiance_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radiance parameters for this analysis.
+(Default: girdbased.LowQuality)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rtrace.Rtrace.input_files">
+<code class="descname">input_files</code><a class="headerlink" href="#honeybee.radiance.command.rtrace.Rtrace.input_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Input files for this command.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">octree_file</code></dt>
+<dd><p>Full path to input oct file.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.rtrace.Rtrace.output_file">
+<code class="descname">output_file</code><a class="headerlink" href="#honeybee.radiance.command.rtrace.Rtrace.output_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>oct file name which is usually the same as the project name
+(Default: untitled)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">points_file</code></dt>
+<dd><p>Full path to input points file.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">radiance_parameters</code></dt>
+<dd><p>Radiance parameters for this analysis
+(Default: RadianceParameters.LowQuality).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">simulation_type</code></dt>
+<dd><p><a href="#id1"><span class="problematic" id="id2">**</span></a>Simulation type* – 0* – Illuminance(lux), 1: Radiation (kWh), 2: Luminance (Candela)
+(Default: 0)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.rtrace.Rtrace.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>relative_path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/rtrace.html#Rtrace.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.rtrace.Rtrace.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return full command as a string.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.command.vwrays">
+<span id="honeybee-radiance-command-vwrays-module"></span><h2>honeybee.radiance.command.vwrays module<a class="headerlink" href="#module-honeybee.radiance.command.vwrays" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.radiance.command.vwrays.Vwrays">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.command.vwrays.</code><code class="descname">Vwrays</code><span class="sig-paren">(</span><em>view_file=None</em>, <em>vwrays_parameters=None</em>, <em>output_file=None</em>, <em>output_data_format=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/vwrays.html#Vwrays"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.vwrays.Vwrays" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.command._commandbase.RadianceCommand</span></code></p>
+<p>Vwrays compute rays for a given picture or a view.</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.command.vwrays.Vwrays.input_files">
+<code class="descname">input_files</code><a class="headerlink" href="#honeybee.radiance.command.vwrays.Vwrays.input_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Input files.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.vwrays.Vwrays.isVwraysParameters">
+<code class="descname">isVwraysParameters</code><a class="headerlink" href="#honeybee.radiance.command.vwrays.Vwrays.isVwraysParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>return True for type check.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.vwrays.Vwrays.output_data_format">
+<code class="descname">output_data_format</code><a class="headerlink" href="#honeybee.radiance.command.vwrays.Vwrays.output_data_format" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.vwrays.Vwrays.output_file">
+<code class="descname">output_file</code><a class="headerlink" href="#honeybee.radiance.command.vwrays.Vwrays.output_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.vwrays.Vwrays.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>relative_path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/vwrays.html#Vwrays.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.vwrays.Vwrays.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return full command as a string.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.vwrays.Vwrays.view_file">
+<code class="descname">view_file</code><a class="headerlink" href="#honeybee.radiance.command.vwrays.Vwrays.view_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.vwrays.Vwrays.vwrays_parameters">
+<code class="descname">vwrays_parameters</code><a class="headerlink" href="#honeybee.radiance.command.vwrays.Vwrays.vwrays_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get and set gendaymtx_parameters.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.command.xform">
+<span id="honeybee-radiance-command-xform-module"></span><h2>honeybee.radiance.command.xform module<a class="headerlink" href="#module-honeybee.radiance.command.xform" title="Permalink to this headline">¶</a></h2>
+<p>xform - transform a RADIANCE scene description</p>
+<dl class="class">
+<dt id="honeybee.radiance.command.xform.Xform">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.command.xform.</code><code class="descname">Xform</code><span class="sig-paren">(</span><em>rad_file=None</em>, <em>xform_parameters=None</em>, <em>output_file=None</em>, <em>transforms=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/xform.html#Xform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.xform.Xform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.command._commandbase.RadianceCommand</span></code></p>
+<dl class="attribute">
+<dt id="honeybee.radiance.command.xform.Xform.input_files">
+<code class="descname">input_files</code><a class="headerlink" href="#honeybee.radiance.command.xform.Xform.input_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return input files by the user.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.xform.Xform.output_file">
+<code class="descname">output_file</code><a class="headerlink" href="#honeybee.radiance.command.xform.Xform.output_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.xform.Xform.rad_file">
+<code class="descname">rad_file</code><a class="headerlink" href="#honeybee.radiance.command.xform.Xform.rad_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get and set rad files.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.xform.Xform.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>relative_path=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/xform.html#Xform.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.xform.Xform.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return full command as a string</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.xform.Xform.transforms">
+<code class="descname">transforms</code><a class="headerlink" href="#honeybee.radiance.command.xform.Xform.transforms" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.command.xform.Xform.xform_parameters">
+<code class="descname">xform_parameters</code><a class="headerlink" href="#honeybee.radiance.command.xform.Xform.xform_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get and set gendaymtx_parameters.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.command">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-honeybee.radiance.command" title="Permalink to this headline">¶</a></h2>
+<p>Radiance commands.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/honeybee.radiance.command.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

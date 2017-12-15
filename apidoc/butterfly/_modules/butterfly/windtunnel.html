@@ -1,0 +1,565 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>butterfly.windtunnel &#8212; Butterfly 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/butterfly.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Butterfly is a python library to create and run advanced computational fluid dynamic (CFD) simulations using OpenFOAM.</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=butterfly&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../butterfly.html">butterfly package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for butterfly.windtunnel</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="sd">&quot;&quot;&quot;Butterfly wind tunnel.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">deepcopy</span>
+
+<span class="kn">from</span> <span class="nn">.blockMeshDict</span> <span class="k">import</span> <span class="n">BlockMeshDict</span>
+<span class="kn">from</span> <span class="nn">.case</span> <span class="k">import</span> <span class="n">Case</span>
+<span class="kn">from</span> <span class="nn">.meshingparameters</span> <span class="k">import</span> <span class="n">MeshingParameters</span>
+<span class="kn">from</span> <span class="nn">.geometry</span> <span class="k">import</span> <span class="n">calculate_min_max_from_bf_geometries</span><span class="p">,</span> <span class="n">BFBlockGeometry</span>
+<span class="kn">from</span> <span class="nn">.boundarycondition</span> <span class="k">import</span> <span class="n">WindTunnelGroundBoundaryCondition</span><span class="p">,</span> \
+    <span class="n">WindTunnelInletBoundaryCondition</span><span class="p">,</span> <span class="n">WindTunnelOutletBoundaryCondition</span><span class="p">,</span> \
+    <span class="n">WindTunnelTopAndSidesBoundaryCondition</span><span class="p">,</span> <span class="n">WindTunnelWallBoundaryCondition</span>
+<span class="kn">from</span> <span class="nn">.conditions</span> <span class="k">import</span> <span class="n">ABLConditions</span>
+
+<span class="kn">import</span> <span class="nn">vectormath</span> <span class="k">as</span> <span class="nn">vm</span>
+<span class="kn">import</span> <span class="nn">grading</span>
+<span class="kn">import</span> <span class="nn">gradingutil</span> <span class="k">as</span> <span class="nn">gutil</span>
+
+
+<div class="viewcode-block" id="WindTunnel"><a class="viewcode-back" href="../../butterfly.html#butterfly.windtunnel.WindTunnel">[docs]</a><span class="k">class</span> <span class="nc">WindTunnel</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Butterfly WindTunnel.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        inlet: Inlet as a butterfly geometry. inlet boundary condition should be</span>
+<span class="sd">            ABL (atmBoundaryLayer).</span>
+<span class="sd">        outlet: Outlet as a butterfly geometry.</span>
+<span class="sd">        sides: Left and right side geometries as butterfly geometries.</span>
+<span class="sd">        top: Top face as buttefly geometry.</span>
+<span class="sd">        ground: Ground face as butterfly geometry.</span>
+<span class="sd">        test_geomtries: A list of geometries as butterfly geometries that are located</span>
+<span class="sd">            within bounding box boundary.</span>
+<span class="sd">        roughness: z0 (roughness) value.</span>
+<span class="sd">                &#39;0.0002&#39;  # sea</span>
+<span class="sd">                &#39;0.005&#39;   # smooth</span>
+<span class="sd">                &#39;0.03&#39;    # open</span>
+<span class="sd">                &#39;0.10&#39;    # roughlyOpen</span>
+<span class="sd">                &#39;0.25&#39;    # rough</span>
+<span class="sd">                &#39;0.5&#39;     # veryRough</span>
+<span class="sd">                &#39;1.0&#39;     # closed</span>
+<span class="sd">                &#39;2.0&#39;     # chaotic</span>
+<span class="sd">        Zref: Reference height for wind velocity in meters (default: 10).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">inlet</span><span class="p">,</span> <span class="n">outlet</span><span class="p">,</span> <span class="n">sides</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">ground</span><span class="p">,</span> <span class="n">test_geomtries</span><span class="p">,</span>
+                 <span class="n">roughness</span><span class="p">,</span> <span class="n">meshing_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">Zref</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">convertToMeters</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init wind tunnel.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inlet</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_input_geometry</span><span class="p">(</span><span class="n">inlet</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outlet</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_input_geometry</span><span class="p">(</span><span class="n">outlet</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sides</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">side</span> <span class="k">for</span> <span class="n">side</span> <span class="ow">in</span> <span class="n">sides</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_input_geometry</span><span class="p">(</span><span class="n">side</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">top</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_input_geometry</span><span class="p">(</span><span class="n">top</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ground</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_input_geometry</span><span class="p">(</span><span class="n">ground</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_geomtries</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">geo</span> <span class="k">for</span> <span class="n">geo</span> <span class="ow">in</span> <span class="n">test_geomtries</span>
+                                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_input_geometry</span><span class="p">(</span><span class="n">geo</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">z0</span> <span class="o">=</span> <span class="n">roughness</span> <span class="k">if</span> <span class="n">roughness</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.25</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__blockMeshDict</span> <span class="o">=</span> <span class="n">BlockMeshDict</span><span class="o">.</span><span class="n">from_bf_block_geometries</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bounding_geometries</span><span class="p">,</span> <span class="n">convertToMeters</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">meshing_parameters</span> <span class="o">=</span> <span class="n">meshing_parameters</span> <span class="ow">or</span> <span class="n">MeshingParameters</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">Zref</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">Zref</span><span class="p">)</span> <span class="k">if</span> <span class="n">Zref</span> <span class="k">else</span> <span class="mi">10</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">convertToMeters</span> <span class="o">=</span> <span class="n">convertToMeters</span>
+
+        <span class="c1"># place holder for refinment regions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__refinementRegions</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="WindTunnel.from_geometries_wind_vector_and_parameters"><a class="viewcode-back" href="../../butterfly.html#butterfly.windtunnel.WindTunnel.from_geometries_wind_vector_and_parameters">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_geometries_wind_vector_and_parameters</span><span class="p">(</span>
+            <span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">geometries</span><span class="p">,</span> <span class="n">wind_vector</span><span class="p">,</span> <span class="n">tunnel_parameters</span><span class="p">,</span> <span class="n">roughness</span><span class="p">,</span>
+            <span class="n">meshing_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">Zref</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">convertToMeters</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a wind_tunnel based on size, wind speed and wind direction.&quot;&quot;&quot;</span>
+        <span class="c1"># butterfly geometries</span>
+        <span class="n">geos</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_check_input_geometry</span><span class="p">(</span><span class="n">geo</span><span class="p">)</span> <span class="k">for</span> <span class="n">geo</span> <span class="ow">in</span> <span class="n">geometries</span><span class="p">)</span>
+
+        <span class="c1"># update boundary condition of wall geometries</span>
+        <span class="k">for</span> <span class="n">bfGeometry</span> <span class="ow">in</span> <span class="n">geometries</span><span class="p">:</span>
+            <span class="n">bfGeometry</span><span class="o">.</span><span class="n">boundary_condition</span> <span class="o">=</span> <span class="n">WindTunnelWallBoundaryCondition</span><span class="p">()</span>
+
+        <span class="n">tp</span> <span class="o">=</span> <span class="n">tunnel_parameters</span>
+
+        <span class="c1"># find x_axis</span>
+        <span class="c1"># project wind vector to XY Plane</span>
+        <span class="n">wind_vector</span> <span class="o">=</span> <span class="p">(</span><span class="n">wind_vector</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">wind_vector</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">z_axis</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">x_axis</span> <span class="o">=</span> <span class="n">vm</span><span class="o">.</span><span class="n">cross_product</span><span class="p">(</span><span class="n">wind_vector</span><span class="p">,</span> <span class="n">z_axis</span><span class="p">)</span>
+        <span class="n">y_axis</span> <span class="o">=</span> <span class="n">vm</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">wind_vector</span><span class="p">)</span>
+
+        <span class="c1"># get size of bounding box from blockMeshDict</span>
+        <span class="n">min_pt</span><span class="p">,</span> <span class="n">max_pt</span> <span class="o">=</span> <span class="n">calculate_min_max_from_bf_geometries</span><span class="p">(</span><span class="n">geos</span><span class="p">,</span> <span class="n">x_axis</span><span class="p">)</span>
+        <span class="n">_blockMeshDict</span> <span class="o">=</span> <span class="n">BlockMeshDict</span><span class="o">.</span><span class="n">from_min_max</span><span class="p">(</span><span class="n">min_pt</span><span class="p">,</span> <span class="n">max_pt</span><span class="p">,</span> <span class="n">convertToMeters</span><span class="p">,</span>
+                                                    <span class="n">x_axis</span><span class="o">=</span><span class="n">x_axis</span><span class="p">)</span>
+        <span class="c1"># scale based on wind tunnel parameters</span>
+        <span class="n">ver</span> <span class="o">=</span> <span class="n">_blockMeshDict</span><span class="o">.</span><span class="n">vertices</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">_blockMeshDict</span><span class="o">.</span><span class="n">height</span>
+        <span class="n">v0</span> <span class="o">=</span> <span class="n">vm</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">ver</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vm</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">y_axis</span><span class="p">,</span> <span class="o">-</span><span class="n">tp</span><span class="o">.</span><span class="n">windward</span> <span class="o">*</span> <span class="n">height</span><span class="p">))</span>
+        <span class="n">v0</span> <span class="o">=</span> <span class="n">vm</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">v0</span><span class="p">,</span> <span class="n">vm</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">x_axis</span><span class="p">,</span> <span class="o">-</span><span class="n">tp</span><span class="o">.</span><span class="n">side</span> <span class="o">*</span> <span class="n">height</span><span class="p">))</span>
+        <span class="n">v1</span> <span class="o">=</span> <span class="n">vm</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">ver</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vm</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">y_axis</span><span class="p">,</span> <span class="o">-</span><span class="n">tp</span><span class="o">.</span><span class="n">windward</span> <span class="o">*</span> <span class="n">height</span><span class="p">))</span>
+        <span class="n">v1</span> <span class="o">=</span> <span class="n">vm</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">vm</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">x_axis</span><span class="p">,</span> <span class="n">tp</span><span class="o">.</span><span class="n">side</span> <span class="o">*</span> <span class="n">height</span><span class="p">))</span>
+        <span class="n">v2</span> <span class="o">=</span> <span class="n">vm</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">ver</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">vm</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">y_axis</span><span class="p">,</span> <span class="n">tp</span><span class="o">.</span><span class="n">leeward</span> <span class="o">*</span> <span class="n">height</span><span class="p">))</span>
+        <span class="n">v2</span> <span class="o">=</span> <span class="n">vm</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">v2</span><span class="p">,</span> <span class="n">vm</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">x_axis</span><span class="p">,</span> <span class="n">tp</span><span class="o">.</span><span class="n">side</span> <span class="o">*</span> <span class="n">height</span><span class="p">))</span>
+        <span class="n">v3</span> <span class="o">=</span> <span class="n">vm</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">ver</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">vm</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">y_axis</span><span class="p">,</span> <span class="n">tp</span><span class="o">.</span><span class="n">leeward</span> <span class="o">*</span> <span class="n">height</span><span class="p">))</span>
+        <span class="n">v3</span> <span class="o">=</span> <span class="n">vm</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">v3</span><span class="p">,</span> <span class="n">vm</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">x_axis</span><span class="p">,</span> <span class="o">-</span><span class="n">tp</span><span class="o">.</span><span class="n">side</span> <span class="o">*</span> <span class="n">height</span><span class="p">))</span>
+        <span class="n">v4</span> <span class="o">=</span> <span class="n">vm</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">v0</span><span class="p">,</span> <span class="n">vm</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">z_axis</span><span class="p">,</span> <span class="n">tp</span><span class="o">.</span><span class="n">top</span> <span class="o">*</span> <span class="n">height</span><span class="p">))</span>
+        <span class="n">v5</span> <span class="o">=</span> <span class="n">vm</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">vm</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">z_axis</span><span class="p">,</span> <span class="n">tp</span><span class="o">.</span><span class="n">top</span> <span class="o">*</span> <span class="n">height</span><span class="p">))</span>
+        <span class="n">v6</span> <span class="o">=</span> <span class="n">vm</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">v2</span><span class="p">,</span> <span class="n">vm</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">z_axis</span><span class="p">,</span> <span class="n">tp</span><span class="o">.</span><span class="n">top</span> <span class="o">*</span> <span class="n">height</span><span class="p">))</span>
+        <span class="n">v7</span> <span class="o">=</span> <span class="n">vm</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">v3</span><span class="p">,</span> <span class="n">vm</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">z_axis</span><span class="p">,</span> <span class="n">tp</span><span class="o">.</span><span class="n">top</span> <span class="o">*</span> <span class="n">height</span><span class="p">))</span>
+
+        <span class="c1"># create inlet, outlet, etc</span>
+        <span class="n">abl_conditions</span> <span class="o">=</span> <span class="n">ABLConditions</span><span class="o">.</span><span class="n">from_input_values</span><span class="p">(</span>
+            <span class="n">flow_speed</span><span class="o">=</span><span class="n">vm</span><span class="o">.</span><span class="n">length</span><span class="p">(</span><span class="n">wind_vector</span><span class="p">),</span> <span class="n">z0</span><span class="o">=</span><span class="n">roughness</span><span class="p">,</span>
+            <span class="n">flowDir</span><span class="o">=</span><span class="n">vm</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">wind_vector</span><span class="p">),</span> <span class="n">zGround</span><span class="o">=</span><span class="n">_blockMeshDict</span><span class="o">.</span><span class="n">min_z</span><span class="p">)</span>
+
+        <span class="n">_order</span> <span class="o">=</span> <span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">),)</span>
+        <span class="n">inlet</span> <span class="o">=</span> <span class="n">BFBlockGeometry</span><span class="p">(</span>
+            <span class="s1">&#39;inlet&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">v0</span><span class="p">,</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v5</span><span class="p">,</span> <span class="n">v4</span><span class="p">),</span> <span class="n">_order</span><span class="p">,</span> <span class="p">((</span><span class="n">v0</span><span class="p">,</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v5</span><span class="p">,</span> <span class="n">v4</span><span class="p">),),</span>
+            <span class="n">WindTunnelInletBoundaryCondition</span><span class="p">(</span><span class="n">abl_conditions</span><span class="p">))</span>
+
+        <span class="n">outlet</span> <span class="o">=</span> <span class="n">BFBlockGeometry</span><span class="p">(</span>
+            <span class="s1">&#39;outlet&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">v2</span><span class="p">,</span> <span class="n">v3</span><span class="p">,</span> <span class="n">v7</span><span class="p">,</span> <span class="n">v6</span><span class="p">),</span> <span class="n">_order</span><span class="p">,</span> <span class="p">((</span><span class="n">v2</span><span class="p">,</span> <span class="n">v3</span><span class="p">,</span> <span class="n">v7</span><span class="p">,</span> <span class="n">v6</span><span class="p">),),</span>
+            <span class="n">WindTunnelOutletBoundaryCondition</span><span class="p">())</span>
+
+        <span class="n">right_side</span> <span class="o">=</span> <span class="n">BFBlockGeometry</span><span class="p">(</span>
+            <span class="s1">&#39;right_side&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">v6</span><span class="p">,</span> <span class="n">v5</span><span class="p">),</span> <span class="n">_order</span><span class="p">,</span> <span class="p">((</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">v6</span><span class="p">,</span> <span class="n">v5</span><span class="p">),),</span>
+            <span class="n">WindTunnelTopAndSidesBoundaryCondition</span><span class="p">())</span>
+
+        <span class="n">left_side</span> <span class="o">=</span> <span class="n">BFBlockGeometry</span><span class="p">(</span>
+            <span class="s1">&#39;left_side&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">v3</span><span class="p">,</span> <span class="n">v0</span><span class="p">,</span> <span class="n">v4</span><span class="p">,</span> <span class="n">v7</span><span class="p">),</span> <span class="n">_order</span><span class="p">,</span> <span class="p">((</span><span class="n">v3</span><span class="p">,</span> <span class="n">v0</span><span class="p">,</span> <span class="n">v4</span><span class="p">,</span> <span class="n">v7</span><span class="p">),),</span>
+            <span class="n">WindTunnelTopAndSidesBoundaryCondition</span><span class="p">())</span>
+
+        <span class="n">top</span> <span class="o">=</span> <span class="n">BFBlockGeometry</span><span class="p">(</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">v4</span><span class="p">,</span> <span class="n">v5</span><span class="p">,</span> <span class="n">v6</span><span class="p">,</span> <span class="n">v7</span><span class="p">),</span> <span class="n">_order</span><span class="p">,</span>
+                              <span class="p">((</span><span class="n">v4</span><span class="p">,</span> <span class="n">v5</span><span class="p">,</span> <span class="n">v6</span><span class="p">,</span> <span class="n">v7</span><span class="p">),),</span>
+                              <span class="n">WindTunnelTopAndSidesBoundaryCondition</span><span class="p">())</span>
+
+        <span class="n">ground</span> <span class="o">=</span> <span class="n">BFBlockGeometry</span><span class="p">(</span>
+            <span class="s1">&#39;ground&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">v3</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v0</span><span class="p">),</span> <span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">),),</span> <span class="p">((</span><span class="n">v3</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v0</span><span class="p">),),</span>
+            <span class="n">WindTunnelGroundBoundaryCondition</span><span class="p">(</span><span class="n">abl_conditions</span><span class="p">))</span>
+
+        <span class="c1"># return the class</span>
+        <span class="n">wt</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">inlet</span><span class="p">,</span> <span class="n">outlet</span><span class="p">,</span> <span class="p">(</span><span class="n">right_side</span><span class="p">,</span> <span class="n">left_side</span><span class="p">),</span> <span class="n">top</span><span class="p">,</span> <span class="n">ground</span><span class="p">,</span>
+                 <span class="n">geometries</span><span class="p">,</span> <span class="n">roughness</span><span class="p">,</span> <span class="n">meshing_parameters</span><span class="p">,</span> <span class="n">Zref</span><span class="p">,</span>
+                 <span class="n">convertToMeters</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">wt</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">width</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get width in x direction.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">blockMeshDict</span><span class="o">.</span><span class="n">width</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">height</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get width in x direction.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">blockMeshDict</span><span class="o">.</span><span class="n">height</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get width in x direction.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">blockMeshDict</span><span class="o">.</span><span class="n">length</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">bounding_geometries</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return bounding geometries of wind tunnel.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inlet</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">outlet</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sides</span> <span class="o">+</span> \
+               <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">top</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ground</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">refinementRegions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get refinement regions.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__refinementRegions</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">flowDir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get flow direction for this wind tunnel as a tuple (x, y, z).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">inlet</span><span class="o">.</span><span class="n">boundary_condition</span><span class="o">.</span><span class="n">U</span><span class="o">.</span><span class="n">flowDir</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">flow_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get flow speed for this wind tunnel.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">inlet</span><span class="o">.</span><span class="n">boundary_condition</span><span class="o">.</span><span class="n">U</span><span class="o">.</span><span class="n">Uref</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">zGround</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Minimum z value of the bounding box.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">blockMeshDict</span><span class="o">.</span><span class="n">min_z</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">blockMeshDict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Wind tunnel blockMeshDict.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__blockMeshDict</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ABLConditionsDict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get ABLCondition for this wind tunnel as a dictionary.&quot;&quot;&quot;</span>
+        <span class="n">_ABLCDict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">_ABLCDict</span><span class="p">[</span><span class="s1">&#39;Uref&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flow_speed</span><span class="p">)</span>
+        <span class="n">_ABLCDict</span><span class="p">[</span><span class="s1">&#39;z0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;uniform </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">z0</span><span class="p">)</span>
+        <span class="n">_ABLCDict</span><span class="p">[</span><span class="s1">&#39;flowDir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flowDir</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flowDir</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> \
+            <span class="k">else</span> <span class="s1">&#39;(</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">flowDir</span><span class="p">)</span>
+        <span class="n">_ABLCDict</span><span class="p">[</span><span class="s1">&#39;zGround&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;uniform </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zGround</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_ABLCDict</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">meshing_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Meshing parameters.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__meshing_parameters</span>
+
+    <span class="nd">@meshing_parameters</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">meshing_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mp</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update meshing parameters.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">mp</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">mp</span><span class="p">,</span> <span class="s1">&#39;isMeshingParameters&#39;</span><span class="p">),</span> \
+            <span class="s1">&#39;Excepted Meshingparameters not </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">mp</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__meshing_parameters</span> <span class="o">=</span> <span class="n">mp</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">blockMeshDict</span><span class="o">.</span><span class="n">update_meshing_parameters</span><span class="p">(</span><span class="n">mp</span><span class="p">)</span>
+
+<div class="viewcode-block" id="WindTunnel.get_internal_dimensions"><a class="viewcode-back" href="../../butterfly.html#butterfly.windtunnel.WindTunnel.get_internal_dimensions">[docs]</a>    <span class="k">def</span> <span class="nf">get_internal_dimensions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get internal dimensions of wind tunnel.</span>
+
+<span class="sd">        This method returns three tuples for x, y and z which are</span>
+<span class="sd">        (distance_to_geometry_bounding_box, geometry_bounding_box,</span>
+<span class="sd">         distance_after_geometry_bounding_box). This method is useful to get initial</span>
+<span class="sd">         values to calculate grading.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x_axis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blockMeshDict</span><span class="o">.</span><span class="n">x_axis</span>
+        <span class="n">min_pt</span><span class="p">,</span> <span class="n">max_pt</span> <span class="o">=</span> <span class="n">calculate_min_max_from_bf_geometries</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_geomtries</span><span class="p">,</span>
+                                                              <span class="n">x_axis</span><span class="p">)</span>
+        <span class="c1"># rotate points to xy axis</span>
+        <span class="n">angle</span> <span class="o">=</span> <span class="n">vm</span><span class="o">.</span><span class="n">angle_anitclockwise</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">x_axis</span><span class="p">)</span>
+        <span class="n">min_pt</span> <span class="o">=</span> <span class="n">vm</span><span class="o">.</span><span class="n">rotate</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">min_pt</span><span class="p">,</span> <span class="o">-</span><span class="n">angle</span><span class="p">)</span>
+        <span class="n">max_pt</span> <span class="o">=</span> <span class="n">vm</span><span class="o">.</span><span class="n">rotate</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">max_pt</span><span class="p">,</span> <span class="o">-</span><span class="n">angle</span><span class="p">)</span>
+        <span class="n">wt_min_pt</span> <span class="o">=</span> <span class="n">vm</span><span class="o">.</span><span class="n">rotate</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">blockMeshDict</span><span class="o">.</span><span class="n">min_pt</span><span class="p">,</span> <span class="o">-</span><span class="n">angle</span><span class="p">)</span>
+        <span class="n">wt_max_pt</span> <span class="o">=</span> <span class="n">vm</span><span class="o">.</span><span class="n">rotate</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">blockMeshDict</span><span class="o">.</span><span class="n">max_pt</span><span class="p">,</span> <span class="o">-</span><span class="n">angle</span><span class="p">)</span>
+
+        <span class="n">x_values</span> <span class="o">=</span> \
+            <span class="p">(</span><span class="n">min_pt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">wt_min_pt</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">max_pt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">min_pt</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">wt_max_pt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">max_pt</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="n">y_values</span> <span class="o">=</span> \
+            <span class="p">(</span><span class="n">min_pt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">wt_min_pt</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">max_pt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">min_pt</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">wt_max_pt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">max_pt</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="n">z_values</span> <span class="o">=</span> \
+            <span class="p">(</span><span class="n">min_pt</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">wt_min_pt</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">max_pt</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">min_pt</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">wt_max_pt</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">max_pt</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">x_values</span><span class="p">,</span> <span class="n">y_values</span><span class="p">,</span> <span class="n">z_values</span></div>
+
+<div class="viewcode-block" id="WindTunnel.calculate_grading"><a class="viewcode-back" href="../../butterfly.html#butterfly.windtunnel.WindTunnel.calculate_grading">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_grading</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cell_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">expansion_ratio</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">wake_offset</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                          <span class="n">height_offset</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">z_mode</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate simpleGrading for this wind tunnel based on best practice.</span>
+
+<span class="sd">        This method calcutes grading for blockMeshDict based on the size of the wind</span>
+<span class="sd">        tunnel and the bounding box of the geometries.</span>
+
+
+<span class="sd">        Args:</span>
+<span class="sd">            cell_size: Cell size in the area of interest (default: 1).</span>
+<span class="sd">            expansion_ratio: expansion ratio for the segments outside the area of</span>
+<span class="sd">                interest (default: 1.2).</span>
+<span class="sd">            wake_offset: The length to be added to the end of geometries bounding</span>
+<span class="sd">                box to be considerd as part of area of interest (default: 2).</span>
+<span class="sd">            height_offset: The length to be added to the topic of geometries bounding</span>
+<span class="sd">                box to be considerd as part of area of interest (default: 5).</span>
+<span class="sd">            z_mode: If 0 special treatment will be considerd for the first 2 and 10</span>
+<span class="sd">                meters. The first 2 meters will be graded for each half meter and from</span>
+<span class="sd">                2-10 it will be graded 0.5-1, from 10 to maximum height it will be 1-5</span>
+<span class="sd">                if expansion ration is less than expansion ratio then expansion ratio</span>
+<span class="sd">                will be used. After 10 meters normal expansion_ratio will be used.</span>
+<span class="sd">                If 1, z direction will be treated similar to x and y (default: 0).</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            SimpleGrading, cell_count as (x_count, y_count, z_count)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x_dim</span><span class="p">,</span> <span class="n">y_dim</span><span class="p">,</span> <span class="n">z_dim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_internal_dimensions</span><span class="p">()</span>
+        <span class="c1"># adjust for wake offset</span>
+        <span class="n">y_dim</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_dim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y_dim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">wake_offset</span><span class="p">,</span> <span class="n">y_dim</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">wake_offset</span><span class="p">)</span>
+        <span class="n">z_dim</span> <span class="o">=</span> <span class="p">(</span><span class="n">z_dim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">z_dim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">height_offset</span><span class="p">,</span> <span class="n">z_dim</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">height_offset</span><span class="p">)</span>
+
+        <span class="c1"># calculate cell counts and grading for each direction</span>
+        <span class="c1"># x direction</span>
+        <span class="c1"># before the area of interest</span>
+        <span class="n">x_0_grd_data</span> <span class="o">=</span> <span class="n">gutil</span><span class="o">.</span><span class="n">grading_by_length_de_ccratio</span><span class="p">(</span>
+            <span class="n">x_dim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cell_size</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">expansion_ratio</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+        <span class="n">x_0_grd</span> <span class="o">=</span> <span class="n">grading</span><span class="o">.</span><span class="n">Grading</span><span class="p">(</span><span class="n">x_dim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x_0_grd_data</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="n">x_0_grd_data</span><span class="o">.</span><span class="n">r</span><span class="p">)</span>
+        <span class="c1"># area of interest</span>
+        <span class="n">x_1_grd</span> <span class="o">=</span> <span class="n">grading</span><span class="o">.</span><span class="n">Grading</span><span class="p">(</span><span class="n">x_dim</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">int</span><span class="p">(</span><span class="n">x_dim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">cell_size</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># after the area of interest</span>
+        <span class="n">x_2_grd_data</span> <span class="o">=</span> <span class="n">gutil</span><span class="o">.</span><span class="n">grading_by_length_ds_ccratio</span><span class="p">(</span>
+            <span class="n">x_dim</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">expansion_ratio</span><span class="p">)</span>
+        <span class="n">x_2_grd</span> <span class="o">=</span> <span class="n">grading</span><span class="o">.</span><span class="n">Grading</span><span class="p">(</span><span class="n">x_dim</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">x_2_grd_data</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="n">x_2_grd_data</span><span class="o">.</span><span class="n">r</span><span class="p">)</span>
+        <span class="n">x_cell_count</span> <span class="o">=</span> <span class="n">x_0_grd_data</span><span class="o">.</span><span class="n">n</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">x_dim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">cell_size</span><span class="p">)</span> <span class="o">+</span> <span class="n">x_2_grd_data</span><span class="o">.</span><span class="n">n</span>
+        <span class="n">x_grd</span> <span class="o">=</span> <span class="n">grading</span><span class="o">.</span><span class="n">MultiGrading</span><span class="p">((</span><span class="n">x_0_grd</span><span class="p">,</span> <span class="n">x_1_grd</span><span class="p">,</span> <span class="n">x_2_grd</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;x_0: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x_0_grd_data</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;x_2: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x_2_grd_data</span><span class="p">))</span>
+
+        <span class="c1"># y direction</span>
+        <span class="c1"># before the area of interest</span>
+        <span class="n">y_0_grd_data</span> <span class="o">=</span> <span class="n">gutil</span><span class="o">.</span><span class="n">grading_by_length_de_ccratio</span><span class="p">(</span>
+            <span class="n">y_dim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cell_size</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">expansion_ratio</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+        <span class="n">y_0_grd</span> <span class="o">=</span> <span class="n">grading</span><span class="o">.</span><span class="n">Grading</span><span class="p">(</span><span class="n">y_dim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y_0_grd_data</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="n">y_0_grd_data</span><span class="o">.</span><span class="n">r</span><span class="p">)</span>
+        <span class="c1"># area of interest</span>
+        <span class="n">y_1_grd</span> <span class="o">=</span> <span class="n">grading</span><span class="o">.</span><span class="n">Grading</span><span class="p">(</span><span class="n">y_dim</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">int</span><span class="p">(</span><span class="n">y_dim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">cell_size</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># after the area of interest</span>
+        <span class="n">y_2_grd_data</span> <span class="o">=</span> <span class="n">gutil</span><span class="o">.</span><span class="n">grading_by_length_ds_ccratio</span><span class="p">(</span>
+            <span class="n">y_dim</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">expansion_ratio</span><span class="p">)</span>
+        <span class="n">y_2_grd</span> <span class="o">=</span> <span class="n">grading</span><span class="o">.</span><span class="n">Grading</span><span class="p">(</span><span class="n">y_dim</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">y_2_grd_data</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="n">y_2_grd_data</span><span class="o">.</span><span class="n">r</span><span class="p">)</span>
+        <span class="n">y_cell_count</span> <span class="o">=</span> <span class="n">y_0_grd_data</span><span class="o">.</span><span class="n">n</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">y_dim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">cell_size</span><span class="p">)</span> <span class="o">+</span> <span class="n">y_2_grd_data</span><span class="o">.</span><span class="n">n</span>
+        <span class="n">y_grd</span> <span class="o">=</span> <span class="n">grading</span><span class="o">.</span><span class="n">MultiGrading</span><span class="p">((</span><span class="n">y_0_grd</span><span class="p">,</span> <span class="n">y_1_grd</span><span class="p">,</span> <span class="n">y_2_grd</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;y_0: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">y_0_grd_data</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;y_2: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">y_2_grd_data</span><span class="p">))</span>
+
+        <span class="c1"># z direction</span>
+        <span class="c1"># before the area of interest</span>
+        <span class="n">z_grd_col</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">z_cell_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">z_mode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">z_0_grd</span> <span class="o">=</span> <span class="n">grading</span><span class="o">.</span><span class="n">Grading</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># 4 * 0.5 for the first 2 meters</span>
+            <span class="n">z_grd_col</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">z_0_grd</span><span class="p">)</span>
+            <span class="n">z_cell_count</span> <span class="o">+=</span> <span class="mi">4</span>
+            <span class="n">z_1_grd</span> <span class="o">=</span> <span class="n">grading</span><span class="o">.</span><span class="n">Grading</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mf">1.07</span><span class="p">)</span>  <span class="c1"># go from 0.5-1 up to 10 meters</span>
+            <span class="n">z_grd_col</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">z_1_grd</span><span class="p">)</span>
+            <span class="n">z_cell_count</span> <span class="o">+=</span> <span class="mi">11</span>
+
+            <span class="n">geometry_z</span> <span class="o">=</span> <span class="n">z_dim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">z_dim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">geometry_z</span> <span class="o">-</span> <span class="mi">10</span> <span class="o">&gt;</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">expansion_ratio</span><span class="p">:</span>
+                <span class="n">distance</span> <span class="o">=</span> <span class="n">geometry_z</span> <span class="o">-</span> <span class="mi">10</span>
+                <span class="n">z_3_grd_data</span> <span class="o">=</span> <span class="n">gutil</span><span class="o">.</span><span class="n">grading_by_length_ds_de</span><span class="p">(</span>
+                    <span class="n">distance</span><span class="p">,</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">expansion_ratio</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+                <span class="n">z_3_grd</span> <span class="o">=</span> <span class="n">grading</span><span class="o">.</span><span class="n">Grading</span><span class="p">(</span><span class="n">distance</span><span class="p">,</span> <span class="n">z_3_grd_data</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="n">z_3_grd_data</span><span class="o">.</span><span class="n">r</span><span class="p">)</span>
+                <span class="n">z_grd_col</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">z_3_grd</span><span class="p">)</span>
+                <span class="n">z_cell_count</span> <span class="o">+=</span> <span class="n">z_3_grd_data</span><span class="o">.</span><span class="n">n</span>
+
+            <span class="c1"># final part of the wind tunnel</span>
+            <span class="n">z_4_grd_data</span> <span class="o">=</span> <span class="n">gutil</span><span class="o">.</span><span class="n">grading_by_length_ds_ccratio</span><span class="p">(</span>
+                <span class="n">z_dim</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">expansion_ratio</span><span class="p">)</span>
+            <span class="n">z_4_grd</span> <span class="o">=</span> <span class="n">grading</span><span class="o">.</span><span class="n">Grading</span><span class="p">(</span><span class="n">z_dim</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">z_4_grd_data</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="n">z_4_grd_data</span><span class="o">.</span><span class="n">r</span><span class="p">)</span>
+            <span class="n">z_cell_count</span> <span class="o">+=</span> <span class="n">z_4_grd_data</span><span class="o">.</span><span class="n">n</span>
+            <span class="n">z_grd_col</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">z_4_grd</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">z_dim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">z_0_grd_data</span> <span class="o">=</span> <span class="n">gutil</span><span class="o">.</span><span class="n">grading_by_length_de_ccratio</span><span class="p">(</span>
+                    <span class="n">z_dim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cell_size</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">expansion_ratio</span><span class="p">,</span> <span class="mf">0.01</span>
+                <span class="p">)</span>
+                <span class="n">z_0_grd</span> <span class="o">=</span> <span class="n">grading</span><span class="o">.</span><span class="n">Grading</span><span class="p">(</span><span class="n">z_dim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">z_0_grd_data</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="n">z_0_grd_data</span><span class="o">.</span><span class="n">r</span><span class="p">)</span>
+                <span class="n">z_grd_col</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">z_0_grd</span><span class="p">)</span>
+                <span class="n">z_cell_count</span> <span class="o">+=</span> <span class="n">z_0_grd_data</span><span class="o">.</span><span class="n">n</span>
+            <span class="c1"># area of interest</span>
+            <span class="n">z_1_grd</span> <span class="o">=</span> <span class="n">grading</span><span class="o">.</span><span class="n">Grading</span><span class="p">(</span><span class="n">z_dim</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">int</span><span class="p">(</span><span class="n">y_dim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">cell_size</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">z_grd_col</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">z_1_grd</span><span class="p">)</span>
+            <span class="n">z_cell_count</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">y_dim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">cell_size</span><span class="p">)</span>
+
+            <span class="c1"># after the area of interest</span>
+            <span class="n">z_2_grd_data</span> <span class="o">=</span> <span class="n">gutil</span><span class="o">.</span><span class="n">grading_by_length_ds_ccratio</span><span class="p">(</span>
+                <span class="n">y_dim</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">expansion_ratio</span><span class="p">)</span>
+            <span class="n">z_2_grd</span> <span class="o">=</span> <span class="n">grading</span><span class="o">.</span><span class="n">Grading</span><span class="p">(</span><span class="n">z_dim</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">z_2_grd_data</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="n">z_2_grd_data</span><span class="o">.</span><span class="n">r</span><span class="p">)</span>
+            <span class="n">z_grd_col</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">z_2_grd</span><span class="p">)</span>
+            <span class="n">z_cell_count</span> <span class="o">+=</span> <span class="n">z_2_grd_data</span><span class="o">.</span><span class="n">n</span>
+
+        <span class="n">z_grd</span> <span class="o">=</span> <span class="n">grading</span><span class="o">.</span><span class="n">MultiGrading</span><span class="p">(</span><span class="n">z_grd_col</span><span class="p">)</span>
+        <span class="n">grd</span> <span class="o">=</span> <span class="n">grading</span><span class="o">.</span><span class="n">SimpleGrading</span><span class="p">(</span><span class="n">x_grd</span><span class="p">,</span> <span class="n">y_grd</span><span class="p">,</span> <span class="n">z_grd</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">grd</span><span class="p">,</span> <span class="p">(</span><span class="n">x_cell_count</span><span class="p">,</span> <span class="n">y_cell_count</span><span class="p">,</span> <span class="n">z_cell_count</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="WindTunnel.add_refinementRegion"><a class="viewcode-back" href="../../butterfly.html#butterfly.windtunnel.WindTunnel.add_refinementRegion">[docs]</a>    <span class="k">def</span> <span class="nf">add_refinementRegion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">refinementRegion</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add refinement regions to this case.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">refinementRegion</span><span class="p">,</span> <span class="s1">&#39;isRefinementRegion&#39;</span><span class="p">),</span> \
+            <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> is not a refinement region.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">refinementRegion</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__refinementRegions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">refinementRegion</span><span class="p">)</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_check_input_geometry</span><span class="p">(</span><span class="nb">input</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="s1">&#39;isBFGeometry&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">input</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not a Butterfly geometry.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">input</span><span class="p">))</span>
+
+<div class="viewcode-block" id="WindTunnel.to_openfoam_case"><a class="viewcode-back" href="../../butterfly.html#butterfly.windtunnel.WindTunnel.to_openfoam_case">[docs]</a>    <span class="k">def</span> <span class="nf">to_openfoam_case</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">make2d_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a BF case for this wind tunnel.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Case</span><span class="o">.</span><span class="n">from_wind_tunnel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">make2d_parameters</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="WindTunnel.save"><a class="viewcode-back" href="../../butterfly.html#butterfly.windtunnel.WindTunnel.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">minimum</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">make2d_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Save wind_tunnel to folder as an OpenFOAM case.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            overwrite: If True all the current content will be overwritten</span>
+<span class="sd">                (default: False).</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            A butterfly.Case.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_case</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_openfoam_case</span><span class="p">(</span><span class="n">make2d_parameters</span><span class="p">)</span>
+        <span class="n">_case</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">overwrite</span><span class="p">,</span> <span class="n">minimum</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_case</span></div>
+
+<div class="viewcode-block" id="WindTunnel.ToString"><a class="viewcode-back" href="../../butterfly.html#butterfly.windtunnel.WindTunnel.ToString">[docs]</a>    <span class="k">def</span> <span class="nf">ToString</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwrite ToString .NET method.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Wind tunnel.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;WindTunnel::</span><span class="si">%.2f</span><span class="s2"> * </span><span class="si">%.2f</span><span class="s2"> * </span><span class="si">%.2f</span><span class="s2">::dir </span><span class="si">%s</span><span class="s2">::</span><span class="si">%.3f</span><span class="s2"> m/s&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">flowDir</span><span class="p">,</span>
+            <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flow_speed</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="TunnelParameters"><a class="viewcode-back" href="../../butterfly.html#butterfly.windtunnel.TunnelParameters">[docs]</a><span class="k">class</span> <span class="nc">TunnelParameters</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Wind tunnel parameters.</span>
+
+<span class="sd">    Each parameter will be multiplied by multiple height.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        windward: Multiplier value for windward extension (default: 3).</span>
+<span class="sd">        top: Multiplier value for top extension (default: 5).</span>
+<span class="sd">        side: Multiplier value for side extension (default: 5).</span>
+<span class="sd">        leeward: Multiplier value for leeward extension (default: 15).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">windward</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">side</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">leeward</span><span class="o">=</span><span class="mi">15</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init wind tunnel parameters.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">windward</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__check_input</span><span class="p">(</span><span class="n">windward</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">top</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__check_input</span><span class="p">(</span><span class="n">top</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">side</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__check_input</span><span class="p">(</span><span class="n">side</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">leeward</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__check_input</span><span class="p">(</span><span class="n">leeward</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__check_input</span><span class="p">(</span><span class="nb">input</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check input values.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">_inp</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Failed to convert </span><span class="si">%s</span><span class="s2"> to a number.&quot;</span> <span class="o">%</span> <span class="nb">input</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">_inp</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Value (</span><span class="si">%.2f</span><span class="s2">) should be larger than 0.&quot;</span> <span class="o">%</span> <span class="n">_inp</span>
+            <span class="k">return</span> <span class="n">_inp</span>
+
+<div class="viewcode-block" id="TunnelParameters.duplicate"><a class="viewcode-back" href="../../butterfly.html#butterfly.windtunnel.TunnelParameters.duplicate">[docs]</a>    <span class="k">def</span> <span class="nf">duplicate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a copy of this object.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TunnelParameters.ToString"><a class="viewcode-back" href="../../butterfly.html#butterfly.windtunnel.TunnelParameters.ToString">[docs]</a>    <span class="k">def</span> <span class="nf">ToString</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwrite .NET ToString method.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Class representation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;WW: </span><span class="si">%.1f</span><span class="s1">X; T: </span><span class="si">%.1f</span><span class="s1">X; S: </span><span class="si">%.1f</span><span class="s1">X; LW: </span><span class="si">%.1f</span><span class="s1">X;&#39;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">windward</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">top</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">side</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">leeward</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

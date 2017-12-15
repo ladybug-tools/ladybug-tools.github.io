@@ -1,0 +1,268 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.schedule &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.schedule</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Honeybee schedule.</span>
+
+<span class="sd">Use this class to create schecules.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">ladybug.analysisperiod</span> <span class="k">import</span> <span class="n">AnalysisPeriod</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+
+
+<div class="viewcode-block" id="Schedule"><a class="viewcode-back" href="../../honeybee.html#honeybee.schedule.Schedule">[docs]</a><span class="k">class</span> <span class="nc">Schedule</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Schedule.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        values: Schedule values.</span>
+<span class="sd">        hoys: List of hours of the year for this values.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;_values&#39;</span><span class="p">,</span> <span class="s1">&#39;_hoys&#39;</span><span class="p">,</span> <span class="s1">&#39;_occupiedHours&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">hoys</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init Schedule.&quot;&quot;&quot;</span>
+        <span class="n">hoys</span> <span class="o">=</span> <span class="n">hoys</span> <span class="ow">or</span> <span class="n">xrange</span><span class="p">(</span><span class="mi">8760</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+        <span class="c1"># put the hours in a set for quick look up</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hoys</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">hoys</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_occupiedHours</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
+            <span class="n">h</span> <span class="k">for</span> <span class="n">h</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">izip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hoys</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">v</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># check for length of data</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hoys</span><span class="p">),</span> \
+            <span class="s1">&#39;Length of values [</span><span class="si">{}</span><span class="s1">] must be equal to the length of the hours [</span><span class="si">{}</span><span class="s1">].&#39;</span> \
+            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hoys</span><span class="p">))</span>
+
+<div class="viewcode-block" id="Schedule.from_workday_hours"><a class="viewcode-back" href="../../honeybee.html#honeybee.schedule.Schedule.from_workday_hours">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_workday_hours</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">occ_hours</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">off_hours</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">weekend</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">default_value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a schedule from Ladybug&#39;s AnalysisPeriod.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            occ_hours: Start and end hour of work day as a tuple. Default is (8, 17).</span>
+<span class="sd">            off_hours: A list of hours that building is unoccupied during the occupancy</span>
+<span class="sd">                period everyday (e.g. lunch break). Default is an hour lunch break at</span>
+<span class="sd">                (12, 13). Use -1 for no break during the day.</span>
+<span class="sd">            weekend: A list of numbers to indicate the weekend days. [0] None, [1-7] MON</span>
+<span class="sd">                to SUN. Default is 6, 7 (SAT, SUN).</span>
+<span class="sd">            default_value: Default value for occupancy hours (Default: 1).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">daily_hours</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">24</span>
+        <span class="n">occ_hours</span> <span class="o">=</span> <span class="n">occ_hours</span> <span class="ow">or</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">17</span><span class="p">)</span>
+        <span class="n">off_hours</span> <span class="o">=</span> <span class="n">off_hours</span> <span class="ow">or</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">)</span>
+        <span class="n">weekend</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">weekend</span><span class="p">)</span> <span class="k">if</span> <span class="n">weekend</span> <span class="k">else</span> <span class="nb">set</span><span class="p">((</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+        <span class="n">default_value</span> <span class="o">=</span> <span class="n">default_value</span> <span class="ow">or</span> <span class="mi">1</span>
+
+        <span class="c1"># create daily schedules</span>
+        <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="o">*</span><span class="n">occ_hours</span><span class="p">):</span>
+            <span class="n">daily_hours</span><span class="p">[</span><span class="n">h</span><span class="p">]</span> <span class="o">=</span> <span class="n">default_value</span>
+
+        <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="o">*</span><span class="n">off_hours</span><span class="p">):</span>
+            <span class="n">daily_hours</span><span class="p">[</span><span class="n">h</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># create annual schedule</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">daily_hours</span><span class="p">[</span><span class="n">h</span> <span class="o">%</span> <span class="mi">24</span><span class="p">]</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="mi">8760</span><span class="p">)]</span>
+
+        <span class="c1"># set the values to 0 for weekendHours</span>
+        <span class="c1"># assuming the year starts on a Monday</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="mi">365</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">d</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">8</span> <span class="ow">in</span> <span class="n">weekend</span><span class="p">:</span>
+                <span class="c1"># set the hours for that day to 0</span>
+                <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">d</span> <span class="o">*</span> <span class="mi">24</span><span class="p">,</span> <span class="p">(</span><span class="n">d</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">24</span><span class="p">):</span>
+                    <span class="n">values</span><span class="p">[</span><span class="n">h</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">hours</span> <span class="o">=</span> <span class="n">xrange</span><span class="p">(</span><span class="mi">8760</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">hours</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Schedule.from_analysis_period"><a class="viewcode-back" href="../../honeybee.html#honeybee.schedule.Schedule.from_analysis_period">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_analysis_period</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">occ_period</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">off_hours</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">weekend</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                             <span class="n">default_value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a schedule from Ladybug&#39;s AnalysisPeriod.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            occ_period: An analysis period for occupancy. Default is (8, 17).</span>
+<span class="sd">            off_hours: A list of hours that building is unoccupied during the occupancy</span>
+<span class="sd">                period everyday (e.g. lunch break). Default is an hour lunch break at</span>
+<span class="sd">                (12, 13). Use -1 for no break during the day.</span>
+<span class="sd">            weekend: A list of numbers to indicate the weekend days. [0] None, [1-7] MON</span>
+<span class="sd">                to SUN. Default is 6, 7 (SAT, SUN).</span>
+<span class="sd">            default_value: Default value for occupancy hours (Default: 1).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">occ_period</span> <span class="o">=</span> <span class="n">occ_period</span> <span class="ow">or</span> <span class="n">AnalysisPeriod</span><span class="p">(</span><span class="n">stHour</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">endHour</span><span class="o">=</span><span class="mi">17</span><span class="p">)</span>
+        <span class="n">off_hours</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">off_hours</span><span class="p">)</span> <span class="k">if</span> <span class="n">off_hours</span> <span class="k">else</span> <span class="nb">set</span><span class="p">((</span><span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">))</span>
+        <span class="n">weekend</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">weekend</span><span class="p">)</span> <span class="k">if</span> <span class="n">weekend</span> <span class="k">else</span> <span class="nb">set</span><span class="p">((</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+        <span class="n">default_value</span> <span class="o">=</span> <span class="n">default_value</span> <span class="ow">or</span> <span class="mi">1</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">hours</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">h</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">occ_period</span><span class="o">.</span><span class="n">hoys</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s1">&#39;occ_period should be an AnalysisPeriod not </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">occ_period</span><span class="p">))</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># remove weekends</span>
+            <span class="n">hours</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">h</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">hours</span> <span class="k">if</span> <span class="p">((</span><span class="n">h</span> <span class="o">%</span> <span class="mi">24</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">8</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">weekend</span><span class="p">)</span>
+            <span class="c1"># remove off hours</span>
+            <span class="n">hours</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">h</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">hours</span> <span class="k">if</span> <span class="n">h</span> <span class="o">%</span> <span class="mi">24</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">off_hours</span><span class="p">)</span>
+
+            <span class="n">values</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">hours</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">hours</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Tuple of values in this schedule.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">hours</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Tuple of values in this schedule.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hoys</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">occupied_hours</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Occupied hours of the year as a set.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_occupiedHours</span>
+
+<div class="viewcode-block" id="Schedule.write"><a class="viewcode-back" href="../../honeybee.html#honeybee.schedule.Schedule.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write the schedule to a csv file.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Write method is not implemented yet!&#39;</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hour</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">hour</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_occupiedHours</span>
+
+<div class="viewcode-block" id="Schedule.ToString"><a class="viewcode-back" href="../../honeybee.html#honeybee.schedule.Schedule.ToString">[docs]</a>    <span class="k">def</span> <span class="nf">ToString</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwrite .NET ToString.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Schedule representation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;Schedule[#</span><span class="si">%d</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">h</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">Schedule</span><span class="o">.</span><span class="n">from_workday_hours</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

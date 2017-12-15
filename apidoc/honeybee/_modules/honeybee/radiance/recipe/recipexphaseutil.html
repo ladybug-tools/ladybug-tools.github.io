@@ -1,0 +1,590 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.recipe.recipexphaseutil &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../index.html">
+    <img class="logo" src="../../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.recipe.recipexphaseutil</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;A collection of useful methods for multi-phase recipes.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">.recipedcutil</span> <span class="k">import</span> <span class="n">window_group_to_receiver</span><span class="p">,</span> <span class="n">coeff_matrix_commands</span><span class="p">,</span> <span class="n">sky_receiver</span>
+<span class="kn">from</span> <span class="nn">.recipedcutil</span> <span class="k">import</span> <span class="n">matrix_calculation</span><span class="p">,</span> <span class="n">rgb_matrix_file_to_ill</span><span class="p">,</span> \
+    <span class="n">sun_coeff_matrix_commands</span>
+<span class="kn">from</span> <span class="nn">.recipedcutil</span> <span class="k">import</span> <span class="n">sun_matrix_calculation</span><span class="p">,</span> <span class="n">final_matrix_addition</span>
+<span class="kn">from</span> <span class="nn">...futil</span> <span class="k">import</span> <span class="n">preparedir</span><span class="p">,</span> <span class="n">copy_files_to_folder</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
+
+
+<div class="viewcode-block" id="write_rad_files_multi_phase"><a class="viewcode-back" href="../../../../honeybee.radiance.recipe.html#honeybee.radiance.recipe.recipexphaseutil.write_rad_files_multi_phase">[docs]</a><span class="k">def</span> <span class="nf">write_rad_files_multi_phase</span><span class="p">(</span><span class="n">working_dir</span><span class="p">,</span> <span class="n">project_name</span><span class="p">,</span> <span class="n">opq</span><span class="p">,</span> <span class="n">glz</span><span class="p">,</span> <span class="n">wgs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Write files to a target directory for multi-phase method.</span>
+
+<span class="sd">    This method should only be used for daylight coefficeint and multi-phase</span>
+<span class="sd">    daylight simulations. The files will be written under</span>
+<span class="sd">        working_dir/opaque</span>
+<span class="sd">        working_dir/glazing</span>
+<span class="sd">        working_dir/wgroup</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        working_dir: Path to working directory.</span>
+<span class="sd">        opq: A RadFile for opaque surfaces.</span>
+<span class="sd">        glz: A RadFile for glazing surfaces.</span>
+<span class="sd">        wgs: A collection of RadFiles for window-groups.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A named tuple for each RadFile as (fp, fpblk, fpglw)</span>
+<span class="sd">        fp returns the file path to the list of radiance files. It will be glowed</span>
+<span class="sd">            files for window_groups.</span>
+<span class="sd">        fpblk returns the file path to the list of blacked radiance files.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">Files</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;Files&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;fp&#39;</span><span class="p">,</span> <span class="s1">&#39;fpblk&#39;</span><span class="p">,</span> <span class="s1">&#39;fpglw&#39;</span><span class="p">])</span>
+
+    <span class="n">folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">working_dir</span><span class="p">,</span> <span class="s1">&#39;opaque&#39;</span><span class="p">)</span>
+    <span class="n">of</span> <span class="o">=</span> <span class="n">opq</span><span class="o">.</span><span class="n">write_geometries</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">..opq.rad&#39;</span> <span class="o">%</span> <span class="n">project_name</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mkdir</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">om</span> <span class="o">=</span> <span class="n">opq</span><span class="o">.</span><span class="n">write_materials</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">..opq.mat&#39;</span> <span class="o">%</span> <span class="n">project_name</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">blacked</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">bm</span> <span class="o">=</span> <span class="n">opq</span><span class="o">.</span><span class="n">write_materials</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">..blk.mat&#39;</span> <span class="o">%</span> <span class="n">project_name</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">blacked</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">opqf</span> <span class="o">=</span> <span class="n">Files</span><span class="p">((</span><span class="n">om</span><span class="p">,</span> <span class="n">of</span><span class="p">),</span> <span class="p">(</span><span class="n">bm</span><span class="p">,</span> <span class="n">of</span><span class="p">),</span> <span class="p">())</span>
+
+    <span class="n">folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">working_dir</span><span class="p">,</span> <span class="s1">&#39;glazing&#39;</span><span class="p">)</span>
+    <span class="n">ogf</span> <span class="o">=</span> <span class="n">glz</span><span class="o">.</span><span class="n">write_geometries</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">..glz.rad&#39;</span> <span class="o">%</span> <span class="n">project_name</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mkdir</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ogm</span> <span class="o">=</span> <span class="n">glz</span><span class="o">.</span><span class="n">write_materials</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">..glz.mat&#39;</span> <span class="o">%</span> <span class="n">project_name</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">blacked</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">bgm</span> <span class="o">=</span> <span class="n">glz</span><span class="o">.</span><span class="n">write_materials</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">..blk.mat&#39;</span> <span class="o">%</span> <span class="n">project_name</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">blacked</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">glzf</span> <span class="o">=</span> <span class="n">Files</span><span class="p">((</span><span class="n">ogm</span><span class="p">,</span> <span class="n">ogf</span><span class="p">),</span> <span class="p">(</span><span class="n">bgm</span><span class="p">,</span> <span class="n">ogf</span><span class="p">),</span> <span class="p">())</span>
+
+    <span class="n">wgfs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">working_dir</span><span class="p">,</span> <span class="s1">&#39;wgroup&#39;</span><span class="p">)</span>
+    <span class="n">bsdfs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">bsdffolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">working_dir</span><span class="p">,</span> <span class="s1">&#39;bsdf&#39;</span><span class="p">)</span>
+    <span class="n">preparedir</span><span class="p">(</span><span class="n">bsdffolder</span><span class="p">)</span>
+    <span class="c1"># write black material to folder</span>
+    <span class="k">for</span> <span class="n">count</span><span class="p">,</span> <span class="n">wgf</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">wgs</span><span class="p">):</span>
+        <span class="c1"># write it as a black geometry</span>
+        <span class="n">wg</span> <span class="o">=</span> <span class="n">wgf</span><span class="o">.</span><span class="n">hb_surfaces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">wg</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">wgbm</span> <span class="o">=</span> <span class="n">wgf</span><span class="o">.</span><span class="n">write_black_material</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="s1">&#39;black.mat&#39;</span><span class="p">,</span> <span class="n">mkdir</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">wgbf</span> <span class="o">=</span> <span class="n">wgf</span><span class="o">.</span><span class="n">write_geometries_blacked</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">..blk.rad&#39;</span> <span class="o">%</span> <span class="n">name</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">wggf</span> <span class="o">=</span> <span class="n">wgf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">..glw.rad&#39;</span> <span class="o">%</span> <span class="n">name</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">flipped</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                         <span class="n">glowed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mkdir</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">recf</span> <span class="o">=</span> <span class="n">window_group_to_receiver</span><span class="p">(</span><span class="n">wggf</span><span class="p">,</span> <span class="n">wg</span><span class="o">.</span><span class="n">upnormal</span><span class="p">,</span> <span class="n">wg</span><span class="o">.</span><span class="n">radiance_material</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="c1"># remove the original window group and rename the new one to original</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">wggf</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">recf</span><span class="p">,</span> <span class="n">wggf</span><span class="p">)</span>
+
+        <span class="c1"># copy xml files for each state to bsdf folder</span>
+        <span class="c1"># raise TypeError if material is not BSDF</span>
+        <span class="c1"># write files for each state</span>
+        <span class="n">wgfstate</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">scount</span><span class="p">,</span> <span class="n">state</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">wg</span><span class="o">.</span><span class="n">states</span><span class="p">):</span>
+            <span class="n">wg</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">scount</span>
+            <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">wg</span><span class="o">.</span><span class="n">radiance_material</span><span class="p">,</span> <span class="s1">&#39;xmlfile&#39;</span><span class="p">),</span> \
+                <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s1">&#39;RadianceMaterial for all the states should be BSDF material.&#39;</span>
+                    <span class="s1">&#39; Radiance Material for </span><span class="si">{}</span><span class="s1"> state is </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">wg</span><span class="o">.</span><span class="n">radiance_material</span><span class="p">)))</span>
+            <span class="n">bsdfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wg</span><span class="o">.</span><span class="n">radiance_material</span><span class="o">.</span><span class="n">xmlfile</span><span class="p">)</span>
+            <span class="c1"># write the file for each state. only useful for 5-phase</span>
+            <span class="n">wgfst</span> <span class="o">=</span> <span class="n">wgf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">..</span><span class="si">%s</span><span class="s1">.rad&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">wgfstate</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wgfst</span><span class="p">)</span>
+
+        <span class="n">wg</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># set the state back to 0</span>
+        <span class="n">wgfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Files</span><span class="p">(</span><span class="n">wgfstate</span><span class="p">,</span> <span class="p">(</span><span class="n">wgbm</span><span class="p">,</span> <span class="n">wgbf</span><span class="p">),</span> <span class="p">(</span><span class="n">wggf</span><span class="p">,)))</span>
+
+        <span class="n">copy_files_to_folder</span><span class="p">(</span><span class="n">bsdfs</span><span class="p">,</span> <span class="n">bsdffolder</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">opqf</span><span class="p">,</span> <span class="n">glzf</span><span class="p">,</span> <span class="n">wgfs</span></div>
+
+
+<div class="viewcode-block" id="get_commands_view_daylight_matrices"><a class="viewcode-back" href="../../../../honeybee.radiance.recipe.html#honeybee.radiance.recipe.recipexphaseutil.get_commands_view_daylight_matrices">[docs]</a><span class="k">def</span> <span class="nf">get_commands_view_daylight_matrices</span><span class="p">(</span>
+    <span class="n">project_folder</span><span class="p">,</span> <span class="n">window_group</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">inputfiles</span><span class="p">,</span> <span class="n">points_file</span><span class="p">,</span>
+    <span class="n">number_of_points</span><span class="p">,</span> <span class="n">sky_density</span><span class="p">,</span> <span class="n">view_mtx_parameters</span><span class="p">,</span> <span class="n">daylight_mtx_parameters</span><span class="p">,</span>
+        <span class="n">reuse_view_mtx</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">reuse_daylight_mtx</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">phases_count</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get commnds, view matrix file and daylight matrix file.&quot;&quot;&quot;</span>
+    <span class="n">commands</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">opqfiles</span><span class="p">,</span> <span class="n">glzfiles</span><span class="p">,</span> <span class="n">wgsfiles</span><span class="p">,</span> <span class="n">extrafiles</span> <span class="o">=</span> <span class="n">inputfiles</span>
+    <span class="c1"># add material file</span>
+    <span class="n">blkmaterial</span> <span class="o">=</span> <span class="p">[</span><span class="n">wgsfiles</span><span class="p">[</span><span class="n">count</span><span class="p">]</span><span class="o">.</span><span class="n">fpblk</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="c1"># add all the blacked window groups but the one in use</span>
+    <span class="c1"># and finally add non-window group glazing as black</span>
+    <span class="n">wgsblacked</span> <span class="o">=</span> \
+        <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">fpblk</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">wgsfiles</span><span class="p">)</span> <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="n">count</span><span class="p">]</span> <span class="o">+</span> \
+        <span class="nb">list</span><span class="p">(</span><span class="n">glzfiles</span><span class="o">.</span><span class="n">fpblk</span><span class="p">)</span>
+
+    <span class="c1"># for scount, state in enumerate(wg.states):</span>
+    <span class="c1"># 2.3.Generate daylight coefficients using rfluxmtx</span>
+    <span class="c1"># collect list of radiance files in the scene for both total and direct</span>
+    <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="s1">&#39;:: start of the 3-phase calculation for the window group </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">window_group</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="n">vreceiver</span> <span class="o">=</span> <span class="n">wgsfiles</span><span class="p">[</span><span class="n">count</span><span class="p">]</span><span class="o">.</span><span class="n">fpglw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">vrflux_scene</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">f</span> <span class="k">for</span> <span class="n">fl</span> <span class="ow">in</span>
+        <span class="p">(</span><span class="n">opqfiles</span><span class="o">.</span><span class="n">fp</span><span class="p">,</span> <span class="n">blkmaterial</span><span class="p">,</span> <span class="n">wgsblacked</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fl</span><span class="p">)</span>
+
+    <span class="n">drflux_scene</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">f</span> <span class="k">for</span> <span class="n">fl</span> <span class="ow">in</span>
+        <span class="p">(</span><span class="n">opqfiles</span><span class="o">.</span><span class="n">fp</span><span class="p">,</span> <span class="n">extrafiles</span><span class="o">.</span><span class="n">fp</span><span class="p">,</span> <span class="n">blkmaterial</span><span class="p">,</span> <span class="n">wgsblacked</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fl</span><span class="p">)</span>
+
+    <span class="c1"># 3.2.Generate view matrix</span>
+    <span class="n">v_matrix</span> <span class="o">=</span> <span class="s1">&#39;result/matrix/</span><span class="si">{}</span><span class="s1">.vmx&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">window_group</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="n">v_matrix</span><span class="p">))</span> \
+            <span class="ow">or</span> <span class="ow">not</span> <span class="n">reuse_view_mtx</span><span class="p">:</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;:: :: [1/</span><span class="si">{}</span><span class="s1">] calculating view matrix&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">phases_count</span><span class="p">))</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="s1">&#39;:: :: rfluxmtx - [wgroup] [scene] [points] [blacked wgroups]&#39;</span>
+            <span class="s1">&#39; ^&gt; [*.vmx]&#39;</span>
+        <span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;::&#39;</span><span class="p">)</span>
+        <span class="c1"># prepare input files</span>
+        <span class="n">rad_files</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">vrflux_scene</span><span class="p">)</span>
+
+        <span class="n">vmtx</span> <span class="o">=</span> <span class="n">coeff_matrix_commands</span><span class="p">(</span>
+            <span class="n">v_matrix</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">vreceiver</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">),</span> <span class="n">rad_files</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">points_file</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">),</span> <span class="n">number_of_points</span><span class="p">,</span>
+            <span class="n">view_mtx_parameters</span><span class="p">)</span>
+
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vmtx</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+
+    <span class="c1"># 3.3 daylight matrix</span>
+    <span class="n">d_matrix</span> <span class="o">=</span> <span class="s1">&#39;result/matrix/</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.dmx&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">window_group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">sky_density</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="n">d_matrix</span><span class="p">))</span> \
+            <span class="ow">or</span> <span class="ow">not</span> <span class="n">reuse_daylight_mtx</span><span class="p">:</span>
+        <span class="n">sender</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">vreceiver</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">)</span>
+
+        <span class="n">receiver</span> <span class="o">=</span> <span class="n">sky_receiver</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="s1">&#39;sky/rfluxSky.rad&#39;</span><span class="p">),</span> <span class="n">sky_density</span>
+        <span class="p">)</span>
+
+        <span class="n">rad_files</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">drflux_scene</span><span class="p">)</span>
+
+        <span class="n">dmtx</span> <span class="o">=</span> <span class="n">coeff_matrix_commands</span><span class="p">(</span>
+            <span class="n">d_matrix</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">receiver</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">),</span> <span class="n">rad_files</span><span class="p">,</span>
+            <span class="n">sender</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">daylight_mtx_parameters</span><span class="p">)</span>
+
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;:: :: [2/</span><span class="si">{}</span><span class="s1">] calculating daylight matrix&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">phases_count</span><span class="p">))</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="s1">&#39;:: :: rfluxmtx - [sky] [points] [wgroup] [blacked wgroups] [scene]&#39;</span>
+            <span class="s1">&#39; ^&gt; [*.dmx]&#39;</span>
+        <span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;::&#39;</span><span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dmtx</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">commands</span><span class="p">,</span> <span class="n">v_matrix</span><span class="p">,</span> <span class="n">d_matrix</span></div>
+
+
+<div class="viewcode-block" id="get_commands_direct_view_daylight_matrices"><a class="viewcode-back" href="../../../../honeybee.radiance.recipe.html#honeybee.radiance.recipe.recipexphaseutil.get_commands_direct_view_daylight_matrices">[docs]</a><span class="k">def</span> <span class="nf">get_commands_direct_view_daylight_matrices</span><span class="p">(</span>
+    <span class="n">project_folder</span><span class="p">,</span> <span class="n">window_group</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">inputfiles</span><span class="p">,</span> <span class="n">points_file</span><span class="p">,</span>
+    <span class="n">number_of_points</span><span class="p">,</span> <span class="n">sky_density</span><span class="p">,</span> <span class="n">view_mtx_parameters</span><span class="p">,</span> <span class="n">daylight_mtx_parameters</span><span class="p">,</span>
+        <span class="n">reuse_view_mtx</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">reuse_daylight_mtx</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get commnds, view matrix file and daylight matrix file for direct calculation.&quot;&quot;&quot;</span>
+    <span class="n">commands</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">opqfiles</span><span class="p">,</span> <span class="n">glzfiles</span><span class="p">,</span> <span class="n">wgsfiles</span><span class="p">,</span> <span class="n">extrafiles</span> <span class="o">=</span> <span class="n">inputfiles</span>
+    <span class="c1"># add material file</span>
+    <span class="n">blkmaterial</span> <span class="o">=</span> <span class="p">[</span><span class="n">wgsfiles</span><span class="p">[</span><span class="n">count</span><span class="p">]</span><span class="o">.</span><span class="n">fpblk</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="c1"># add all the blacked window groups but the one in use</span>
+    <span class="c1"># and finally add non-window group glazing as black</span>
+    <span class="n">wgsblacked</span> <span class="o">=</span> \
+        <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">fpblk</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">wgsfiles</span><span class="p">)</span> <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="n">count</span><span class="p">]</span> <span class="o">+</span> \
+        <span class="nb">list</span><span class="p">(</span><span class="n">glzfiles</span><span class="o">.</span><span class="n">fpblk</span><span class="p">)</span>
+
+    <span class="c1"># for scount, state in enumerate(wg.states):</span>
+    <span class="c1"># 2.3.Generate daylight coefficients using rfluxmtx</span>
+    <span class="c1"># collect list of radiance files in the scene for both total and direct</span>
+    <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="s1">&#39;:: start of the 3-phase direct calculation for the window group </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">window_group</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="n">vreceiver</span> <span class="o">=</span> <span class="n">wgsfiles</span><span class="p">[</span><span class="n">count</span><span class="p">]</span><span class="o">.</span><span class="n">fpglw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># change here to create a black scene instead</span>
+    <span class="n">vrflux_scene</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">f</span> <span class="k">for</span> <span class="n">fl</span> <span class="ow">in</span>
+        <span class="p">(</span><span class="n">opqfiles</span><span class="o">.</span><span class="n">fpblk</span><span class="p">,</span> <span class="n">blkmaterial</span><span class="p">,</span> <span class="n">wgsblacked</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fl</span><span class="p">)</span>
+
+    <span class="n">drflux_scene</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">f</span> <span class="k">for</span> <span class="n">fl</span> <span class="ow">in</span>
+        <span class="p">(</span><span class="n">opqfiles</span><span class="o">.</span><span class="n">fpblk</span><span class="p">,</span> <span class="n">extrafiles</span><span class="o">.</span><span class="n">fpblk</span><span class="p">,</span> <span class="n">blkmaterial</span><span class="p">,</span> <span class="n">wgsblacked</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fl</span><span class="p">)</span>
+
+    <span class="c1"># 3.2.Generate view matrix</span>
+    <span class="n">v_matrix</span> <span class="o">=</span> <span class="s1">&#39;result/matrix/</span><span class="si">{}</span><span class="s1">_dir.vmx&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">window_group</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="n">v_matrix</span><span class="p">))</span> \
+            <span class="ow">or</span> <span class="ow">not</span> <span class="n">reuse_view_mtx</span><span class="p">:</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;:: :: [4-1/5] calculating direct view matrix&#39;</span><span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="s1">&#39;:: :: rfluxmtx - [wgroup] [blacked scene] [points] [blacked wgroups]&#39;</span>
+            <span class="s1">&#39; ^&gt; [*.vmx]&#39;</span>
+        <span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;::&#39;</span><span class="p">)</span>
+        <span class="c1"># prepare input files</span>
+        <span class="n">rad_files</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">vrflux_scene</span><span class="p">)</span>
+
+        <span class="n">ab</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">view_mtx_parameters</span><span class="o">.</span><span class="n">ambient_bounces</span><span class="p">)</span>
+        <span class="n">view_mtx_parameters</span><span class="o">.</span><span class="n">ambient_bounces</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">vmtx</span> <span class="o">=</span> <span class="n">coeff_matrix_commands</span><span class="p">(</span>
+            <span class="n">v_matrix</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">vreceiver</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">),</span> <span class="n">rad_files</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">points_file</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">),</span> <span class="n">number_of_points</span><span class="p">,</span>
+            <span class="n">view_mtx_parameters</span><span class="p">)</span>
+        <span class="n">view_mtx_parameters</span><span class="o">.</span><span class="n">ambient_bounces</span> <span class="o">=</span> <span class="n">ab</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vmtx</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+
+    <span class="c1"># 3.3 daylight matrix</span>
+    <span class="n">d_matrix</span> <span class="o">=</span> <span class="s1">&#39;result/matrix/</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_dir.dmx&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">window_group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">sky_density</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="n">d_matrix</span><span class="p">))</span> \
+            <span class="ow">or</span> <span class="ow">not</span> <span class="n">reuse_daylight_mtx</span><span class="p">:</span>
+        <span class="n">sender</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">vreceiver</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">)</span>
+
+        <span class="n">receiver</span> <span class="o">=</span> <span class="n">sky_receiver</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="s1">&#39;sky/rfluxSky.rad&#39;</span><span class="p">),</span> <span class="n">sky_density</span>
+        <span class="p">)</span>
+
+        <span class="n">rad_files</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">drflux_scene</span><span class="p">)</span>
+
+        <span class="n">ab</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">daylight_mtx_parameters</span><span class="o">.</span><span class="n">ambient_bounces</span><span class="p">)</span>
+        <span class="n">src</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">daylight_mtx_parameters</span><span class="o">.</span><span class="n">sampling_rays_count</span><span class="p">)</span>
+        <span class="n">daylight_mtx_parameters</span><span class="o">.</span><span class="n">ambient_bounces</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">daylight_mtx_parameters</span><span class="o">.</span><span class="n">sampling_rays_count</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">dmtx</span> <span class="o">=</span> <span class="n">coeff_matrix_commands</span><span class="p">(</span>
+            <span class="n">d_matrix</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">receiver</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">),</span> <span class="n">rad_files</span><span class="p">,</span>
+            <span class="n">sender</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">daylight_mtx_parameters</span><span class="p">)</span>
+        <span class="n">daylight_mtx_parameters</span><span class="o">.</span><span class="n">ambient_bounces</span> <span class="o">=</span> <span class="n">ab</span>
+        <span class="n">daylight_mtx_parameters</span><span class="o">.</span><span class="n">sampling_rays_count</span> <span class="o">=</span> <span class="n">src</span>
+
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;:: :: [4-2/5] calculating direct daylight matrix&#39;</span><span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="s1">&#39;:: :: rfluxmtx - [sky] [points] [wgroup] [blacked wgroups] [blacked scene]&#39;</span>
+            <span class="s1">&#39; ^&gt; [*.dmx]&#39;</span>
+        <span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;::&#39;</span><span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dmtx</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">commands</span><span class="p">,</span> <span class="n">v_matrix</span><span class="p">,</span> <span class="n">d_matrix</span></div>
+
+
+<div class="viewcode-block" id="matrix_calculation_three_phase"><a class="viewcode-back" href="../../../../honeybee.radiance.recipe.html#honeybee.radiance.recipe.recipexphaseutil.matrix_calculation_three_phase">[docs]</a><span class="k">def</span> <span class="nf">matrix_calculation_three_phase</span><span class="p">(</span>
+        <span class="n">project_folder</span><span class="p">,</span> <span class="n">window_group</span><span class="p">,</span> <span class="n">v_matrix</span><span class="p">,</span> <span class="n">d_matrix</span><span class="p">,</span> <span class="n">sky_mtx_total</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Three phase matrix calculation.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        project_folder: Full path to project folder.</span>
+<span class="sd">        window_group: A window_group.</span>
+<span class="sd">        v_matrix: Path to view matrix.</span>
+<span class="sd">        d_matrix: Path to daylight matrix.</span>
+<span class="sd">        sky_mtx_total: Path to sky matrix.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        commands, result_files</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">commands</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">stcount</span><span class="p">,</span> <span class="n">state</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">window_group</span><span class="o">.</span><span class="n">states</span><span class="p">):</span>
+        <span class="c1"># 4. matrix calculations</span>
+        <span class="n">window_group</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">stcount</span>
+        <span class="n">t_matrix</span> <span class="o">=</span> <span class="s1">&#39;scene/bsdf/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">window_group</span><span class="o">.</span><span class="n">radiance_material</span><span class="o">.</span><span class="n">xmlfile</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;tmp/</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">.tmp&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">window_group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">dct</span> <span class="o">=</span> <span class="n">matrix_calculation</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">v_matrix</span><span class="p">,</span> <span class="n">t_matrix</span><span class="p">,</span> <span class="n">d_matrix</span><span class="p">,</span> <span class="n">sky_mtx_total</span><span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;:: :: State </span><span class="si">{}</span><span class="s1"> [</span><span class="si">{}</span><span class="s1"> out of </span><span class="si">{}</span><span class="s1">]&#39;</span>
+                        <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">stcount</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">window_group</span><span class="o">.</span><span class="n">states</span><span class="p">)))</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;:: :: [3/3] v_matrix * d_matrix * t_matrix&#39;</span><span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;:: :: dctimestep [vmx] [tmtx] [dmtx] ^ &gt; [results.rgb]&#39;</span><span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dct</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+
+        <span class="c1"># 5. convert r, g ,b values to illuminance</span>
+        <span class="n">final_output</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;result/</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">.ill&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">window_group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">finalmtx</span> <span class="o">=</span> <span class="n">rgb_matrix_file_to_ill</span><span class="p">((</span><span class="n">dct</span><span class="o">.</span><span class="n">output_file</span><span class="p">,),</span> <span class="n">final_output</span><span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="s1">&#39;:: :: rmtxop -c 47.4 119.9 11.6 [results.rgb] ^&gt; [results.ill]&#39;</span><span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;::&#39;</span><span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;::&#39;</span><span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">finalmtx</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+
+        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="n">final_output</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">commands</span><span class="p">,</span> <span class="n">results</span></div>
+
+
+<div class="viewcode-block" id="matrix_calculation_five_phase"><a class="viewcode-back" href="../../../../honeybee.radiance.recipe.html#honeybee.radiance.recipe.recipexphaseutil.matrix_calculation_five_phase">[docs]</a><span class="k">def</span> <span class="nf">matrix_calculation_five_phase</span><span class="p">(</span>
+        <span class="n">project_name</span><span class="p">,</span> <span class="n">sky_density</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">,</span> <span class="n">window_group</span><span class="p">,</span> <span class="n">skyfiles</span><span class="p">,</span>
+        <span class="n">inputfiles</span><span class="p">,</span> <span class="n">points_file</span><span class="p">,</span> <span class="n">total_point_count</span><span class="p">,</span> <span class="n">rfluxmtx_parameters</span><span class="p">,</span> <span class="n">v_matrix</span><span class="p">,</span>
+        <span class="n">d_matrix</span><span class="p">,</span> <span class="n">dv_matrix</span><span class="p">,</span> <span class="n">dd_matrix</span><span class="p">,</span> <span class="n">window_group_count</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">reuse_view_mtx</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">reuse_daylight_mtx</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">counter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get commands for the five phase recipe.</span>
+
+<span class="sd">    This function takes the result_files from 3phase calculation and adds direct</span>
+<span class="sd">    calculation phases to it.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">commands</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># unpack inputs</span>
+    <span class="n">opqfiles</span><span class="p">,</span> <span class="n">glzfiles</span><span class="p">,</span> <span class="n">wgsfiles</span><span class="p">,</span> <span class="n">extrafiles</span> <span class="o">=</span> <span class="n">inputfiles</span>
+    <span class="n">sky_mtx_total</span><span class="p">,</span> <span class="n">sky_mtx_direct</span><span class="p">,</span> <span class="n">analemma</span><span class="p">,</span> <span class="n">sunlist</span><span class="p">,</span> <span class="n">analemmaMtx</span> <span class="o">=</span> <span class="n">skyfiles</span>
+
+    <span class="c1"># get black material file</span>
+    <span class="n">blkmaterial</span> <span class="o">=</span> <span class="p">[</span><span class="n">wgsfiles</span><span class="p">[</span><span class="n">window_group_count</span><span class="p">]</span><span class="o">.</span><span class="n">fpblk</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="c1"># add all the blacked window groups but the one in use</span>
+    <span class="c1"># and finally add non-window group glazing as black</span>
+    <span class="n">wgsblacked</span> <span class="o">=</span> \
+        <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">fpblk</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">wgsfiles</span><span class="p">)</span> <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="n">window_group_count</span><span class="p">]</span> <span class="o">+</span> \
+        <span class="nb">list</span><span class="p">(</span><span class="n">glzfiles</span><span class="o">.</span><span class="n">fpblk</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">scount</span><span class="p">,</span> <span class="n">state</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">window_group</span><span class="o">.</span><span class="n">states</span><span class="p">):</span>
+        <span class="c1"># 2.3.Generate daylight coefficients using rfluxmtx</span>
+        <span class="c1"># collect list of radiance files in the scene for both total and direct</span>
+        <span class="k">if</span> <span class="n">counter</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="p">((</span><span class="n">counter</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">scount</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">counter</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="mi">100</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span>
+            <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="s1">&#39;:: </span><span class="si">{}</span><span class="s1"> of </span><span class="si">{}</span><span class="s1"> ^|</span><span class="si">{}{}</span><span class="s1">^| (</span><span class="si">{:.2f}%%</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">counter</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">scount</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">counter</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;#&#39;</span> <span class="o">*</span> <span class="n">c</span><span class="p">,</span>
+                    <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="mi">10</span> <span class="o">-</span> <span class="n">c</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;::&#39;</span><span class="p">)</span>
+
+        <span class="c1"># TODO(mostapha): only calculate it if either view materix of daylight matrix</span>
+        <span class="c1"># is recalculated or t-matrix is new.</span>
+        <span class="n">window_group</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">scount</span>
+        <span class="n">t_matrix</span> <span class="o">=</span> <span class="s1">&#39;scene/bsdf/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">window_group</span><span class="o">.</span><span class="n">radiance_material</span><span class="o">.</span><span class="n">xmlfile</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;tmp/3phase..</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">.tmp&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">window_group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">dct</span> <span class="o">=</span> <span class="n">matrix_calculation</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">v_matrix</span><span class="p">,</span> <span class="n">t_matrix</span><span class="p">,</span> <span class="n">d_matrix</span><span class="p">,</span> <span class="n">sky_mtx_total</span><span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;:: :: [3/5] v_matrix * d_matrix * t_matrix&#39;</span><span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;:: :: dctimestep [vmx] [tmtx] [dmtx] ^ &gt; [results.rgb]&#39;</span><span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dct</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+
+        <span class="c1"># 5. convert r, g ,b values to illuminance</span>
+        <span class="n">final_output</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;result/3phase..</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">.ill&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">window_group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">finalmtx</span> <span class="o">=</span> <span class="n">rgb_matrix_file_to_ill</span><span class="p">((</span><span class="n">dct</span><span class="o">.</span><span class="n">output_file</span><span class="p">,),</span> <span class="n">final_output</span><span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">finalmtx</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+
+        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="n">final_output</span><span class="p">))</span>
+
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;::&#39;</span><span class="p">)</span>
+
+        <span class="c1"># calculate direct matrix with black scene</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;tmp/direct..</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">.tmp&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">window_group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">dct</span> <span class="o">=</span> <span class="n">matrix_calculation</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">dv_matrix</span><span class="p">,</span> <span class="n">t_matrix</span><span class="p">,</span> <span class="n">dd_matrix</span><span class="p">,</span> <span class="n">sky_mtx_direct</span><span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;:: :: [4/5] v_matrix * d_matrix * t_matrix&#39;</span><span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;:: :: dctimestep [vmx] [tmtx] [dmtx] ^ &gt; [results.rgb]&#39;</span><span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dct</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+
+        <span class="c1"># 5. convert r, g ,b values to illuminance</span>
+        <span class="n">final_output</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;result/direct..</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">.ill&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">window_group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">finalmtx</span> <span class="o">=</span> <span class="n">rgb_matrix_file_to_ill</span><span class="p">((</span><span class="n">dct</span><span class="o">.</span><span class="n">output_file</span><span class="p">,),</span> <span class="n">final_output</span><span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">finalmtx</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+
+        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="n">final_output</span><span class="p">))</span>
+
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;::&#39;</span><span class="p">)</span>
+
+        <span class="c1"># in case window group is not already provided</span>
+        <span class="n">window_groupfiles</span> <span class="o">=</span> <span class="p">(</span><span class="n">wgsfiles</span><span class="p">[</span><span class="n">window_group_count</span><span class="p">]</span><span class="o">.</span><span class="n">fp</span><span class="p">[</span><span class="n">scount</span><span class="p">],)</span>
+
+        <span class="n">rflux_scene_blacked</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">f</span> <span class="k">for</span> <span class="n">fl</span> <span class="ow">in</span>
+            <span class="p">(</span><span class="n">window_groupfiles</span><span class="p">,</span> <span class="n">opqfiles</span><span class="o">.</span><span class="n">fpblk</span><span class="p">,</span> <span class="n">extrafiles</span><span class="o">.</span><span class="n">fpblk</span><span class="p">,</span>
+             <span class="n">blkmaterial</span><span class="p">,</span> <span class="n">wgsblacked</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fl</span><span class="p">)</span>
+
+        <span class="n">sun_matrix</span> <span class="o">=</span> <span class="s1">&#39;result/matrix/sun_</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">.dc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">project_name</span><span class="p">,</span> <span class="n">window_group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="n">sun_matrix</span><span class="p">))</span> \
+                <span class="ow">or</span> <span class="ow">not</span> <span class="n">reuse_daylight_mtx</span><span class="p">:</span>
+
+            <span class="n">rad_files_blacked</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">)</span>
+                                      <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">rflux_scene_blacked</span><span class="p">)</span>
+
+            <span class="c1"># replace the 4th phase with the new function</span>
+            <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;:: :: [5/5] black scene analemma daylight matrix&#39;</span><span class="p">)</span>
+            <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="s1">&#39;:: :: rcontrib - [sun_matrix] [points] [wgroup] [blacked wgroups] &#39;</span>
+                <span class="s1">&#39;[blacked scene] ^&gt; [analemma dc.mtx]&#39;</span>
+            <span class="p">)</span>
+            <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;::&#39;</span><span class="p">)</span>
+            <span class="n">sun_commands</span> <span class="o">=</span> <span class="n">sun_coeff_matrix_commands</span><span class="p">(</span>
+                <span class="n">sun_matrix</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">points_file</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">),</span>
+                <span class="n">rad_files_blacked</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">analemma</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">),</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">sunlist</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">),</span>
+                <span class="n">rfluxmtx_parameters</span><span class="o">.</span><span class="n">irradiance_calc</span>
+            <span class="p">)</span>
+
+            <span class="n">commands</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span> <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="n">sun_commands</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;:: :: reusing daylight matrices&#39;</span><span class="p">)</span>
+            <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;::&#39;</span><span class="p">)</span>
+
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;:: :: calculating black daylight mtx * analemma&#39;</span><span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="s1">&#39;:: :: dctimestep [black dc.mtx] [analemma only sky] ^&gt; [sun results.rgb]&#39;</span><span class="p">)</span>
+        <span class="n">dct_sun</span> <span class="o">=</span> <span class="n">sun_matrix_calculation</span><span class="p">(</span>
+            <span class="s1">&#39;tmp/sun..</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">.rgb&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">window_group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
+            <span class="n">dc_matrix</span><span class="o">=</span><span class="n">sun_matrix</span><span class="p">,</span>
+            <span class="n">sky_matrix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">analemmaMtx</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dct_sun</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="s1">&#39;:: :: rmtxop -c 47.4 119.9 11.6 [sun results.rgb] ^&gt; &#39;</span>
+            <span class="s1">&#39;[sun results.ill]&#39;</span>
+        <span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;::&#39;</span><span class="p">)</span>
+        <span class="n">finalmtx</span> <span class="o">=</span> <span class="n">rgb_matrix_file_to_ill</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">dct_sun</span><span class="o">.</span><span class="n">output_file</span><span class="p">,),</span>
+            <span class="s1">&#39;result/sun..</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">.ill&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">window_group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">finalmtx</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;:: :: calculating final results&#39;</span><span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="s1">&#39;:: :: rmtxop [3phase results.ill] - [direct results.ill] + &#39;</span>
+            <span class="s1">&#39;[sun results.ill] ^&gt; [final results.ill]&#39;</span>
+        <span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;::&#39;</span><span class="p">)</span>
+
+        <span class="n">fmtx</span> <span class="o">=</span> <span class="n">final_matrix_addition</span><span class="p">(</span>
+            <span class="s1">&#39;result/3phase..</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">.ill&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">window_group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
+            <span class="s1">&#39;result/direct..</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">.ill&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">window_group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
+            <span class="s1">&#39;result/sun..</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">.ill&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">window_group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
+            <span class="s1">&#39;result/</span><span class="si">{}</span><span class="s1">..</span><span class="si">{}</span><span class="s1">.ill&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">window_group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fmtx</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="s1">&#39;:: end of calculation for </span><span class="si">{}</span><span class="s1">, </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">window_group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;::&#39;</span><span class="p">)</span>
+        <span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;::&#39;</span><span class="p">)</span>
+
+        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">fmtx</span><span class="o">.</span><span class="n">output_file</span><span class="p">))</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">commands</span><span class="p">,</span> <span class="n">results</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

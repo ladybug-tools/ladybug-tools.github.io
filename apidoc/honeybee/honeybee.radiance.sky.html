@@ -1,0 +1,1100 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.sky package &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="honeybee.server package" href="honeybee.server.html" />
+    <link rel="prev" title="honeybee.radiance.recipe.threephase package" href="honeybee.radiance.recipe.threephase.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="honeybee.html">honeybee package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="honeybee.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="honeybee.energyplus.html">honeybee.energyplus package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="honeybee.radiance.html">honeybee.radiance package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="honeybee.radiance.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.analysisgrid">honeybee.radiance.analysisgrid module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.analysispoint">honeybee.radiance.analysispoint module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.datatype">honeybee.radiance.datatype module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.filemanager">honeybee.radiance.filemanager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.geometry">honeybee.radiance.geometry module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.imagecollection">honeybee.radiance.imagecollection module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.properties">honeybee.radiance.properties module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.radfile">honeybee.radiance.radfile module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.runmanager">honeybee.radiance.runmanager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.scene">honeybee.radiance.scene module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.view">honeybee.radiance.view module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.server.html">honeybee.server package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.vectormath.html">honeybee.vectormath package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.config">honeybee.config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.dataoperation">honeybee.dataoperation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.futil">honeybee.futil module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.geometryoperation">honeybee.geometryoperation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbdynamicsurface">honeybee.hbdynamicsurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbfensurface">honeybee.hbfensurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbobject">honeybee.hbobject module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbshadesurface">honeybee.hbshadesurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbsurface">honeybee.hbsurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbzone">honeybee.hbzone module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.room">honeybee.room module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.schedule">honeybee.schedule module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.surfaceproperties">honeybee.surfaceproperties module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.surfacetype">honeybee.surfacetype module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.utilcol">honeybee.utilcol module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="honeybee.html">honeybee package</a><ul>
+  <li><a href="honeybee.radiance.html">honeybee.radiance package</a><ul>
+      <li>Previous: <a href="honeybee.radiance.recipe.threephase.html" title="previous chapter">honeybee.radiance.recipe.threephase package</a></li>
+      <li>Next: <a href="honeybee.server.html" title="next chapter">honeybee.server package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="honeybee-radiance-sky-package">
+<h1>honeybee.radiance.sky package<a class="headerlink" href="#honeybee-radiance-sky-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-honeybee.radiance.sky.certainIlluminance">
+<span id="honeybee-radiance-sky-certainilluminance-module"></span><h2>honeybee.radiance.sky.certainIlluminance module<a class="headerlink" href="#module-honeybee.radiance.sky.certainIlluminance" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.radiance.sky.certainIlluminance.CertainIlluminanceLevel">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.sky.certainIlluminance.</code><code class="descname">CertainIlluminanceLevel</code><span class="sig-paren">(</span><em>illuminance_value=10000</em>, <em>sky_type=0</em>, <em>suffix=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/certainIlluminance.html#CertainIlluminanceLevel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.certainIlluminance.CertainIlluminanceLevel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.radiance.sky.cie.CIE" title="honeybee.radiance.sky.cie.CIE"><code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.sky.cie.CIE</span></code></a></p>
+<p>Uniform CIE sky based on illuminance value.</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.certainIlluminance.CertainIlluminanceLevel.illuminance_value">
+<code class="descname">illuminance_value</code><a class="headerlink" href="#honeybee.radiance.sky.certainIlluminance.CertainIlluminanceLevel.illuminance_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Desired illuminance value in lux</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.certainIlluminance.CertainIlluminanceLevel.sky_type">
+<code class="descname">sky_type</code><a class="headerlink" href="#honeybee.radiance.sky.certainIlluminance.CertainIlluminanceLevel.sky_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer between 0..1 to indicate CIE Sky Type.
+[0] cloudy sky, [1] uniform sky (default: 0)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.certainIlluminance.CertainIlluminanceLevel.suffix">
+<code class="descname">suffix</code><a class="headerlink" href="#honeybee.radiance.sky.certainIlluminance.CertainIlluminanceLevel.suffix" title="Permalink to this definition">¶</a></dt>
+<dd><p>An optional suffix for sky name. The suffix will be added at the
+end of the standard name. Use this input to customize the new and
+avoid sky being overwritten by other skymatrix components.</p>
+</dd></dl>
+
+<p>Usage:</p>
+<blockquote>
+<div>sky = CertainIlluminanceLevel(1000)
+sky.execute(“c:/ladybug/1000luxsky.sky”)</div></blockquote>
+<dl class="method">
+<dt id="honeybee.radiance.sky.certainIlluminance.CertainIlluminanceLevel.command">
+<code class="descname">command</code><span class="sig-paren">(</span><em>folder=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/certainIlluminance.html#CertainIlluminanceLevel.command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.certainIlluminance.CertainIlluminanceLevel.command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gensky command.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.sky.certainIlluminance.CertainIlluminanceLevel.duplicate">
+<code class="descname">duplicate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/certainIlluminance.html#CertainIlluminanceLevel.duplicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.certainIlluminance.CertainIlluminanceLevel.duplicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Duplicate class.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">illuminance_value</code></dt>
+<dd><p>Desired Illuminace value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.certainIlluminance.CertainIlluminanceLevel.is_climate_based">
+<code class="descname">is_climate_based</code><a class="headerlink" href="#honeybee.radiance.sky.certainIlluminance.CertainIlluminanceLevel.is_climate_based" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if the sky is generated from values from weather file.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.certainIlluminance.CertainIlluminanceLevel.name">
+<code class="descname">name</code><a class="headerlink" href="#honeybee.radiance.sky.certainIlluminance.CertainIlluminanceLevel.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sky default name.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.sky.cie">
+<span id="honeybee-radiance-sky-cie-module"></span><h2>honeybee.radiance.sky.cie module<a class="headerlink" href="#module-honeybee.radiance.sky.cie" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.radiance.sky.cie.CIE">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.sky.cie.</code><code class="descname">CIE</code><span class="sig-paren">(</span><em>location=None</em>, <em>month=9</em>, <em>day=21</em>, <em>hour=12</em>, <em>north=0</em>, <em>sky_type=0</em>, <em>suffix=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/cie.html#CIE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.cie.CIE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.sky._pointintimesky.PointInTimeSky</span></code></p>
+<p>Create Standard CIE sky.</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.cie.CIE.location">
+<code class="descname">location</code><a class="headerlink" href="#honeybee.radiance.sky.cie.CIE.location" title="Permalink to this definition">¶</a></dt>
+<dd><p>A ladybug location</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.cie.CIE.month">
+<code class="descname">month</code><a class="headerlink" href="#honeybee.radiance.sky.cie.CIE.month" title="Permalink to this definition">¶</a></dt>
+<dd><p>A number to indicate month (1..12)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.cie.CIE.day">
+<code class="descname">day</code><a class="headerlink" href="#honeybee.radiance.sky.cie.CIE.day" title="Permalink to this definition">¶</a></dt>
+<dd><p>A number to indicate day (1..31)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.cie.CIE.hour">
+<code class="descname">hour</code><a class="headerlink" href="#honeybee.radiance.sky.cie.CIE.hour" title="Permalink to this definition">¶</a></dt>
+<dd><p>A number to indicate hour (0..23)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.cie.CIE.north_">
+<code class="descname">north_</code><a class="headerlink" href="#honeybee.radiance.sky.cie.CIE.north_" title="Permalink to this definition">¶</a></dt>
+<dd><p>A number between 0 and 360 that represents the degrees off from
+the y-axis to make North. The default North direction is set to the
+Y-axis (default: 0 degrees).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.cie.CIE.sky_type">
+<code class="descname">sky_type</code><a class="headerlink" href="#honeybee.radiance.sky.cie.CIE.sky_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer between 0..5 to indicate CIE Sky Type.
+[0] Sunny with sun, [1] sunny without sun, [2] intermediate with sun
+[3] intermediate without sun, [4] cloudy sky, [5] uniform sky</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.cie.CIE.suffix">
+<code class="descname">suffix</code><a class="headerlink" href="#honeybee.radiance.sky.cie.CIE.suffix" title="Permalink to this definition">¶</a></dt>
+<dd><p>An optional suffix for sky name. The suffix will be added at the
+end of the standard name. Use this input to customize the new and
+avoid sky being overwritten by other skymatrix components.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.cie.CIE.SKYTYPES">
+<code class="descname">SKYTYPES</code><em class="property"> = {0: ('+s', 'sunnyWSun'), 1: ('-s', 'sunnyNoSun'), 2: ('+i', 'intermWSun'), 3: ('-i', 'intermNoSun'), 4: ('-c', 'cloudy_sky'), 5: ('-u', 'uniformSky')}</em><a class="headerlink" href="#honeybee.radiance.sky.cie.CIE.SKYTYPES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.sky.cie.CIE.ToString">
+<code class="descname">ToString</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/cie.html#CIE.ToString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.cie.CIE.ToString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrite .NET ToString method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.sky.cie.CIE.command">
+<code class="descname">command</code><span class="sig-paren">(</span><em>folder=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/cie.html#CIE.command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.cie.CIE.command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gensky command.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.sky.cie.CIE.duplicate">
+<code class="descname">duplicate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/cie.html#CIE.duplicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.cie.CIE.duplicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Duplicate class.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.radiance.sky.cie.CIE.from_json">
+<em class="property">classmethod </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>loc_json</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/cie.html#CIE.from_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.cie.CIE.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create sky form json.
+{</p>
+<blockquote>
+<div>“location”: {}, // honeybee (or actually ladybug location schema)
+“day”: 1, // an integer between 1-31
+“month”: 1, // an integer between 1-12
+“hour”: 12.0, // a float number between 0-23
+“north”: 0, // degree for north if not Y axis
+“sky_type”: 0 // A number between 0-5 –  0: sunny sky</div></blockquote>
+<p>}</p>
+<p>location schema
+{</p>
+<blockquote>
+<div>“city”: “”,
+“latitude”: 0,
+“longitude”: 0,
+“time_zone”: 0,
+“elevation”: 0</div></blockquote>
+<p>}</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.radiance.sky.cie.CIE.from_lat_long">
+<em class="property">classmethod </em><code class="descname">from_lat_long</code><span class="sig-paren">(</span><em>city</em>, <em>latitude</em>, <em>longitude</em>, <em>timezone</em>, <em>elevation</em>, <em>month=6</em>, <em>day=21</em>, <em>hour=9</em>, <em>north=0</em>, <em>sky_type=0</em>, <em>suffix=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/cie.html#CIE.from_lat_long"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.cie.CIE.from_lat_long" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create sky from latitude and longitude.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.cie.CIE.name">
+<code class="descname">name</code><a class="headerlink" href="#honeybee.radiance.sky.cie.CIE.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sky default name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.sky.cie.CIE.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/cie.html#CIE.to_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.cie.CIE.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return sky as a json.
+{</p>
+<blockquote>
+<div>“location”: {}, // honeybee (or actually ladybug location schema)
+“day”: 1, // an integer between 1-31
+“month”: 1, // an integer between 1-12
+“hour”: 12.0, // a float number between 0-23
+“north”: 0, // degree for north if not Y axis
+“sky_type”: 0 // A number between 0-5 –  0: sunny sky</div></blockquote>
+<p>}</p>
+<p>location schema
+{</p>
+<blockquote>
+<div>“city”: “”,
+“latitude”: 0,
+“longitude”: 0,
+“time_zone”: 0,
+“elevation”: 0</div></blockquote>
+<p>}</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.sky.climatebased">
+<span id="honeybee-radiance-sky-climatebased-module"></span><h2>honeybee.radiance.sky.climatebased module<a class="headerlink" href="#module-honeybee.radiance.sky.climatebased" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.radiance.sky.climatebased.ClimateBased">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.sky.climatebased.</code><code class="descname">ClimateBased</code><span class="sig-paren">(</span><em>location</em>, <em>month</em>, <em>day</em>, <em>hour</em>, <em>direct_radiation</em>, <em>diffuse_radiation</em>, <em>north=0</em>, <em>suffix=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/climatebased.html#ClimateBased"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.climatebased.ClimateBased" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.sky._pointintimesky.PointInTimeSky</span></code></p>
+<p>Create Standard CIE sky.</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.climatebased.ClimateBased.location">
+<code class="descname">location</code><a class="headerlink" href="#honeybee.radiance.sky.climatebased.ClimateBased.location" title="Permalink to this definition">¶</a></dt>
+<dd><p>A ladybug location</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.climatebased.ClimateBased.month">
+<code class="descname">month</code><a class="headerlink" href="#honeybee.radiance.sky.climatebased.ClimateBased.month" title="Permalink to this definition">¶</a></dt>
+<dd><p>A number to indicate month (1..12)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.climatebased.ClimateBased.day">
+<code class="descname">day</code><a class="headerlink" href="#honeybee.radiance.sky.climatebased.ClimateBased.day" title="Permalink to this definition">¶</a></dt>
+<dd><p>A number to indicate day (1..31)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.climatebased.ClimateBased.hour">
+<code class="descname">hour</code><a class="headerlink" href="#honeybee.radiance.sky.climatebased.ClimateBased.hour" title="Permalink to this definition">¶</a></dt>
+<dd><p>A number to indicate hour (0..23)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.climatebased.ClimateBased.direct_radiation">
+<code class="descname">direct_radiation</code><a class="headerlink" href="#honeybee.radiance.sky.climatebased.ClimateBased.direct_radiation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Direct-normal irradiance in W/m^2.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.climatebased.ClimateBased.diffuse_radiation">
+<code class="descname">diffuse_radiation</code><a class="headerlink" href="#honeybee.radiance.sky.climatebased.ClimateBased.diffuse_radiation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Diffuse-horizontal irradiance in W/m^2.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.climatebased.ClimateBased.north_">
+<code class="descname">north_</code><a class="headerlink" href="#honeybee.radiance.sky.climatebased.ClimateBased.north_" title="Permalink to this definition">¶</a></dt>
+<dd><p>A number between 0 and 360 that represents the degrees off from
+the y-axis to make North. The default North direction is set to the
+Y-axis (default: 0 degrees).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.climatebased.ClimateBased.suffix">
+<code class="descname">suffix</code><a class="headerlink" href="#honeybee.radiance.sky.climatebased.ClimateBased.suffix" title="Permalink to this definition">¶</a></dt>
+<dd><p>An optional suffix for sky name. The suffix will be added at the
+end of the standard name. Use this input to customize the new and
+avoid sky being overwritten by other skymatrix components.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.sky.climatebased.ClimateBased.ToString">
+<code class="descname">ToString</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/climatebased.html#ClimateBased.ToString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.climatebased.ClimateBased.ToString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrite .NET ToString method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.sky.climatebased.ClimateBased.command">
+<code class="descname">command</code><span class="sig-paren">(</span><em>folder=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/climatebased.html#ClimateBased.command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.climatebased.ClimateBased.command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gensky command.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.sky.climatebased.ClimateBased.duplicate">
+<code class="descname">duplicate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/climatebased.html#ClimateBased.duplicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.climatebased.ClimateBased.duplicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Duplicate sky.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.radiance.sky.climatebased.ClimateBased.from_lat_long">
+<em class="property">classmethod </em><code class="descname">from_lat_long</code><span class="sig-paren">(</span><em>city</em>, <em>latitude</em>, <em>longitude</em>, <em>timezone</em>, <em>elevation</em>, <em>month</em>, <em>day</em>, <em>hour</em>, <em>direct_radiation</em>, <em>diffuse_radiation</em>, <em>north=0</em>, <em>suffix=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/climatebased.html#ClimateBased.from_lat_long"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.climatebased.ClimateBased.from_lat_long" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create sky from latitude and longitude.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.radiance.sky.climatebased.ClimateBased.from_wea">
+<em class="property">classmethod </em><code class="descname">from_wea</code><span class="sig-paren">(</span><em>wea</em>, <em>month</em>, <em>day</em>, <em>hour</em>, <em>north=0</em>, <em>suffix=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/climatebased.html#ClimateBased.from_wea"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.climatebased.ClimateBased.from_wea" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create sky from wea file.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.climatebased.ClimateBased.is_climate_based">
+<code class="descname">is_climate_based</code><a class="headerlink" href="#honeybee.radiance.sky.climatebased.ClimateBased.is_climate_based" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if the sky is climated-based.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.climatebased.ClimateBased.name">
+<code class="descname">name</code><a class="headerlink" href="#honeybee.radiance.sky.climatebased.ClimateBased.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sky default name.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.climatebased.ClimateBased.sky_type">
+<code class="descname">sky_type</code><a class="headerlink" href="#honeybee.radiance.sky.climatebased.ClimateBased.sky_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specify 0 for visible radiation, 1 for solar radiation and 2 for luminance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.climatebased.ClimateBased.sky_type_human_readable">
+<code class="descname">sky_type_human_readable</code><a class="headerlink" href="#honeybee.radiance.sky.climatebased.ClimateBased.sky_type_human_readable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Human readable sky type.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.sky.gendaylit">
+<span id="honeybee-radiance-sky-gendaylit-module"></span><h2>honeybee.radiance.sky.gendaylit module<a class="headerlink" href="#module-honeybee.radiance.sky.gendaylit" title="Permalink to this headline">¶</a></h2>
+<p>Calculte sky values based on Radiance’s gendaylit.</p>
+<dl class="docutils">
+<dt>This code is parts of genddaylit.c whic is copyrighted by:</dt>
+<dd><dl class="first last docutils">
+<dt>Copyright (c) 1994,2006 <a href="#id1"><span class="problematic" id="id2">*</span></a>Fraunhofer Institut for Solar Energy Systems</dt>
+<dd>Heidenhofstr. 2, D-79110 Freiburg, Germany
+Agence de l’Environnement et de la Maitrise de l’Energie
+Centre de Valbonne, 500 route des Lucioles, 06565 Sophia Antipolis Cedex, France
+<a href="#id3"><span class="problematic" id="id4">*</span></a>BOUYGUES
+1 Avenue Eugene Freyssinet, Saint-Quentin-Yvelines, France</dd>
+</dl>
+</dd>
+<dt>You can check the source code at:</dt>
+<dd><dl class="first last docutils">
+<dt><a class="reference external" href="https://github.com/NREL/Radiance/blob/53485a7fb48727293d62f98d7bac830aa34ccba4/src/">https://github.com/NREL/Radiance/blob/53485a7fb48727293d62f98d7bac830aa34ccba4/src/</a></dt>
+<dd>gen/gendaylit.c</dd>
+</dl>
+</dd>
+</dl>
+<dl class="function">
+<dt id="honeybee.radiance.sky.gendaylit.air_mass">
+<code class="descclassname">honeybee.radiance.sky.gendaylit.</code><code class="descname">air_mass</code><span class="sig-paren">(</span><em>sunzenith</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/gendaylit.html#air_mass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.gendaylit.air_mass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enter sunzenith angle (degrees) return relative air mass (double).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="honeybee.radiance.sky.gendaylit.calc_rel_lum_perez">
+<code class="descclassname">honeybee.radiance.sky.gendaylit.</code><code class="descname">calc_rel_lum_perez</code><span class="sig-paren">(</span><em>dzeta</em>, <em>gamma</em>, <em>z</em>, <em>epsilon</em>, <em>delta</em>, <em>coeff_perez</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/gendaylit.html#calc_rel_lum_perez"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.gendaylit.calc_rel_lum_perez" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sky luminance perez model.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="honeybee.radiance.sky.gendaylit.check_input_values">
+<code class="descclassname">honeybee.radiance.sky.gendaylit.</code><code class="descname">check_input_values</code><span class="sig-paren">(</span><em>directilluminance</em>, <em>diffuseilluminance</em>, <em>altitude</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/gendaylit.html#check_input_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.gendaylit.check_input_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validity of the direct and diffuse components.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="honeybee.radiance.sky.gendaylit.check_parametrization">
+<code class="descclassname">honeybee.radiance.sky.gendaylit.</code><code class="descname">check_parametrization</code><span class="sig-paren">(</span><em>skyclearness</em>, <em>skybrightness</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/gendaylit.html#check_parametrization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.gendaylit.check_parametrization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the range of epsilon and delta indexes of the perez parametrization.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="honeybee.radiance.sky.gendaylit.coeff_lum_perez">
+<code class="descclassname">honeybee.radiance.sky.gendaylit.</code><code class="descname">coeff_lum_perez</code><span class="sig-paren">(</span><em>z</em>, <em>epsilon</em>, <em>delta</em>, <em>coeff_perez</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/gendaylit.html#coeff_lum_perez"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.gendaylit.coeff_lum_perez" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coefficients for the sky luminance perez model.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="honeybee.radiance.sky.gendaylit.direct_n_effi_perez">
+<code class="descclassname">honeybee.radiance.sky.gendaylit.</code><code class="descname">direct_n_effi_perez</code><span class="sig-paren">(</span><em>skyclearness</em>, <em>skybrightness</em>, <em>sunzenith</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/gendaylit.html#direct_n_effi_perez"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.gendaylit.direct_n_effi_perez" title="Permalink to this definition">¶</a></dt>
+<dd><p>Direct normal efficacy model, according to PEREZ.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="honeybee.radiance.sky.gendaylit.gendaylit">
+<code class="descclassname">honeybee.radiance.sky.gendaylit.</code><code class="descname">gendaylit</code><span class="sig-paren">(</span><em>altitude</em>, <em>month</em>, <em>day</em>, <em>hour</em>, <em>directirradiance</em>, <em>diffuseirradiance</em>, <em>output_type=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/gendaylit.html#gendaylit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.gendaylit.gendaylit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get sun position and RGB values for sky.</p>
+<p>altitude: Sun altitude in degrees.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="honeybee.radiance.sky.gendaylit.get_eccentricity">
+<code class="descclassname">honeybee.radiance.sky.gendaylit.</code><code class="descname">get_eccentricity</code><span class="sig-paren">(</span><em>day_angle</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/gendaylit.html#get_eccentricity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.gendaylit.get_eccentricity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enter day number, return E0 = square(R0/R): eccentricity correction factor.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="honeybee.radiance.sky.gendaylit.get_numlin">
+<code class="descclassname">honeybee.radiance.sky.gendaylit.</code><code class="descname">get_numlin</code><span class="sig-paren">(</span><em>epsilon</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/gendaylit.html#get_numlin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.gendaylit.get_numlin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="honeybee.radiance.sky.gendaylit.glob_h_diffuse_effi_perez">
+<code class="descclassname">honeybee.radiance.sky.gendaylit.</code><code class="descname">glob_h_diffuse_effi_perez</code><span class="sig-paren">(</span><em>skyclearness</em>, <em>skybrightness</em>, <em>sunzenith</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/gendaylit.html#glob_h_diffuse_effi_perez"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.gendaylit.glob_h_diffuse_effi_perez" title="Permalink to this definition">¶</a></dt>
+<dd><p>Global horizontal diffuse efficacy model, according to PEREZ.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="honeybee.radiance.sky.gendaylit.integ_lv">
+<code class="descclassname">honeybee.radiance.sky.gendaylit.</code><code class="descname">integ_lv</code><span class="sig-paren">(</span><em>lv</em>, <em>theta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/gendaylit.html#integ_lv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.gendaylit.integ_lv" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="honeybee.radiance.sky.gendaylit.radians">
+<code class="descclassname">honeybee.radiance.sky.gendaylit.</code><code class="descname">radians</code><span class="sig-paren">(</span><em>degres</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/gendaylit.html#radians"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.gendaylit.radians" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="honeybee.radiance.sky.gendaylit.sky_brightness">
+<code class="descclassname">honeybee.radiance.sky.gendaylit.</code><code class="descname">sky_brightness</code><span class="sig-paren">(</span><em>diffuseirradiance</em>, <em>sunzenith</em>, <em>day_angle</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/gendaylit.html#sky_brightness"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.gendaylit.sky_brightness" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="honeybee.radiance.sky.gendaylit.sky_clearness">
+<code class="descclassname">honeybee.radiance.sky.gendaylit.</code><code class="descname">sky_clearness</code><span class="sig-paren">(</span><em>diffuseirradiance</em>, <em>directirradiance</em>, <em>sunzenith</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/gendaylit.html#sky_clearness"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.gendaylit.sky_clearness" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perez sky’s clearness.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="honeybee.radiance.sky.gendaylit.theta_phi_to_dzeta_gamma">
+<code class="descclassname">honeybee.radiance.sky.gendaylit.</code><code class="descname">theta_phi_to_dzeta_gamma</code><span class="sig-paren">(</span><em>theta</em>, <em>phi</em>, <em>z</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/gendaylit.html#theta_phi_to_dzeta_gamma"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.gendaylit.theta_phi_to_dzeta_gamma" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculation of the angles dzeta and gamma.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.sky.skymatrix">
+<span id="honeybee-radiance-sky-skymatrix-module"></span><h2>honeybee.radiance.sky.skymatrix module<a class="headerlink" href="#module-honeybee.radiance.sky.skymatrix" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.radiance.sky.skymatrix.SkyMatrix">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.sky.skymatrix.</code><code class="descname">SkyMatrix</code><span class="sig-paren">(</span><em>wea</em>, <em>sky_density=1</em>, <em>north=0</em>, <em>hoys=None</em>, <em>mode=0</em>, <em>suffix=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/skymatrix.html#SkyMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.skymatrix.SkyMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.sky._skyBase.RadianceSky</span></code></p>
+<p>Radiance sky matrix based on an epw weather file.</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.skymatrix.SkyMatrix.wea">
+<code class="descname">wea</code><a class="headerlink" href="#honeybee.radiance.sky.skymatrix.SkyMatrix.wea" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of ladybug Wea.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.skymatrix.SkyMatrix.sky_density">
+<code class="descname">sky_density</code><a class="headerlink" href="#honeybee.radiance.sky.skymatrix.SkyMatrix.sky_density" title="Permalink to this definition">¶</a></dt>
+<dd><p>A positive intger for sky density. [1] Tregenza Sky,
+[2] Reinhart Sky, etc. (Default: 1)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.skymatrix.SkyMatrix.north">
+<code class="descname">north</code><a class="headerlink" href="#honeybee.radiance.sky.skymatrix.SkyMatrix.north" title="Permalink to this definition">¶</a></dt>
+<dd><p>An angle in degrees between 0-360 to indicate north direction
+(Default: 0).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.skymatrix.SkyMatrix.hoys">
+<code class="descname">hoys</code><a class="headerlink" href="#honeybee.radiance.sky.skymatrix.SkyMatrix.hoys" title="Permalink to this definition">¶</a></dt>
+<dd><p>The list of hours for generating the sky matrix (Default: 0..8759).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.skymatrix.SkyMatrix.mode">
+<code class="descname">mode</code><a class="headerlink" href="#honeybee.radiance.sky.skymatrix.SkyMatrix.mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sky mode 0: total, 1: direct-only, 2: diffuse-only (Default: 0).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.skymatrix.SkyMatrix.suffix">
+<code class="descname">suffix</code><a class="headerlink" href="#honeybee.radiance.sky.skymatrix.SkyMatrix.suffix" title="Permalink to this definition">¶</a></dt>
+<dd><p>An optional suffix for sky name. The suffix will be added at the
+end of the standard name. Use this input to customize the new and
+avoid sky being overwritten by other skymatrix components.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.sky.skymatrix.SkyMatrix.ToString">
+<code class="descname">ToString</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/skymatrix.html#SkyMatrix.ToString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.skymatrix.SkyMatrix.ToString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrite .NET ToString method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.sky.skymatrix.SkyMatrix.duplicate">
+<code class="descname">duplicate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/skymatrix.html#SkyMatrix.duplicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.skymatrix.SkyMatrix.duplicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Duplicate this class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.sky.skymatrix.SkyMatrix.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><em>working_dir</em>, <em>reuse=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/skymatrix.html#SkyMatrix.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.skymatrix.SkyMatrix.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate sky matrix.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>working_dir</strong> – Folder to execute and write the output.</li>
+<li><strong>reuse</strong> – Reuse the matrix if already existed in the folder.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.radiance.sky.skymatrix.SkyMatrix.from_epw_file">
+<em class="property">classmethod </em><code class="descname">from_epw_file</code><span class="sig-paren">(</span><em>epw_file</em>, <em>sky_density=1</em>, <em>north=0</em>, <em>hoys=None</em>, <em>mode=0</em>, <em>suffix=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/skymatrix.html#SkyMatrix.from_epw_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.skymatrix.SkyMatrix.from_epw_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create sky from an epw file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.sky.skymatrix.SkyMatrix.hours_match">
+<code class="descname">hours_match</code><span class="sig-paren">(</span><em>hours_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/skymatrix.html#SkyMatrix.hours_match"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.skymatrix.SkyMatrix.hours_match" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if hours in the hours file matches the hours of wea.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">hoys</code></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.skymatrix.SkyMatrix.isSkyMatrix">
+<code class="descname">isSkyMatrix</code><a class="headerlink" href="#honeybee.radiance.sky.skymatrix.SkyMatrix.isSkyMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.skymatrix.SkyMatrix.is_climate_based">
+<code class="descname">is_climate_based</code><a class="headerlink" href="#honeybee.radiance.sky.skymatrix.SkyMatrix.is_climate_based" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if the sky is generated from values from weather file.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">mode</code></dt>
+<dd><p><a href="#id5"><span class="problematic" id="id6">**</span></a>Sky mode 0* – total, 1* – direct-only, 2: diffuse-only (Default: 0).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.skymatrix.SkyMatrix.name">
+<code class="descname">name</code><a class="headerlink" href="#honeybee.radiance.sky.skymatrix.SkyMatrix.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sky default name.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">north</code></dt>
+<dd><p><em>An angle in degrees between 0-360 to indicate north direction (Default</em> – 0).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">sky_density</code></dt>
+<dd><p>A positive intger for sky density. [1] Tregenza Sky, [2] Reinhart Sky, etc.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.skymatrix.SkyMatrix.sky_matrix_parameters">
+<code class="descname">sky_matrix_parameters</code><a class="headerlink" href="#honeybee.radiance.sky.skymatrix.SkyMatrix.sky_matrix_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return sky matrix parameters.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.skymatrix.SkyMatrix.sky_type">
+<code class="descname">sky_type</code><a class="headerlink" href="#honeybee.radiance.sky.skymatrix.SkyMatrix.sky_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specify 0 for visible radiation, 1 for total solar radiation.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.skymatrix.SkyMatrix.sky_type_human_readable">
+<code class="descname">sky_type_human_readable</code><a class="headerlink" href="#honeybee.radiance.sky.skymatrix.SkyMatrix.sky_type_human_readable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Human readable sky type.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">suffix</code></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.sky.skymatrix.SkyMatrix.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>working_dir</em>, <em>write_hours=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/skymatrix.html#SkyMatrix.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.skymatrix.SkyMatrix.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the radiance command line as a string.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">wea</code></dt>
+<dd><p>An instance of ladybug Wea.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.sky.skymatrix.SkyMatrix.write_wea">
+<code class="descname">write_wea</code><span class="sig-paren">(</span><em>target_dir</em>, <em>write_hours=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/skymatrix.html#SkyMatrix.write_wea"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.skymatrix.SkyMatrix.write_wea" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the wea file.</p>
+<p>WEA carries radiation values from epw and is what gendaymtx uses to
+generate the sky.
+:param target_dir: Path to target directory.
+:param write_hours: Write hours in a separate file in folder.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.sky.skyvector">
+<span id="honeybee-radiance-sky-skyvector-module"></span><h2>honeybee.radiance.sky.skyvector module<a class="headerlink" href="#module-honeybee.radiance.sky.skyvector" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.radiance.sky.skyvector.SkyVector">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.sky.skyvector.</code><code class="descname">SkyVector</code><span class="sig-paren">(</span><em>sky</em>, <em>sky_density=1</em>, <em>is_climate_based=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/skyvector.html#SkyVector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.skyvector.SkyVector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.sky._skyBase.RadianceSky</span></code></p>
+<p>Radiance sky vector.</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.skyvector.SkyVector.sky">
+<code class="descname">sky</code><a class="headerlink" href="#honeybee.radiance.sky.skyvector.SkyVector.sky" title="Permalink to this definition">¶</a></dt>
+<dd><p>A sky object generated either by gensky or gendaylit. If you’re not
+sure how to create them use one of the classmethods.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.skyvector.SkyVector.sky_density">
+<code class="descname">sky_density</code><a class="headerlink" href="#honeybee.radiance.sky.skyvector.SkyVector.sky_density" title="Permalink to this definition">¶</a></dt>
+<dd><p>A positive intger for sky density. [1] Tregenza Sky,
+[2] Reinhart Sky, etc. (Default: 1)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.sky.skyvector.SkyVector.ToString">
+<code class="descname">ToString</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/skyvector.html#SkyVector.ToString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.skyvector.SkyVector.ToString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrite .NET ToString method.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.skyvector.SkyVector.day">
+<code class="descname">day</code><a class="headerlink" href="#honeybee.radiance.sky.skyvector.SkyVector.day" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return hour.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.sky.skyvector.SkyVector.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><em>working_dir</em>, <em>reuse=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/skyvector.html#SkyVector.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.skyvector.SkyVector.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate sky vector.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>working_dir</strong> – Folder to execute and write the output.</li>
+<li><strong>reuse</strong> – Reuse the matrix if already existed in the folder.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.radiance.sky.skyvector.SkyVector.from_cie_sky">
+<em class="property">classmethod </em><code class="descname">from_cie_sky</code><span class="sig-paren">(</span><em>location</em>, <em>month=6</em>, <em>day=21</em>, <em>hour=12</em>, <em>sky_type=0</em>, <em>sky_density=1</em>, <em>north=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/skyvector.html#SkyVector.from_cie_sky"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.skyvector.SkyVector.from_cie_sky" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a sky vector from an standard CIE sky.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>month</strong> – Month [1..12] (default: 6).</li>
+<li><strong>day</strong> – Day [1..31] (default: 21).</li>
+<li><strong>hour</strong> – Hour [0..23] (default: 12).</li>
+<li><strong>sky_type</strong> – An intger between 0-5 for CIE sky type.
+0: [+s] Sunny with sun, 1: [-s] Sunny without sun,
+2: [+i] Intermediate with sun, 3: [-i] Intermediate with no sun,
+4: [-c] Cloudy overcast sky, 5: [-u] Uniform cloudy sky</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>sky_density: A positive intger for sky density. [1] Tregenza Sky,</dt>
+<dd>[2] Reinhart Sky, etc. (Default: 1)</dd>
+</dl>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.radiance.sky.skyvector.SkyVector.from_epw_file">
+<em class="property">classmethod </em><code class="descname">from_epw_file</code><span class="sig-paren">(</span><em>epw_file</em>, <em>month=6</em>, <em>day=21</em>, <em>hour=12</em>, <em>sky_density=1</em>, <em>north=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/skyvector.html#SkyVector.from_epw_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.skyvector.SkyVector.from_epw_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a climate-based sky vector.</p>
+<p>This methos uses Radiance’s gendaylit.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>epw_file</strong> – Full path to epw weather file.</li>
+<li><strong>month</strong> – Month [1..12] (default: 6).</li>
+<li><strong>day</strong> – Day [1..31] (default: 21).</li>
+<li><strong>hour</strong> – Hour [0..23] (default: 12).</li>
+<li><strong>sky_type</strong> – An intger between 0-5 for CIE sky type.
+0: [+s] Sunny with sun, 1: [-s] Sunny without sun,
+2: [+i] Intermediate with sun, 3: [-i] Intermediate with no sun,
+4: [-c] Cloudy overcast sky, 5: [-u] Uniform cloudy sky</li>
+<li><strong>sky_density</strong> – A positive intger for sky density. [1] Tregenza Sky,
+[2] Reinhart Sky, etc. (Default: 1)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.radiance.sky.skyvector.SkyVector.from_radiation_values">
+<em class="property">classmethod </em><code class="descname">from_radiation_values</code><span class="sig-paren">(</span><em>location</em>, <em>direct_normal_radiation</em>, <em>diffuse_horizontal_radiation</em>, <em>month=6</em>, <em>day=21</em>, <em>hour=12</em>, <em>sky_density=1</em>, <em>north=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/skyvector.html#SkyVector.from_radiation_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.skyvector.SkyVector.from_radiation_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>From radiation values.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.skyvector.SkyVector.hour">
+<code class="descname">hour</code><a class="headerlink" href="#honeybee.radiance.sky.skyvector.SkyVector.hour" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return hour.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.skyvector.SkyVector.isSkyVector">
+<code class="descname">isSkyVector</code><a class="headerlink" href="#honeybee.radiance.sky.skyvector.SkyVector.isSkyVector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.skyvector.SkyVector.is_climate_based">
+<code class="descname">is_climate_based</code><a class="headerlink" href="#honeybee.radiance.sky.skyvector.SkyVector.is_climate_based" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if the sky is generated from values from weather file.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.skyvector.SkyVector.month">
+<code class="descname">month</code><a class="headerlink" href="#honeybee.radiance.sky.skyvector.SkyVector.month" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return hour.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.skyvector.SkyVector.name">
+<code class="descname">name</code><a class="headerlink" href="#honeybee.radiance.sky.skyvector.SkyVector.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sky default name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.sky.skyvector.SkyVector.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>working_dir=None</em>, <em>relative_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/skyvector.html#SkyVector.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.skyvector.SkyVector.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return Radiance command line.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.sky.sunmatrix">
+<span id="honeybee-radiance-sky-sunmatrix-module"></span><h2>honeybee.radiance.sky.sunmatrix module<a class="headerlink" href="#module-honeybee.radiance.sky.sunmatrix" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.radiance.sky.sunmatrix.SunMatrix">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.sky.sunmatrix.</code><code class="descname">SunMatrix</code><span class="sig-paren">(</span><em>wea</em>, <em>north=0</em>, <em>hoys=None</em>, <em>sky_type=0</em>, <em>suffix=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/sunmatrix.html#SunMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.sunmatrix.SunMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.sky._skyBase.RadianceSky</span></code></p>
+<p>Radiance sun matrix (analemma) created from weather file.</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.sunmatrix.SunMatrix.wea">
+<code class="descname">wea</code><a class="headerlink" href="#honeybee.radiance.sky.sunmatrix.SunMatrix.wea" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of ladybug Wea.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.sunmatrix.SunMatrix.north">
+<code class="descname">north</code><a class="headerlink" href="#honeybee.radiance.sky.sunmatrix.SunMatrix.north" title="Permalink to this definition">¶</a></dt>
+<dd><p>An angle in degrees between 0-360 to indicate north direction
+(Default: 0).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.sunmatrix.SunMatrix.hoys">
+<code class="descname">hoys</code><a class="headerlink" href="#honeybee.radiance.sky.sunmatrix.SunMatrix.hoys" title="Permalink to this definition">¶</a></dt>
+<dd><p>The list of hours for generating the sky matrix (Default: 0..8759)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.sunmatrix.SunMatrix.sky_type">
+<code class="descname">sky_type</code><a class="headerlink" href="#honeybee.radiance.sky.sunmatrix.SunMatrix.sky_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specify 0 for visible radiation, 1 for total solar radiation.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.sunmatrix.SunMatrix.suffix">
+<code class="descname">suffix</code><a class="headerlink" href="#honeybee.radiance.sky.sunmatrix.SunMatrix.suffix" title="Permalink to this definition">¶</a></dt>
+<dd><p>An optional suffix for sky name. The suffix will be added at the
+end of the standard name. Use this input to customize the new and
+avoid sky being overwritten by other skymatrix components.</p>
+</dd></dl>
+
+<p>Usage:</p>
+<blockquote>
+<div>from honeybee.radiance.sky.sunmatrix import SunMatrix
+epwfile = r”./USA_CA_San.Francisco.Intl.AP.724940_TMY3.epw”
+sunmtx = sun_matrix.from_epw_file(epwfile, north=20)
+analemma, sunlist, sunmtxfile = sunmtx.execute(‘c:/ladybug’)</div></blockquote>
+<dl class="method">
+<dt id="honeybee.radiance.sky.sunmatrix.SunMatrix.ToString">
+<code class="descname">ToString</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/sunmatrix.html#SunMatrix.ToString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.sunmatrix.SunMatrix.ToString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrite .NET ToString method.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.sunmatrix.SunMatrix.analemmafile">
+<code class="descname">analemmafile</code><a class="headerlink" href="#honeybee.radiance.sky.sunmatrix.SunMatrix.analemmafile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Analemma file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.sky.sunmatrix.SunMatrix.duplicate">
+<code class="descname">duplicate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/sunmatrix.html#SunMatrix.duplicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.sunmatrix.SunMatrix.duplicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Duplicate this class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.sky.sunmatrix.SunMatrix.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><em>working_dir</em>, <em>reuse=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/sunmatrix.html#SunMatrix.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.sunmatrix.SunMatrix.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate sun matrix.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>working_dir</strong> – Folder to execute and write the output.</li>
+<li><strong>reuse</strong> – Reuse the matrix if already existed in the folder.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Full path to analemma, sunlist and sun_matrix.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.radiance.sky.sunmatrix.SunMatrix.from_epw_file">
+<em class="property">classmethod </em><code class="descname">from_epw_file</code><span class="sig-paren">(</span><em>epw_file</em>, <em>north=0</em>, <em>hoys=None</em>, <em>suffix=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/sunmatrix.html#SunMatrix.from_epw_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.sunmatrix.SunMatrix.from_epw_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create sun matrix from an epw file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.sky.sunmatrix.SunMatrix.hours_match">
+<code class="descname">hours_match</code><span class="sig-paren">(</span><em>hours_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/sunmatrix.html#SunMatrix.hours_match"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.sunmatrix.SunMatrix.hours_match" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if hours in the hours file matches the hours of wea.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.sunmatrix.SunMatrix.isSunMatrix">
+<code class="descname">isSunMatrix</code><a class="headerlink" href="#honeybee.radiance.sky.sunmatrix.SunMatrix.isSunMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.sunmatrix.SunMatrix.is_climate_based">
+<code class="descname">is_climate_based</code><a class="headerlink" href="#honeybee.radiance.sky.sunmatrix.SunMatrix.is_climate_based" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if the sky is generated from values from weather file.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.sunmatrix.SunMatrix.name">
+<code class="descname">name</code><a class="headerlink" href="#honeybee.radiance.sky.sunmatrix.SunMatrix.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sky default name.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">north</code></dt>
+<dd><p><em>An angle in degrees between 0-360 to indicate north direction (Default</em> – 0).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">sky_type</code></dt>
+<dd><p>Specify 0 for visible radiation, 1 for solar radiation and 2 for luminance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.sunmatrix.SunMatrix.sky_type_human_readable">
+<code class="descname">sky_type_human_readable</code><a class="headerlink" href="#honeybee.radiance.sky.sunmatrix.SunMatrix.sky_type_human_readable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Human readable sky type.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.sunmatrix.SunMatrix.sunlistfile">
+<code class="descname">sunlistfile</code><a class="headerlink" href="#honeybee.radiance.sky.sunmatrix.SunMatrix.sunlistfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sun list file.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.sky.sunmatrix.SunMatrix.sunmtxfile">
+<code class="descname">sunmtxfile</code><a class="headerlink" href="#honeybee.radiance.sky.sunmatrix.SunMatrix.sunmtxfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sun matrix file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.sky.sunmatrix.SunMatrix.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>working_dir</em>, <em>write_hours=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/sky/sunmatrix.html#SunMatrix.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.sky.sunmatrix.SunMatrix.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the radiance command line as a string.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">wea</code></dt>
+<dd><p>An instance of ladybug Wea.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.sky">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-honeybee.radiance.sky" title="Permalink to this headline">¶</a></h2>
+<p>Honeybee skies.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/honeybee.radiance.sky.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

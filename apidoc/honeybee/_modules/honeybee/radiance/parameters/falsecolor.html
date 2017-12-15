@@ -1,0 +1,259 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.parameters.falsecolor &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../index.html">
+    <img class="logo" src="../../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.parameters.falsecolor</h1><div class="highlight"><pre>
+<span></span>
+
+<span class="c1"># coding=utf-8</span>
+
+<span class="kn">from</span> <span class="nn">._advancedparametersbase</span> <span class="k">import</span> <span class="n">AdvancedRadianceParameters</span>
+<span class="kn">from</span> <span class="nn">._frozen</span> <span class="k">import</span> <span class="n">frozen</span>
+
+<span class="c1"># TODO: Didn&#39;t add inputs for red,green,blue channels as the chances of that being used</span>
+<span class="c1">#    are almost zero.</span>
+
+
+<div class="viewcode-block" id="FalsecolorParameters"><a class="viewcode-back" href="../../../../honeybee.radiance.parameters.html#honeybee.radiance.parameters.falsecolor.FalsecolorParameters">[docs]</a><span class="nd">@frozen</span>
+<span class="k">class</span> <span class="nc">FalsecolorParameters</span><span class="p">(</span><span class="n">AdvancedRadianceParameters</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pic_for_contours</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">contour_bands</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">contour_lines</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">print_extrema_points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">contour_quant</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">legend_width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">legend_height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">multiplier</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">palette</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="n">AdvancedRadianceParameters</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_path</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="s1">&#39;picture for contours&#39;</span><span class="p">,</span> <span class="n">check_exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                               <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;pic_for_contours&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pic_for_contours</span> <span class="o">=</span> <span class="n">pic_for_contours</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        -p picture</span>
+
+<span class="sd">        Contour lines can be placed over another Radiance picture using the -p option.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_bool_flag</span><span class="p">(</span><span class="s1">&#39;cb&#39;</span><span class="p">,</span> <span class="s1">&#39;create contour bands&#39;</span><span class="p">,</span>
+                                    <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;contour_bands&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">contour_bands</span> <span class="o">=</span> <span class="n">contour_bands</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        -cb</span>
+
+<span class="sd">        The -cb option produces contour bands instead of lines, where the</span>
+<span class="sd">        thickness of the bands is related to the rate of change in the image.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_bool_flag</span><span class="p">(</span><span class="s1">&#39;cl&#39;</span><span class="p">,</span> <span class="s1">&#39;create contour lines&#39;</span><span class="p">,</span>
+                                    <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;contour_lines&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">contour_lines</span> <span class="o">=</span> <span class="n">contour_lines</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        -cl</span>
+
+<span class="sd">        If contour lines are desired rather than just false color, the -cl</span>
+<span class="sd">        option can be used. These lines can be placed over another Radiance</span>
+<span class="sd">        picture using the -p  option.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_bool_flag</span><span class="p">(</span>
+            <span class="s1">&#39;e&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;print extrema points&#39;</span><span class="p">,</span>
+            <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;print_extrema_points&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_extrema_points</span> <span class="o">=</span> <span class="n">print_extrema_points</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        -e</span>
+
+<span class="sd">        The -e option causes extrema points to be printed on the brightest and</span>
+<span class="sd">        darkest pixels of the input picture.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_value</span><span class="p">(</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="s1">&#39;scaling value&#39;</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;scale&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">scale</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        -s scale</span>
+
+<span class="sd">        A different scale can be given with the -s option. If the argument given</span>
+<span class="sd">        to -s begins with an &quot;a&quot; for &quot;auto,&quot; then the maximum is used for scaling</span>
+<span class="sd">        the result. The default multiplier is 179, which converts from radiance</span>
+<span class="sd">        or irradiance to luminance or illuminance, respectively.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_value</span><span class="p">(</span><span class="s1">&#39;l&#39;</span><span class="p">,</span> <span class="s1">&#39;label for legend&#39;</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;label&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">label</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        -l label</span>
+
+<span class="sd">        A legend is produced for the new image with a label given by the -l</span>
+<span class="sd">        option. The default label is &quot;Nits&quot;, which is appropriate for standard</span>
+<span class="sd">        Radiance images.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;number of contours&#39;</span><span class="p">,</span>
+                                 <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;contour_quant&#39;</span><span class="p">,</span> <span class="n">num_type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">contour_quant</span> <span class="o">=</span> <span class="n">contour_quant</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        -n</span>
+
+<span class="sd">        The -n option can be used to change the number of contours (and</span>
+<span class="sd">        corresponding legend entries) from the default value of 8.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;lw&#39;</span><span class="p">,</span> <span class="s1">&#39;legend width&#39;</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;legend_width&#39;</span><span class="p">,</span>
+                                 <span class="n">num_type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">legend_width</span> <span class="o">=</span> <span class="n">legend_width</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The -lw and -lh options may be used to change the legend dimensions</span>
+<span class="sd">        from the default width and height of 100x200. A value of zero in either</span>
+<span class="sd">        eliminates the legend in the output.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;lh&#39;</span><span class="p">,</span> <span class="s1">&#39;legend height&#39;</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;legend_height&#39;</span><span class="p">,</span>
+                                 <span class="n">num_type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">legend_height</span> <span class="o">=</span> <span class="n">legend_height</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The -lw and -lh options may be used to change the legend dimensions</span>
+<span class="sd">        from the default width and height of 100x200. A value of zero in either</span>
+<span class="sd">        eliminates the legend in the output.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="s1">&#39;number of decades for log scale&#39;</span><span class="p">,</span>
+                                 <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">num_type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="n">log</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        -log</span>
+<span class="sd">        For a logarithmic rather than a linear mapping, the -log option can be</span>
+<span class="sd">        used, where decades is the number of decades below the maximum scale</span>
+<span class="sd">        desired.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="s1">&#39;multiplier for scaling&#39;</span><span class="p">,</span>
+                                 <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;multiplier&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">multiplier</span> <span class="o">=</span> <span class="n">multiplier</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The default multiplier is 179, which converts from radiance or irradiance</span>
+<span class="sd">        to luminance or illuminance, respectively. A different multiplier can be</span>
+<span class="sd">        given with -m to get daylight factors or whatever.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_value</span><span class="p">(</span><span class="s1">&#39;pal&#39;</span><span class="p">,</span> <span class="s1">&#39;color palettes&#39;</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;palette&#39;</span><span class="p">,</span>
+                                <span class="n">accepted_inputs</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;spec&#39;</span><span class="p">,</span> <span class="s1">&#39;hot&#39;</span><span class="p">,</span> <span class="s1">&#39;pm3d&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">palette</span> <span class="o">=</span> <span class="n">palette</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The -pal option provides different color palettes for falsecolor. The</span>
+<span class="sd">        current choices are spec for the old spectral mapping, hot for a thermal</span>
+<span class="sd">        scale, and pm3d for a variation of the default mapping, def.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

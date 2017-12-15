@@ -1,0 +1,487 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.parameters.gridbased &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../index.html">
+    <img class="logo" src="../../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.parameters.gridbased</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Radiance raytracing Parameters.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">._advancedparametersbase</span> <span class="k">import</span> <span class="n">AdvancedRadianceParameters</span>
+<span class="kn">from</span> <span class="nn">._defaultset</span> <span class="k">import</span> <span class="n">rtrace_number_parameters</span><span class="p">,</span> <span class="n">rtrace_boolean_parameters</span>
+<span class="kn">from</span> <span class="nn">._frozen</span> <span class="k">import</span> <span class="n">frozen</span>
+
+
+<div class="viewcode-block" id="GridBasedParameters"><a class="viewcode-back" href="../../../../honeybee.radiance.parameters.html#honeybee.radiance.parameters.gridbased.GridBasedParameters">[docs]</a><span class="nd">@frozen</span>
+<span class="k">class</span> <span class="nc">GridBasedParameters</span><span class="p">(</span><span class="n">AdvancedRadianceParameters</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Radiance Parameters for grid based analysis.</span>
+
+<span class="sd">    For the full list of attributes try self.keys</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        quality: An integer between 0-2 (0:low, 1: medium or 2: high quality)</span>
+
+<span class="sd">    Usage:</span>
+
+<span class="sd">        rp = GridBasedParameters(0)</span>
+<span class="sd">        print(rp.to_rad_string())</span>
+
+<span class="sd">        &gt; -aa 0.25 -ab 2 -ad 512 -dc 0.25 -st 0.85 -lw 0.05 -as 128 -ar 16 -lr 4</span>
+<span class="sd">          -dt 0.5 -dr 0 -ds 0.5 -dp 64</span>
+
+<span class="sd">        rp = GridBasedParameters(1)</span>
+<span class="sd">        print(rp.to_rad_string())</span>
+
+<span class="sd">        &gt; -aa 0.2 -ab 3 -ad 2048 -dc 0.5 -st 0.5 -lw 0.01 -as 2048 -ar 64 -lr 6</span>
+<span class="sd">          -dt 0.25 -dr 1 -ds 0.25 -dp 256</span>
+
+<span class="sd">        rp = GridBasedParameters(2)</span>
+<span class="sd">        print(rp.to_rad_string())</span>
+<span class="sd">        &gt; -aa 0.1 -ab 6 -ad 4096 -dc 0.75 -st 0.15 -lw 0.005 -as 4096 -ar 128</span>
+<span class="sd">          -lr 8 -dt 0.15 -dr 3 -ds 0.05 -dp 512</span>
+
+<span class="sd">        rp.ab = 5</span>
+<span class="sd">        rp.u = True</span>
+<span class="sd">        print(rp.to_rad_string())</span>
+
+<span class="sd">        &gt; -aa 0.1 -ab 5 -dj 0.7 -ad 4096 -dc 0.75 -st 0.15 -lw 0.005 -as 4096</span>
+<span class="sd">          -ar 128 -lr 8 -dt 0.15 -dr 3 -ds 0.05 -dp 512 -u</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create Radiance paramters.&quot;&quot;&quot;</span>
+        <span class="n">AdvancedRadianceParameters</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">quality</span> <span class="o">=</span> <span class="n">quality</span> <span class="ow">or</span> <span class="mi">0</span>
+        <span class="sd">&quot;&quot;&quot;An integer between 0-2 (0:low, 1: medium or 2: high quality)&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;ab&#39;</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="o">=</span><span class="s1">&#39;ambient bounces&#39;</span><span class="p">,</span>
+                                 <span class="n">attribute_name</span><span class="o">=</span><span class="s2">&quot;ambient_bounces&quot;</span><span class="p">,</span> <span class="n">num_type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ambient_bounces</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="sd">&quot;&quot;&quot; Number of ambient bounces. This is the maximum number of diffuse</span>
+<span class="sd">            bounces computed by the indirect calculation. A value of zero</span>
+<span class="sd">            implies no indirect calculation.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;ad&#39;</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="o">=</span><span class="s1">&#39;ambient divisions&#39;</span><span class="p">,</span>
+                                 <span class="n">attribute_name</span><span class="o">=</span><span class="s2">&quot;ambient_divisions&quot;</span><span class="p">,</span> <span class="n">num_type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ambient_divisions</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="sd">&quot;&quot;&quot; Number of ambient divisions. The error in the Monte Carlo calculation</span>
+<span class="sd">            of indirect illuminance will be inversely proportional to the square</span>
+<span class="sd">            root of this number. A value of zero implies no indirect calculation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;as&#39;</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="o">=</span><span class="s1">&#39;ambient super samples&#39;</span><span class="p">,</span>
+                                 <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;ambient_supersamples&#39;</span><span class="p">,</span> <span class="n">num_type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ambient_supersamples</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="sd">&quot;&quot;&quot; Number of ambient super-samples. Super-samples are applied only to</span>
+<span class="sd">            the ambient divisions which show a significant change.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;ar&#39;</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="o">=</span><span class="s1">&#39;ambient resolution&#39;</span><span class="p">,</span>
+                                 <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;ambient_resolution&#39;</span><span class="p">,</span> <span class="n">num_type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ambient_resolution</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="sd">&quot;&quot;&quot; Number of ambient resolution. This number will determine the maximum</span>
+<span class="sd">            density of ambient values used in interpolation. Error will start to</span>
+<span class="sd">            increase on surfaces spaced closer than the scene size divided by the</span>
+<span class="sd">            ambient resolution. The maximum ambient value density is the scene</span>
+<span class="sd">            size times the ambient accuracy.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;aa&#39;</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="o">=</span><span class="s1">&#39;ambient accuracy&#39;</span><span class="p">,</span>
+                                 <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;ambient_accuracy&#39;</span><span class="p">,</span> <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ambient_accuracy</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="sd">&quot;&quot;&quot;Number of ambient accuracy. This value will approximately equal the</span>
+<span class="sd">        error from indirect illuminance interpolation. A value of zero implies</span>
+<span class="sd">        no interpolation.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;dj&#39;</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="o">=</span><span class="s1">&#39;direct source jitter&#39;</span><span class="p">,</span>
+                                 <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;direct_jitter&#39;</span><span class="p">,</span> <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">direct_jitter</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        -dj frac</span>
+<span class="sd">        Set the direct jittering to frac. A value of zero samples each source</span>
+<span class="sd">        at specific sample points (see the -ds option below), giving a smoother</span>
+<span class="sd">        but somewhat less accurate rendering. A positive value causes rays to</span>
+<span class="sd">        be distributed over each source sample according to its size,</span>
+<span class="sd">        resulting in more accurate penumbras. This option should never be</span>
+<span class="sd">        greater than 1, and may even cause problems (such as speckle)when the</span>
+<span class="sd">        value is smaller. A warning about aiming failure will issued if frac is</span>
+<span class="sd">        too large. It is usually wise to turn off image sampling when using</span>
+<span class="sd">        direct jitter by setting -ps to 1.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;ds&#39;</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="o">=</span><span class="s1">&#39;direct sampling&#39;</span><span class="p">,</span>
+                                 <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;direct_sampling&#39;</span><span class="p">,</span> <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">direct_sampling</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        -ds frac</span>
+<span class="sd">        Set the direct sampling ratio to frac. A light source will be subdivided</span>
+<span class="sd">        until the width of each sample area divided by the distance to the</span>
+<span class="sd">        illuminated point is below this ratio. This assures accuracy in regions</span>
+<span class="sd">        close to large area sources at a slight computational expense. A value</span>
+<span class="sd">        of zero turns source subdivision off, sending at most one shadow ray to</span>
+<span class="sd">        each light source.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;dt&#39;</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="o">=</span><span class="s1">&#39;direct thresholding&#39;</span><span class="p">,</span>
+                                 <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;direct_threshold&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">direct_threshold</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        -dt frac</span>
+
+<span class="sd">        Set the direct threshold to frac. Shadow testing will stop when the</span>
+<span class="sd">        potential contribution of at least the next and at most all remaining</span>
+<span class="sd">        light source samples is less than this fraction of the accumulated value.</span>
+<span class="sd">        The remaining light source contributions are approximated statistically.</span>
+<span class="sd">        A value of zero means that all light source samples will be tested for</span>
+<span class="sd">        shadow.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;dc&#39;</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="o">=</span><span class="s1">&#39;direct certainty&#39;</span><span class="p">,</span>
+                                 <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;direct_certainty&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">direct_certainty</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        -dc frac</span>
+
+<span class="sd">        Set the direct certainty to frac. A value of one guarantees that the</span>
+<span class="sd">        absolute accuracy of the direct calculation will be equal to or better</span>
+<span class="sd">        than that given in the -dt specification. A value of zero only insures</span>
+<span class="sd">        that all shadow lines resulting in a contrast change greater than the</span>
+<span class="sd">        -dt specification will be calculated.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;dr&#39;</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="o">=</span><span class="s1">&#39;direct relays&#39;</span><span class="p">,</span>
+                                 <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;direct_sec_relays&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">direct_sec_relays</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        -dr N</span>
+
+<span class="sd">        Set the number of relays for secondary sources to N. A value of 0 means</span>
+<span class="sd">        that secondary sources will be ignored. A value of 1 means that sources</span>
+<span class="sd">        will be made into first generation secondary sources; a value of 2 means</span>
+<span class="sd">        that first generation secondary sources will also be made into second</span>
+<span class="sd">        generation secondary sources, and so on.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;dp&#39;</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="o">=</span><span class="s1">&#39;direct presampling density&#39;</span><span class="p">,</span>
+                                 <span class="n">num_type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;direct_presamp_density&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">direct_presamp_density</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        -dp D</span>
+
+<span class="sd">        Set the secondary source presampling density to D. This is the number of</span>
+<span class="sd">        samples per steradian that will be used to determine ahead of time</span>
+<span class="sd">        whether or not it is worth following shadow rays through all the</span>
+<span class="sd">        reflections and/or transmissions associated with a secondary source path.</span>
+<span class="sd">        A value of 0 means that the full secondary source path will always be</span>
+<span class="sd">        tested for shadows if it is tested at all.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;st&#39;</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="o">=</span><span class="s1">&#39;specular threshold&#39;</span><span class="p">,</span>
+                                 <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;specular_threshold&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">specular_threshold</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        -st frac</span>
+
+<span class="sd">        Set the specular sampling threshold to frac. This is the minimum</span>
+<span class="sd">        fraction of reflection or transmission, under which no specular sampling</span>
+<span class="sd">        is performed. A value of zero means that highlights will always be</span>
+<span class="sd">        sampled by tracing reflected or transmitted rays. A value of one means</span>
+<span class="sd">        that specular sampling is never used. Highlights from light sources</span>
+<span class="sd">        will always be correct, but reflections from other surfaces will be</span>
+<span class="sd">        approximated using an ambient value. A sampling threshold between zero</span>
+<span class="sd">        and one offers a compromise between image accuracy and rendering time.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;lw&#39;</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="o">=</span><span class="s1">&#39;limit weight&#39;</span><span class="p">,</span>
+                                 <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;limit_weight&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">limit_weight</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        -lw frac</span>
+
+<span class="sd">        Limit the weight of each ray to a minimum of frac. During ray-tracing,</span>
+<span class="sd">        a record is kept of the estimated contribution (weight) a ray would have</span>
+<span class="sd">        in the image. If this weight is less than the specified minimum and the</span>
+<span class="sd">        -lr setting (above) is positive, the ray is not traced. Otherwise,</span>
+<span class="sd">        Russian roulette is used to continue rays with a probability equal to</span>
+<span class="sd">        the ray weight divided by the given frac.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;lr&#39;</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="o">=</span><span class="s1">&#39;limit reflections&#39;</span><span class="p">,</span>
+                                 <span class="n">num_type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;limit_reflections&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">limit_reflections</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        -lr N</span>
+<span class="sd">        Limit reflections to a maximum of N, if N is a positive integer. If N</span>
+<span class="sd">        is zero, then Russian roulette is used for ray termination, and the</span>
+<span class="sd">        -lw setting (below) must be positive. If N is a negative integer, then</span>
+<span class="sd">        this sets the upper limit of reflections past which Russian roulette</span>
+<span class="sd">        will be used. In scenes with dielectrics and total internal reflection,</span>
+<span class="sd">        a setting of 0 (no limit) may cause a stack overflow.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;ss&#39;</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="o">=</span><span class="s1">&#39;specular sampling&#39;</span><span class="p">,</span>
+                                 <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;specular_sampling&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">specular_sampling</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        -ss samp</span>
+
+<span class="sd">        Set the specular sampling to samp. For values less than 1, this is the</span>
+<span class="sd">        degree to which the highlights are sampled for rough specular materials.</span>
+<span class="sd">        A value greater than one causes multiple ray samples to be sent to reduce</span>
+<span class="sd">        noise at a commmesurate cost. A value of zero means that no jittering</span>
+<span class="sd">        will take place, and all reflections will appear sharp even when they</span>
+<span class="sd">        should be diffuse. This may be desirable when used in combination with</span>
+<span class="sd">        image sampling to obtain faster renderings.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_bool_flag</span><span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="o">=</span><span class="s1">&#39;irradiance calculation&#39;</span><span class="p">,</span>
+                                    <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;irradiance_calc&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">irradiance_calc</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        -I</span>
+
+<span class="sd">            Boolean switch to compute irradiance rather than radiance, with the</span>
+<span class="sd">            input origin and direction interpreted instead as measurement point and</span>
+<span class="sd">            orientation. -h Boolean switch for information header on output. The</span>
+<span class="sd">            radiance default value for this option is False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># TODO(sarith)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_bool_flag</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="o">=</span><span class="s1">&#39;irradiance calculation&#39;</span><span class="p">,</span>
+                                    <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;i_irradiance_calc&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_irradiance_calc</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        -i</span>
+
+<span class="sd">            Boolean switch to compute irradiance rather than radiance values. This</span>
+<span class="sd">            only affects the final result, substituting a Lambertian surface and</span>
+<span class="sd">            multiplying the radiance by pi. Glass and other transparent surfaces are</span>
+<span class="sd">            ignored during this stage. Light sources still appear with their original</span>
+<span class="sd">            radiance values, though the -dv option (below) may be used to override</span>
+<span class="sd">            this. This option is especially useful in conjunction with ximage(1)</span>
+<span class="sd">            for computing illuminance at scene points</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_bool_flag</span><span class="p">(</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="o">=</span><span class="s1">&#39;uncorrelated random sampling&#39;</span><span class="p">,</span>
+                                    <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;uncor_rand_samp&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uncor_rand_samp</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        -u</span>
+
+<span class="sd">        Boolean switch to control uncorrelated random sampling. When &quot;off&quot;, a</span>
+<span class="sd">        low-discrepancy sequence is used, which reduces variance but can result</span>
+<span class="sd">        in a brushed appearance in specular highlights. When &quot;on&quot;, pure Monte</span>
+<span class="sd">        Carlo sampling is used in all calculations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_value</span><span class="p">(</span><span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;output data format&#39;</span><span class="p">,</span>
+                                <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;output_data_format&#39;</span><span class="p">,</span> <span class="n">is_joined</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_data_format</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        -f[io]</span>
+
+<span class="sd">        Format input according to the character i and output according to the</span>
+<span class="sd">        character o. Rtrace understands the following input and output formats:</span>
+<span class="sd">        &#39;a&#39; for ascii, &#39;f&#39; for single-precision floating point, and &#39;d&#39; for</span>
+<span class="sd">        double-precision floating point. In addition to these three choices, the</span>
+<span class="sd">        character &#39;c&#39; may be used to denote 4-byte floating point (Radiance) color</span>
+<span class="sd">        format for the output of values only (-ov option, below). If the output</span>
+<span class="sd">        character is missing, the input format is used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">isGridBasedRadianceParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True to indicate this object is a RadianceParameters.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">quality</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get and set quality.</span>
+
+<span class="sd">        An integer between 0-2 (0:low, 1: medium or 2: high quality)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_quality</span>
+
+    <span class="nd">@quality</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">quality</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+
+        <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">0</span>
+
+        <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">,</span> \
+            <span class="s2">&quot;Quality can only be 0:low, 1: medium or 2: high quality&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_quality</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="sd">&quot;&quot;&quot;An integer between 0-2 (0:low, 1: medium or 2: high quality)&quot;&quot;&quot;</span>
+
+        <span class="c1"># add all numeric parameters</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">rtrace_number_parameters</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;dscrip&#39;</span><span class="p">],</span> <span class="n">num_type</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">],</span>
+                                     <span class="n">attribute_name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;values&#39;</span><span class="p">][</span><span class="n">value</span><span class="p">])</span>
+
+        <span class="c1"># add boolean parameters</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">rtrace_boolean_parameters</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_bool_flag</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;dscrip&#39;</span><span class="p">],</span>
+                                        <span class="n">attribute_name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;values&#39;</span><span class="p">][</span><span class="n">value</span><span class="p">])</span>
+
+<div class="viewcode-block" id="GridBasedParameters.get_parameter_default_value_based_on_quality"><a class="viewcode-back" href="../../../../honeybee.radiance.parameters.html#honeybee.radiance.parameters.gridbased.GridBasedParameters.get_parameter_default_value_based_on_quality">[docs]</a>    <span class="k">def</span> <span class="nf">get_parameter_default_value_based_on_quality</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get parameter value based on quality.</span>
+
+<span class="sd">        You can change this value by using self.parameter = value (e.g. self.ab=5)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            parameter: Radiance parameter as an string (e.g &quot;ab&quot;)</span>
+
+<span class="sd">        Usage:</span>
+
+<span class="sd">            rp = LowQuality()</span>
+<span class="sd">            print rp.getParameterValue(&quot;ab&quot;)</span>
+<span class="sd">            &gt;&gt; 2</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">quality</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Quality is not set! use self.quality to set the value.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">__key</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">parameter</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">__key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">,</span> \
+            <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> is not a valid radiance parameter&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">parameter</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">rtrace_number_parameters</span><span class="p">[</span><span class="n">__key</span><span class="p">][</span><span class="s2">&quot;values&quot;</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">quality</span><span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="LowQuality"><a class="viewcode-back" href="../../../../honeybee.radiance.parameters.html#honeybee.radiance.parameters.gridbased.LowQuality">[docs]</a><span class="k">class</span> <span class="nc">LowQuality</span><span class="p">(</span><span class="n">GridBasedParameters</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Radiance parmaters for a quick analysis.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create low quality radiance parameters for quick studies.&quot;&quot;&quot;</span>
+        <span class="n">GridBasedParameters</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MediumQuality"><a class="viewcode-back" href="../../../../honeybee.radiance.parameters.html#honeybee.radiance.parameters.gridbased.MediumQuality">[docs]</a><span class="k">class</span> <span class="nc">MediumQuality</span><span class="p">(</span><span class="n">GridBasedParameters</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Medium quality Radiance parmaters.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create medium quality radiance parameters.&quot;&quot;&quot;</span>
+        <span class="n">GridBasedParameters</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="HighQuality"><a class="viewcode-back" href="../../../../honeybee.radiance.parameters.html#honeybee.radiance.parameters.gridbased.HighQuality">[docs]</a><span class="k">class</span> <span class="nc">HighQuality</span><span class="p">(</span><span class="n">GridBasedParameters</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;High quality radiance parameters.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create high quality radiance parameters.&quot;&quot;&quot;</span>
+        <span class="n">GridBasedParameters</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

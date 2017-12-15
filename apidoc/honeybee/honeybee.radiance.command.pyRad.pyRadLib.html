@@ -1,0 +1,294 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.command.pyRad.pyRadLib package &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="honeybee.radiance.material package" href="honeybee.radiance.material.html" />
+    <link rel="prev" title="honeybee.radiance.command.pyRad package" href="honeybee.radiance.command.pyRad.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="honeybee.html">honeybee package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="honeybee.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="honeybee.energyplus.html">honeybee.energyplus package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="honeybee.radiance.html">honeybee.radiance package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="honeybee.radiance.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.analysisgrid">honeybee.radiance.analysisgrid module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.analysispoint">honeybee.radiance.analysispoint module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.datatype">honeybee.radiance.datatype module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.filemanager">honeybee.radiance.filemanager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.geometry">honeybee.radiance.geometry module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.imagecollection">honeybee.radiance.imagecollection module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.properties">honeybee.radiance.properties module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.radfile">honeybee.radiance.radfile module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.runmanager">honeybee.radiance.runmanager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.scene">honeybee.radiance.scene module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.view">honeybee.radiance.view module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.server.html">honeybee.server package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.vectormath.html">honeybee.vectormath package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.config">honeybee.config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.dataoperation">honeybee.dataoperation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.futil">honeybee.futil module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.geometryoperation">honeybee.geometryoperation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbdynamicsurface">honeybee.hbdynamicsurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbfensurface">honeybee.hbfensurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbobject">honeybee.hbobject module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbshadesurface">honeybee.hbshadesurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbsurface">honeybee.hbsurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbzone">honeybee.hbzone module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.room">honeybee.room module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.schedule">honeybee.schedule module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.surfaceproperties">honeybee.surfaceproperties module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.surfacetype">honeybee.surfacetype module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.utilcol">honeybee.utilcol module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="honeybee.html">honeybee package</a><ul>
+  <li><a href="honeybee.radiance.html">honeybee.radiance package</a><ul>
+  <li><a href="honeybee.radiance.command.html">honeybee.radiance.command package</a><ul>
+  <li><a href="honeybee.radiance.command.pyRad.html">honeybee.radiance.command.pyRad package</a><ul>
+      <li>Previous: <a href="honeybee.radiance.command.pyRad.html" title="previous chapter">honeybee.radiance.command.pyRad package</a></li>
+      <li>Next: <a href="honeybee.radiance.material.html" title="next chapter">honeybee.radiance.material package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="honeybee-radiance-command-pyrad-pyradlib-package">
+<h1>honeybee.radiance.command.pyRad.pyRadLib package<a class="headerlink" href="#honeybee-radiance-command-pyrad-pyradlib-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-honeybee.radiance.command.pyRad.pyRadLib.pyrad_proc">
+<span id="honeybee-radiance-command-pyrad-pyradlib-pyrad-proc-module"></span><h2>honeybee.radiance.command.pyRad.pyRadLib.pyrad_proc module<a class="headerlink" href="#module-honeybee.radiance.command.pyRad.pyRadLib.pyrad_proc" title="Permalink to this headline">¶</a></h2>
+<p>pyrad_proc.py - Process and pipeline management for Python Radiance scripts
+2016 - Georg Mischler</p>
+<dl class="docutils">
+<dt>Use as:</dt>
+<dd>from pyradlib.pyrad_proc import PIPE, Error, ProcMixin</dd>
+</dl>
+<p>For a single-file installation, include the contents of this file
+at the same place (minus the __future__ import below).</p>
+<dl class="exception">
+<dt id="honeybee.radiance.command.pyRad.pyRadLib.pyrad_proc.Error">
+<em class="property">exception </em><code class="descclassname">honeybee.radiance.command.pyRad.pyRadLib.pyrad_proc.</code><code class="descname">Error</code><a class="reference internal" href="_modules/honeybee/radiance/command/pyRad/pyRadLib/pyrad_proc.html#Error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.pyRad.pyRadLib.pyrad_proc.Error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.radiance.command.pyRad.pyRadLib.pyrad_proc.ProcMixin">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.command.pyRad.pyRadLib.pyrad_proc.</code><code class="descname">ProcMixin</code><a class="reference internal" href="_modules/honeybee/radiance/command/pyRad/pyRadLib/pyrad_proc.html#ProcMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.pyRad.pyRadLib.pyrad_proc.ProcMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process and pipeline management for Python Radiance scripts</p>
+<dl class="method">
+<dt id="honeybee.radiance.command.pyRad.pyRadLib.pyrad_proc.ProcMixin.call_many">
+<code class="descname">call_many</code><span class="sig-paren">(</span><em>cmdlines</em>, <em>actstr</em>, <em>_in=None</em>, <em>out=None</em>, <em>universal_newlines=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/pyRad/pyRadLib/pyrad_proc.html#ProcMixin.call_many"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.pyRad.pyRadLib.pyrad_proc.ProcMixin.call_many" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a series of N processes, chained via pipes, possibly with an
+incoming and outgoing pipe at each end.
+Returns a tuple of N subprocess.Popen instances.
+Depending on the values of _in and out, the first and last may be
+available to write to or read from respectively.
+Most arguments are equivalent to call_one(), with
+- cmdlines</p>
+<blockquote>
+<div>a list of N command argument lists</div></blockquote>
+<ul class="simple">
+<li>_in / out
+applying to the ends of the chain.</li>
+</ul>
+<p>If _in or out is PIPE, the caller should call p.wait() on all
+returned Popen instances after writing to and closing the first one.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.pyRad.pyRadLib.pyrad_proc.ProcMixin.call_one">
+<code class="descname">call_one</code><span class="sig-paren">(</span><em>cmdl</em>, <em>actstr</em>, <em>_in=None</em>, <em>out=None</em>, <em>universal_newlines=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/pyRad/pyRadLib/pyrad_proc.html#ProcMixin.call_one"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.pyRad.pyRadLib.pyrad_proc.ProcMixin.call_one" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Create a single subprocess, possibly with an incoming and outgoing</dt>
+<dd><p class="first">pipe at each end.
+- cmdl</p>
+<blockquote>
+<div>A list of strings, leading with the name of the executable (without
+the <a href="#id1"><span class="problematic" id="id2">*</span></a>.exe suffix), followed by individual arguments.</div></blockquote>
+<ul class="last simple">
+<li>actstr
+A text string of the form “do something”.
+Used in verbose mode as “### do someting</li>
+</ul>
+</dd>
+<dt>### [command line]”</dt>
+<dd><blockquote class="first">
+<div>Used in error messages as “Scriptname: Unable to do something”.</div></blockquote>
+<ul>
+<li><p class="first">_in / out
+What to do with the input and output pipes of the process:
+* a filename as string</p>
+<blockquote>
+<div><p>Open file and use for reading/writing.</p>
+</div></blockquote>
+<ul class="simple">
+<li>a file like object
+Use for reading/writing</li>
+<li>PIPE
+Pipe will be available in returned object for reading/writing.</li>
+<li>None (default)
+System stdin/stdout will be used if available</li>
+</ul>
+</li>
+</ul>
+<p class="last">If _in or out is a PIPE, the caller should call p.wait() on the
+returned Popen instance after writing to and closing it.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.pyRad.pyRadLib.pyrad_proc.ProcMixin.call_two">
+<code class="descname">call_two</code><span class="sig-paren">(</span><em>cmdl_1</em>, <em>cmdl_2</em>, <em>actstr_1</em>, <em>actstr_2</em>, <em>_in=None</em>, <em>out=None</em>, <em>universal_newlines=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/pyRad/pyRadLib/pyrad_proc.html#ProcMixin.call_two"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.pyRad.pyRadLib.pyrad_proc.ProcMixin.call_two" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create two processes, chained via a pipe, possibly with an incoming
+and outgoing pipe at each end.
+Returns a tuple of two Popen instances.
+Arguments are equivalent to call_one(), with _in and out applying
+to the ends of the chain.
+If _in or out is PIPE, the caller should call p.wait() on both
+returned popen instances after writing to and closing the first on .</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.pyRad.pyRadLib.pyrad_proc.ProcMixin.qjoin">
+<code class="descname">qjoin</code><span class="sig-paren">(</span><em>sl</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/pyRad/pyRadLib/pyrad_proc.html#ProcMixin.qjoin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.pyRad.pyRadLib.pyrad_proc.ProcMixin.qjoin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Join a list with quotes around each element containing whitespace.
+We only use this to display command lines on sys.stderr, the actual
+Popen() calls are made with the original list.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.command.pyRad.pyRadLib.pyrad_proc.ProcMixin.raise_on_error">
+<code class="descname">raise_on_error</code><span class="sig-paren">(</span><em>actstr</em>, <em>e</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/command/pyRad/pyRadLib/pyrad_proc.html#ProcMixin.raise_on_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.command.pyRad.pyRadLib.pyrad_proc.ProcMixin.raise_on_error" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.command.pyRad.pyRadLib">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-honeybee.radiance.command.pyRad.pyRadLib" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/honeybee.radiance.command.pyRad.pyRadLib.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

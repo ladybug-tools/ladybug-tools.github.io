@@ -1,0 +1,251 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.parameters.gendaymtx &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../index.html">
+    <img class="logo" src="../../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.parameters.gendaymtx</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Radiance raytracing Parameters.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">._advancedparametersbase</span> <span class="k">import</span> <span class="n">AdvancedRadianceParameters</span>
+<span class="kn">from</span> <span class="nn">._frozen</span> <span class="k">import</span> <span class="n">frozen</span>
+
+
+<span class="c1"># TODO: Add a check to make sure user can&#39;t set both -s and -d to True.</span>
+<div class="viewcode-block" id="GendaymtxParameters"><a class="viewcode-back" href="../../../../honeybee.radiance.parameters.html#honeybee.radiance.parameters.gendaymtx.GendaymtxParameters">[docs]</a><span class="nd">@frozen</span>
+<span class="k">class</span> <span class="nc">GendaymtxParameters</span><span class="p">(</span><span class="n">AdvancedRadianceParameters</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Radiance Parameters for grid based analysis.</span>
+
+<span class="sd">    Read more:</span>
+<span class="sd">    https://www.radiance-online.org/learning/documentation/manual-pages/pdfs/gendaymtx.pdf</span>
+
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        verbose_report: [-v] A boolean to indicate verbose reporting (Default: True)</span>
+<span class="sd">        remove_header: [-h] A boolean to disable header (Default: False)</span>
+<span class="sd">        only_direct: [-d] A boolean to only generate sun-only matrix (Default: False)</span>
+<span class="sd">        only_sky: [-s] A boolean to only generate sky matrix with no direct sun</span>
+<span class="sd">            (Default: False)</span>
+<span class="sd">        rotation: [-r deg] A floating number in degrees that indicates zenith</span>
+<span class="sd">            rotation (Default: 0)</span>
+<span class="sd">        sky_density: [-m N] An integer to indicate number of sky patches. Default</span>
+<span class="sd">            value of 1 generates 146 sky pacthes.</span>
+<span class="sd">        ground_color: [-g r g b] A tuple of r, g, b values to indicate ground</span>
+<span class="sd">            color (Default:  0.2 0.2 0.2)</span>
+<span class="sd">        sky_color: [-c r g b] A tuple of r, g, b values to indicate sky color</span>
+<span class="sd">            (Default: 0.960, 1.004, 1.118)</span>
+<span class="sd">        output_format: [-o{f|d}] An integer to indicate binary output format.</span>
+<span class="sd">            0 is double output [d] and 1 is binary float numbers (f). If you&#39;re</span>
+<span class="sd">            running Radiance on Windows do not use this option. (Default: None)</span>
+<span class="sd">        output_type: [-O{0|1}] An integr specifies output type. 0 generates the</span>
+<span class="sd">            values for visible radiance whereas 1 indicates the results should</span>
+<span class="sd">            be total solar radiance.</span>
+
+<span class="sd">        * For the full list of attributes try self.parameters</span>
+<span class="sd">        ** values between []&#39;s indicate Radiance equivalent keys for advanced users</span>
+
+<span class="sd">    Usage:</span>
+
+<span class="sd">        # generate sky matrix with default values</span>
+<span class="sd">        gmtx = GendaymtxParameters()</span>
+
+<span class="sd">        # check the current values</span>
+<span class="sd">        print(gmtx.to_rad_string())</span>
+<span class="sd">        &gt; -v -r 0 -m 1 -of</span>
+
+<span class="sd">        # ask only for direct sun</span>
+<span class="sd">        gmtx.only_direct = True</span>
+
+<span class="sd">        # check the new values. -d is added.</span>
+<span class="sd">        print(gmtx.to_rad_string())</span>
+<span class="sd">        &gt; -v -d -r 0 -m 1 -of</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose_report</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">remove_header</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">only_direct</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">only_sky</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sky_density</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ground_color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">sky_color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init paramters.&quot;&quot;&quot;</span>
+        <span class="n">AdvancedRadianceParameters</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1"># convert user input to radiance output formats</span>
+        <span class="n">_output_format</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+
+        <span class="c1"># add parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_bool_flag</span><span class="p">(</span><span class="s1">&#39;v&#39;</span><span class="p">,</span> <span class="s1">&#39;verbose reporting&#39;</span><span class="p">,</span>
+                                    <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;verbose_report&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose_report</span> <span class="o">=</span> <span class="n">verbose_report</span>
+        <span class="sd">&quot;&quot;&quot;[-v] A boolean to indicate verbose reporting (Default: True)&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_bool_flag</span><span class="p">(</span><span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;disable header&#39;</span><span class="p">,</span>
+                                    <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;remove_header&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove_header</span> <span class="o">=</span> <span class="n">remove_header</span>
+        <span class="sd">&quot;&quot;&quot;[-h] A boolean to disable header (Default: False)&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_bool_flag</span><span class="p">(</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;sun mtx only&#39;</span><span class="p">,</span>
+                                    <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;only_direct&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">only_direct</span> <span class="o">=</span> <span class="n">only_direct</span>
+        <span class="sd">&quot;&quot;&quot;[-d] A boolean to only generate sun-only matrix (Default: False)&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_bool_flag</span><span class="p">(</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="s1">&#39;sky mtx only&#39;</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;only_sky&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">only_sky</span> <span class="o">=</span> <span class="n">only_sky</span>
+        <span class="sd">&quot;&quot;&quot;[-s] A boolean to only generate sky matrix with no direct sun</span>
+<span class="sd">           (Default: False)&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;zenith rotation&#39;</span><span class="p">,</span> <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+                                 <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;rotation&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rotation</span> <span class="o">=</span> <span class="n">rotation</span>
+        <span class="sd">&quot;&quot;&quot;[-r deg] A floating number in degrees that indicates zenith</span>
+<span class="sd">           rotation (Default: 0)&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="s1">&#39;sky patches&#39;</span><span class="p">,</span> <span class="n">num_type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+                                 <span class="n">check_positive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                 <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;sky_density&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sky_density</span> <span class="o">=</span> <span class="n">sky_density</span>
+        <span class="sd">&quot;&quot;&quot; [-m N] An integer to indicate number of sky patches. Default</span>
+<span class="sd">            value of 1 generates 146 sky pacthes.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_tuple</span><span class="p">(</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="s1">&#39;ground color&#39;</span><span class="p">,</span> <span class="n">valid_range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                                <span class="n">tuple_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+                                <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;ground_color&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ground_color</span> <span class="o">=</span> <span class="n">ground_color</span>
+        <span class="sd">&quot;&quot;&quot; [-g r g b] A tuple of r, g, b values to indicate ground</span>
+<span class="sd">            color (Default:  0.2 0.2 0.2)&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_tuple</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;sky color&#39;</span><span class="p">,</span> <span class="n">valid_range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">tuple_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                                <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;sky_color&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sky_color</span> <span class="o">=</span> <span class="n">sky_color</span>
+        <span class="sd">&quot;&quot;&quot; [-c r g b] A tuple of r, g, b values to indicate sky color</span>
+<span class="sd">            (Default: 0.960, 1.004, 1.118)&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_value</span><span class="p">(</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="s1">&#39;output format&#39;</span><span class="p">,</span>
+                                <span class="n">accepted_inputs</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">),</span> <span class="n">is_joined</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;output_format&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_format</span> <span class="o">=</span> <span class="n">_output_format</span><span class="p">[</span><span class="n">output_format</span><span class="p">]</span>
+        <span class="sd">&quot;&quot;&quot; [-o{f|d}] An integer to indicate binary output format.</span>
+<span class="sd">            0 is double output [d] and 1 is binary float numbers (f). If you&#39;re</span>
+<span class="sd">            running Radiance on Windows do not use this option. (Default: None)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_value</span><span class="p">(</span><span class="s1">&#39;O&#39;</span><span class="p">,</span> <span class="s1">&#39;radiation type&#39;</span><span class="p">,</span>
+                                <span class="n">accepted_inputs</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">),</span> <span class="n">is_joined</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;output_type&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_type</span> <span class="o">=</span> <span class="n">output_type</span>
+        <span class="sd">&quot;&quot;&quot; [-O{0|1}] An integr specifies output type. 0 generates the</span>
+<span class="sd">            values for visible radiance whereas 1 indicates the results should</span>
+<span class="sd">            be total solar radiance.&quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">only_direct</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">only_sky</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> \
+            <span class="s2">&quot;You can only set one of the only_direct and only_sky to True.&quot;</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

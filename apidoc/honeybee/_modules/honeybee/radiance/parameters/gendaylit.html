@@ -1,0 +1,248 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.parameters.gendaylit &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../index.html">
+    <img class="logo" src="../../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.parameters.gendaylit</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="kn">from</span> <span class="nn">._advancedparametersbase</span> <span class="k">import</span> <span class="n">AdvancedRadianceParameters</span>
+<span class="kn">from</span> <span class="nn">._frozen</span> <span class="k">import</span> <span class="n">frozen</span>
+
+
+<div class="viewcode-block" id="GendaylitParameters"><a class="viewcode-back" href="../../../../honeybee.radiance.parameters.html#honeybee.radiance.parameters.gendaylit.GendaylitParameters">[docs]</a><span class="nd">@frozen</span>
+<span class="k">class</span> <span class="nc">GendaylitParameters</span><span class="p">(</span><span class="n">AdvancedRadianceParameters</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Gendaylit parameters.</span>
+
+<span class="sd">    Read more:</span>
+<span class="sd">        http://radsite.lbl.gov/radiance/man_html/gensky.1.html</span>
+
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        altitude_azimuth: [-ang] A tuple corresponding to altitude and azimuth</span>
+<span class="sd">            angle.This input can be used instead of specifying the monthDayTime.</span>
+<span class="sd">        ground_reflect: [-g rfl] A float number to indicate ground reflectance.</span>
+<span class="sd">        latitude: [-a lat] A float number to indicate site altitude. Negative</span>
+<span class="sd">            angle indicates south latitude.</span>
+<span class="sd">        longitude: [-o lon] A float number to indicate site latitude. Negative</span>
+<span class="sd">            angle indicates east longitude.</span>
+<span class="sd">        meridian: [-m mer] A float number to indicate site meridian west of</span>
+<span class="sd">        Greenwich.</span>
+
+<span class="sd">        * For the full list of attributes try self.keys</span>
+<span class="sd">        ** values between []&#39;s indicate Radiance equivalent keys for advanced users</span>
+
+<span class="sd">    Usage:</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">altitude_azimuth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">meridian</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ground_reflect</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">suppress_warnings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">time_interval</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">suppress_sun</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">perez_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">dir_norm_dif_horz_irrad</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dir_horz_dif_horz_irrad</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">dir_horz_dif_horz_illum</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">glob_horz_irrad</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init sky parameters.&quot;&quot;&quot;</span>
+        <span class="n">AdvancedRadianceParameters</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_tuple</span><span class="p">(</span><span class="s1">&#39;ang&#39;</span><span class="p">,</span> <span class="s1">&#39;altitude azimuth&#39;</span><span class="p">,</span> <span class="n">tuple_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;altitude_azimuth&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">altitude_azimuth</span> <span class="o">=</span> <span class="n">altitude_azimuth</span>
+        <span class="sd">&quot;&quot;&quot;[-ang] A tuple corresponding to altitude and azimuth</span>
+<span class="sd">            angle.This input can be used instead of specifying the monthDayTime.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="s1">&#39;ground reflectance&#39;</span><span class="p">,</span>
+                                 <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;ground_reflect&#39;</span><span class="p">,</span>
+                                 <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">valid_range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ground_reflect</span> <span class="o">=</span> <span class="n">ground_reflect</span>
+        <span class="sd">&quot;&quot;&quot;[-g rfl] A float number to indicate ground reflectance &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;latitude&#39;</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;latitude&#39;</span><span class="p">,</span>
+                                 <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span> <span class="o">=</span> <span class="n">latitude</span>
+        <span class="sd">&quot;&quot;&quot;[-a lat] A float number to indicate site altitude. Negative angle</span>
+<span class="sd">        indicates south latitude.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="s1">&#39;longitude&#39;</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;longitude&#39;</span><span class="p">,</span>
+                                 <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">longitude</span> <span class="o">=</span> <span class="n">longitude</span>
+        <span class="sd">&quot;&quot;&quot;[-o lon] A float number to indicate site latitude. Negative angle</span>
+<span class="sd">        indicates east longitude.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="s1">&#39;meridian&#39;</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;meridian&#39;</span><span class="p">,</span>
+                                 <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meridian</span> <span class="o">=</span> <span class="n">meridian</span>
+        <span class="sd">&quot;&quot;&quot;[-m mer] A float number to indicate site meridian west of</span>
+<span class="sd">        Greenwich. &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_bool_flag</span><span class="p">(</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="s1">&#39;suppress warnings&#39;</span><span class="p">,</span>
+                                    <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;suppress_warnings&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">suppress_warnings</span> <span class="o">=</span> <span class="n">suppress_warnings</span>
+        <span class="sd">&quot;&quot;&quot;Suppress warning messages.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="s1">&#39;time interval&#39;</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;time_interval&#39;</span><span class="p">,</span>
+                                 <span class="n">num_type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_interval</span> <span class="o">=</span> <span class="n">time_interval</span>
+        <span class="sd">&quot;&quot;&quot;...&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_bool_flag</span><span class="p">(</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="s1">&#39;suppress sun&#39;</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;suppress_sun&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">suppress_sun</span> <span class="o">=</span> <span class="n">suppress_sun</span>
+        <span class="sd">&quot;&quot;&quot;Prevent the solar disc from being in the output.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_tuple</span><span class="p">(</span><span class="s1">&#39;P&#39;</span><span class="p">,</span> <span class="s1">&#39;perez parameters&#39;</span><span class="p">,</span> <span class="n">tuple_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;perez_parameters&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">perez_parameters</span> <span class="o">=</span> <span class="n">perez_parameters</span>
+        <span class="sd">&quot;&quot;&quot;Perez parameters corresponding to epsilon and delta values.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_tuple</span><span class="p">(</span><span class="s1">&#39;W&#39;</span><span class="p">,</span> <span class="s1">&#39;direct-normal,diffuse-horizontal irradiance&#39;</span><span class="p">,</span>
+                                <span class="n">tuple_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;dir_norm_dif_horz_irrad&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dir_norm_dif_horz_irrad</span> <span class="o">=</span> <span class="n">dir_norm_dif_horz_irrad</span>
+        <span class="sd">&quot;&quot;&quot;Direct-normal irradiance and diffuse-horizontal irradiance in W/m^2&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_tuple</span><span class="p">(</span><span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;direct-horizontal,diffuse-horizontal irradiance&#39;</span><span class="p">,</span>
+                                <span class="n">tuple_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;dir_horz_dif_horz_irrad&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dir_horz_dif_horz_irrad</span> <span class="o">=</span> <span class="n">dir_horz_dif_horz_irrad</span>
+        <span class="sd">&quot;&quot;&quot;Direct-horizontal irradiance and diffuse-horizontal irradiance in W/m^2&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_tuple</span><span class="p">(</span><span class="s1">&#39;L&#39;</span><span class="p">,</span> <span class="s1">&#39;direct-horizontal,diffuse-horizontal illuminance&#39;</span><span class="p">,</span>
+                                <span class="n">tuple_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;dir_horz_dif_horz_illum&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dir_horz_dif_horz_illum</span> <span class="o">=</span> <span class="n">dir_horz_dif_horz_illum</span>
+        <span class="sd">&quot;&quot;&quot;Direct normal luminance and diffuse horizontal illuminance&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;global horizontal irradiance&#39;</span><span class="p">,</span>
+                                 <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;glob_horz_irrad&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">glob_horz_irrad</span> <span class="o">=</span> <span class="n">glob_horz_irrad</span>
+        <span class="sd">&quot;&quot;&quot;Global horizontal irradiance&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;O&#39;</span><span class="p">,</span> <span class="s1">&#39;output type&#39;</span><span class="p">,</span>
+                                 <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;output_type&#39;</span><span class="p">,</span> <span class="n">accepted_inputs</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_type</span> <span class="o">=</span> <span class="n">output_type</span>
+        <span class="sd">&quot;&quot;&quot;Specify 0 for visible radiation, 1 for solar radiation and 2 for luminance&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="GendaylitParameters.to_rad_string"><a class="viewcode-back" href="../../../../honeybee.radiance.parameters.html#honeybee.radiance.parameters.gendaylit.GendaylitParameters.to_rad_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_rad_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate Radiance string for gendaylit.&quot;&quot;&quot;</span>
+        <span class="c1"># Ensure only one of the inputs in the arguments below is set to True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_incompatible_inputs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">perez_parameters</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">(),</span>
+                                       <span class="bp">self</span><span class="o">.</span><span class="n">dir_norm_dif_horz_irrad</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">(),</span>
+                                       <span class="bp">self</span><span class="o">.</span><span class="n">dir_horz_dif_horz_irrad</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">(),</span>
+                                       <span class="bp">self</span><span class="o">.</span><span class="n">dir_horz_dif_horz_illum</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">(),</span>
+                                       <span class="bp">self</span><span class="o">.</span><span class="n">glob_horz_irrad</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">AdvancedRadianceParameters</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

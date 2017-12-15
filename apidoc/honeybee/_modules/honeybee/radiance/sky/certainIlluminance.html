@@ -1,0 +1,200 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.sky.certainIlluminance &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../index.html">
+    <img class="logo" src="../../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.sky.certainIlluminance</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">.cie</span> <span class="k">import</span> <span class="n">CIE</span>
+<span class="kn">from</span> <span class="nn">..command.gensky</span> <span class="k">import</span> <span class="n">Gensky</span>
+
+
+<div class="viewcode-block" id="CertainIlluminanceLevel"><a class="viewcode-back" href="../../../../honeybee.radiance.sky.html#honeybee.radiance.sky.certainIlluminance.CertainIlluminanceLevel">[docs]</a><span class="k">class</span> <span class="nc">CertainIlluminanceLevel</span><span class="p">(</span><span class="n">CIE</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Uniform CIE sky based on illuminance value.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        illuminance_value: Desired illuminance value in lux</span>
+<span class="sd">        sky_type: An integer between 0..1 to indicate CIE Sky Type.</span>
+<span class="sd">            [0] cloudy sky, [1] uniform sky (default: 0)</span>
+<span class="sd">        suffix: An optional suffix for sky name. The suffix will be added at the</span>
+<span class="sd">            end of the standard name. Use this input to customize the new and</span>
+<span class="sd">            avoid sky being overwritten by other skymatrix components.</span>
+<span class="sd">    Usage:</span>
+
+<span class="sd">        sky = CertainIlluminanceLevel(1000)</span>
+<span class="sd">        sky.execute(&quot;c:/ladybug/1000luxsky.sky&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">illuminance_value</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">sky_type</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create sky.</span>
+
+<span class="sd">        Attributes:</span>
+<span class="sd">            illuminance_value: Desired illuminance value in lux</span>
+<span class="sd">            sky_type: An integer between 0..1 to indicate CIE Sky Type.</span>
+<span class="sd">                [0] cloudy sky, [1] uniform sky (default: 0)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sky_type</span> <span class="o">=</span> <span class="n">sky_type</span> <span class="ow">or</span> <span class="mi">0</span>
+        <span class="n">CIE</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sky_type</span><span class="o">=</span><span class="n">sky_type</span> <span class="o">+</span> <span class="mi">4</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">illuminance_value</span> <span class="o">=</span> <span class="n">illuminance_value</span> <span class="ow">or</span> <span class="mi">10000</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_climate_based</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True if the sky is generated from values from weather file.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sky default name.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_</span><span class="si">%d%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">illuminance_value</span><span class="p">),</span>
+            <span class="s1">&#39;_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">suffix</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">suffix</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">illuminance_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Desired Illuminace value.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_illum</span>
+
+    <span class="nd">@illuminance_value</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">illuminance_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Illuminace value can&#39;t be negative.&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_illum</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<div class="viewcode-block" id="CertainIlluminanceLevel.command"><a class="viewcode-back" href="../../../../honeybee.radiance.sky.html#honeybee.radiance.sky.certainIlluminance.CertainIlluminanceLevel.command">[docs]</a>    <span class="k">def</span> <span class="nf">command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gensky command.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">folder</span><span class="p">:</span>
+            <span class="n">output_name</span> <span class="o">=</span> <span class="n">folder</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">output_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">Gensky</span><span class="o">.</span><span class="n">uniform_skyfrom_illuminance_value</span><span class="p">(</span>
+            <span class="n">output_name</span><span class="o">=</span><span class="n">output_name</span><span class="p">,</span> <span class="n">illuminance_value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">illuminance_value</span><span class="p">,</span>
+            <span class="n">sky_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sky_type</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">cmd</span></div>
+
+<div class="viewcode-block" id="CertainIlluminanceLevel.duplicate"><a class="viewcode-back" href="../../../../honeybee.radiance.sky.html#honeybee.radiance.sky.certainIlluminance.CertainIlluminanceLevel.duplicate">[docs]</a>    <span class="k">def</span> <span class="nf">duplicate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Duplicate class.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">CertainIlluminanceLevel</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">illuminance_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky_type</span> <span class="o">-</span> <span class="mi">4</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">suffix</span>
+        <span class="p">)</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># test code</span>
+    <span class="n">sky</span> <span class="o">=</span> <span class="n">CertainIlluminanceLevel</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sky</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sky</span><span class="o">.</span><span class="n">illuminance_value</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

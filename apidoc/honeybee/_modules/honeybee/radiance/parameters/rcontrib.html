@@ -1,0 +1,196 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.parameters.rcontrib &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../index.html">
+    <img class="logo" src="../../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.parameters.rcontrib</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="sd">&quot;&quot;&quot;Radiance rcontrib Parameters.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">gridbased</span> <span class="k">import</span> <span class="n">GridBasedParameters</span>
+<span class="kn">from</span> <span class="nn">._frozen</span> <span class="k">import</span> <span class="n">frozen</span>
+
+
+<span class="c1"># TODO: Implement the rest of rcontrib options</span>
+<div class="viewcode-block" id="RcontribParameters"><a class="viewcode-back" href="../../../../honeybee.radiance.parameters.html#honeybee.radiance.parameters.rcontrib.RcontribParameters">[docs]</a><span class="nd">@frozen</span>
+<span class="k">class</span> <span class="nc">RcontribParameters</span><span class="p">(</span><span class="n">GridBasedParameters</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Radiance Parameters for rcontrib command including rtrace parameters.</span>
+
+<span class="sd">    Read more:</span>
+<span class="sd">    https://www.radiance-online.org/learning/documentation/manual-pages/pdfs/rcontrib.pdf</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        mod_file: [-M file] File path to a file with a list of modifiers</span>
+<span class="sd">            (Default: None)</span>
+
+<span class="sd">        * For the full list of attributes try self.parameters</span>
+<span class="sd">        ** values between []&#39;s indicate Radiance equivalent keys for advanced users</span>
+
+<span class="sd">    Usage:</span>
+
+<span class="sd">        # generate sky matrix with default values</span>
+<span class="sd">        rcp = RcontribParameters()</span>
+
+<span class="sd">        # paramters returns an empty string which means rcontrib will use</span>
+<span class="sd">        # default values.</span>
+<span class="sd">        print(rcp.to_rad_string())</span>
+<span class="sd">        &gt;</span>
+
+<span class="sd">        # add modifiers file</span>
+<span class="sd">        rcp.mod_file = &quot;c:/ladybug/suns.txt&quot;</span>
+
+<span class="sd">        # set number of ambient bounces and ambient divisions</span>
+<span class="sd">        # these are rtrace (gridbased) paramters</span>
+<span class="sd">        rcp.ab = 0</span>
+<span class="sd">        rcp.ad = 10000</span>
+<span class="sd">        rcp.I = True</span>
+
+<span class="sd">        # check radiance parameters with the new values</span>
+<span class="sd">        print(rcp.to_rad_string())</span>
+<span class="sd">        &gt; -ab 0 -ad 10000 -M c:/ladybug/suns.txt -I</span>
+
+<span class="sd">        # or you can set all the parameter for rtrace based on quality</span>
+<span class="sd">        rcp.quality = 1</span>
+<span class="sd">        print(rcp.to_rad_string())</span>
+<span class="sd">        &gt; -aa 0.2 -ab 0 -ad 10000 -M c:/ladybug/suns.txt -I -dc 0.5 -st 0.5 -lw 0.01</span>
+<span class="sd">            -as 2048 -ar 64 -lr 6 -dt 0.25 -dr 1 -ds 0.25 -dp 256</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mod_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_filename_format</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init paramters.&quot;&quot;&quot;</span>
+        <span class="n">GridBasedParameters</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1"># add parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_value</span><span class="p">(</span><span class="s1">&#39;M&#39;</span><span class="p">,</span> <span class="s1">&#39;modifiers file&#39;</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;mod_file&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mod_file</span> <span class="o">=</span> <span class="n">mod_file</span>
+        <span class="sd">&quot;&quot;&quot;[-M file] File path to a file with a list of modifiers</span>
+<span class="sd">        (Default: None)&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;number of total points or pixels in y direction&#39;</span><span class="p">,</span>
+                                 <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;y_dimension&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_dimension</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="sd">&quot;&quot;&quot;[-y int] Y dimension of an image or number of total points in points file.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;number of pixels in x direction&#39;</span><span class="p">,</span>
+                                 <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;x_dimension&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_dimension</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="sd">&quot;&quot;&quot;[-x int] X dimension of an image.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_value</span><span class="p">(</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="s1">&#39;output file name format&#39;</span><span class="p">,</span>
+                                <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;output_filename_format&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_filename_format</span> <span class="o">=</span> <span class="n">output_filename_format</span>
+        <span class="sd">&quot;&quot;&quot;[-0 str] output format e.g. %04f.hdr.&quot;&quot;&quot;</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,339 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>butterfly.fvSchemes &#8212; Butterfly 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/butterfly.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Butterfly is a python library to create and run advanced computational fluid dynamic (CFD) simulations using OpenFOAM.</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=butterfly&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../butterfly.html">butterfly package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for butterfly.fvSchemes</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="sd">&quot;&quot;&quot;Finite Volume Schemes class.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">version</span> <span class="k">import</span> <span class="n">Version</span>
+<span class="kn">from</span> <span class="nn">foamfile</span> <span class="k">import</span> <span class="n">FoamFile</span><span class="p">,</span> <span class="n">foam_file_from_file</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+
+
+<div class="viewcode-block" id="FvSchemes"><a class="viewcode-back" href="../../butterfly.html#butterfly.fvSchemes.FvSchemes">[docs]</a><span class="k">class</span> <span class="nc">FvSchemes</span><span class="p">(</span><span class="n">FoamFile</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Finite Volume Schemes class.&quot;&quot;&quot;</span>
+
+    <span class="c1"># set default valus for this class</span>
+    <span class="n">__default_values</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;ddtSchemes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;steadyState&#39;</span><span class="p">}</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;gradSchemes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;cellLimited leastSquares 1&#39;</span><span class="p">}</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;divSchemes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;none&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;div(phi,U)&#39;</span><span class="p">:</span> <span class="s1">&#39;bounded Gauss linearUpwindV grad(U)&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;div(phi,epsilon)&#39;</span><span class="p">:</span> <span class="s1">&#39;bounded Gauss linearUpwind grad(epsilon)&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;div(phi,k)&#39;</span><span class="p">:</span> <span class="s1">&#39;bounded Gauss linearUpwind grad(k)&#39;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">Version</span><span class="o">.</span><span class="n">of_ver</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;divSchemes&#39;</span><span class="p">][</span><span class="s1">&#39;div((nuEff*dev(T(grad(U)))))&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Gauss linear&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;divSchemes&#39;</span><span class="p">][</span><span class="s1">&#39;div((nuEff*dev2(T(grad(U)))))&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Gauss linear&#39;</span>
+
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;laplacianSchemes&#39;</span><span class="p">]</span> <span class="o">=</span> \
+        <span class="p">{</span><span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;Gauss linear limited corrected 0.333&#39;</span><span class="p">}</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;interpolationSchemes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;linear&#39;</span><span class="p">}</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;snGradSchemes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;limited corrected 0.333&#39;</span><span class="p">}</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;fluxRequired&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;no&#39;</span><span class="p">,</span> <span class="s1">&#39;p&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">}</span>
+
+    <span class="c1"># first and second order of divSchemes</span>
+    <span class="n">divSchemesCollector</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;// first order</span><span class="se">\n</span><span class="s1">&#39;</span>
+           <span class="s1">&#39;divSchemes</span><span class="se">\n</span><span class="s1">&#39;</span>
+           <span class="s1">&#39;{</span><span class="se">\n</span><span class="s1">&#39;</span>
+           <span class="s1">&#39;    default     none;</span><span class="se">\n</span><span class="s1">&#39;</span>
+           <span class="s1">&#39;    div(phi,epsilon)       bounded Gauss upwind default;</span><span class="se">\n</span><span class="s1">&#39;</span>
+           <span class="s1">&#39;    div(phi,U)      bounded Gauss upwind grad(U);</span><span class="se">\n</span><span class="s1">&#39;</span>
+           <span class="s1">&#39;    div((nuEff*dev2(T(grad(U)))))   Gauss linear;</span><span class="se">\n</span><span class="s1">&#39;</span>
+           <span class="s1">&#39;    div(phi,k)      bounded Gauss upwind grad(k);</span><span class="se">\n</span><span class="s1">&#39;</span>
+           <span class="s1">&#39;}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;// second order</span><span class="se">\n</span><span class="s1">&#39;</span>
+           <span class="s1">&#39;divSchemes</span><span class="se">\n</span><span class="s1">&#39;</span>
+           <span class="s1">&#39;{</span><span class="se">\n</span><span class="s1">&#39;</span>
+           <span class="s1">&#39;    default     none;</span><span class="se">\n</span><span class="s1">&#39;</span>
+           <span class="s1">&#39;    div(phi,epsilon)    bounded Gauss linearUpwind grad(epsilon);</span><span class="se">\n</span><span class="s1">&#39;</span>
+           <span class="s1">&#39;    div(phi,U)      bounded Gauss linearUpwind grad(U);</span><span class="se">\n</span><span class="s1">&#39;</span>
+           <span class="s1">&#39;    div((nuEff*dev2(T(grad(U)))))       Gauss linear;</span><span class="se">\n</span><span class="s1">&#39;</span>
+           <span class="s1">&#39;    div(phi,k)      bounded Gauss linearUpwind grad(k);</span><span class="se">\n</span><span class="s1">&#39;</span>
+           <span class="s1">&#39;}&#39;</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init class.&quot;&quot;&quot;</span>
+        <span class="n">FoamFile</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;fvSchemes&#39;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="s1">&#39;dictionary&#39;</span><span class="p">,</span>
+                          <span class="n">location</span><span class="o">=</span><span class="s1">&#39;system&#39;</span><span class="p">,</span> <span class="n">default_values</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__default_values</span><span class="p">,</span>
+                          <span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FvSchemes.from_file"><a class="viewcode-back" href="../../butterfly.html#butterfly.fvSchemes.FvSchemes.from_file">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a FoamFile from a file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath: Full file path to dictionary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="n">foam_file_from_file</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="FvSchemes.from_recipe"><a class="viewcode-back" href="../../butterfly.html#butterfly.fvSchemes.FvSchemes.from_recipe">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_recipe</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">recipe</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create an fvSchemes from recipe id.</span>
+
+<span class="sd">        0 &gt; SteadyIncompressible</span>
+<span class="sd">        1 &gt; HeatTransfer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_cls</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">recipe</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_cls</span>
+        <span class="k">elif</span> <span class="n">recipe</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># update divSchemes</span>
+            <span class="n">_cls</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;divSchemes&#39;</span><span class="p">][</span><span class="s1">&#39;div(phi,T)&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="s1">&#39;bounded Gauss linearUpwind default&#39;</span>
+            <span class="k">return</span> <span class="n">_cls</span></div>
+
+<div class="viewcode-block" id="FvSchemes.from_mesh_orthogonality"><a class="viewcode-back" href="../../butterfly.html#butterfly.fvSchemes.FvSchemes.from_mesh_orthogonality">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_mesh_orthogonality</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">average_orthogonality</span><span class="o">=</span><span class="mi">45</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init fvSchemes based on mesh orthogonality.</span>
+
+<span class="sd">        Check pp. 45-50 of this document:</span>
+<span class="sd">        http://www.dicat.unige.it/guerrero/oftraining/9tipsandtricks.pdf</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">get_values_from_mesh_orthogonality</span><span class="p">(</span>
+            <span class="n">average_orthogonality</span><span class="p">))</span></div>
+
+    <span class="c1"># TODO(): OpenFOAM version check for dev vs dev2.</span>
+<div class="viewcode-block" id="FvSchemes.get_values_from_mesh_orthogonality"><a class="viewcode-back" href="../../butterfly.html#butterfly.fvSchemes.FvSchemes.get_values_from_mesh_orthogonality">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_values_from_mesh_orthogonality</span><span class="p">(</span><span class="n">average_orthogonality</span><span class="o">=</span><span class="mi">45</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get scheme values from orthogonality.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">average_orthogonality</span> <span class="o">&gt;</span> <span class="mi">80</span><span class="p">:</span>
+            <span class="n">_values</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;gradSchemes&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;faceLimited leastSquares 1.0&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;grad(U)&#39;</span><span class="p">:</span> <span class="s1">&#39;faceLimited leastSquares 1.0&#39;</span>
+                <span class="p">},</span>
+
+                <span class="s1">&#39;divSchemes&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;div(phi,U)&#39;</span><span class="p">:</span> <span class="s1">&#39;bounded Gauss linearUpwind grad(U)&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;div(phi,omega)&#39;</span><span class="p">:</span> <span class="s1">&#39;bounded Gauss upwind&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;div(phi,k)&#39;</span><span class="p">:</span> <span class="s1">&#39;bounded Gauss upwind&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;div((nuEff*dev2(T(grad(U)))))&#39;</span><span class="p">:</span> <span class="s1">&#39;Gauss linear&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;div(phi,epsilon)&#39;</span><span class="p">:</span> <span class="s1">&#39;bounded Gauss linearUpwind grad(epsilon)&#39;</span>
+                <span class="p">},</span>
+
+                <span class="s1">&#39;laplacianSchemes&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;Gauss linear limited 0.333&#39;</span>
+                <span class="p">},</span>
+
+                <span class="s1">&#39;snGradSchemes&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;limited 0.333&#39;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="k">elif</span> <span class="mi">70</span> <span class="o">&lt;=</span> <span class="n">average_orthogonality</span> <span class="o">&lt;=</span> <span class="mi">80</span><span class="p">:</span>
+            <span class="n">_values</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;gradSchemes&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;cellLimited leastSquares 1.0&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;grad(U)&#39;</span><span class="p">:</span> <span class="s1">&#39;cellLimited leastSquares 1.0&#39;</span>
+                <span class="p">},</span>
+
+                <span class="s1">&#39;divSchemes&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;div(phi,U)&#39;</span><span class="p">:</span> <span class="s1">&#39;bounded Gauss linearUpwind grad(U)&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;div(phi,omega)&#39;</span><span class="p">:</span> <span class="s1">&#39;bounded Gauss upwind&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;div(phi,k)&#39;</span><span class="p">:</span> <span class="s1">&#39;bounded Gauss upwind&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;div((nuEff*dev2(T(grad(U)))))&#39;</span><span class="p">:</span> <span class="s1">&#39;Gauss linear&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;div(phi,epsilon)&#39;</span><span class="p">:</span> <span class="s1">&#39;bounded Gauss linearUpwind grad(epsilon)&#39;</span>
+                <span class="p">},</span>
+
+                <span class="s1">&#39;laplacianSchemes&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;Gauss linear limited 0.5&#39;</span>
+                <span class="p">},</span>
+
+                <span class="s1">&#39;snGradSchemes&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;limited 0.5&#39;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+
+        <span class="k">elif</span> <span class="mi">60</span> <span class="o">&lt;=</span> <span class="n">average_orthogonality</span> <span class="o">&lt;</span> <span class="mi">70</span><span class="p">:</span>
+            <span class="n">_values</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;gradSchemes&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;cellMDLimited Gauss linear 0.5&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;grad(U)&#39;</span><span class="p">:</span> <span class="s1">&#39;cellMDLimited Gauss linear 0.5&#39;</span>
+                <span class="p">},</span>
+
+                <span class="s1">&#39;divSchemes&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;div(phi,U)&#39;</span><span class="p">:</span> <span class="s1">&#39;bounded Gauss linearUpwind grad(U)&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;div(phi,omega)&#39;</span><span class="p">:</span> <span class="s1">&#39;bounded Gauss linearUpwind default&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;div(phi,k)&#39;</span><span class="p">:</span> <span class="s1">&#39;bounded Gauss linearUpwind default&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;div((nuEff*dev2(T(grad(U)))))&#39;</span><span class="p">:</span> <span class="s1">&#39;Gauss linear&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;div(phi,epsilon)&#39;</span><span class="p">:</span> <span class="s1">&#39;bounded Gauss linearUpwind grad(epsilon)&#39;</span>
+                <span class="p">},</span>
+
+                <span class="s1">&#39;laplacianSchemes&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;Gauss linear limited 0.777&#39;</span>
+                <span class="p">},</span>
+
+                <span class="s1">&#39;snGradSchemes&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;limited 0.777&#39;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="k">elif</span> <span class="mi">40</span> <span class="o">&lt;=</span> <span class="n">average_orthogonality</span> <span class="o">&lt;</span> <span class="mi">60</span><span class="p">:</span>
+            <span class="n">_values</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;gradSchemes&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;cellMDLimited Gauss linear 0.5&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;grad(U)&#39;</span><span class="p">:</span> <span class="s1">&#39;cellMDLimited Gauss linear 0.5&#39;</span>
+                <span class="p">},</span>
+
+                <span class="s1">&#39;divSchemes&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;div(phi,U)&#39;</span><span class="p">:</span> <span class="s1">&#39;bounded Gauss linearUpwind grad(U)&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;div(phi,omega)&#39;</span><span class="p">:</span> <span class="s1">&#39;bounded Gauss linearUpwind default&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;div(phi,k)&#39;</span><span class="p">:</span> <span class="s1">&#39;bounded Gauss linearUpwind default&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;div((nuEff*dev2(T(grad(U)))))&#39;</span><span class="p">:</span> <span class="s1">&#39;Gauss linear&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;div(phi,epsilon)&#39;</span><span class="p">:</span> <span class="s1">&#39;bounded Gauss linearUpwind grad(epsilon)&#39;</span>
+                <span class="p">},</span>
+
+                <span class="s1">&#39;laplacianSchemes&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;Gauss linear limited 1.0&#39;</span>
+                <span class="p">},</span>
+
+                <span class="s1">&#39;snGradSchemes&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;limited 1.0&#39;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># smaller than 40</span>
+            <span class="n">_values</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;gradSchemes&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;cellMDLimited Gauss linear 0.333&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;grad(U)&#39;</span><span class="p">:</span> <span class="s1">&#39;cellMDLimited Gauss linear 0.333&#39;</span>
+                <span class="p">},</span>
+
+                <span class="s1">&#39;divSchemes&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;div(phi,U)&#39;</span><span class="p">:</span> <span class="s1">&#39;bounded Gauss linearUpwind grad(U)&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;div(phi,omega)&#39;</span><span class="p">:</span> <span class="s1">&#39;bounded Gauss linearUpwind default&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;div(phi,k)&#39;</span><span class="p">:</span> <span class="s1">&#39;bounded Gauss linearUpwind default&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;div((nuEff*dev2(T(grad(U)))))&#39;</span><span class="p">:</span> <span class="s1">&#39;Gauss linear&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;div(phi,epsilon)&#39;</span><span class="p">:</span> <span class="s1">&#39;bounded Gauss linearUpwind grad(epsilon)&#39;</span>
+                <span class="p">},</span>
+
+                <span class="s1">&#39;laplacianSchemes&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;Gauss linear orthogonal&#39;</span>
+                <span class="p">},</span>
+
+                <span class="s1">&#39;snGradSchemes&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;orthogonal&#39;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">_values</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

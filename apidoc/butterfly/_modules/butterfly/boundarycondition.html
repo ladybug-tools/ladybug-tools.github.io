@@ -1,0 +1,568 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>butterfly.boundarycondition &#8212; Butterfly 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/butterfly.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Butterfly is a python library to create and run advanced computational fluid dynamic (CFD) simulations using OpenFOAM.</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=butterfly&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../butterfly.html">butterfly package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for butterfly.boundarycondition</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="sd">&quot;&quot;&quot;Collection of OpenFOAM boundary conditions (e.g. wall, inlet, outlet).&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">fields</span> <span class="k">import</span> <span class="n">AtmBoundaryLayerInletVelocity</span><span class="p">,</span> <span class="n">AtmBoundaryLayerInletK</span><span class="p">,</span> \
+    <span class="n">AtmBoundaryLayerInletEpsilon</span><span class="p">,</span> <span class="n">Calculated</span><span class="p">,</span> <span class="n">EpsilonWallFunction</span><span class="p">,</span> <span class="n">FixedValue</span><span class="p">,</span> \
+    <span class="n">InletOutlet</span><span class="p">,</span> <span class="n">KqRWallFunction</span><span class="p">,</span> <span class="n">NutkWallFunction</span><span class="p">,</span> <span class="n">NutkAtmRoughWallFunction</span><span class="p">,</span> \
+    <span class="n">Slip</span><span class="p">,</span> <span class="n">ZeroGradient</span><span class="p">,</span> <span class="n">AlphatJayatillekeWallFunction</span><span class="p">,</span> <span class="n">FixedFluxPressure</span><span class="p">,</span> <span class="n">Empty</span><span class="p">,</span> \
+    <span class="n">Field</span>
+
+
+<div class="viewcode-block" id="BoundaryCondition"><a class="viewcode-back" href="../../butterfly.html#butterfly.boundarycondition.BoundaryCondition">[docs]</a><span class="k">class</span> <span class="nc">BoundaryCondition</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Boundary condition base class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># TODO(Mostapha): Write a descriptor for each field and replace all properties</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bc_type</span><span class="o">=</span><span class="s1">&#39;patch&#39;</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">U</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">epsilon</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nut</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alphat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">p_rgh</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Instantiate boundary condition.</span>
+<span class="sd">        Attributes:</span>
+<span class="sd">                :param bc_type: Boundary condition type. e.g.(patch, wall)</span>
+<span class="sd">                :param T: Optional input for temperature in Kelvin (300)</span>
+<span class="sd">                :param U: OpenFOAM value for U.</span>
+<span class="sd">                :param p: OpenFOAM value for p.</span>
+<span class="sd">                :param k: OpenFOAM value for k.</span>
+<span class="sd">                :param epsilon: OpenFOAM value for epsilon.</span>
+<span class="sd">                :param nut: OpenFOAM value for nut.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;is</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">bc_type</span>
+        <span class="c1"># set default values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">=</span> <span class="n">T</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">U</span> <span class="o">=</span> <span class="n">U</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">k</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">=</span> <span class="n">epsilon</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nut</span> <span class="o">=</span> <span class="n">nut</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alphat</span> <span class="o">=</span> <span class="n">alphat</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_rgh</span> <span class="o">=</span> <span class="n">p_rgh</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">T</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s2">&quot;T boundary condition.&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T</span>
+
+    <span class="nd">@T</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">T</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_T</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">try_get_field</span><span class="p">(</span><span class="n">t</span> <span class="ow">or</span> <span class="n">ZeroGradient</span><span class="p">())</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">U</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s2">&quot;U boundary condition.&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_U</span>
+
+    <span class="nd">@U</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">U</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_U</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">try_get_field</span><span class="p">(</span><span class="n">u</span> <span class="ow">or</span> <span class="n">ZeroGradient</span><span class="p">())</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">p</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s2">&quot;p boundary condition.&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p</span>
+
+    <span class="nd">@p</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">p</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">try_get_field</span><span class="p">(</span><span class="n">p</span> <span class="ow">or</span> <span class="n">ZeroGradient</span><span class="p">())</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">k</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s2">&quot;k boundary condition.&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k</span>
+
+    <span class="nd">@k</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">k</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k_</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">try_get_field</span><span class="p">(</span><span class="n">k_</span> <span class="ow">or</span> <span class="n">ZeroGradient</span><span class="p">())</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">epsilon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s2">&quot;epsilon boundary condition.&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_epsilon</span>
+
+    <span class="nd">@epsilon</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">epsilon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_epsilon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">try_get_field</span><span class="p">(</span><span class="n">e</span> <span class="ow">or</span> <span class="n">ZeroGradient</span><span class="p">())</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">nut</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s2">&quot;nut boundary condition.&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nut</span>
+
+    <span class="nd">@nut</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">nut</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nut</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">try_get_field</span><span class="p">(</span><span class="n">n</span> <span class="ow">or</span> <span class="n">ZeroGradient</span><span class="p">())</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">alphat</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s2">&quot;alphat boundary condition.&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_alphat</span>
+
+    <span class="nd">@alphat</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">alphat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_alphat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">try_get_field</span><span class="p">(</span><span class="n">a</span> <span class="ow">or</span> <span class="n">ZeroGradient</span><span class="p">())</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">p_rgh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s2">&quot;p_rgh boundary condition.&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p_rgh</span>
+
+    <span class="nd">@p_rgh</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">p_rgh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prgh</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_p_rgh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">try_get_field</span><span class="p">(</span><span class="n">prgh</span> <span class="ow">or</span> <span class="n">ZeroGradient</span><span class="p">())</span>
+
+<div class="viewcode-block" id="BoundaryCondition.isBoundaryCondition"><a class="viewcode-back" href="../../butterfly.html#butterfly.boundarycondition.BoundaryCondition.isBoundaryCondition">[docs]</a>    <span class="k">def</span> <span class="nf">isBoundaryCondition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True for boundary conditions.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="BoundaryCondition.try_get_field"><a class="viewcode-back" href="../../butterfly.html#butterfly.boundarycondition.BoundaryCondition.try_get_field">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">try_get_field</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Try getting the field from the input.</span>
+
+<span class="sd">        The method will return the input if it is an instance of class &lt;Field&gt;,</span>
+<span class="sd">        otherwise it tries to create the field from a dictionary and finally</span>
+<span class="sd">        tries to create it from the string.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">Field</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">f</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="n">OrderedDict</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="n">Field</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">Field</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s1">&#39;Failed to create an OpenFOAM field from </span><span class="si">{}</span><span class="s1">. Use a valid value.&#39;</span>
+                    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="BoundaryCondition.duplicate"><a class="viewcode-back" href="../../butterfly.html#butterfly.boundarycondition.BoundaryCondition.duplicate">[docs]</a>    <span class="k">def</span> <span class="nf">duplicate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Duplicate Boundary Condition.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BoundaryCondition.ToString"><a class="viewcode-back" href="../../butterfly.html#butterfly.boundarycondition.BoundaryCondition.ToString">[docs]</a>    <span class="k">def</span> <span class="nf">ToString</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwrite .NET ToString.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Bounday condition representatoin.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BoundingBoxBoundaryCondition"><a class="viewcode-back" href="../../butterfly.html#butterfly.boundarycondition.BoundingBoxBoundaryCondition">[docs]</a><span class="k">class</span> <span class="nc">BoundingBoxBoundaryCondition</span><span class="p">(</span><span class="n">BoundaryCondition</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Bounding box boundary condition for bounding box geometry.</span>
+
+<span class="sd">    It returns a boundary condition of ZeroGradient for all the inputs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init bounday condition.&quot;&quot;&quot;</span>
+        <span class="n">U</span> <span class="o">=</span> <span class="n">ZeroGradient</span><span class="p">()</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">ZeroGradient</span><span class="p">()</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">ZeroGradient</span><span class="p">()</span>
+        <span class="n">epsilon</span> <span class="o">=</span> <span class="n">ZeroGradient</span><span class="p">()</span>
+        <span class="n">nut</span> <span class="o">=</span> <span class="n">ZeroGradient</span><span class="p">()</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="n">ZeroGradient</span><span class="p">()</span>
+        <span class="n">alphat</span> <span class="o">=</span> <span class="n">ZeroGradient</span><span class="p">()</span>
+        <span class="n">p_rgh</span> <span class="o">=</span> <span class="n">ZeroGradient</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BoundingBoxBoundaryCondition</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="s1">&#39;wall&#39;</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">,</span> <span class="n">nut</span><span class="p">,</span> <span class="n">alphat</span><span class="p">,</span> <span class="n">p_rgh</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="EmptyBoundaryCondition"><a class="viewcode-back" href="../../butterfly.html#butterfly.boundarycondition.EmptyBoundaryCondition">[docs]</a><span class="k">class</span> <span class="nc">EmptyBoundaryCondition</span><span class="p">(</span><span class="n">BoundaryCondition</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Empty boundary condition.</span>
+
+<span class="sd">    It returns a boundary condition of Empty for all the inputs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init bounday condition.&quot;&quot;&quot;</span>
+        <span class="n">U</span> <span class="o">=</span> <span class="n">Empty</span><span class="p">()</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">Empty</span><span class="p">()</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">Empty</span><span class="p">()</span>
+        <span class="n">epsilon</span> <span class="o">=</span> <span class="n">Empty</span><span class="p">()</span>
+        <span class="n">nut</span> <span class="o">=</span> <span class="n">Empty</span><span class="p">()</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="n">Empty</span><span class="p">()</span>
+        <span class="n">alphat</span> <span class="o">=</span> <span class="n">Empty</span><span class="p">()</span>
+        <span class="n">p_rgh</span> <span class="o">=</span> <span class="n">Empty</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">EmptyBoundaryCondition</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="s1">&#39;wall&#39;</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">,</span> <span class="n">nut</span><span class="p">,</span> <span class="n">alphat</span><span class="p">,</span> <span class="n">p_rgh</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="IndoorWallBoundaryCondition"><a class="viewcode-back" href="../../butterfly.html#butterfly.boundarycondition.IndoorWallBoundaryCondition">[docs]</a><span class="k">class</span> <span class="nc">IndoorWallBoundaryCondition</span><span class="p">(</span><span class="n">BoundaryCondition</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Wall boundary condition base class.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        T: Optional input for Temperature.</span>
+<span class="sd">        U: OpenFOAM value for U.</span>
+<span class="sd">        p: OpenFOAM value for p.</span>
+<span class="sd">        k: OpenFOAM value for k.</span>
+<span class="sd">        epsilon: OpenFOAM value for epsilon.</span>
+<span class="sd">        nut: OpenFOAM value for nut.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">U</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nut</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">alphat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">p_rgh</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init bounday condition.&quot;&quot;&quot;</span>
+        <span class="n">U</span> <span class="o">=</span> <span class="n">U</span> <span class="ow">or</span> <span class="n">FixedValue</span><span class="p">(</span><span class="s1">&#39;(0 0 0)&#39;</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">p</span> <span class="ow">or</span> <span class="n">ZeroGradient</span><span class="p">()</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">k</span> <span class="ow">or</span> <span class="n">KqRWallFunction</span><span class="p">(</span><span class="s1">&#39;0.1&#39;</span><span class="p">)</span>
+        <span class="n">epsilon</span> <span class="o">=</span> <span class="n">epsilon</span> <span class="ow">or</span> <span class="n">EpsilonWallFunction</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+        <span class="n">nut</span> <span class="o">=</span> <span class="n">nut</span> <span class="ow">or</span> <span class="n">NutkWallFunction</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="n">T</span> <span class="ow">or</span> <span class="n">ZeroGradient</span><span class="p">()</span>
+        <span class="n">alphat</span> <span class="o">=</span> <span class="n">alphat</span> <span class="ow">or</span> <span class="n">AlphatJayatillekeWallFunction</span><span class="p">(</span>
+            <span class="n">value</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">is_uniform</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">Prt</span><span class="o">=</span><span class="s1">&#39;0.85&#39;</span><span class="p">)</span>
+
+        <span class="n">p_rgh</span> <span class="o">=</span> <span class="n">p_rgh</span> <span class="ow">or</span> <span class="n">FixedFluxPressure</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">is_uniform</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">rho</span><span class="o">=</span><span class="s1">&#39;rhok&#39;</span><span class="p">)</span>
+
+        <span class="n">BoundaryCondition</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;wall&#39;</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span>
+                                   <span class="n">k</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">,</span> <span class="n">nut</span><span class="p">,</span> <span class="n">alphat</span><span class="p">,</span> <span class="n">p_rgh</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="FixedInletBoundaryCondition"><a class="viewcode-back" href="../../butterfly.html#butterfly.boundarycondition.FixedInletBoundaryCondition">[docs]</a><span class="k">class</span> <span class="nc">FixedInletBoundaryCondition</span><span class="p">(</span><span class="n">BoundaryCondition</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Inlet boundary condition base class.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        T: Optional input for Temperature.</span>
+<span class="sd">        U: Air velocity as fixed value (x, y, z).</span>
+<span class="sd">        p: OpenFOAM value for p.</span>
+<span class="sd">        k: OpenFOAM value for k.</span>
+<span class="sd">        epsilon: OpenFOAM value for epsilon.</span>
+<span class="sd">        nut: OpenFOAM value for nut.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">U</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nut</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">alphat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">p_rgh</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init bounday condition.&quot;&quot;&quot;</span>
+        <span class="c1"># set default values for an inlet</span>
+        <span class="n">U</span> <span class="o">=</span> <span class="n">U</span> <span class="ow">or</span> <span class="n">FixedValue</span><span class="p">(</span><span class="s1">&#39;(0 0 0)&#39;</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">p</span> <span class="ow">or</span> <span class="n">ZeroGradient</span><span class="p">()</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">k</span> <span class="ow">or</span> <span class="n">FixedValue</span><span class="p">(</span><span class="s1">&#39;0.1&#39;</span><span class="p">)</span>
+        <span class="n">epsilon</span> <span class="o">=</span> <span class="n">epsilon</span> <span class="ow">or</span> <span class="n">FixedValue</span><span class="p">(</span><span class="s1">&#39;0.01&#39;</span><span class="p">)</span>
+        <span class="n">nut</span> <span class="o">=</span> <span class="n">Calculated</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">)</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="n">T</span> <span class="k">if</span> <span class="n">T</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">alphat</span> <span class="o">=</span> <span class="n">ZeroGradient</span><span class="p">()</span>
+        <span class="n">p_rgh</span> <span class="o">=</span> <span class="n">ZeroGradient</span><span class="p">()</span>
+
+        <span class="n">BoundaryCondition</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;patch&#39;</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span>
+                                   <span class="n">k</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">,</span> <span class="n">nut</span><span class="p">,</span> <span class="n">alphat</span><span class="p">,</span> <span class="n">p_rgh</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Bounday condition representatoin.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">velocity </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">U</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="FixedOutletBoundaryCondition"><a class="viewcode-back" href="../../butterfly.html#butterfly.boundarycondition.FixedOutletBoundaryCondition">[docs]</a><span class="k">class</span> <span class="nc">FixedOutletBoundaryCondition</span><span class="p">(</span><span class="n">BoundaryCondition</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Outlet boundary condition base class.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        pressure: Pressure as a float (default: 0)</span>
+<span class="sd">        T: Optional input for Temperature.</span>
+<span class="sd">        U: OpenFOAM value for U.</span>
+<span class="sd">        p: OpenFOAM value for p.</span>
+<span class="sd">        k: OpenFOAM value for k.</span>
+<span class="sd">        epsilon: OpenFOAM value for epsilon.</span>
+<span class="sd">        nut: OpenFOAM value for nut.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">U</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nut</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">alphat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">p_rgh</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init bounday condition.&quot;&quot;&quot;</span>
+        <span class="c1"># set default values for an inlet</span>
+        <span class="n">U</span> <span class="o">=</span> <span class="n">U</span> <span class="ow">or</span> <span class="n">InletOutlet</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s1">&#39;uniform (0 0 0)&#39;</span><span class="p">,</span> <span class="n">inletValue</span><span class="o">=</span><span class="s1">&#39;uniform (0 0 0)&#39;</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">p</span> <span class="ow">or</span> <span class="n">FixedValue</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">)</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">k</span> <span class="ow">or</span> <span class="n">InletOutlet</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s1">&#39;uniform 0.1&#39;</span><span class="p">,</span> <span class="n">inletValue</span><span class="o">=</span><span class="s1">&#39;uniform 0.1&#39;</span><span class="p">)</span>
+        <span class="n">epsilon</span> <span class="o">=</span> <span class="n">epsilon</span> <span class="ow">or</span> <span class="n">InletOutlet</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s1">&#39;uniform 0.1&#39;</span><span class="p">,</span> <span class="n">inletValue</span><span class="o">=</span><span class="s1">&#39;uniform 0.1&#39;</span><span class="p">)</span>
+        <span class="n">nut</span> <span class="o">=</span> <span class="n">Calculated</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">)</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="n">T</span> <span class="ow">or</span> <span class="n">ZeroGradient</span><span class="p">()</span>
+        <span class="n">alphat</span> <span class="o">=</span> <span class="n">alphat</span> <span class="ow">or</span> <span class="n">ZeroGradient</span><span class="p">()</span>
+        <span class="n">p_rgh</span> <span class="o">=</span> <span class="n">p_rgh</span> <span class="ow">or</span> <span class="n">FixedValue</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">FixedOutletBoundaryCondition</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="s1">&#39;patch&#39;</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">,</span> <span class="n">nut</span><span class="p">,</span> <span class="n">alphat</span><span class="p">,</span> <span class="n">p_rgh</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Bounday condition representatoin.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">pressure </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="WindTunnelWallBoundaryCondition"><a class="viewcode-back" href="../../butterfly.html#butterfly.boundarycondition.WindTunnelWallBoundaryCondition">[docs]</a><span class="k">class</span> <span class="nc">WindTunnelWallBoundaryCondition</span><span class="p">(</span><span class="n">BoundaryCondition</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Wall boundary condition for wall geometrys inside wind tunnel.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        T: Optional input for Temperature.</span>
+<span class="sd">        T: Optional input for Temperature.</span>
+<span class="sd">        U: OpenFOAM value for U.</span>
+<span class="sd">        p: OpenFOAM value for p.</span>
+<span class="sd">        k: OpenFOAM value for k.</span>
+<span class="sd">        epsilon: OpenFOAM value for epsilon.</span>
+<span class="sd">        nut: OpenFOAM value for nut.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">U</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nut</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init bounday condition.&quot;&quot;&quot;</span>
+        <span class="n">U</span> <span class="o">=</span> <span class="n">U</span> <span class="ow">or</span> <span class="n">FixedValue</span><span class="p">(</span><span class="s1">&#39;(0 0 0)&#39;</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">p</span> <span class="ow">or</span> <span class="n">ZeroGradient</span><span class="p">()</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">k</span> <span class="ow">or</span> <span class="n">KqRWallFunction</span><span class="p">(</span><span class="s1">&#39;$internalField&#39;</span><span class="p">,</span> <span class="n">is_unifrom</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">epsilon</span> <span class="o">=</span> <span class="n">epsilon</span> <span class="ow">or</span> <span class="n">EpsilonWallFunction</span><span class="p">(</span><span class="s1">&#39;$internalField&#39;</span><span class="p">,</span> <span class="n">is_unifrom</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">nut</span> <span class="o">=</span> <span class="n">nut</span> <span class="ow">or</span> <span class="n">NutkWallFunction</span><span class="p">(</span><span class="s1">&#39;0.0&#39;</span><span class="p">)</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="n">T</span> <span class="ow">or</span> <span class="n">ZeroGradient</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">WindTunnelWallBoundaryCondition</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="s1">&#39;wall&#39;</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">,</span> <span class="n">nut</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="WindTunnelGroundBoundaryCondition"><a class="viewcode-back" href="../../butterfly.html#butterfly.boundarycondition.WindTunnelGroundBoundaryCondition">[docs]</a><span class="k">class</span> <span class="nc">WindTunnelGroundBoundaryCondition</span><span class="p">(</span><span class="n">BoundaryCondition</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Wind tunnel ground boundary condition.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        T: Optional input for Temperature.</span>
+<span class="sd">        T: Optional input for Temperature.</span>
+<span class="sd">        U: OpenFOAM value for U.</span>
+<span class="sd">        p: OpenFOAM value for p.</span>
+<span class="sd">        k: OpenFOAM value for k.</span>
+<span class="sd">        epsilon: OpenFOAM value for epsilon.</span>
+<span class="sd">        nut: OpenFOAM value for nut.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ABLConditions</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">U</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init bounday condition.&quot;&quot;&quot;</span>
+        <span class="n">U</span> <span class="o">=</span> <span class="n">U</span> <span class="ow">or</span> <span class="n">FixedValue</span><span class="p">(</span><span class="s1">&#39;(0 0 0)&#39;</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">p</span> <span class="ow">or</span> <span class="n">ZeroGradient</span><span class="p">()</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">k</span> <span class="ow">or</span> <span class="n">ZeroGradient</span><span class="p">()</span>
+        <span class="n">epsilon</span> <span class="o">=</span> <span class="n">epsilon</span> <span class="ow">or</span> <span class="n">ZeroGradient</span><span class="p">()</span>
+        <span class="n">nut</span> <span class="o">=</span> <span class="n">NutkAtmRoughWallFunction</span><span class="o">.</span><span class="n">from_ABLConditions</span><span class="p">(</span><span class="n">ABLConditions</span><span class="p">,</span>
+                                                          <span class="s1">&#39;uniform 0&#39;</span><span class="p">)</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="n">T</span> <span class="ow">or</span> <span class="n">ZeroGradient</span><span class="p">()</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">WindTunnelGroundBoundaryCondition</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="s1">&#39;wall&#39;</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">,</span> <span class="n">nut</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="WindTunnelInletBoundaryCondition"><a class="viewcode-back" href="../../butterfly.html#butterfly.boundarycondition.WindTunnelInletBoundaryCondition">[docs]</a><span class="k">class</span> <span class="nc">WindTunnelInletBoundaryCondition</span><span class="p">(</span><span class="n">BoundaryCondition</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Wind tunnel atmBoundaryLayerInletVelocity boundary condition.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        T: Optional input for Temperature.</span>
+<span class="sd">        U: OpenFOAM value for U.</span>
+<span class="sd">        p: OpenFOAM value for p.</span>
+<span class="sd">        k: OpenFOAM value for k.</span>
+<span class="sd">        epsilon: OpenFOAM value for epsilon.</span>
+<span class="sd">        nut: OpenFOAM value for nut.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ABLConditions</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nut</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init bounday condition.&quot;&quot;&quot;</span>
+        <span class="c1"># set default values for an inlet</span>
+        <span class="n">U</span> <span class="o">=</span> <span class="n">AtmBoundaryLayerInletVelocity</span><span class="o">.</span><span class="n">from_ABLConditions</span><span class="p">(</span><span class="n">ABLConditions</span><span class="p">)</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">AtmBoundaryLayerInletK</span><span class="o">.</span><span class="n">from_ABLConditions</span><span class="p">(</span><span class="n">ABLConditions</span><span class="p">)</span>
+        <span class="n">epsilon</span> <span class="o">=</span> <span class="n">AtmBoundaryLayerInletEpsilon</span><span class="o">.</span><span class="n">from_ABLConditions</span><span class="p">(</span><span class="n">ABLConditions</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">p</span> <span class="ow">or</span> <span class="n">ZeroGradient</span><span class="p">()</span>
+        <span class="n">nut</span> <span class="o">=</span> <span class="n">nut</span> <span class="ow">or</span> <span class="n">Calculated</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">)</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="n">T</span> <span class="ow">or</span> <span class="n">ZeroGradient</span><span class="p">()</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">WindTunnelInletBoundaryCondition</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="s1">&#39;patch&#39;</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">,</span> <span class="n">nut</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Bounday condition representatoin.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">velocity </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">U</span><span class="o">.</span><span class="n">Uref</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="WindTunnelOutletBoundaryCondition"><a class="viewcode-back" href="../../butterfly.html#butterfly.boundarycondition.WindTunnelOutletBoundaryCondition">[docs]</a><span class="k">class</span> <span class="nc">WindTunnelOutletBoundaryCondition</span><span class="p">(</span><span class="n">BoundaryCondition</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Outlet boundary condition for wind tunnel.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        pressure: Pressure as a float (default: 0)</span>
+<span class="sd">        T: Optional input for Temperature.</span>
+<span class="sd">        U: OpenFOAM value for U.</span>
+<span class="sd">        p: OpenFOAM value for p.</span>
+<span class="sd">        k: OpenFOAM value for k.</span>
+<span class="sd">        epsilon: OpenFOAM value for epsilon.</span>
+<span class="sd">        nut: OpenFOAM value for nut.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">U</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nut</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init bounday condition.&quot;&quot;&quot;</span>
+        <span class="c1"># set default values for an inlet</span>
+        <span class="n">U</span> <span class="o">=</span> <span class="n">U</span> <span class="ow">or</span> <span class="n">InletOutlet</span><span class="p">(</span><span class="s1">&#39;uniform (0 0 0)&#39;</span><span class="p">,</span> <span class="s1">&#39;$internalField&#39;</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">p</span> <span class="ow">or</span> <span class="n">FixedValue</span><span class="p">(</span><span class="s1">&#39;$pressure&#39;</span><span class="p">)</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">k</span> <span class="ow">or</span> <span class="n">InletOutlet</span><span class="p">(</span><span class="s1">&#39;uniform $turbulentKE&#39;</span><span class="p">,</span> <span class="s1">&#39;$internalField&#39;</span><span class="p">)</span>
+        <span class="n">epsilon</span> <span class="o">=</span> <span class="n">epsilon</span> <span class="ow">or</span> <span class="n">InletOutlet</span><span class="p">(</span><span class="s1">&#39;uniform $turbulentEpsilon&#39;</span><span class="p">,</span> <span class="s1">&#39;$internalField&#39;</span><span class="p">)</span>
+        <span class="n">nut</span> <span class="o">=</span> <span class="n">nut</span> <span class="ow">or</span> <span class="n">Calculated</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">)</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="n">T</span> <span class="ow">or</span> <span class="n">ZeroGradient</span><span class="p">()</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">WindTunnelOutletBoundaryCondition</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="s1">&#39;patch&#39;</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">,</span> <span class="n">nut</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Bounday condition representatoin.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">pressure </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="WindTunnelTopAndSidesBoundaryCondition"><a class="viewcode-back" href="../../butterfly.html#butterfly.boundarycondition.WindTunnelTopAndSidesBoundaryCondition">[docs]</a><span class="k">class</span> <span class="nc">WindTunnelTopAndSidesBoundaryCondition</span><span class="p">(</span><span class="n">BoundaryCondition</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Outlet boundary condition for top and sides of wind tunnel.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        pressure: Pressure as a float (default: 0)</span>
+<span class="sd">        T: Optional input for Temperature.</span>
+<span class="sd">        U: OpenFOAM value for U.</span>
+<span class="sd">        p: OpenFOAM value for p.</span>
+<span class="sd">        k: OpenFOAM value for k.</span>
+<span class="sd">        epsilon: OpenFOAM value for epsilon.</span>
+<span class="sd">        nut: OpenFOAM value for nut.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">U</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nut</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init bounday condition.&quot;&quot;&quot;</span>
+        <span class="c1"># set default values for an inlet</span>
+        <span class="n">U</span> <span class="o">=</span> <span class="n">U</span> <span class="ow">or</span> <span class="n">Slip</span><span class="p">()</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">p</span> <span class="ow">or</span> <span class="n">Slip</span><span class="p">()</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">k</span> <span class="ow">or</span> <span class="n">Slip</span><span class="p">()</span>
+        <span class="n">epsilon</span> <span class="o">=</span> <span class="n">epsilon</span> <span class="ow">or</span> <span class="n">Slip</span><span class="p">()</span>
+        <span class="n">nut</span> <span class="o">=</span> <span class="n">Calculated</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">)</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="n">T</span> <span class="ow">or</span> <span class="n">ZeroGradient</span><span class="p">()</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">WindTunnelTopAndSidesBoundaryCondition</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="s1">&#39;patch&#39;</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">,</span> <span class="n">nut</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Bounday condition representatoin.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">conditions</span> <span class="k">import</span> <span class="n">ABLConditions</span>
+    <span class="n">abc</span> <span class="o">=</span> <span class="n">ABLConditions</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">WindTunnelWallBoundaryCondition</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">WindTunnelInletBoundaryCondition</span><span class="p">(</span><span class="n">abc</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">WindTunnelGroundBoundaryCondition</span><span class="p">(</span><span class="n">abc</span><span class="p">))</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

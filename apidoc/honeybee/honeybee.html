@@ -1,0 +1,2159 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee package &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="honeybee.energyplus package" href="honeybee.energyplus.html" />
+    <link rel="prev" title="Welcome to honeybee’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">honeybee package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.energyplus.html">honeybee.energyplus package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.radiance.html">honeybee.radiance package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.server.html">honeybee.server package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.vectormath.html">honeybee.vectormath package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-honeybee.config">honeybee.config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-honeybee.dataoperation">honeybee.dataoperation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-honeybee.futil">honeybee.futil module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-honeybee.geometryoperation">honeybee.geometryoperation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-honeybee.hbdynamicsurface">honeybee.hbdynamicsurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-honeybee.hbfensurface">honeybee.hbfensurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-honeybee.hbobject">honeybee.hbobject module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-honeybee.hbshadesurface">honeybee.hbshadesurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-honeybee.hbsurface">honeybee.hbsurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-honeybee.hbzone">honeybee.hbzone module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-honeybee.room">honeybee.room module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-honeybee.schedule">honeybee.schedule module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-honeybee.surfaceproperties">honeybee.surfaceproperties module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-honeybee.surfacetype">honeybee.surfacetype module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-honeybee.utilcol">honeybee.utilcol module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-honeybee">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to honeybee’s documentation!</a></li>
+      <li>Next: <a href="honeybee.energyplus.html" title="next chapter">honeybee.energyplus package</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="honeybee-package">
+<h1>honeybee package<a class="headerlink" href="#honeybee-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="honeybee.energyplus.html">honeybee.energyplus package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.energyplus.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.energyplus.html#module-honeybee.energyplus.filemanager">honeybee.energyplus.filemanager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.energyplus.html#module-honeybee.energyplus.geometryrules">honeybee.energyplus.geometryrules module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.energyplus.html#module-honeybee.energyplus">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="honeybee.radiance.html">honeybee.radiance package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.radiance.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.radiance.command.html">honeybee.radiance.command package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="honeybee.radiance.command.pyRad.html">honeybee.radiance.command.pyRad package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.command.pyRad.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="honeybee.radiance.command.pyRad.pyRadLib.html">honeybee.radiance.command.pyRad.pyRadLib package</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="honeybee.radiance.command.pyRad.pyRadLib.html#submodules">Submodules</a></li>
+<li class="toctree-l8"><a class="reference internal" href="honeybee.radiance.command.pyRad.pyRadLib.html#module-honeybee.radiance.command.pyRad.pyRadLib.pyrad_proc">honeybee.radiance.command.pyRad.pyRadLib.pyrad_proc module</a></li>
+<li class="toctree-l8"><a class="reference internal" href="honeybee.radiance.command.pyRad.pyRadLib.html#module-honeybee.radiance.command.pyRad.pyRadLib">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.command.pyRad.html#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.command.pyRad.html#honeybee-radiance-command-pyrad-objview-module">honeybee.radiance.command.pyRad.objview module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.command.pyRad.html#module-honeybee.radiance.command.pyRad">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.html#module-honeybee.radiance.command.dctimestep">honeybee.radiance.command.dctimestep module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.html#module-honeybee.radiance.command.epw2wea">honeybee.radiance.command.epw2wea module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.html#module-honeybee.radiance.command.falsecolor">honeybee.radiance.command.falsecolor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.html#module-honeybee.radiance.command.genBSDF">honeybee.radiance.command.genBSDF module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.html#module-honeybee.radiance.command.gendaylit">honeybee.radiance.command.gendaylit module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.html#module-honeybee.radiance.command.gendaymtx">honeybee.radiance.command.gendaymtx module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.html#module-honeybee.radiance.command.gensky">honeybee.radiance.command.gensky module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.html#module-honeybee.radiance.command.genskyvec">honeybee.radiance.command.genskyvec module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.html#module-honeybee.radiance.command.getbbox">honeybee.radiance.command.getbbox module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.html#module-honeybee.radiance.command.getinfo">honeybee.radiance.command.getinfo module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.html#module-honeybee.radiance.command.objview">honeybee.radiance.command.objview module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.html#module-honeybee.radiance.command.oconv">honeybee.radiance.command.oconv module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.html#module-honeybee.radiance.command.pcomb">honeybee.radiance.command.pcomb module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.html#module-honeybee.radiance.command.raBmp">honeybee.radiance.command.raBmp module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.html#module-honeybee.radiance.command.raTiff">honeybee.radiance.command.raTiff module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.html#module-honeybee.radiance.command.rcalc">honeybee.radiance.command.rcalc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.html#module-honeybee.radiance.command.rcollate">honeybee.radiance.command.rcollate module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.html#module-honeybee.radiance.command.rcontrib">honeybee.radiance.command.rcontrib module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.html#module-honeybee.radiance.command.rfluxmtx">honeybee.radiance.command.rfluxmtx module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.html#module-honeybee.radiance.command.rmtxop">honeybee.radiance.command.rmtxop module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.html#module-honeybee.radiance.command.rpict">honeybee.radiance.command.rpict module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.html#module-honeybee.radiance.command.rtrace">honeybee.radiance.command.rtrace module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.html#module-honeybee.radiance.command.vwrays">honeybee.radiance.command.vwrays module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.html#module-honeybee.radiance.command.xform">honeybee.radiance.command.xform module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.command.html#module-honeybee.radiance.command">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.radiance.material.html">honeybee.radiance.material package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.material.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.material.html#module-honeybee.radiance.material.bsdf">honeybee.radiance.material.bsdf module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.material.html#module-honeybee.radiance.material.custom">honeybee.radiance.material.custom module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.material.html#module-honeybee.radiance.material.glass">honeybee.radiance.material.glass module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.material.html#module-honeybee.radiance.material.glow">honeybee.radiance.material.glow module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.material.html#module-honeybee.radiance.material.light">honeybee.radiance.material.light module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.material.html#module-honeybee.radiance.material.metal">honeybee.radiance.material.metal module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.material.html#module-honeybee.radiance.material.plastic">honeybee.radiance.material.plastic module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.material.html#module-honeybee.radiance.material">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.radiance.parameters.html">honeybee.radiance.parameters package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.parameters.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.parameters.html#module-honeybee.radiance.parameters.dctimestep">honeybee.radiance.parameters.dctimestep module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.parameters.html#module-honeybee.radiance.parameters.falsecolor">honeybee.radiance.parameters.falsecolor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.parameters.html#module-honeybee.radiance.parameters.genBsdf">honeybee.radiance.parameters.genBsdf module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.parameters.html#module-honeybee.radiance.parameters.gendaylit">honeybee.radiance.parameters.gendaylit module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.parameters.html#module-honeybee.radiance.parameters.gendaymtx">honeybee.radiance.parameters.gendaymtx module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.parameters.html#module-honeybee.radiance.parameters.gensky">honeybee.radiance.parameters.gensky module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.parameters.html#module-honeybee.radiance.parameters.gridbased">honeybee.radiance.parameters.gridbased module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.parameters.html#module-honeybee.radiance.parameters.imagebased">honeybee.radiance.parameters.imagebased module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.parameters.html#module-honeybee.radiance.parameters.oconv">honeybee.radiance.parameters.oconv module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.parameters.html#module-honeybee.radiance.parameters.pcomb">honeybee.radiance.parameters.pcomb module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.parameters.html#module-honeybee.radiance.parameters.raBmp">honeybee.radiance.parameters.raBmp module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.parameters.html#module-honeybee.radiance.parameters.raTiff">honeybee.radiance.parameters.raTiff module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.parameters.html#module-honeybee.radiance.parameters.rcalc">honeybee.radiance.parameters.rcalc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.parameters.html#module-honeybee.radiance.parameters.rcollate">honeybee.radiance.parameters.rcollate module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.parameters.html#module-honeybee.radiance.parameters.rcontrib">honeybee.radiance.parameters.rcontrib module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.parameters.html#module-honeybee.radiance.parameters.rfluxmtx">honeybee.radiance.parameters.rfluxmtx module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.parameters.html#module-honeybee.radiance.parameters.rmtxop">honeybee.radiance.parameters.rmtxop module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.parameters.html#module-honeybee.radiance.parameters.vwrays">honeybee.radiance.parameters.vwrays module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.parameters.html#module-honeybee.radiance.parameters.xform">honeybee.radiance.parameters.xform module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.parameters.html#module-honeybee.radiance.parameters">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.radiance.recipe.html">honeybee.radiance.recipe package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.recipe.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="honeybee.radiance.recipe.annual.html">honeybee.radiance.recipe.annual package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.recipe.annual.html#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.recipe.annual.html#module-honeybee.radiance.recipe.annual.gridbased">honeybee.radiance.recipe.annual.gridbased module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.recipe.annual.html#module-honeybee.radiance.recipe.annual">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="honeybee.radiance.recipe.daylightcoeff.html">honeybee.radiance.recipe.daylightcoeff package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.recipe.daylightcoeff.html#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.recipe.daylightcoeff.html#module-honeybee.radiance.recipe.daylightcoeff.gridbased">honeybee.radiance.recipe.daylightcoeff.gridbased module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.recipe.daylightcoeff.html#module-honeybee.radiance.recipe.daylightcoeff.imagebased">honeybee.radiance.recipe.daylightcoeff.imagebased module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.recipe.daylightcoeff.html#module-honeybee.radiance.recipe.daylightcoeff">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="honeybee.radiance.recipe.daylightfactor.html">honeybee.radiance.recipe.daylightfactor package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.recipe.daylightfactor.html#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.recipe.daylightfactor.html#module-honeybee.radiance.recipe.daylightfactor.gridbased">honeybee.radiance.recipe.daylightfactor.gridbased module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.recipe.daylightfactor.html#module-honeybee.radiance.recipe.daylightfactor">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="honeybee.radiance.recipe.fivephase.html">honeybee.radiance.recipe.fivephase package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.recipe.fivephase.html#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.recipe.fivephase.html#module-honeybee.radiance.recipe.fivephase.gridbased">honeybee.radiance.recipe.fivephase.gridbased module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.recipe.fivephase.html#module-honeybee.radiance.recipe.fivephase">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="honeybee.radiance.recipe.pointintime.html">honeybee.radiance.recipe.pointintime package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.recipe.pointintime.html#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.recipe.pointintime.html#module-honeybee.radiance.recipe.pointintime.gridbased">honeybee.radiance.recipe.pointintime.gridbased module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.recipe.pointintime.html#module-honeybee.radiance.recipe.pointintime.imagebased">honeybee.radiance.recipe.pointintime.imagebased module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.recipe.pointintime.html#module-honeybee.radiance.recipe.pointintime">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="honeybee.radiance.recipe.radiation.html">honeybee.radiance.recipe.radiation package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.recipe.radiation.html#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.recipe.radiation.html#module-honeybee.radiance.recipe.radiation.gridbased">honeybee.radiance.recipe.radiation.gridbased module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.recipe.radiation.html#module-honeybee.radiance.recipe.radiation">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="honeybee.radiance.recipe.solaraccess.html">honeybee.radiance.recipe.solaraccess package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.recipe.solaraccess.html#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.recipe.solaraccess.html#module-honeybee.radiance.recipe.solaraccess.gridbased">honeybee.radiance.recipe.solaraccess.gridbased module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.recipe.solaraccess.html#module-honeybee.radiance.recipe.solaraccess">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="honeybee.radiance.recipe.threephase.html">honeybee.radiance.recipe.threephase package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.recipe.threephase.html#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.recipe.threephase.html#module-honeybee.radiance.recipe.threephase.gridbased">honeybee.radiance.recipe.threephase.gridbased module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="honeybee.radiance.recipe.threephase.html#module-honeybee.radiance.recipe.threephase">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.recipe.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.recipe.html#module-honeybee.radiance.recipe.parameters">honeybee.radiance.recipe.parameters module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.recipe.html#module-honeybee.radiance.recipe.recipedcutil">honeybee.radiance.recipe.recipedcutil module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.recipe.html#module-honeybee.radiance.recipe.recipeutil">honeybee.radiance.recipe.recipeutil module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.recipe.html#module-honeybee.radiance.recipe.recipexphaseutil">honeybee.radiance.recipe.recipexphaseutil module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.recipe.html#module-honeybee.radiance.recipe">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.radiance.sky.html">honeybee.radiance.sky package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.sky.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.sky.html#module-honeybee.radiance.sky.certainIlluminance">honeybee.radiance.sky.certainIlluminance module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.sky.html#module-honeybee.radiance.sky.cie">honeybee.radiance.sky.cie module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.sky.html#module-honeybee.radiance.sky.climatebased">honeybee.radiance.sky.climatebased module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.sky.html#module-honeybee.radiance.sky.gendaylit">honeybee.radiance.sky.gendaylit module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.sky.html#module-honeybee.radiance.sky.skymatrix">honeybee.radiance.sky.skymatrix module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.sky.html#module-honeybee.radiance.sky.skyvector">honeybee.radiance.sky.skyvector module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.sky.html#module-honeybee.radiance.sky.sunmatrix">honeybee.radiance.sky.sunmatrix module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.sky.html#module-honeybee.radiance.sky">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.radiance.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.analysisgrid">honeybee.radiance.analysisgrid module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.analysispoint">honeybee.radiance.analysispoint module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.datatype">honeybee.radiance.datatype module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.filemanager">honeybee.radiance.filemanager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.geometry">honeybee.radiance.geometry module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.imagecollection">honeybee.radiance.imagecollection module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.properties">honeybee.radiance.properties module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.radfile">honeybee.radiance.radfile module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.runmanager">honeybee.radiance.runmanager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.scene">honeybee.radiance.scene module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.view">honeybee.radiance.view module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="honeybee.server.html">honeybee.server package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.server.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.server.html#module-honeybee.server.client">honeybee.server.client module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.server.html#module-honeybee.server.mpupload">honeybee.server.mpupload module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.server.html#module-honeybee.server">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="honeybee.vectormath.html">honeybee.vectormath package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.vectormath.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.vectormath.html#module-honeybee.vectormath.euclid">honeybee.vectormath.euclid module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.vectormath.html#module-honeybee.vectormath">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-honeybee.config">
+<span id="honeybee-config-module"></span><h2>honeybee.config module<a class="headerlink" href="#module-honeybee.config" title="Permalink to this headline">¶</a></h2>
+<p>Honeybee configurations.</p>
+<p>Import this module in every module that you need to access Honeybee configurations.</p>
+<p>Usage:</p>
+<blockquote>
+<div>import config
+print(config.radlib_path)
+print(config.radbin_path)
+print(config.platform)
+config.radbin_path = “c:/radiance/bin”</div></blockquote>
+<dl class="class">
+<dt id="honeybee.config.Folders">
+<em class="property">class </em><code class="descclassname">honeybee.config.</code><code class="descname">Folders</code><span class="sig-paren">(</span><em>mute=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/config.html#Folders"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.config.Folders" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Honeybee folders.</p>
+<dl class="attribute">
+<dt id="honeybee.config.Folders.mute">
+<code class="descname">mute</code><a class="headerlink" href="#honeybee.config.Folders.mute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set to True if you don’t want the class to print the report
+(Default: False)</p>
+</dd></dl>
+
+<p>Usage:</p>
+<blockquote>
+<div>folders = Folders(mute=False)
+print(folders.radbin_path)</div></blockquote>
+<dl class="attribute">
+<dt id="honeybee.config.Folders.ep_folder">
+<code class="descname">ep_folder</code><a class="headerlink" href="#honeybee.config.Folders.ep_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to EnergyPlus folder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.config.Folders.load_from_file">
+<code class="descname">load_from_file</code><span class="sig-paren">(</span><em>file_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/config.html#Folders.load_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.config.Folders.load_from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load installation folders from a json file.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.config.Folders.open_studio_path">
+<code class="descname">open_studio_path</code><a class="headerlink" href="#honeybee.config.Folders.open_studio_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set and get the path to openstudio installation folder.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.config.Folders.perl_exe_path">
+<code class="descname">perl_exe_path</code><a class="headerlink" href="#honeybee.config.Folders.perl_exe_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to perl executable file.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.config.Folders.perl_path">
+<code class="descname">perl_path</code><a class="headerlink" href="#honeybee.config.Folders.perl_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to the folder containing Perl binary files.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.config.Folders.python_exe_path">
+<code class="descname">python_exe_path</code><a class="headerlink" href="#honeybee.config.Folders.python_exe_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to Python folder.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.config.Folders.radbin_path">
+<code class="descname">radbin_path</code><a class="headerlink" href="#honeybee.config.Folders.radbin_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to Radiance binary folder.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.config.Folders.radiance_path">
+<code class="descname">radiance_path</code><a class="headerlink" href="#honeybee.config.Folders.radiance_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get and set path to radiance installation folder.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.config.Folders.radlib_path">
+<code class="descname">radlib_path</code><a class="headerlink" href="#honeybee.config.Folders.radlib_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to Radiance library folder.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="data">
+<dt id="honeybee.config.epPath">
+<code class="descclassname">honeybee.config.</code><code class="descname">epPath</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.config.epPath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to EnergyPlus folder.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="honeybee.config.perlExePath">
+<code class="descclassname">honeybee.config.</code><code class="descname">perlExePath</code><em class="property"> = 'C:/Program Files/OpenStudio 1.14.0\\strawberry-perl-5.16.2.1-32bit-portable-reduced\\perl/bin/perl.exe'</em><a class="headerlink" href="#honeybee.config.perlExePath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to the perl executable needed for some othe Radiance Scripts.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="honeybee.config.pythonExePath">
+<code class="descclassname">honeybee.config.</code><code class="descname">pythonExePath</code><em class="property"> = 'c:\\python27\\python.exe'</em><a class="headerlink" href="#honeybee.config.pythonExePath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to python executable needed for some Radiance scripts from the PyRad
+library</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="honeybee.config.radbin_path">
+<code class="descclassname">honeybee.config.</code><code class="descname">radbin_path</code><em class="property"> = 'c:\\radiance\\bin'</em><a class="headerlink" href="#honeybee.config.radbin_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to Radinace binaries folder.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="honeybee.config.radlib_path">
+<code class="descclassname">honeybee.config.</code><code class="descname">radlib_path</code><em class="property"> = 'c:\\radiance\\lib'</em><a class="headerlink" href="#honeybee.config.radlib_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to Radinace libraries folder.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="honeybee.config.wrapper">
+<code class="descclassname">honeybee.config.</code><code class="descname">wrapper</code><em class="property"> = '&quot;'</em><a class="headerlink" href="#honeybee.config.wrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for path with white space.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.dataoperation">
+<span id="honeybee-dataoperation-module"></span><h2>honeybee.dataoperation module<a class="headerlink" href="#module-honeybee.dataoperation" title="Permalink to this headline">¶</a></h2>
+<p>Collection of functions for data operation.</p>
+<dl class="function">
+<dt id="honeybee.dataoperation.flatten">
+<code class="descclassname">honeybee.dataoperation.</code><code class="descname">flatten</code><span class="sig-paren">(</span><em>input_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/dataoperation.html#flatten"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.dataoperation.flatten" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a flattened genertor from an input list.</p>
+<p>Usage:</p>
+<blockquote>
+<div>input_list = [[‘a’], [‘b’, ‘c’, ‘d’], [[‘e’]], [‘f’]]
+list(flatten(input_list))
+&gt;&gt; [‘a’, ‘b’, ‘c’, ‘d’, ‘e’, ‘f’]</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="honeybee.dataoperation.flatten_tuple_list">
+<code class="descclassname">honeybee.dataoperation.</code><code class="descname">flatten_tuple_list</code><span class="sig-paren">(</span><em>input_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/dataoperation.html#flatten_tuple_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.dataoperation.flatten_tuple_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a flattened generator from an input list of (x, y, z) tuples.</p>
+<dl class="docutils">
+<dt>Usage:</dt>
+<dd><p class="first">input_list = [[(0, 0, 0)], [(10, 0, 0), (10, 10, 0)]]
+print(list(flattenPointList(input_list)))</p>
+<p class="last">&gt;&gt; [(0, 0, 0), (10, 0, 0), (10, 10, 0)]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="honeybee.dataoperation.match_data">
+<code class="descclassname">honeybee.dataoperation.</code><code class="descname">match_data</code><span class="sig-paren">(</span><em>guide</em>, <em>follower</em>, <em>none_value=(0</em>, <em>0</em>, <em>1)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/dataoperation.html#match_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.dataoperation.match_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Match data between two lists and reomove None values.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>guide</strong> – Long list.</li>
+<li><strong>follower</strong> – Short list.</li>
+<li><strong>noneValue</strong> – Place holder for alternative values for None values in shortlist.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="honeybee.dataoperation.match_points_and_vectors">
+<code class="descclassname">honeybee.dataoperation.</code><code class="descname">match_points_and_vectors</code><span class="sig-paren">(</span><em>pts_t</em>, <em>vec_t</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/dataoperation.html#match_points_and_vectors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.dataoperation.match_points_and_vectors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert list fo data to list.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pts_t</strong> – List of lists of test points.</li>
+<li><strong>vec_t</strong> – List of lists of vectors.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Nested list of points
+vectors: Nested list of vectors</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">pts</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="honeybee.dataoperation.unflatten">
+<code class="descclassname">honeybee.dataoperation.</code><code class="descname">unflatten</code><span class="sig-paren">(</span><em>guide</em>, <em>falttened_input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/dataoperation.html#unflatten"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.dataoperation.unflatten" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unflatten a falttened generator.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>guide</strong> – A guide list to follow the structure</li>
+<li><strong>falttened_input</strong> – A flattened iterator object</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Usage:</p>
+<blockquote>
+<div>guide = iter([[“a”], [“b”,”c”,”d”], [[“e”]], [“f”]])
+input_list = [0, 1, 2, 3, 4, 5, 6, 7]
+unflatten(guide, iter(input_list))
+&gt;&gt; [[0], [1, 2, 3], [[4]], [5]]</div></blockquote>
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.futil">
+<span id="honeybee-futil-module"></span><h2>honeybee.futil module<a class="headerlink" href="#module-honeybee.futil" title="Permalink to this headline">¶</a></h2>
+<p>A collection of auxiliary funtions for working with files and directories.</p>
+<dl class="function">
+<dt id="honeybee.futil.bat_to_sh">
+<code class="descclassname">honeybee.futil.</code><code class="descname">bat_to_sh</code><span class="sig-paren">(</span><em>file_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/futil.html#bat_to_sh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.futil.bat_to_sh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert honeybee .bat file to .sh file.</p>
+<p>WARNING: This is a very simple function and doesn’t handle any edge cases.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="honeybee.futil.copy_files_to_folder">
+<code class="descclassname">honeybee.futil.</code><code class="descname">copy_files_to_folder</code><span class="sig-paren">(</span><em>files</em>, <em>target_folder</em>, <em>overwrite=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/futil.html#copy_files_to_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.futil.copy_files_to_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy a list of files to a new target folder.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of fullpath of the new files.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="honeybee.futil.get_radiance_path_lines">
+<code class="descclassname">honeybee.futil.</code><code class="descname">get_radiance_path_lines</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/futil.html#get_radiance_path_lines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.futil.get_radiance_path_lines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return path to radiance folders.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="honeybee.futil.normspace">
+<code class="descclassname">honeybee.futil.</code><code class="descname">normspace</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/futil.html#normspace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.futil.normspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Norm white spaces in path.</p>
+<p>Return path with quotation marks if there is whitespace in path.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="honeybee.futil.nukedir">
+<code class="descclassname">honeybee.futil.</code><code class="descname">nukedir</code><span class="sig-paren">(</span><em>target_dir</em>, <em>rmdir=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/futil.html#nukedir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.futil.nukedir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete all the files inside target_dir.</p>
+<dl class="docutils">
+<dt>Usage:</dt>
+<dd>nukedir(“c:/ladybug/libs”, True)</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="honeybee.futil.preparedir">
+<code class="descclassname">honeybee.futil.</code><code class="descname">preparedir</code><span class="sig-paren">(</span><em>target_dir</em>, <em>remove_content=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/futil.html#preparedir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.futil.preparedir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepare a folder for analysis.</p>
+<p>This method creates the folder if it is not created, and removes the file in
+the folder if the folder already existed.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="honeybee.futil.write_to_file">
+<code class="descclassname">honeybee.futil.</code><code class="descname">write_to_file</code><span class="sig-paren">(</span><em>file_path</em>, <em>data</em>, <em>mkdir=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/futil.html#write_to_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.futil.write_to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a string of data to file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_path</strong> – Full path for a valid file path (e.g. c:/ladybug/testPts.pts)</li>
+<li><strong>data</strong> – Any data as string</li>
+<li><strong>mkdir</strong> – Set to True to create the directory if doesn’t exist (Default: False)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="honeybee.futil.write_to_file_by_name">
+<code class="descclassname">honeybee.futil.</code><code class="descname">write_to_file_by_name</code><span class="sig-paren">(</span><em>folder</em>, <em>fname</em>, <em>data</em>, <em>mkdir=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/futil.html#write_to_file_by_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.futil.write_to_file_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a string of data to file by filename and folder.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>folder</strong> – Target folder (e.g. c:/ladybug).</li>
+<li><strong>fname</strong> – File name (e.g. testPts.pts).</li>
+<li><strong>data</strong> – Any data as string.</li>
+<li><strong>mkdir</strong> – Set to True to create the directory if doesn’t exist (Default: False).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.geometryoperation">
+<span id="honeybee-geometryoperation-module"></span><h2>honeybee.geometryoperation module<a class="headerlink" href="#module-honeybee.geometryoperation" title="Permalink to this headline">¶</a></h2>
+<p>Collection of methods for geometrical operations.</p>
+<dl class="function">
+<dt id="honeybee.geometryoperation.center_point_from_points">
+<code class="descclassname">honeybee.geometryoperation.</code><code class="descname">center_point_from_points</code><span class="sig-paren">(</span><em>pts</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/geometryoperation.html#center_point_from_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.geometryoperation.center_point_from_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate center point.</p>
+<p>This method finds the center point by averging x, y and z values.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="honeybee.geometryoperation.normal_from_points">
+<code class="descclassname">honeybee.geometryoperation.</code><code class="descname">normal_from_points</code><span class="sig-paren">(</span><em>pts</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/geometryoperation.html#normal_from_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.geometryoperation.normal_from_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate normal vector for a list of points.</p>
+<p>This method uses the pts[-1], pts[0] and pts[1] to calculate the normal
+assuming the points are representing a planar surface</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="honeybee.geometryoperation.strip_point_list">
+<code class="descclassname">honeybee.geometryoperation.</code><code class="descname">strip_point_list</code><span class="sig-paren">(</span><em>pts</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/geometryoperation.html#strip_point_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.geometryoperation.strip_point_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flatten a list of list of points.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="honeybee.geometryoperation.up_vector_from_points">
+<code class="descclassname">honeybee.geometryoperation.</code><code class="descname">up_vector_from_points</code><span class="sig-paren">(</span><em>pts</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/geometryoperation.html#up_vector_from_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.geometryoperation.up_vector_from_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate up vector for a surface from points.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="honeybee.geometryoperation.vector_angle">
+<code class="descclassname">honeybee.geometryoperation.</code><code class="descname">vector_angle</code><span class="sig-paren">(</span><em>vector1</em>, <em>vector2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/geometryoperation.html#vector_angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.geometryoperation.vector_angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate vector angle between two vectors.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="honeybee.geometryoperation.vector_angle_to_z_axis">
+<code class="descclassname">honeybee.geometryoperation.</code><code class="descname">vector_angle_to_z_axis</code><span class="sig-paren">(</span><em>vector</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/geometryoperation.html#vector_angle_to_z_axis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.geometryoperation.vector_angle_to_z_axis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate angle between vectoe and (0, 0, 1) in degrees.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.hbdynamicsurface">
+<span id="honeybee-hbdynamicsurface-module"></span><h2>honeybee.hbdynamicsurface module<a class="headerlink" href="#module-honeybee.hbdynamicsurface" title="Permalink to this headline">¶</a></h2>
+<p>A honeybee surface with multiple states.</p>
+<dl class="class">
+<dt id="honeybee.hbdynamicsurface.HBDynamicSurface">
+<em class="property">class </em><code class="descclassname">honeybee.hbdynamicsurface.</code><code class="descname">HBDynamicSurface</code><span class="sig-paren">(</span><em>name</em>, <em>sorted_points=[]</em>, <em>surface_type=None</em>, <em>is_name_set_by_user=False</em>, <em>is_type_set_by_user=False</em>, <em>rad_properties=None</em>, <em>ep_properties=None</em>, <em>states=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/hbdynamicsurface.html#HBDynamicSurface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.hbdynamicsurface.HBDynamicSurface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.hbsurface.HBSurface" title="honeybee.hbsurface.HBSurface"><code class="xref py py-class docutils literal"><span class="pre">honeybee.hbsurface.HBSurface</span></code></a></p>
+<p>Base class for Honeybee surface.</p>
+<dl class="attribute">
+<dt id="honeybee.hbdynamicsurface.HBDynamicSurface.name">
+<code class="descname">name</code><a class="headerlink" href="#honeybee.hbdynamicsurface.HBDynamicSurface.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>A unique string for surface name</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbdynamicsurface.HBDynamicSurface.sorted_points">
+<code class="descname">sorted_points</code><a class="headerlink" href="#honeybee.hbdynamicsurface.HBDynamicSurface.sorted_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of 3 points or more as tuple or list with three items
+(x, y, z). Points should be sorted. This class won’t sort the points.
+If surfaces has multiple subsurfaces you can pass lists of point lists
+to this function (e.g. ((0, 0, 0), (10, 0, 0), (0, 10, 0))).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbdynamicsurface.HBDynamicSurface.surface_type">
+<code class="descname">surface_type</code><a class="headerlink" href="#honeybee.hbdynamicsurface.HBDynamicSurface.surface_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optional input for surface type. You can use any of the surface
+types available from surfacetype libraries or use a float number to
+indicate the type. If not indicated it will be assigned based on normal
+angle of the surface which will be calculated from surface points.</p>
+<blockquote>
+<div>0.0: Wall           0.5: UndergroundWall
+1.0: Roof           1.5: UndergroundCeiling
+2.0: Floor          2.25: UndergroundSlab
+2.5: SlabOnGrade    2.75: ExposedFloor
+3.0: Ceiling        4.0: AirWall
+6.0: Context</div></blockquote>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbdynamicsurface.HBDynamicSurface.is_name_set_by_user">
+<code class="descname">is_name_set_by_user</code><a class="headerlink" href="#honeybee.hbdynamicsurface.HBDynamicSurface.is_name_set_by_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>If you want the name to be changed by honeybee any case
+set is_name_set_by_user to True. Default is set to False which let Honeybee
+to rename the surface in cases like creating a newHBZone.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbdynamicsurface.HBDynamicSurface.rad_properties">
+<code class="descname">rad_properties</code><a class="headerlink" href="#honeybee.hbdynamicsurface.HBDynamicSurface.rad_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radiance properties for this surface. If empty default
+RADProperties will be assigned to surface by Honeybee.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbdynamicsurface.HBDynamicSurface.ep_properties">
+<code class="descname">ep_properties</code><a class="headerlink" href="#honeybee.hbdynamicsurface.HBDynamicSurface.ep_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>EnergyPlus properties for this surface. If empty default
+ep_properties will be assigned to surface by Honeybee.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbdynamicsurface.HBDynamicSurface.states">
+<code class="descname">states</code><a class="headerlink" href="#honeybee.hbdynamicsurface.HBDynamicSurface.states" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of SurfaceStates for this dynamic surface.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbdynamicsurface.HBDynamicSurface.isHBDynamicSurface">
+<code class="descname">isHBDynamicSurface</code><a class="headerlink" href="#honeybee.hbdynamicsurface.HBDynamicSurface.isHBDynamicSurface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the surface is HBDynamicSurface.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.hbfensurface">
+<span id="honeybee-hbfensurface-module"></span><h2>honeybee.hbfensurface module<a class="headerlink" href="#module-honeybee.hbfensurface" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.hbfensurface.HBFenSurface">
+<em class="property">class </em><code class="descclassname">honeybee.hbfensurface.</code><code class="descname">HBFenSurface</code><span class="sig-paren">(</span><em>name</em>, <em>sorted_points=None</em>, <em>is_name_set_by_user=False</em>, <em>rad_properties=None</em>, <em>ep_properties=None</em>, <em>states=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/hbfensurface.html#HBFenSurface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.hbfensurface.HBFenSurface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee._hbanalysissurface.HBAnalysisSurface</span></code></p>
+<p>Honeybee fenestration surface.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> – A unique string for surface name</li>
+<li><strong>sorted_points</strong> – A list of 3 points or more as tuple or list with three items
+(x, y, z). Points should be sorted. This class won’t sort the points.
+If surfaces has multiple subsurfaces you can pass lists of point lists
+to this function (e.g. ((0, 0, 0), (10, 0, 0), (0, 10, 0))).</li>
+<li><strong>is_name_set_by_user</strong> – If you want the name to be changed by honeybee any case
+set is_name_set_by_user to True. Default is set to False which let Honeybee
+to rename the surface in cases like creating a newHBZone.</li>
+<li><strong>rad_properties</strong> – Radiance properties for this surface. If empty default
+RADProperties will be assigned to surface by Honeybee.</li>
+<li><strong>ep_properties</strong> – EnergyPlus properties for this surface. If empty default
+ep_properties will be assigned to surface by Honeybee.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Usage:</p>
+<blockquote>
+<div><p>from honeybee.hbsurface import HBSurface
+from honeybee.hbfensurface import HBFenSurface</p>
+<p># create a surface
+pts = [(0, 0, 0), (10, 0, 0), (0, 0, 10)]
+hbsrf = HBSurface(“001”, pts, surface_type=None, is_name_set_by_user=True)</p>
+<p>glzpts = [(1, 0, 1), (8, 0, 1), (1, 0, 8)]
+glzsrf = HBFenSurface(“glz_001”, glzpts)</p>
+<p># add fenestration surface to hb surface
+hbsrf.add_fenestration_surface(glzsrf)</p>
+<p># get full definiion of the surface including the fenestration
+print(hbsrf.to_rad_string(include_materials=True))</p>
+<p># save the definiion to a .rad file
+hbsrf.rad_string_to_file(r”c:/ladybug/triangle.rad”, include_materials=True)</p>
+</div></blockquote>
+<dl class="classmethod">
+<dt id="honeybee.hbfensurface.HBFenSurface.from_ep_string">
+<em class="property">classmethod </em><code class="descname">from_ep_string</code><span class="sig-paren">(</span><em>ep_string</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/hbfensurface.html#HBFenSurface.from_ep_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.hbfensurface.HBFenSurface.from_ep_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Init Honeybee fenestration surface from an ep_string.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ep_string</strong> – The full ep_string for an EnergyPlus fenestration.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.hbfensurface.HBFenSurface.from_geometry">
+<em class="property">classmethod </em><code class="descname">from_geometry</code><span class="sig-paren">(</span><em>name</em>, <em>geometry</em>, <em>is_name_set_by_user=False</em>, <em>rad_properties=None</em>, <em>ep_properties=None</em>, <em>states=None</em>, <em>group=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/hbfensurface.html#HBFenSurface.from_geometry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.hbfensurface.HBFenSurface.from_geometry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a honeybee fenestration surface from Grasshopper geometry.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbfensurface.HBFenSurface.geometry">
+<code class="descname">geometry</code><a class="headerlink" href="#honeybee.hbfensurface.HBFenSurface.geometry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return geometry.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbfensurface.HBFenSurface.isHBFenSurface">
+<code class="descname">isHBFenSurface</code><a class="headerlink" href="#honeybee.hbfensurface.HBFenSurface.isHBFenSurface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True for HBFenSurface.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbfensurface.HBFenSurface.is_child_surface">
+<code class="descname">is_child_surface</code><a class="headerlink" href="#honeybee.hbfensurface.HBFenSurface.is_child_surface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if Honeybee surface is Fenestration Surface.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbfensurface.HBFenSurface.is_created_from_geometry">
+<code class="descname">is_created_from_geometry</code><a class="headerlink" href="#honeybee.hbfensurface.HBFenSurface.is_created_from_geometry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if the surface is created from a geometry not points.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbfensurface.HBFenSurface.parent">
+<code class="descname">parent</code><a class="headerlink" href="#honeybee.hbfensurface.HBFenSurface.parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return parent surface for this fenestration surface.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbfensurface.HBFenSurface.profile">
+<code class="descname">profile</code><a class="headerlink" href="#honeybee.hbfensurface.HBFenSurface.profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get profile curve of this surface.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.hbobject">
+<span id="honeybee-hbobject-module"></span><h2>honeybee.hbobject module<a class="headerlink" href="#module-honeybee.hbobject" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.hbobject.HBObject">
+<em class="property">class </em><code class="descclassname">honeybee.hbobject.</code><code class="descname">HBObject</code><a class="reference internal" href="_modules/honeybee/hbobject.html#HBObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.hbobject.HBObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Base class for Honeybee Zone and Surface.</p>
+<dl class="attribute">
+<dt id="honeybee.hbobject.HBObject.isHBObject">
+<code class="descname">isHBObject</code><a class="headerlink" href="#honeybee.hbobject.HBObject.isHBObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.hbshadesurface">
+<span id="honeybee-hbshadesurface-module"></span><h2>honeybee.hbshadesurface module<a class="headerlink" href="#module-honeybee.hbshadesurface" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.hbshadesurface.HBShadingSurface">
+<em class="property">class </em><code class="descclassname">honeybee.hbshadesurface.</code><code class="descname">HBShadingSurface</code><span class="sig-paren">(</span><em>name</em>, <em>sorted_points=[]</em>, <em>is_name_set_by_user=False</em>, <em>rad_properties=None</em>, <em>ep_properties=None</em>, <em>states=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/hbshadesurface.html#HBShadingSurface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.hbshadesurface.HBShadingSurface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee._hbanalysissurface.HBAnalysisSurface</span></code></p>
+<p>Honeybee shading surface.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> – A unique string for surface name</li>
+<li><strong>sorted_points</strong> – A list of 3 points or more as tuple or list with three items
+(x, y, z). Points should be sorted. This class won’t sort the points.
+If surfaces has multiple subsurfaces you can pass lists of point lists
+to this function (e.g. ((0, 0, 0), (10, 0, 0), (0, 10, 0))).</li>
+<li><strong>is_name_set_by_user</strong> – If you want the name to be changed by honeybee any case
+set is_name_set_by_user to True. Default is set to False which let Honeybee
+to rename the surface in cases like creating a newHBZone.</li>
+<li><strong>rad_properties</strong> – Radiance properties for this surface. If empty default
+RADProperties will be assigned to surface by Honeybee.</li>
+<li><strong>ep_properties</strong> – EnergyPlus properties for this surface. If empty default
+ep_properties will be assigned to surface by Honeybee.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="classmethod">
+<dt id="honeybee.hbshadesurface.HBShadingSurface.from_ep_string">
+<em class="property">classmethod </em><code class="descname">from_ep_string</code><span class="sig-paren">(</span><em>ep_string</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/hbshadesurface.html#HBShadingSurface.from_ep_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.hbshadesurface.HBShadingSurface.from_ep_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Init Honeybee shading from an ep_string.</p>
+<p>Supported types are Shading:Site:Detailed, Shading:Building:Detailed,
+Shading:Zone:Detailed</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ep_string</strong> – The full ep_string for an EnergyPlus shading object.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbshadesurface.HBShadingSurface.isHBShadingSurface">
+<code class="descname">isHBShadingSurface</code><a class="headerlink" href="#honeybee.hbshadesurface.HBShadingSurface.isHBShadingSurface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True for HBFenSurface.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbshadesurface.HBShadingSurface.is_child_surface">
+<code class="descname">is_child_surface</code><a class="headerlink" href="#honeybee.hbshadesurface.HBShadingSurface.is_child_surface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if Honeybee surface is Fenestration Surface.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbshadesurface.HBShadingSurface.parent">
+<code class="descname">parent</code><a class="headerlink" href="#honeybee.hbshadesurface.HBShadingSurface.parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get or set parent zone.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.hbsurface">
+<span id="honeybee-hbsurface-module"></span><h2>honeybee.hbsurface module<a class="headerlink" href="#module-honeybee.hbsurface" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.hbsurface.HBSurface">
+<em class="property">class </em><code class="descclassname">honeybee.hbsurface.</code><code class="descname">HBSurface</code><span class="sig-paren">(</span><em>name</em>, <em>sorted_points=[]</em>, <em>surface_type=None</em>, <em>is_name_set_by_user=False</em>, <em>is_type_set_by_user=False</em>, <em>rad_properties=None</em>, <em>ep_properties=None</em>, <em>states=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/hbsurface.html#HBSurface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.hbsurface.HBSurface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee._hbanalysissurface.HBAnalysisSurface</span></code></p>
+<p>Base class for Honeybee surface.</p>
+<dl class="attribute">
+<dt id="honeybee.hbsurface.HBSurface.name">
+<code class="descname">name</code><a class="headerlink" href="#honeybee.hbsurface.HBSurface.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>A unique string for surface name</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbsurface.HBSurface.sorted_points">
+<code class="descname">sorted_points</code><a class="headerlink" href="#honeybee.hbsurface.HBSurface.sorted_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of 3 points or more as tuple or list with three items
+(x, y, z). Points should be sorted. This class won’t sort the points.
+If surfaces has multiple subsurfaces you can pass lists of point lists
+to this function (e.g. ((0, 0, 0), (10, 0, 0), (0, 10, 0))).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbsurface.HBSurface.surface_type">
+<code class="descname">surface_type</code><a class="headerlink" href="#honeybee.hbsurface.HBSurface.surface_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optional input for surface type. You can use any of the surface
+types available from surfacetype libraries or use a float number to
+indicate the type. If not indicated it will be assigned based on normal
+angle of the surface which will be calculated from surface points.</p>
+<blockquote>
+<div>0.0: Wall           0.5: UndergroundWall
+1.0: Roof           1.5: UndergroundCeiling
+2.0: Floor          2.25: UndergroundSlab
+2.5: SlabOnGrade    2.75: ExposedFloor
+3.0: Ceiling        4.0: AirWall
+6.0: Context</div></blockquote>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbsurface.HBSurface.is_name_set_by_user">
+<code class="descname">is_name_set_by_user</code><a class="headerlink" href="#honeybee.hbsurface.HBSurface.is_name_set_by_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>If you want the name to be changed by honeybee any case
+set is_name_set_by_user to True. Default is set to False which let Honeybee
+to rename the surface in cases like creating a newHBZone.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbsurface.HBSurface.rad_properties">
+<code class="descname">rad_properties</code><a class="headerlink" href="#honeybee.hbsurface.HBSurface.rad_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radiance properties for this surface. If empty default
+RADProperties will be assigned to surface by Honeybee.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbsurface.HBSurface.ep_properties">
+<code class="descname">ep_properties</code><a class="headerlink" href="#honeybee.hbsurface.HBSurface.ep_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>EnergyPlus properties for this surface. If empty default
+ep_properties will be assigned to surface by Honeybee.</p>
+</dd></dl>
+
+<p>Usage:</p>
+<blockquote>
+<div><p>pts = ((0, 0, 0), (10, 0, 0), (0, 0, 10))
+hbsrf = HBSurface(“001”, pts, surface_type=None, is_name_set_by_user=True,</p>
+<blockquote>
+<div>is_type_set_by_user=True)</div></blockquote>
+<p>print(hbsrf.to_rad_string(include_materials=True))</p>
+<p>&gt; void plastic generic_wall
+&gt; 0
+&gt; 0
+&gt; 5 0.500 0.500 0.500 0.000 0.000
+&gt; generic_wall polygon 001
+&gt; 0
+&gt; 0
+&gt; 9
+&gt; 0 0 0
+&gt; 10 0 0
+&gt; 0 10 10</p>
+</div></blockquote>
+<dl class="method">
+<dt id="honeybee.hbsurface.HBSurface.add_fenestration_surface">
+<code class="descname">add_fenestration_surface</code><span class="sig-paren">(</span><em>fenestration_surface</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/hbsurface.html#HBSurface.add_fenestration_surface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.hbsurface.HBSurface.add_fenestration_surface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a fenestration surface to HB surface.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.hbsurface.HBSurface.add_fenestration_surface_by_size">
+<code class="descname">add_fenestration_surface_by_size</code><span class="sig-paren">(</span><em>name</em>, <em>width</em>, <em>height</em>, <em>sill_height=1</em>, <em>radiance_material=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/hbsurface.html#HBSurface.add_fenestration_surface_by_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.hbsurface.HBSurface.add_fenestration_surface_by_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add rectangular fenestration surface to surface.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>width</strong> – Opening width. Opening will be centered in HBSurface.</li>
+<li><strong>height</strong> – Opening height.</li>
+<li><strong>sill_height</strong> – Sill height (default: 1).</li>
+<li><strong>radiance_material</strong> – Optional radiance material for this fenestration.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbsurface.HBSurface.children_surfaces">
+<code class="descname">children_surfaces</code><a class="headerlink" href="#honeybee.hbsurface.HBSurface.children_surfaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get children surfaces.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.hbsurface.HBSurface.from_ep_string">
+<em class="property">classmethod </em><code class="descname">from_ep_string</code><span class="sig-paren">(</span><em>ep_string</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/hbsurface.html#HBSurface.from_ep_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.hbsurface.HBSurface.from_ep_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Init Honeybee surface from an ep_string.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ep_string</strong> – The full ep_string for an EnergyPlus surface.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.hbsurface.HBSurface.from_geometry">
+<em class="property">classmethod </em><code class="descname">from_geometry</code><span class="sig-paren">(</span><em>name</em>, <em>geometry</em>, <em>surface_type=None</em>, <em>is_name_set_by_user=False</em>, <em>is_type_set_by_user=False</em>, <em>rad_properties=None</em>, <em>ep_properties=None</em>, <em>states=None</em>, <em>group=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/hbsurface.html#HBSurface.from_geometry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.hbsurface.HBSurface.from_geometry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create honeybee surface[s] from a Grasshopper geometry.</p>
+<p>If group is False it will return a list of HBSurfaces.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbsurface.HBSurface.geometry">
+<code class="descname">geometry</code><a class="headerlink" href="#honeybee.hbsurface.HBSurface.geometry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return geometry.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbsurface.HBSurface.has_child_surfaces">
+<code class="descname">has_child_surfaces</code><a class="headerlink" href="#honeybee.hbsurface.HBSurface.has_child_surfaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if Honeybee surface has Fenestration surrfaces.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbsurface.HBSurface.isHBSurface">
+<code class="descname">isHBSurface</code><a class="headerlink" href="#honeybee.hbsurface.HBSurface.isHBSurface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True for HBSurface.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbsurface.HBSurface.is_child_surface">
+<code class="descname">is_child_surface</code><a class="headerlink" href="#honeybee.hbsurface.HBSurface.is_child_surface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return False for HBSurface.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbsurface.HBSurface.is_created_from_geometry">
+<code class="descname">is_created_from_geometry</code><a class="headerlink" href="#honeybee.hbsurface.HBSurface.is_created_from_geometry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if the surface is created from a geometry not points.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbsurface.HBSurface.parent">
+<code class="descname">parent</code><a class="headerlink" href="#honeybee.hbsurface.HBSurface.parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get or set parent zone.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbsurface.HBSurface.profile">
+<code class="descname">profile</code><a class="headerlink" href="#honeybee.hbsurface.HBSurface.profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get profile curve of this surface.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.hbzone">
+<span id="honeybee-hbzone-module"></span><h2>honeybee.hbzone module<a class="headerlink" href="#module-honeybee.hbzone" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.hbzone.HBZone">
+<em class="property">class </em><code class="descclassname">honeybee.hbzone.</code><code class="descname">HBZone</code><span class="sig-paren">(</span><em>name=None</em>, <em>origin=(0</em>, <em>0</em>, <em>0)</em>, <em>geometry_rules=None</em>, <em>building_program=None</em>, <em>zone_program=None</em>, <em>is_conditioned=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/hbzone.html#HBZone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.hbzone.HBZone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.hbobject.HBObject" title="honeybee.hbobject.HBObject"><code class="xref py py-class docutils literal"><span class="pre">honeybee.hbobject.HBObject</span></code></a></p>
+<p>Honeybee base class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> – Unique name for this zone.</li>
+<li><strong>origin</strong> – Zone origin point (default: 0, 0, 0)</li>
+<li><strong>geometry_rules</strong> – EnergyPlus geometry_rules. (default: “LowerLeftCorner”;
+“CounterClockWise”; “Absolute”)</li>
+<li><strong>building_program</strong> – HBZone building program.</li>
+<li><strong>zone_program</strong> – Specific program for this zone from the available building
+programs.</li>
+<li><strong>is_conditioned</strong> – A boolean that indicates if the zone is conditioned.
+(default: True)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="honeybee.hbzone.HBZone.ToString">
+<code class="descname">ToString</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/hbzone.html#HBZone.ToString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.hbzone.HBZone.ToString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrite .NET ToString.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.hbzone.HBZone.add_surface">
+<code class="descname">add_surface</code><span class="sig-paren">(</span><em>surface</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/hbzone.html#HBZone.add_surface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.hbzone.HBZone.add_surface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a surface to Honeybee zone.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbzone.HBZone.ceilings">
+<code class="descname">ceilings</code><a class="headerlink" href="#honeybee.hbzone.HBZone.ceilings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get ceilings surfaces.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbzone.HBZone.children_surfaces">
+<code class="descname">children_surfaces</code><a class="headerlink" href="#honeybee.hbzone.HBZone.children_surfaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get list of children Surfaces for this zone.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbzone.HBZone.floors">
+<code class="descname">floors</code><a class="headerlink" href="#honeybee.hbzone.HBZone.floors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get floor surfaces.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.hbzone.HBZone.from_ep_string">
+<em class="property">classmethod </em><code class="descname">from_ep_string</code><span class="sig-paren">(</span><em>ep_string</em>, <em>geometry_rules=None</em>, <em>building_program=None</em>, <em>zone_program=None</em>, <em>is_conditioned=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/hbzone.html#HBZone.from_ep_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.hbzone.HBZone.from_ep_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Init Honeybee zone from an ep_string.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ep_string</strong> – The full ep_string for an EnergyPlus Zone.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbzone.HBZone.geometry">
+<code class="descname">geometry</code><a class="headerlink" href="#honeybee.hbzone.HBZone.geometry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return zone geometry for visualization.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbzone.HBZone.geometry_rules">
+<code class="descname">geometry_rules</code><a class="headerlink" href="#honeybee.hbzone.HBZone.geometry_rules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get and set global geometry rules for this zone.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbzone.HBZone.isHBZone">
+<code class="descname">isHBZone</code><a class="headerlink" href="#honeybee.hbzone.HBZone.isHBZone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if a HBZone.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbzone.HBZone.is_relative_system">
+<code class="descname">is_relative_system</code><a class="headerlink" href="#honeybee.hbzone.HBZone.is_relative_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if coordinate system is relative.</p>
+<p>To find the absolute coordinate values in a relative system you should
+add surface coordinates to zone origin.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbzone.HBZone.name">
+<code class="descname">name</code><a class="headerlink" href="#honeybee.hbzone.HBZone.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Zone name</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbzone.HBZone.origin">
+<code class="descname">origin</code><a class="headerlink" href="#honeybee.hbzone.HBZone.origin" title="Permalink to this definition">¶</a></dt>
+<dd><p>origin of the zone.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbzone.HBZone.profile">
+<code class="descname">profile</code><a class="headerlink" href="#honeybee.hbzone.HBZone.profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return zone profile for visualization.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.hbzone.HBZone.rad_string_to_file">
+<code class="descname">rad_string_to_file</code><span class="sig-paren">(</span><em>file_path</em>, <em>mode=1</em>, <em>include_materials=False</em>, <em>flipped=False</em>, <em>blacked=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/hbzone.html#HBZone.rad_string_to_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.hbzone.HBZone.rad_string_to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write Radiance definition for this surface to a file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filepath</strong> – Full filepath (e.g c:/ladybug/geo.rad).</li>
+<li><strong>mode</strong> – An integer 0-2 (Default: 1)
+0 - Do not include children surfaces.
+1 - Include children surfaces.
+2 - Only children surfaces.</li>
+<li><strong>include_materials</strong> – Set to False if you only want the geometry definition
+(default:True).</li>
+<li><strong>flipped</strong> – Flip the surface geometry.</li>
+<li><strong>blacked</strong> – If True materials will all be set to plastic 0 0 0 0 0.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbzone.HBZone.radiance_materials">
+<code class="descname">radiance_materials</code><a class="headerlink" href="#honeybee.hbzone.HBZone.radiance_materials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get list of Radiance materials for zone including fenestration.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbzone.HBZone.surfaces">
+<code class="descname">surfaces</code><a class="headerlink" href="#honeybee.hbzone.HBZone.surfaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get list of HBSurfaces for this zone.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.hbzone.HBZone.to_rad_file">
+<code class="descname">to_rad_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/hbzone.html#HBZone.to_rad_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.hbzone.HBZone.to_rad_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a RadFile like object.</p>
+<p>Use this method to get easy access to radiance geometries and materials for this
+zone. For a full definition as a string use to_rad_string method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.hbzone.HBZone.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>mode=1</em>, <em>include_materials=False</em>, <em>flipped=False</em>, <em>blacked=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/hbzone.html#HBZone.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.hbzone.HBZone.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get full radiance file as a string.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>mode</strong> – An integer 0-2 (Default: 1)
+0 - Do not include children surfaces.
+1 - Include children surfaces.
+2 - Only children surfaces.</li>
+<li><strong>include_materials</strong> – Set to False if you only want the geometry definition
+(default:True).</li>
+<li><strong>flipped</strong> – Flip the surface geometry.</li>
+<li><strong>blacked</strong> – If True materials will all be set to plastic 0 0 0 0 0.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.hbzone.HBZone.walls">
+<code class="descname">walls</code><a class="headerlink" href="#honeybee.hbzone.HBZone.walls" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get wall surfaces.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.room">
+<span id="honeybee-room-module"></span><h2>honeybee.room module<a class="headerlink" href="#module-honeybee.room" title="Permalink to this headline">¶</a></h2>
+<p>Honeybee test room.</p>
+<p>This class generates prototype rooms.</p>
+<dl class="class">
+<dt id="honeybee.room.Room">
+<em class="property">class </em><code class="descclassname">honeybee.room.</code><code class="descname">Room</code><span class="sig-paren">(</span><em>origin=(0</em>, <em>0</em>, <em>0)</em>, <em>width=3</em>, <em>depth=6</em>, <em>height=3.2</em>, <em>rotation_angle=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/room.html#Room"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.room.Room" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.hbzone.HBZone" title="honeybee.hbzone.HBZone"><code class="xref py py-class docutils literal"><span class="pre">honeybee.hbzone.HBZone</span></code></a></p>
+<p>Honeybee room.</p>
+<dl class="docutils">
+<dt>Attribute:</dt>
+<dd>origin: Origin of the room as a tuple (default: (0, 0, 0)).
+width: Room width.
+depth: Room depth.
+height: Room height.
+rotationAngle: Clock-wise rotation angle of the room from YAxis.</dd>
+</dl>
+<dl class="method">
+<dt id="honeybee.room.Room.add_fenestration_surface">
+<code class="descname">add_fenestration_surface</code><span class="sig-paren">(</span><em>wall_name</em>, <em>width</em>, <em>height</em>, <em>sill_height</em>, <em>radiance_material=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/room.html#Room.add_fenestration_surface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.room.Room.add_fenestration_surface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add rectangular fenestration surface to surface.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>wall_name</strong> – Target wall name (back, right, front, left)</li>
+<li><strong>width</strong> – Opening width. Opening will be centered in HBSurface.</li>
+<li><strong>height</strong> – Opening height.</li>
+<li><strong>sill_height</strong> – Sill height (default: 1).</li>
+<li><strong>radiance_material</strong> – Optional radiance material for this fenestration.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Usage:</p>
+<blockquote>
+<div><p>r = Room()
+for pt in r.generate_test_points():</p>
+<blockquote>
+<div>print(pt)</div></blockquote>
+<p>r.add_fenestration_surface(‘back’, 2, 2, .7)
+r.add_fenestration_surface(‘right’, 4, 1.5, .5)
+r.add_fenestration_surface(‘right’, 4, 0.5, 2.2)
+with open(‘c:/ladybug/room.rad’, ‘wb’) as outf:</p>
+<blockquote>
+<div>outf.write(r.to_rad_string(include_materials=True))</div></blockquote>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.room.Room.generate_interior_view">
+<code class="descname">generate_interior_view</code><span class="sig-paren">(</span><em>u=0.5</em>, <em>v=0.5</em>, <em>z=0.5</em>, <em>angle=0</em>, <em>view_up_vector=(0</em>, <em>0</em>, <em>1)</em>, <em>view_type=0</em>, <em>view_h_size=60</em>, <em>view_v_size=60</em>, <em>x_resolution=64</em>, <em>y_resolution=64</em>, <em>view_shift=0</em>, <em>view_lift=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/room.html#Room.generate_interior_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.room.Room.generate_interior_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate an inetrior view.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>angle</strong> – Rotation angle from back wall.</li>
+<li><strong>view_up_vector</strong> – Set the view up (-vu) vector (vertical direction) to
+(x, y, z).cDefault: (0, 0, 1)</li>
+<li><strong>view_type</strong> – <dl class="docutils">
+<dt>Set view type (-vt) to one of the choices below.</dt>
+<dd>0: Perspective (v)
+1: Hemispherical fisheye (h)
+2: Parallel (l)
+3: Cylindrical panorma (c)
+4: Angular fisheye (a)
+5: Planisphere [stereographic] projection (s)</dd>
+</dl>
+<p>For more detailed description about view types check rpict manual
+page: (<a class="reference external" href="http://radsite.lbl.gov/radiance/man_html/rpict.1.html">http://radsite.lbl.gov/radiance/man_html/rpict.1.html</a>)</p>
+</li>
+<li><strong>view_h_size</strong> – Set the view horizontal size (-vs). For a perspective
+projection (including fisheye views), val is the horizontal field
+of view (in degrees). For a parallel projection, val is the view
+width in world coordinates.</li>
+<li><strong>view_v_size</strong> – Set the view vertical size (-vv). For a perspective
+projection (including fisheye views), val is the horizontal field
+of view (in degrees). For a parallel projection, val is the view
+width in world coordinates.</li>
+<li><strong>x_resolution</strong> – Set the maximum x resolution (-x) to an integer.</li>
+<li><strong>y_resolution</strong> – Set the maximum y resolution (-y) to an integer.</li>
+<li><strong>view_shift</strong> – Set the view shift (-vs). This is the amount the actual
+image will be shifted to the right of the specified view. This
+option is useful for generating skewed perspectives or rendering
+an image a piece at a time. A value of 1 means that the rendered
+image starts just to the right of the normal view. A value of −1
+would be to the left. Larger or fractional values are permitted
+as well.</li>
+<li><strong>view_lift</strong> – Set the view lift (-vl) to a value. This is the amount the
+actual image will be lifted up from the specified view.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.room.Room.generate_test_points">
+<code class="descname">generate_test_points</code><span class="sig-paren">(</span><em>grid_size=1</em>, <em>height=0.75</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/room.html#Room.generate_test_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.room.Room.generate_test_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a grid of test points in the room.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>grid_size</strong> – Size of test grid.</li>
+<li><strong>height</strong> – Test points height.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.room.Room.get_location">
+<code class="descname">get_location</code><span class="sig-paren">(</span><em>u=0.5</em>, <em>v=0.5</em>, <em>z=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/room.html#Room.get_location"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.room.Room.get_location" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get location as a point based on u, v, z.</p>
+<p>u, v, z must be between 0..1.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.room.Room.vertices">
+<code class="descname">vertices</code><a class="headerlink" href="#honeybee.room.Room.vertices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the room vertices.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.schedule">
+<span id="honeybee-schedule-module"></span><h2>honeybee.schedule module<a class="headerlink" href="#module-honeybee.schedule" title="Permalink to this headline">¶</a></h2>
+<p>Honeybee schedule.</p>
+<p>Use this class to create schecules.</p>
+<dl class="class">
+<dt id="honeybee.schedule.Schedule">
+<em class="property">class </em><code class="descclassname">honeybee.schedule.</code><code class="descname">Schedule</code><span class="sig-paren">(</span><em>values</em>, <em>hoys=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/schedule.html#Schedule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.schedule.Schedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Schedule.</p>
+<dl class="attribute">
+<dt id="honeybee.schedule.Schedule.values">
+<code class="descname">values</code><a class="headerlink" href="#honeybee.schedule.Schedule.values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Schedule values.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.schedule.Schedule.hoys">
+<code class="descname">hoys</code><a class="headerlink" href="#honeybee.schedule.Schedule.hoys" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of hours of the year for this values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.schedule.Schedule.ToString">
+<code class="descname">ToString</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/schedule.html#Schedule.ToString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.schedule.Schedule.ToString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrite .NET ToString.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.schedule.Schedule.from_analysis_period">
+<em class="property">classmethod </em><code class="descname">from_analysis_period</code><span class="sig-paren">(</span><em>occ_period=None</em>, <em>off_hours=None</em>, <em>weekend=None</em>, <em>default_value=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/schedule.html#Schedule.from_analysis_period"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.schedule.Schedule.from_analysis_period" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a schedule from Ladybug’s AnalysisPeriod.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>occ_period</strong> – An analysis period for occupancy. Default is (8, 17).</li>
+<li><strong>off_hours</strong> – A list of hours that building is unoccupied during the occupancy
+period everyday (e.g. lunch break). Default is an hour lunch break at
+(12, 13). Use -1 for no break during the day.</li>
+<li><strong>weekend</strong> – A list of numbers to indicate the weekend days. [0] None, [1-7] MON
+to SUN. Default is 6, 7 (SAT, SUN).</li>
+<li><strong>default_value</strong> – Default value for occupancy hours (Default: 1).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.schedule.Schedule.from_workday_hours">
+<em class="property">classmethod </em><code class="descname">from_workday_hours</code><span class="sig-paren">(</span><em>occ_hours=None</em>, <em>off_hours=None</em>, <em>weekend=None</em>, <em>default_value=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/schedule.html#Schedule.from_workday_hours"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.schedule.Schedule.from_workday_hours" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a schedule from Ladybug’s AnalysisPeriod.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>occ_hours</strong> – Start and end hour of work day as a tuple. Default is (8, 17).</li>
+<li><strong>off_hours</strong> – A list of hours that building is unoccupied during the occupancy
+period everyday (e.g. lunch break). Default is an hour lunch break at
+(12, 13). Use -1 for no break during the day.</li>
+<li><strong>weekend</strong> – A list of numbers to indicate the weekend days. [0] None, [1-7] MON
+to SUN. Default is 6, 7 (SAT, SUN).</li>
+<li><strong>default_value</strong> – Default value for occupancy hours (Default: 1).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.schedule.Schedule.hours">
+<code class="descname">hours</code><a class="headerlink" href="#honeybee.schedule.Schedule.hours" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tuple of values in this schedule.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.schedule.Schedule.occupied_hours">
+<code class="descname">occupied_hours</code><a class="headerlink" href="#honeybee.schedule.Schedule.occupied_hours" title="Permalink to this definition">¶</a></dt>
+<dd><p>Occupied hours of the year as a set.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">values</code></dt>
+<dd><p>Tuple of values in this schedule.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.schedule.Schedule.write">
+<code class="descname">write</code><span class="sig-paren">(</span><em>file_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/schedule.html#Schedule.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.schedule.Schedule.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the schedule to a csv file.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.surfaceproperties">
+<span id="honeybee-surfaceproperties-module"></span><h2>honeybee.surfaceproperties module<a class="headerlink" href="#module-honeybee.surfaceproperties" title="Permalink to this headline">¶</a></h2>
+<p>Surface Properties.</p>
+<p>A class that contains both radiance and energyplus properties which can be applied to a
+surface or a list of honeybee surfaces.</p>
+<dl class="class">
+<dt id="honeybee.surfaceproperties.SurfaceProperties">
+<em class="property">class </em><code class="descclassname">honeybee.surfaceproperties.</code><code class="descname">SurfaceProperties</code><span class="sig-paren">(</span><em>surface_type=None</em>, <em>rad_properties=None</em>, <em>ep_properties=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/surfaceproperties.html#SurfaceProperties"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfaceproperties.SurfaceProperties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Surface data for a single state.</p>
+<p>This class is useful to define several states for one or a group of HBSurfaces. Each
+state can has a different material and add additional geometry to the scene. You can
+add the states to each HBSurface using HBSurface.addState.</p>
+<dl class="attribute">
+<dt id="honeybee.surfaceproperties.SurfaceProperties.surface_type">
+<code class="descname">surface_type</code><a class="headerlink" href="#honeybee.surfaceproperties.SurfaceProperties.surface_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>A honeybee surface type (Default: surfacetype.Wall).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.surfaceproperties.SurfaceProperties.rad_properties">
+<code class="descname">rad_properties</code><a class="headerlink" href="#honeybee.surfaceproperties.SurfaceProperties.rad_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radiance properties for this surface. If empty default
+RADProperties will be assigned based on surface type once assigned
+to a surface.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.surfaceproperties.SurfaceProperties.ep_properties">
+<code class="descname">ep_properties</code><a class="headerlink" href="#honeybee.surfaceproperties.SurfaceProperties.ep_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>EnergyPlus properties for this surface. If empty default
+ep_properties will be assigned based on surface type once assigned
+to a surface.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.surfaceproperties.SurfaceProperties.ToString">
+<code class="descname">ToString</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/surfaceproperties.html#SurfaceProperties.ToString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfaceproperties.SurfaceProperties.ToString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrite .NET ToString method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.surfaceproperties.SurfaceProperties.isSurfaceProperties">
+<code class="descname">isSurfaceProperties</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/surfaceproperties.html#SurfaceProperties.isSurfaceProperties"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfaceproperties.SurfaceProperties.isSurfaceProperties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True for states.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.surfaceproperties.SurfaceProperties.rad_material_from_type">
+<code class="descname">rad_material_from_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/surfaceproperties.html#SurfaceProperties.rad_material_from_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfaceproperties.SurfaceProperties.rad_material_from_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get default radiance material for the surface type.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">rad_properties</code></dt>
+<dd><p>Get and set Radiance properties.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">surface_type</code></dt>
+<dd><p>Get and set Surface Type.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.surfaceproperties.SurfaceState">
+<em class="property">class </em><code class="descclassname">honeybee.surfaceproperties.</code><code class="descname">SurfaceState</code><span class="sig-paren">(</span><em>name</em>, <em>surface_properties=None</em>, <em>surfaces=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/surfaceproperties.html#SurfaceState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfaceproperties.SurfaceState" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A HBSurface State.</p>
+<p>A state includes surface data for a single state which includes SurfaceProperties
+and optional additional HBSurfaces.</p>
+<p>This class is useful to define several states for one or a group of HBSurfaces. Each
+state can have different material and add additional geometry to the scene. You can
+add the states to a HBSurface using HBSurface.addState.</p>
+<p>Both Attributes are optional but at least one of them should be provided to make the
+state meaningful.</p>
+<dl class="attribute">
+<dt id="honeybee.surfaceproperties.SurfaceState.name">
+<code class="descname">name</code><a class="headerlink" href="#honeybee.surfaceproperties.SurfaceState.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name as a string.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.surfaceproperties.SurfaceState.surface_properties">
+<code class="descname">surface_properties</code><a class="headerlink" href="#honeybee.surfaceproperties.SurfaceState.surface_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of SurfaceProperties (Default: None).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.surfaceproperties.SurfaceState.surfaces">
+<code class="descname">surfaces</code><a class="headerlink" href="#honeybee.surfaceproperties.SurfaceState.surfaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of HBSurfaces to be added to the scene. For multi-phase
+daylight simulation hb_surfaces can only be located outside the room
+(Default: None).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.surfaceproperties.SurfaceState.ToString">
+<code class="descname">ToString</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/surfaceproperties.html#SurfaceState.ToString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfaceproperties.SurfaceState.ToString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrite .NET ToString method.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.surfaceproperties.SurfaceState.isSurfaceState">
+<code class="descname">isSurfaceState</code><a class="headerlink" href="#honeybee.surfaceproperties.SurfaceState.isSurfaceState" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if a SurfaceState.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">name</code></dt>
+<dd><p>The name of this state.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.surfaceproperties.SurfaceState.rad_properties">
+<code class="descname">rad_properties</code><a class="headerlink" href="#honeybee.surfaceproperties.SurfaceState.rad_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get Radiance material from SurfaceProperties.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.surfaceproperties.SurfaceState.radiance_material">
+<code class="descname">radiance_material</code><a class="headerlink" href="#honeybee.surfaceproperties.SurfaceState.radiance_material" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get Radiance material from SurfaceProperties.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.surfaceproperties.SurfaceState.radiance_materials">
+<code class="descname">radiance_materials</code><span class="sig-paren">(</span><em>blacked=False</em>, <em>to_rad_string=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/surfaceproperties.html#SurfaceState.radiance_materials"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfaceproperties.SurfaceState.radiance_materials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the full list of materials for surfaces.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">surface_properties</code></dt>
+<dd><p>SurfaceProperties for this state.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">surfaces</code></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.surfaceproperties.SurfaceState.to_rad_string">
+<code class="descname">to_rad_string</code><span class="sig-paren">(</span><em>mode=1</em>, <em>include_materials=False</em>, <em>flipped=False</em>, <em>blacked=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/surfaceproperties.html#SurfaceState.to_rad_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfaceproperties.SurfaceState.to_rad_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get surfaces as a RadFile. Use str(to_rad_string) to get the full str.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>mode</strong> – An integer 0-2 (Default: 1)
+0 - Do not include children surfaces.
+1 - Include children surfaces.
+2 - Only children surfaces.</li>
+<li><strong>include_materials</strong> – Set to False if you only want the geometry definition
+(default:True).</li>
+<li><strong>flipped</strong> – Flip the surface geometry.</li>
+<li><strong>blacked</strong> – If True materials will all be set to plastic 0 0 0 0 0.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.surfacetype">
+<span id="honeybee-surfacetype-module"></span><h2>honeybee.surfacetype module<a class="headerlink" href="#module-honeybee.surfacetype" title="Permalink to this headline">¶</a></h2>
+<p>Honeybee surface types (e.g. wall, roof, etc.).</p>
+<dl class="class">
+<dt id="honeybee.surfacetype.AirWall">
+<em class="property">class </em><code class="descclassname">honeybee.surfacetype.</code><code class="descname">AirWall</code><a class="reference internal" href="_modules/honeybee/surfacetype.html#AirWall"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfacetype.AirWall" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.surfacetype.SurfaceTypeBase" title="honeybee.surfacetype.SurfaceTypeBase"><code class="xref py py-class docutils literal"><span class="pre">honeybee.surfacetype.SurfaceTypeBase</span></code></a></p>
+<p>Air wall.</p>
+<p>Virtual wall to define zones inside a space. AirWalls don’t exist in reality.</p>
+<dl class="attribute">
+<dt id="honeybee.surfacetype.AirWall.radiance_material">
+<code class="descname">radiance_material</code><em class="property"> = void glass generic_glass 0 0 4 1.089 1.089 1.089 1.520</em><a class="headerlink" href="#honeybee.surfacetype.AirWall.radiance_material" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default Radiance material.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.surfacetype.AirWall.typeId">
+<code class="descname">typeId</code><em class="property"> = 4</em><a class="headerlink" href="#honeybee.surfacetype.AirWall.typeId" title="Permalink to this definition">¶</a></dt>
+<dd><p>Surface type id.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.surfacetype.Ceiling">
+<em class="property">class </em><code class="descclassname">honeybee.surfacetype.</code><code class="descname">Ceiling</code><a class="reference internal" href="_modules/honeybee/surfacetype.html#Ceiling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfacetype.Ceiling" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.surfacetype.SurfaceTypeBase" title="honeybee.surfacetype.SurfaceTypeBase"><code class="xref py py-class docutils literal"><span class="pre">honeybee.surfacetype.SurfaceTypeBase</span></code></a></p>
+<p>Ceiling.</p>
+<dl class="attribute">
+<dt id="honeybee.surfacetype.Ceiling.radiance_material">
+<code class="descname">radiance_material</code><em class="property"> = void plastic generic_ceiling 0 0 5 0.800 0.800 0.800 0.000 0.000</em><a class="headerlink" href="#honeybee.surfacetype.Ceiling.radiance_material" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default Radiance material.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.surfacetype.Ceiling.typeId">
+<code class="descname">typeId</code><em class="property"> = 3</em><a class="headerlink" href="#honeybee.surfacetype.Ceiling.typeId" title="Permalink to this definition">¶</a></dt>
+<dd><p>Surface type id.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.surfacetype.Context">
+<em class="property">class </em><code class="descclassname">honeybee.surfacetype.</code><code class="descname">Context</code><a class="reference internal" href="_modules/honeybee/surfacetype.html#Context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfacetype.Context" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.surfacetype.SurfaceTypeBase" title="honeybee.surfacetype.SurfaceTypeBase"><code class="xref py py-class docutils literal"><span class="pre">honeybee.surfacetype.SurfaceTypeBase</span></code></a></p>
+<p>Context surfaces.</p>
+<dl class="attribute">
+<dt id="honeybee.surfacetype.Context.radiance_material">
+<code class="descname">radiance_material</code><em class="property"> = void plastic generic_shading 0 0 5 0.350 0.350 0.350 0.000 0.000</em><a class="headerlink" href="#honeybee.surfacetype.Context.radiance_material" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default Radiance material.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.surfacetype.Context.typeId">
+<code class="descname">typeId</code><em class="property"> = 6</em><a class="headerlink" href="#honeybee.surfacetype.Context.typeId" title="Permalink to this definition">¶</a></dt>
+<dd><p>Surface type id.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.surfacetype.ExposedFloor">
+<em class="property">class </em><code class="descclassname">honeybee.surfacetype.</code><code class="descname">ExposedFloor</code><a class="reference internal" href="_modules/honeybee/surfacetype.html#ExposedFloor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfacetype.ExposedFloor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.surfacetype.SurfaceTypeBase" title="honeybee.surfacetype.SurfaceTypeBase"><code class="xref py py-class docutils literal"><span class="pre">honeybee.surfacetype.SurfaceTypeBase</span></code></a></p>
+<p>Exposed Floor.</p>
+<p>Part of the floor/slab the is cantilevered.</p>
+<dl class="attribute">
+<dt id="honeybee.surfacetype.ExposedFloor.radiance_material">
+<code class="descname">radiance_material</code><em class="property"> = void plastic generic_floor 0 0 5 0.200 0.200 0.200 0.000 0.000</em><a class="headerlink" href="#honeybee.surfacetype.ExposedFloor.radiance_material" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default Radiance material.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.surfacetype.ExposedFloor.typeId">
+<code class="descname">typeId</code><em class="property"> = 2.75</em><a class="headerlink" href="#honeybee.surfacetype.ExposedFloor.typeId" title="Permalink to this definition">¶</a></dt>
+<dd><p>Surface type id.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.surfacetype.Floor">
+<em class="property">class </em><code class="descclassname">honeybee.surfacetype.</code><code class="descname">Floor</code><a class="reference internal" href="_modules/honeybee/surfacetype.html#Floor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfacetype.Floor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.surfacetype.SurfaceTypeBase" title="honeybee.surfacetype.SurfaceTypeBase"><code class="xref py py-class docutils literal"><span class="pre">honeybee.surfacetype.SurfaceTypeBase</span></code></a></p>
+<p>Floor.</p>
+<dl class="attribute">
+<dt id="honeybee.surfacetype.Floor.radiance_material">
+<code class="descname">radiance_material</code><em class="property"> = void plastic generic_floor 0 0 5 0.200 0.200 0.200 0.000 0.000</em><a class="headerlink" href="#honeybee.surfacetype.Floor.radiance_material" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default Radiance material.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.surfacetype.Floor.typeId">
+<code class="descname">typeId</code><em class="property"> = 2.0</em><a class="headerlink" href="#honeybee.surfacetype.Floor.typeId" title="Permalink to this definition">¶</a></dt>
+<dd><p>Surface type id.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.surfacetype.Roof">
+<em class="property">class </em><code class="descclassname">honeybee.surfacetype.</code><code class="descname">Roof</code><a class="reference internal" href="_modules/honeybee/surfacetype.html#Roof"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfacetype.Roof" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.surfacetype.SurfaceTypeBase" title="honeybee.surfacetype.SurfaceTypeBase"><code class="xref py py-class docutils literal"><span class="pre">honeybee.surfacetype.SurfaceTypeBase</span></code></a></p>
+<p>Roof.</p>
+<dl class="attribute">
+<dt id="honeybee.surfacetype.Roof.radiance_material">
+<code class="descname">radiance_material</code><em class="property"> = void plastic generic_roof 0 0 5 0.800 0.800 0.800 0.000 0.000</em><a class="headerlink" href="#honeybee.surfacetype.Roof.radiance_material" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default Radiance material.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.surfacetype.Roof.typeId">
+<code class="descname">typeId</code><em class="property"> = 1.0</em><a class="headerlink" href="#honeybee.surfacetype.Roof.typeId" title="Permalink to this definition">¶</a></dt>
+<dd><p>Surface type id.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.surfacetype.SlabOnGrade">
+<em class="property">class </em><code class="descclassname">honeybee.surfacetype.</code><code class="descname">SlabOnGrade</code><a class="reference internal" href="_modules/honeybee/surfacetype.html#SlabOnGrade"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfacetype.SlabOnGrade" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.surfacetype.SurfaceTypeBase" title="honeybee.surfacetype.SurfaceTypeBase"><code class="xref py py-class docutils literal"><span class="pre">honeybee.surfacetype.SurfaceTypeBase</span></code></a></p>
+<p>Slab on Grade.</p>
+<p>Any floor that is touching the ground. z=0</p>
+<dl class="attribute">
+<dt id="honeybee.surfacetype.SlabOnGrade.radiance_material">
+<code class="descname">radiance_material</code><em class="property"> = void plastic generic_floor 0 0 5 0.200 0.200 0.200 0.000 0.000</em><a class="headerlink" href="#honeybee.surfacetype.SlabOnGrade.radiance_material" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default Radiance material.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.surfacetype.SlabOnGrade.typeId">
+<code class="descname">typeId</code><em class="property"> = 2.5</em><a class="headerlink" href="#honeybee.surfacetype.SlabOnGrade.typeId" title="Permalink to this definition">¶</a></dt>
+<dd><p>Surface type id.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.surfacetype.SurfaceTypeBase">
+<em class="property">class </em><code class="descclassname">honeybee.surfacetype.</code><code class="descname">SurfaceTypeBase</code><a class="reference internal" href="_modules/honeybee/surfacetype.html#SurfaceTypeBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfacetype.SurfaceTypeBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Base class for surface types.</p>
+<dl class="method">
+<dt id="honeybee.surfacetype.SurfaceTypeBase.ToString">
+<code class="descname">ToString</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/surfacetype.html#SurfaceTypeBase.ToString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfacetype.SurfaceTypeBase.ToString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrite .NET ToString method.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.surfacetype.SurfaceTypeBase.energyPlusConstruction">
+<code class="descname">energyPlusConstruction</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.surfacetype.SurfaceTypeBase.energyPlusConstruction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default EnergyPlus Construction.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.surfacetype.SurfaceTypeBase.isSurfaceType">
+<code class="descname">isSurfaceType</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/surfacetype.html#SurfaceTypeBase.isSurfaceType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfacetype.SurfaceTypeBase.isSurfaceType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True for surface types.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.surfacetype.SurfaceTypeBase.radiance_material">
+<code class="descname">radiance_material</code><em class="property"> = None</em><a class="headerlink" href="#honeybee.surfacetype.SurfaceTypeBase.radiance_material" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default Radiance material.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.surfacetype.SurfaceTypeBase.typeId">
+<code class="descname">typeId</code><em class="property"> = -1</em><a class="headerlink" href="#honeybee.surfacetype.SurfaceTypeBase.typeId" title="Permalink to this definition">¶</a></dt>
+<dd><p>Surface type id.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.surfacetype.SurfaceTypes">
+<em class="property">class </em><code class="descclassname">honeybee.surfacetype.</code><code class="descname">SurfaceTypes</code><a class="reference internal" href="_modules/honeybee/surfacetype.html#SurfaceTypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfacetype.SurfaceTypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Collection of surface types.</p>
+<p>0.0: Wall,
+0.5: UndergroundWall,
+1.0: Roof,
+1.5: UndergroundCeiling,
+2.0: Floor,
+2.25: UndergroundSlab,
+2.5: SlabOnGrade,
+2.75: ExposedFloor,
+3.0: Ceiling,
+4.0: AirWall,
+5.0: Window,
+6.0: Context</p>
+<dl class="classmethod">
+<dt id="honeybee.surfacetype.SurfaceTypes.by_normal_angle_and_points">
+<em class="property">classmethod </em><code class="descname">by_normal_angle_and_points</code><span class="sig-paren">(</span><em>normal_angle</em>, <em>points=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/surfacetype.html#SurfaceTypes.by_normal_angle_and_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfacetype.SurfaceTypes.by_normal_angle_and_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get surface type based on surface normal angle to Z axis.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>normal_angle</strong> – Angle between surface normal and z axis in degrees.</li>
+<li><strong>points</strong> – List of surface points. If not provided the base type will
+be returned.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Surface type as SurfaceTypeBase object.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="honeybee.surfacetype.SurfaceTypes.get_base_type_by_normal_angle">
+<em class="property">static </em><code class="descname">get_base_type_by_normal_angle</code><span class="sig-paren">(</span><em>angle_to_z_axis</em>, <em>maximum_roof_angle=30</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/surfacetype.html#SurfaceTypes.get_base_type_by_normal_angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfacetype.SurfaceTypes.get_base_type_by_normal_angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get based type of the surface.</p>
+<p>This method does calculte base methods as wall,roof and floor</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>angle_to_z_axis</strong> – Angle between surface normal and z_axis in degrees.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Wall, 1: Roof, 2: Floor</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">An integer between 0-2 0</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.surfacetype.SurfaceTypes.get_type_by_key">
+<em class="property">classmethod </em><code class="descname">get_type_by_key</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/surfacetype.html#SurfaceTypes.get_type_by_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfacetype.SurfaceTypes.get_type_by_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return type based on key value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> – 0.0: Wall, 0.5: UndergroundWall,
+1.0: Roof, 1.5: UndergroundCeiling,
+2.0: Floor, 2.25: UndergroundSlab,
+2.5: SlabOnGrade, 2.75: ExposedFloor,
+3.0: Ceiling,
+4.0: AirWall,
+5.0: Window,
+6.0: Context</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>Usage:</dt>
+<dd>srf_type = SurfaceTypes.get_type_by_key(6)</dd>
+</dl>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="honeybee.surfacetype.SurfaceTypes.is_surface_on_ground">
+<em class="property">static </em><code class="descname">is_surface_on_ground</code><span class="sig-paren">(</span><em>pts</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/surfacetype.html#SurfaceTypes.is_surface_on_ground"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfacetype.SurfaceTypes.is_surface_on_ground" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if this surface is on the ground.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="honeybee.surfacetype.SurfaceTypes.is_surface_underground">
+<em class="property">static </em><code class="descname">is_surface_underground</code><span class="sig-paren">(</span><em>pts</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/surfacetype.html#SurfaceTypes.is_surface_underground"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfacetype.SurfaceTypes.is_surface_underground" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if this surface is underground.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.surfacetype.SurfaceTypes.re_evaluate_surface_type">
+<code class="descname">re_evaluate_surface_type</code><span class="sig-paren">(</span><em>base_surface_type</em>, <em>pts</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/surfacetype.html#SurfaceTypes.re_evaluate_surface_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfacetype.SurfaceTypes.re_evaluate_surface_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Re-evaluate base type for special types.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.surfacetype.UndergroundCeiling">
+<em class="property">class </em><code class="descclassname">honeybee.surfacetype.</code><code class="descname">UndergroundCeiling</code><a class="reference internal" href="_modules/honeybee/surfacetype.html#UndergroundCeiling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfacetype.UndergroundCeiling" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.surfacetype.SurfaceTypeBase" title="honeybee.surfacetype.SurfaceTypeBase"><code class="xref py py-class docutils literal"><span class="pre">honeybee.surfacetype.SurfaceTypeBase</span></code></a></p>
+<p>Underground Ceiling.</p>
+<dl class="attribute">
+<dt id="honeybee.surfacetype.UndergroundCeiling.radiance_material">
+<code class="descname">radiance_material</code><em class="property"> = void plastic generic_wall 0 0 5 0.500 0.500 0.500 0.000 0.000</em><a class="headerlink" href="#honeybee.surfacetype.UndergroundCeiling.radiance_material" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default Radiance material.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.surfacetype.UndergroundCeiling.typeId">
+<code class="descname">typeId</code><em class="property"> = 1.5</em><a class="headerlink" href="#honeybee.surfacetype.UndergroundCeiling.typeId" title="Permalink to this definition">¶</a></dt>
+<dd><p>Surface type id.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.surfacetype.UndergroundSlab">
+<em class="property">class </em><code class="descclassname">honeybee.surfacetype.</code><code class="descname">UndergroundSlab</code><a class="reference internal" href="_modules/honeybee/surfacetype.html#UndergroundSlab"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfacetype.UndergroundSlab" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.surfacetype.SurfaceTypeBase" title="honeybee.surfacetype.SurfaceTypeBase"><code class="xref py py-class docutils literal"><span class="pre">honeybee.surfacetype.SurfaceTypeBase</span></code></a></p>
+<p>Underground slab.</p>
+<p>Any floor that is located under ground (z &lt; 0)</p>
+<dl class="attribute">
+<dt id="honeybee.surfacetype.UndergroundSlab.radiance_material">
+<code class="descname">radiance_material</code><em class="property"> = void plastic generic_floor 0 0 5 0.200 0.200 0.200 0.000 0.000</em><a class="headerlink" href="#honeybee.surfacetype.UndergroundSlab.radiance_material" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default Radiance material.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.surfacetype.UndergroundSlab.typeId">
+<code class="descname">typeId</code><em class="property"> = 2.25</em><a class="headerlink" href="#honeybee.surfacetype.UndergroundSlab.typeId" title="Permalink to this definition">¶</a></dt>
+<dd><p>Surface type id.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.surfacetype.UndergroundWall">
+<em class="property">class </em><code class="descclassname">honeybee.surfacetype.</code><code class="descname">UndergroundWall</code><a class="reference internal" href="_modules/honeybee/surfacetype.html#UndergroundWall"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfacetype.UndergroundWall" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.surfacetype.SurfaceTypeBase" title="honeybee.surfacetype.SurfaceTypeBase"><code class="xref py py-class docutils literal"><span class="pre">honeybee.surfacetype.SurfaceTypeBase</span></code></a></p>
+<p>Underground wall.</p>
+<dl class="attribute">
+<dt id="honeybee.surfacetype.UndergroundWall.radiance_material">
+<code class="descname">radiance_material</code><em class="property"> = void plastic generic_wall 0 0 5 0.500 0.500 0.500 0.000 0.000</em><a class="headerlink" href="#honeybee.surfacetype.UndergroundWall.radiance_material" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default Radiance material.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.surfacetype.UndergroundWall.typeId">
+<code class="descname">typeId</code><em class="property"> = 0.5</em><a class="headerlink" href="#honeybee.surfacetype.UndergroundWall.typeId" title="Permalink to this definition">¶</a></dt>
+<dd><p>Surface type id.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.surfacetype.Wall">
+<em class="property">class </em><code class="descclassname">honeybee.surfacetype.</code><code class="descname">Wall</code><a class="reference internal" href="_modules/honeybee/surfacetype.html#Wall"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfacetype.Wall" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.surfacetype.SurfaceTypeBase" title="honeybee.surfacetype.SurfaceTypeBase"><code class="xref py py-class docutils literal"><span class="pre">honeybee.surfacetype.SurfaceTypeBase</span></code></a></p>
+<p>Wall.</p>
+<dl class="attribute">
+<dt id="honeybee.surfacetype.Wall.radiance_material">
+<code class="descname">radiance_material</code><em class="property"> = void plastic generic_wall 0 0 5 0.500 0.500 0.500 0.000 0.000</em><a class="headerlink" href="#honeybee.surfacetype.Wall.radiance_material" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default Radiance material.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.surfacetype.Wall.typeId">
+<code class="descname">typeId</code><em class="property"> = 0.0</em><a class="headerlink" href="#honeybee.surfacetype.Wall.typeId" title="Permalink to this definition">¶</a></dt>
+<dd><p>Surface type id.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.surfacetype.Window">
+<em class="property">class </em><code class="descclassname">honeybee.surfacetype.</code><code class="descname">Window</code><a class="reference internal" href="_modules/honeybee/surfacetype.html#Window"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.surfacetype.Window" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.surfacetype.SurfaceTypeBase" title="honeybee.surfacetype.SurfaceTypeBase"><code class="xref py py-class docutils literal"><span class="pre">honeybee.surfacetype.SurfaceTypeBase</span></code></a></p>
+<p>Window surfaces.</p>
+<dl class="attribute">
+<dt id="honeybee.surfacetype.Window.radiance_material">
+<code class="descname">radiance_material</code><em class="property"> = void glass generic_glass 0 0 4 0.654 0.654 0.654 1.520</em><a class="headerlink" href="#honeybee.surfacetype.Window.radiance_material" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default Radiance material.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.surfacetype.Window.typeId">
+<code class="descname">typeId</code><em class="property"> = 5</em><a class="headerlink" href="#honeybee.surfacetype.Window.typeId" title="Permalink to this definition">¶</a></dt>
+<dd><p>Surface type id.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.utilcol">
+<span id="honeybee-utilcol-module"></span><h2>honeybee.utilcol module<a class="headerlink" href="#module-honeybee.utilcol" title="Permalink to this headline">¶</a></h2>
+<p>A collection of useful utilities for Honeybee</p>
+<dl class="function">
+<dt id="honeybee.utilcol.check_name">
+<code class="descclassname">honeybee.utilcol.</code><code class="descname">check_name</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/utilcol.html#check_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.utilcol.check_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if a name is a valid honeybee name.</p>
+<p>A valid name can only have alphabet, digits, - and _.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="honeybee.utilcol.random_name">
+<code class="descclassname">honeybee.utilcol.</code><code class="descname">random_name</code><span class="sig-paren">(</span><em>shorten=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/utilcol.html#random_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.utilcol.random_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a random name as a string using uuid.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>shorten</strong> – If True the name will be the first to segment of uuid.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-honeybee" title="Permalink to this headline">¶</a></h2>
+<p>Honeybee core library.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/honeybee.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

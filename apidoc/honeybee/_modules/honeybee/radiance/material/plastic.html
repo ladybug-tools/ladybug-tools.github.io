@@ -1,0 +1,285 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.material.plastic &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../index.html">
+    <img class="logo" src="../../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.material.plastic</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Radiance Plastic Material.</span>
+
+<span class="sd">http://radsite.lbl.gov/radiance/refer/ray.html#Plastic</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">_materialbase</span> <span class="k">import</span> <span class="n">RadianceMaterial</span>
+
+
+<div class="viewcode-block" id="PlasticMaterial"><a class="viewcode-back" href="../../../../honeybee.radiance.material.html#honeybee.surfacetype.PlasticMaterial">[docs]</a><span class="k">class</span> <span class="nc">PlasticMaterial</span><span class="p">(</span><span class="n">RadianceMaterial</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Radiance plastic material.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">r_reflectance</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">g_reflectance</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b_reflectance</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">specularity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">roughness</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">modifier</span><span class="o">=</span><span class="s2">&quot;void&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create plastic material.</span>
+
+<span class="sd">        Attributes:</span>
+<span class="sd">            name: Material name as a string. Do not use white space and special</span>
+<span class="sd">                character.</span>
+<span class="sd">            r_reflectance: Reflectance for red. The value should be between 0 and 1</span>
+<span class="sd">                (Default: 0).</span>
+<span class="sd">            g_reflectance: Reflectance for green. The value should be between 0 and 1</span>
+<span class="sd">                (Default: 0).</span>
+<span class="sd">            b_reflectance: Reflectance for blue. The value should be between 0 and 1</span>
+<span class="sd">                (Default: 0).</span>
+<span class="sd">            specularity: Fraction of specularity. Specularity fractions greater than 0.1</span>
+<span class="sd">                are not realistic (Default: 0).</span>
+<span class="sd">            roughness: Roughness is specified as the rms slope of surface facets. A</span>
+<span class="sd">                value of 0 corresponds to a perfectly smooth surface, and a value of 1</span>
+<span class="sd">                would be a very rough surface. Roughness values greater than 0.2 are not</span>
+<span class="sd">                very realistic. (Default: 0).</span>
+<span class="sd">            modifier: Material modifier (Default: &quot;void&quot;).</span>
+
+<span class="sd">        Usage:</span>
+<span class="sd">            wallMaterial = PlasticMaterial(&quot;generic wall&quot;, .55, .65, .75)</span>
+<span class="sd">            print(wallMaterial)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">RadianceMaterial</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">material_type</span><span class="o">=</span><span class="s2">&quot;plastic&quot;</span><span class="p">,</span> <span class="n">modifier</span><span class="o">=</span><span class="s2">&quot;void&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">r_reflectance</span> <span class="o">=</span> <span class="n">r_reflectance</span>
+        <span class="sd">&quot;&quot;&quot;Reflectance for red. The value should be between 0 and 1 (Default: 0).&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">g_reflectance</span> <span class="o">=</span> <span class="n">g_reflectance</span>
+        <span class="sd">&quot;&quot;&quot;Reflectance for green. The value should be between 0 and 1 (Default: 0).&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_reflectance</span> <span class="o">=</span> <span class="n">b_reflectance</span>
+        <span class="sd">&quot;&quot;&quot;Reflectance for blue. The value should be between 0 and 1 (Default: 0).&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">specularity</span> <span class="o">=</span> <span class="n">specularity</span>
+        <span class="sd">&quot;&quot;&quot;Fraction of specularity. Specularity fractions greater than 0.1 are not</span>
+<span class="sd">           realistic (Default: 0).&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">roughness</span> <span class="o">=</span> <span class="n">roughness</span>
+        <span class="sd">&quot;&quot;&quot;Roughness is specified as the rms slope of surface facets. A value of 0</span>
+<span class="sd">           corresponds to a perfectly smooth surface, and a value of 1 would be a</span>
+<span class="sd">           very rough surface. Roughness values greater than 0.2 are not very realistic.</span>
+<span class="sd">           (Default: 0).&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PlasticMaterial.by_single_reflect_value"><a class="viewcode-back" href="../../../../honeybee.radiance.material.html#honeybee.surfacetype.PlasticMaterial.by_single_reflect_value">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">by_single_reflect_value</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">rgb_reflectance</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">specularity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                <span class="n">roughness</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">modifier</span><span class="o">=</span><span class="s2">&quot;void&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create plastic material with single reflectance value.</span>
+
+<span class="sd">        Attributes:</span>
+<span class="sd">            name: Material name as a string. Do not use white space and special character</span>
+<span class="sd">            rgb_reflectance: Reflectance for red, green and blue. The value should be</span>
+<span class="sd">                between 0 and 1 (Default: 0).</span>
+<span class="sd">            specularity: Fraction of specularity. Specularity fractions greater than 0.1</span>
+<span class="sd">                are not realistic (Default: 0).</span>
+<span class="sd">            roughness: Roughness is specified as the rms slope of surface facets. A value</span>
+<span class="sd">                of 0 corresponds to a perfectly smooth surface, and a value of 1 would be</span>
+<span class="sd">                a very rough surface. Roughness values greater than 0.2 are not very</span>
+<span class="sd">                realistic. (Default: 0).</span>
+<span class="sd">            modifier: Material modifier (Default: &quot;void&quot;).</span>
+
+<span class="sd">        Usage:</span>
+<span class="sd">            wallMaterial = PlasticMaterial.by_single_reflect_value(&quot;generic wall&quot;, .55)</span>
+<span class="sd">            print(wallMaterial)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">r_reflectance</span><span class="o">=</span><span class="n">rgb_reflectance</span><span class="p">,</span> <span class="n">g_reflectance</span><span class="o">=</span><span class="n">rgb_reflectance</span><span class="p">,</span>
+                   <span class="n">b_reflectance</span><span class="o">=</span><span class="n">rgb_reflectance</span><span class="p">,</span> <span class="n">specularity</span><span class="o">=</span><span class="n">specularity</span><span class="p">,</span>
+                   <span class="n">roughness</span><span class="o">=</span><span class="n">roughness</span><span class="p">,</span> <span class="n">modifier</span><span class="o">=</span><span class="s2">&quot;void&quot;</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">r_reflectance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Red reflectance.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_r</span>
+
+    <span class="nd">@r_reflectance</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">r_reflectance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Red reflectance should be between 0 and 1&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_r</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">g_reflectance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Green reflectance.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_g</span>
+
+    <span class="nd">@g_reflectance</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">g_reflectance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Green reflectance should be between 0 and 1&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_g</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">b_reflectance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Blue reflectance.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span>
+
+    <span class="nd">@b_reflectance</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">b_reflectance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Blue reflectance should be between 0 and 1&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_b</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">specularity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Specularity fraction.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spec</span>
+
+    <span class="nd">@specularity</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">specularity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Specularity should be between 0 and 1&quot;</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="mf">0.1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: Specularity values above .1 is uncommon.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_spec</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">roughness</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Roughness.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rough</span>
+
+    <span class="nd">@roughness</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">roughness</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Roughness should be between 0 and 1&quot;</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="mf">0.2</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: Roughness values above .2 is uncommon.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rough</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">average_reflectance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate average reflectance of plastic material.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mf">0.265</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_reflectance</span> <span class="o">+</span> <span class="mf">0.670</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">g_reflectance</span> <span class="o">+</span>
+                <span class="mf">0.065</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_reflectance</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">specularity</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">specularity</span>
+
+<div class="viewcode-block" id="PlasticMaterial.to_rad_string"><a class="viewcode-back" href="../../../../honeybee.radiance.material.html#honeybee.surfacetype.PlasticMaterial.to_rad_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_rad_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">minimal</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return full radiance definition.&quot;&quot;&quot;</span>
+        <span class="n">base_string</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_line</span> <span class="o">+</span> <span class="s2">&quot;0</span><span class="se">\n</span><span class="s2">0</span><span class="se">\n</span><span class="s2">5 </span><span class="si">%.3f</span><span class="s2"> </span><span class="si">%.3f</span><span class="s2"> </span><span class="si">%.3f</span><span class="s2"> </span><span class="si">%.3f</span><span class="s2"> </span><span class="si">%.3f</span><span class="s2">&quot;</span>
+
+        <span class="n">plastic_definition</span> <span class="o">=</span> <span class="n">base_string</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">r_reflectance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">g_reflectance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_reflectance</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">specularity</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">roughness</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">plastic_definition</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">minimal</span> <span class="k">else</span> <span class="n">plastic_definition</span></div></div>
+
+
+<div class="viewcode-block" id="BlackMaterial"><a class="viewcode-back" href="../../../../honeybee.radiance.material.html#honeybee.surfacetype.BlackMaterial">[docs]</a><span class="k">class</span> <span class="nc">BlackMaterial</span><span class="p">(</span><span class="n">PlasticMaterial</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Radiance black plastic material.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">):</span>
+        <span class="n">PlasticMaterial</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># some test code</span>
+    <span class="n">wallMaterial</span> <span class="o">=</span> <span class="n">PlasticMaterial</span><span class="o">.</span><span class="n">by_single_reflect_value</span><span class="p">(</span><span class="s2">&quot;generic wall&quot;</span><span class="p">,</span> <span class="o">.</span><span class="mi">55</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">wallMaterial</span><span class="p">)</span>
+
+    <span class="n">wallMaterial</span> <span class="o">=</span> <span class="n">PlasticMaterial</span><span class="p">(</span><span class="s2">&quot;generic wall&quot;</span><span class="p">,</span> <span class="o">.</span><span class="mi">55</span><span class="p">,</span> <span class="o">.</span><span class="mi">65</span><span class="p">,</span> <span class="o">.</span><span class="mi">75</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">wallMaterial</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">BlackMaterial</span><span class="p">())</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

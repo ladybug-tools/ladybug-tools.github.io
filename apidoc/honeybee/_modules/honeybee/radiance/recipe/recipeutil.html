@@ -1,0 +1,301 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.recipe.recipeutil &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../index.html">
+    <img class="logo" src="../../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.recipe.recipeutil</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;A collection of useful methods for recipes.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">..command.xform</span> <span class="k">import</span> <span class="n">Xform</span><span class="p">,</span> <span class="n">XformParameters</span>
+<span class="kn">from</span> <span class="nn">..material.plastic</span> <span class="k">import</span> <span class="n">BlackMaterial</span>
+<span class="kn">from</span> <span class="nn">..radfile</span> <span class="k">import</span> <span class="n">RadFile</span>
+<span class="kn">from</span> <span class="nn">...futil</span> <span class="k">import</span> <span class="n">write_to_file_by_name</span><span class="p">,</span> <span class="n">copy_files_to_folder</span><span class="p">,</span> <span class="n">preparedir</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">Counter</span><span class="p">,</span> <span class="n">namedtuple</span>
+
+
+<div class="viewcode-block" id="input_srfs_to_rad_files"><a class="viewcode-back" href="../../../../honeybee.radiance.recipe.html#honeybee.radiance.recipe.recipeutil.input_srfs_to_rad_files">[docs]</a><span class="k">def</span> <span class="nf">input_srfs_to_rad_files</span><span class="p">(</span><span class="n">in_srfs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;separate input honeybee surfaces to RadFiles based on type.</span>
+
+<span class="sd">    This function analyzes a collection of input honeybee surfaces and returns</span>
+<span class="sd">    3 rad_file like objecs for opaque, glazing and tuple(window groups).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">opaque</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">fen</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">wgs</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="n">in_srfs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">srf</span><span class="o">.</span><span class="n">isHBDynamicSurface</span><span class="p">:</span>
+            <span class="c1"># window groups, multiple of single state</span>
+            <span class="n">wgs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">srf</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">srf</span><span class="o">.</span><span class="n">isHBFenSurface</span> <span class="ow">or</span> <span class="n">srf</span><span class="o">.</span><span class="n">radiance_material</span><span class="o">.</span><span class="n">isGlassMaterial</span><span class="p">:</span>
+            <span class="c1"># generic window surfaces</span>
+            <span class="n">fen</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">srf</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">srf</span><span class="o">.</span><span class="n">isHBSurface</span><span class="p">:</span>
+            <span class="n">opaque</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">srf</span><span class="p">)</span>
+            <span class="n">fen</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">srf</span><span class="o">.</span><span class="n">children_surfaces</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not an analysis surface.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">srf</span><span class="p">))</span>
+
+    <span class="c1"># make sure there is no duplicat name in window groups</span>
+    <span class="n">dup</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">Counter</span><span class="p">((</span><span class="n">wg</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">wg</span> <span class="ow">in</span> <span class="n">wgs</span><span class="p">))</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">dup</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> \
+        <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Found duplicate window-group names: </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span>
+                   <span class="s1">&#39;Each window-group must have a uniqe name.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dup</span><span class="p">))</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Found </span><span class="si">%d</span><span class="s1"> opaque surfaces.&#39;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">opaque</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Found </span><span class="si">%d</span><span class="s1"> fenestration surfaces.&#39;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">fen</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Found </span><span class="si">%d</span><span class="s1"> window-groups.&#39;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">wgs</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">count</span><span class="p">,</span> <span class="n">wg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">wgs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">wg</span><span class="o">.</span><span class="n">states</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  [</span><span class="si">%d</span><span class="s1">] </span><span class="si">%s</span><span class="s1">, 1 state.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">wg</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  [</span><span class="si">%d</span><span class="s1">] </span><span class="si">%s</span><span class="s1">, </span><span class="si">%d</span><span class="s1"> states.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">wg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">wg</span><span class="o">.</span><span class="n">states</span><span class="p">)))</span>
+
+    <span class="k">return</span> <span class="n">RadFile</span><span class="p">(</span><span class="n">opaque</span><span class="p">),</span> <span class="n">RadFile</span><span class="p">(</span><span class="n">fen</span><span class="p">),</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">RadFile</span><span class="p">((</span><span class="n">wg</span><span class="p">,))</span> <span class="k">for</span> <span class="n">wg</span> <span class="ow">in</span> <span class="n">wgs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="glz_srf_to_window_group"><a class="viewcode-back" href="../../../../honeybee.radiance.recipe.html#honeybee.radiance.recipe.recipeutil.glz_srf_to_window_group">[docs]</a><span class="k">def</span> <span class="nf">glz_srf_to_window_group</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Create a named tuple that looks like window groups for glazing surfaces.</span>
+
+<span class="sd">    This is neccessary to work with normal glazing just like window groups.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">State</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;State&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">)</span>
+    <span class="n">WindowGroup</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;WindowGroup&#39;</span><span class="p">,</span> <span class="s1">&#39;name states state_count&#39;</span><span class="p">)</span>
+
+    <span class="n">state</span> <span class="o">=</span> <span class="n">State</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">)</span>
+    <span class="n">wg</span> <span class="o">=</span> <span class="n">WindowGroup</span><span class="p">(</span><span class="s1">&#39;scene&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">state</span><span class="p">,),</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">wg</span></div>
+
+
+<div class="viewcode-block" id="write_extra_files"><a class="viewcode-back" href="../../../../honeybee.radiance.recipe.html#honeybee.radiance.recipe.recipeutil.write_extra_files">[docs]</a><span class="k">def</span> <span class="nf">write_extra_files</span><span class="p">(</span><span class="n">rad_scene</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">add_blacked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Copy additionl files from rad_scenes to working_dir.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        rad_scene: A RadScene object.</span>
+<span class="sd">        target_dir: Target study folder. The files will be copied under extra.</span>
+<span class="sd">        add_blacked: Set to True to add the blacked radiance file to the same folder.</span>
+<span class="sd">            The file will be named *_blacked.rad.</span>
+
+<span class="sd">        A named tuple for each RadFile as (fp, fpblk)</span>
+<span class="sd">        fp returns the file path to the list of original radiance files.</span>
+<span class="sd">        fpblk returns the file path to the list of blacked radiance files.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">Files</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;Files&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;fp&#39;</span><span class="p">,</span> <span class="s1">&#39;fpblk&#39;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">rad_scene</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Files</span><span class="p">([],</span> <span class="p">[])</span>
+
+    <span class="k">if</span> <span class="n">rad_scene</span><span class="o">.</span><span class="n">file_count</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;One file from the radiance scene is added to the analysis.&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1"> files from the radiance scene are added to the analysis.&#39;</span> <span class="o">%</span> \
+            <span class="n">rad_scene</span><span class="o">.</span><span class="n">file_count</span><span class="p">)</span>
+
+    <span class="n">target_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="s1">&#39;extra&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">rad_scene</span><span class="o">.</span><span class="n">copy_local</span><span class="p">:</span>
+        <span class="n">preparedir</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">rad_scene</span><span class="o">.</span><span class="n">overwrite</span><span class="p">)</span>
+        <span class="n">scene_mat_files</span> <span class="o">=</span> <span class="n">copy_files_to_folder</span><span class="p">(</span>
+            <span class="n">rad_scene</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">mat</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">rad_scene</span><span class="o">.</span><span class="n">overwrite</span><span class="p">)</span>
+        <span class="n">scene_rad_files</span> <span class="o">=</span> <span class="n">copy_files_to_folder</span><span class="p">(</span>
+            <span class="n">rad_scene</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">rad</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">rad_scene</span><span class="o">.</span><span class="n">overwrite</span><span class="p">)</span>
+        <span class="n">scene_oct_files</span> <span class="o">=</span> <span class="n">copy_files_to_folder</span><span class="p">(</span>
+            <span class="n">rad_scene</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">oct</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">rad_scene</span><span class="o">.</span><span class="n">overwrite</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">scene_mat_files</span> <span class="o">=</span> <span class="n">rad_scene</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">mat</span>
+        <span class="n">scene_rad_files</span> <span class="o">=</span> <span class="n">rad_scene</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">rad</span>
+        <span class="n">scene_oct_files</span> <span class="o">=</span> <span class="n">rad_scene</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">oct</span>
+
+    <span class="n">rad_files</span> <span class="o">=</span> <span class="n">scene_mat_files</span><span class="p">,</span> <span class="n">scene_rad_files</span><span class="p">,</span> <span class="n">scene_oct_files</span>
+
+    <span class="c1"># use xform to generate the blacked version</span>
+    <span class="n">blacked</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">add_blacked</span><span class="p">:</span>
+        <span class="n">black_mat</span> <span class="o">=</span> <span class="n">RadFile</span><span class="o">.</span><span class="n">header</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">BlackMaterial</span><span class="p">()</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+        <span class="n">xfr_para</span> <span class="o">=</span> <span class="n">XformParameters</span><span class="p">()</span>
+        <span class="n">xfr_para</span><span class="o">.</span><span class="n">mod_replace</span> <span class="o">=</span> <span class="n">BlackMaterial</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
+
+        <span class="c1"># Note: Xform has this thing it only works well if the paths are absolute.</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">scene_rad_files</span><span class="p">:</span>
+            <span class="c1"># copy black material file if doesn&#39;t exist and add it to blacked</span>
+            <span class="n">folder</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="n">materialfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="s1">&#39;black.mat&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">materialfile</span><span class="p">):</span>
+                <span class="n">write_to_file_by_name</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="s1">&#39;black.mat&#39;</span><span class="p">,</span> <span class="n">black_mat</span><span class="p">)</span>
+                <span class="n">blacked</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">materialfile</span><span class="p">)</span>
+            <span class="c1"># create blacked rad scene</span>
+            <span class="n">xfr</span> <span class="o">=</span> <span class="n">Xform</span><span class="p">()</span>
+            <span class="n">xfr</span><span class="o">.</span><span class="n">xform_parameters</span> <span class="o">=</span> <span class="n">xfr_para</span>
+            <span class="n">xfr</span><span class="o">.</span><span class="n">rad_file</span> <span class="o">=</span> <span class="n">f</span>
+            <span class="n">xfr</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="n">f</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_blacked&#39;</span> <span class="o">+</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span>
+            <span class="n">xfr</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+            <span class="n">blacked</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xfr</span><span class="o">.</span><span class="n">output_file</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Files</span><span class="p">([</span><span class="n">f</span> <span class="k">for</span> <span class="n">fl</span> <span class="ow">in</span> <span class="n">rad_files</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fl</span><span class="p">],</span> <span class="n">blacked</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="write_rad_files"><a class="viewcode-back" href="../../../../honeybee.radiance.recipe.html#honeybee.radiance.recipe.recipeutil.write_rad_files">[docs]</a><span class="k">def</span> <span class="nf">write_rad_files</span><span class="p">(</span><span class="n">scene_folder</span><span class="p">,</span> <span class="n">project_name</span><span class="p">,</span> <span class="n">opq</span><span class="p">,</span> <span class="n">glz</span><span class="p">,</span> <span class="n">wgs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Write files to a target directory.</span>
+
+<span class="sd">    This method should only be used for daylight coefficeint and multi-phase</span>
+<span class="sd">    daylight simulations. The files will be written under</span>
+<span class="sd">        scene_folder/opaque</span>
+<span class="sd">        scene_folder/glazing</span>
+<span class="sd">        scene_folder/wgroup</span>
+<span class="sd">    If any of the surfaces has BSDF material the xml file will be copied under</span>
+<span class="sd">    scene_folder/*/bsdf and the path to the material will be modified to the new</span>
+<span class="sd">    path.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        scene_folder: Path to working directory.</span>
+<span class="sd">        opq: A RadFile for opaque surfaces.</span>
+<span class="sd">        glz: A RadFile for glazing surfaces.</span>
+<span class="sd">        wgs: A collection of RadFiles for window-groups.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Return 3 list for radiance files for opaque, glz and window groups.</span>
+<span class="sd">        The list for windowgroups will be a list of lists for each window group</span>
+<span class="sd">        and its states.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scene_folder</span><span class="p">,</span> <span class="s1">&#39;opaque&#39;</span><span class="p">)</span>
+    <span class="n">of</span> <span class="o">=</span> <span class="n">opq</span><span class="o">.</span><span class="n">write_geometries</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">..opq.rad&#39;</span> <span class="o">%</span> <span class="n">project_name</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mkdir</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">om</span> <span class="o">=</span> <span class="n">opq</span><span class="o">.</span><span class="n">write_materials</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">..opq.mat&#39;</span> <span class="o">%</span> <span class="n">project_name</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">blacked</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">opqf</span> <span class="o">=</span> <span class="p">[</span><span class="n">om</span><span class="p">,</span> <span class="n">of</span><span class="p">]</span>
+
+    <span class="n">folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scene_folder</span><span class="p">,</span> <span class="s1">&#39;glazing&#39;</span><span class="p">)</span>
+    <span class="n">ogf</span> <span class="o">=</span> <span class="n">glz</span><span class="o">.</span><span class="n">write_geometries</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">..glz.rad&#39;</span> <span class="o">%</span> <span class="n">project_name</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mkdir</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ogm</span> <span class="o">=</span> <span class="n">glz</span><span class="o">.</span><span class="n">write_materials</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">..glz.mat&#39;</span> <span class="o">%</span> <span class="n">project_name</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">blacked</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">glzf</span> <span class="o">=</span> <span class="p">[</span><span class="n">ogm</span><span class="p">,</span> <span class="n">ogf</span><span class="p">]</span>
+
+    <span class="n">wgfs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scene_folder</span><span class="p">,</span> <span class="s1">&#39;wgroup&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">count</span><span class="p">,</span> <span class="n">wgf</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">wgs</span><span class="p">):</span>
+        <span class="n">wg</span> <span class="o">=</span> <span class="n">wgf</span><span class="o">.</span><span class="n">hb_surfaces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">wg</span><span class="o">.</span><span class="n">name</span>
+        <span class="c1"># write files for each state</span>
+        <span class="n">wgfstate</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">scount</span><span class="p">,</span> <span class="n">state</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">wg</span><span class="o">.</span><span class="n">states</span><span class="p">):</span>
+            <span class="n">wg</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">scount</span>
+            <span class="n">wgfst</span> <span class="o">=</span> <span class="n">wgf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">..</span><span class="si">%s</span><span class="s1">.rad&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">wgfstate</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wgfst</span><span class="p">)</span>
+
+        <span class="n">wgfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wgfstate</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">opqf</span><span class="p">,</span> <span class="n">glzf</span><span class="p">,</span> <span class="n">wgfs</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

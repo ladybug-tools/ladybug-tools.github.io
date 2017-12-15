@@ -1,0 +1,240 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.command.oconv &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../index.html">
+    <img class="logo" src="../../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.command.oconv</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="sd">&quot;&quot;&quot;oconv-create an octree from a RADIANCE scene description.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">_commandbase</span> <span class="k">import</span> <span class="n">RadianceCommand</span>
+<span class="kn">from</span> <span class="nn">..datatype</span> <span class="k">import</span> <span class="n">RadiancePath</span>
+<span class="kn">from</span> <span class="nn">..parameters.oconv</span> <span class="k">import</span> <span class="n">OconvParameters</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<div class="viewcode-block" id="Oconv"><a class="viewcode-back" href="../../../../honeybee.radiance.command.html#honeybee.radiance.command.oconv.Oconv">[docs]</a><span class="k">class</span> <span class="nc">Oconv</span><span class="p">(</span><span class="n">RadianceCommand</span><span class="p">):</span>
+    <span class="sa">u</span><span class="sd">&quot;&quot;&quot;Create a Radiance octree.</span>
+
+<span class="sd">    Read more at: http://radsite.lbl.gov/radiance/man_html/oconv.1.html</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        output_name: Output oct file which is usually the same as the project name</span>
+<span class="sd">            (Default: untitled)</span>
+<span class="sd">        scene_files: A list of radiance files (e.g. sky files, material files,</span>
+<span class="sd">            geometry files) in the order that they should show up in oconv</span>
+<span class="sd">            command. Make sure to put files with modifiers (e.g materials,</span>
+<span class="sd">            sources) before the files that are using them (e.g geometry files).</span>
+<span class="sd">        oconv_parameters: Radiance parameters for oconv. If None Default</span>
+<span class="sd">            parameters will be set. You can use self.oconv_parameters to view,</span>
+<span class="sd">            add or remove the parameters before executing the command.</span>
+
+<span class="sd">    Usage:</span>
+
+<span class="sd">        from honeybee.radiance.parameters.oconv import OconvParameters</span>
+<span class="sd">        from honeybee.radiance.command.oconv import Oconv</span>
+
+<span class="sd">        # generate oconv parameters</span>
+<span class="sd">        rcp = OconvParameters()</span>
+
+<span class="sd">        # trun off turn off warnings</span>
+<span class="sd">        rcp.turn_off_warns = True</span>
+
+<span class="sd">        # create an oconv command</span>
+<span class="sd">        oconv = Oconv(output_name=&quot;C:/ladybug/test3/gridbased/test3.oct&quot;,</span>
+<span class="sd">                      scene_files=((r&quot;C:/ladybug/test3/gridbased/test3.mat&quot;,</span>
+<span class="sd">                                   r&quot;c:/ladybug/test3/gridbased/test3.rad&quot;)),</span>
+<span class="sd">                      oconv_parameters=rcp</span>
+<span class="sd">                      )</span>
+
+<span class="sd">        # print command line to check</span>
+<span class="sd">        print(oconv.to_rad_string())</span>
+<span class="sd">        &gt; c:/radiance/bin/oconv -f C:/ladybug/test3/gridbased/test3.mat</span>
+<span class="sd">          c:/ladybug/test3/gridbased/test3.rad &gt; test3.oct</span>
+
+<span class="sd">        # execute the command</span>
+<span class="sd">        output_file_path = oconv.execute()</span>
+
+<span class="sd">        print(output_filePath)</span>
+<span class="sd">        &gt; C:/ladybug/test3/gridbased/test3.oct</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">output_file</span> <span class="o">=</span> <span class="n">RadiancePath</span><span class="p">(</span><span class="s2">&quot;oct&quot;</span><span class="p">,</span> <span class="s2">&quot;octree file&quot;</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="s2">&quot;.oct&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_name</span><span class="o">=</span><span class="s2">&quot;untitled&quot;</span><span class="p">,</span> <span class="n">scene_files</span><span class="o">=</span><span class="p">[],</span>
+                 <span class="n">oconv_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize the class.&quot;&quot;&quot;</span>
+        <span class="c1"># Initialize base class to make sure path to radiance is set correctly</span>
+        <span class="n">RadianceCommand</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="n">output_name</span> <span class="k">if</span> <span class="n">output_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.oct&quot;</span><span class="p">)</span> \
+            <span class="k">else</span> <span class="n">output_name</span> <span class="o">+</span> <span class="s2">&quot;.oct&quot;</span>
+        <span class="sd">&quot;&quot;&quot;results file for coefficients (Default: untitled)&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">scene_files</span> <span class="o">=</span> <span class="n">scene_files</span>
+        <span class="sd">&quot;&quot;&quot;Sorted list of full path to input rad files (Default: [])&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">oconv_parameters</span> <span class="o">=</span> <span class="n">oconv_parameters</span>
+        <span class="sd">&quot;&quot;&quot;Radiance parameters for oconv. If None Default parameters will be</span>
+<span class="sd">        set. You can use self.oconv_parameters to view, add or remove the</span>
+<span class="sd">        parameters before executing the command.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">oconv_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get and set gendaymtx_parameters.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__oconv_parameters</span>
+
+    <span class="nd">@oconv_parameters</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">oconv_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__oconv_parameters</span> <span class="o">=</span> <span class="n">parameters</span> <span class="k">if</span> <span class="n">parameters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> \
+            <span class="k">else</span> <span class="n">OconvParameters</span><span class="p">()</span>
+
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oconv_parameters</span><span class="p">,</span> <span class="s2">&quot;isRadianceParameters&quot;</span><span class="p">),</span> \
+            <span class="s2">&quot;input oconv_parameters is not a valid parameters type.&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">scene_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get and set scene files.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__scene_files</span>
+
+    <span class="nd">@scene_files</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">scene_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__scene_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">]</span>
+
+<div class="viewcode-block" id="Oconv.add_file_to_scene"><a class="viewcode-back" href="../../../../honeybee.radiance.command.html#honeybee.radiance.command.oconv.Oconv.add_file_to_scene">[docs]</a>    <span class="k">def</span> <span class="nf">add_file_to_scene</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add a new file to the scene.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scene_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">file_path</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Oconv.to_rad_string"><a class="viewcode-back" href="../../../../honeybee.radiance.command.html#honeybee.radiance.command.oconv.Oconv.to_rad_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_rad_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">relative_path</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return full command as a string.&quot;&quot;&quot;</span>
+        <span class="n">rad_string</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> &gt; </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">normspace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radbin_path</span><span class="p">,</span> <span class="s2">&quot;oconv&quot;</span><span class="p">)),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">oconv_parameters</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">(),</span>
+            <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">normspace</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene_files</span><span class="p">]),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">normspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_file</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+        <span class="p">)</span>
+
+        <span class="c1"># make sure input files are set by user</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_input_files</span><span class="p">(</span><span class="n">rad_string</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">rad_string</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">input_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return input files by user.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene_files</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

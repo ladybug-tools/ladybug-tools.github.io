@@ -1,0 +1,342 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.surfaceproperties &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.surfaceproperties</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Surface Properties.</span>
+
+<span class="sd">A class that contains both radiance and energyplus properties which can be applied to a</span>
+<span class="sd">surface or a list of honeybee surfaces.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">surfacetype</span>
+<span class="kn">import</span> <span class="nn">utilcol</span> <span class="k">as</span> <span class="nn">util</span>
+<span class="kn">from</span> <span class="nn">radiance.properties</span> <span class="k">import</span> <span class="n">RadianceProperties</span>
+<span class="kn">from</span> <span class="nn">radiance.radfile</span> <span class="k">import</span> <span class="n">RadFile</span>
+
+
+<div class="viewcode-block" id="SurfaceProperties"><a class="viewcode-back" href="../../honeybee.html#honeybee.surfaceproperties.SurfaceProperties">[docs]</a><span class="k">class</span> <span class="nc">SurfaceProperties</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Surface data for a single state.</span>
+
+<span class="sd">    This class is useful to define several states for one or a group of HBSurfaces. Each</span>
+<span class="sd">    state can has a different material and add additional geometry to the scene. You can</span>
+<span class="sd">    add the states to each HBSurface using HBSurface.addState.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        surface_type: A honeybee surface type (Default: surfacetype.Wall).</span>
+<span class="sd">        rad_properties: Radiance properties for this surface. If empty default</span>
+<span class="sd">            RADProperties will be assigned based on surface type once assigned</span>
+<span class="sd">            to a surface.</span>
+<span class="sd">        ep_properties: EnergyPlus properties for this surface. If empty default</span>
+<span class="sd">            ep_properties will be assigned based on surface type once assigned</span>
+<span class="sd">            to a surface.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># TODO: add default ep_properties - based on surface type.</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">surface_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rad_properties</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ep_properties</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">surface_type</span> <span class="o">=</span> <span class="n">surface_type</span> <span class="ow">or</span> <span class="n">surfacetype</span><span class="o">.</span><span class="n">Wall</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rad_properties</span> <span class="o">=</span> <span class="n">rad_properties</span>
+        <span class="k">if</span> <span class="n">ep_properties</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;EnergyPlus properties is not implemented yet!&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ep_properties</span> <span class="o">=</span> <span class="n">ep_properties</span>
+
+<div class="viewcode-block" id="SurfaceProperties.isSurfaceProperties"><a class="viewcode-back" href="../../honeybee.html#honeybee.surfaceproperties.SurfaceProperties.isSurfaceProperties">[docs]</a>    <span class="k">def</span> <span class="nf">isSurfaceProperties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True for states.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">surface_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get and set Surface Type.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_surface_type</span>
+
+    <span class="nd">@surface_type</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">surface_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="c1"># it is either a number or already a valid type</span>
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s1">&#39;isSurfaceType&#39;</span><span class="p">),</span> \
+            <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> is not a valid surface type.&#39;</span> <span class="o">%</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_surface_type</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="c1"># update radiance material</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rad_properties</span><span class="o">.</span><span class="n">radiance_material</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">surface_type</span><span class="o">.</span><span class="n">radiance_material</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">pass</span>  <span class="c1"># surface rad properties is not set yet!</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">rad_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get and set Radiance properties.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rad_properties</span>
+
+    <span class="nd">@rad_properties</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">rad_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rad_properties</span><span class="p">):</span>
+        <span class="n">rad_properties</span> <span class="o">=</span> <span class="n">rad_properties</span> <span class="ow">or</span> \
+            <span class="n">RadianceProperties</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">surface_type</span><span class="o">.</span><span class="n">radiance_material</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">rad_properties</span><span class="p">,</span> <span class="s1">&#39;isRadianceProperties&#39;</span><span class="p">),</span> \
+            <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> is not a valid RadianceProperties&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">rad_properties</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rad_properties</span><span class="o">.</span><span class="n">radiance_material</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">rad_properties</span><span class="o">.</span><span class="n">radiance_material</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">surface_type</span><span class="o">.</span><span class="n">radiance_material</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rad_properties</span> <span class="o">=</span> <span class="n">rad_properties</span>
+
+<div class="viewcode-block" id="SurfaceProperties.rad_material_from_type"><a class="viewcode-back" href="../../honeybee.html#honeybee.surfaceproperties.SurfaceProperties.rad_material_from_type">[docs]</a>    <span class="k">def</span> <span class="nf">rad_material_from_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get default radiance material for the surface type.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">surface_type</span><span class="o">.</span><span class="n">radiance_material</span></div>
+
+<div class="viewcode-block" id="SurfaceProperties.ToString"><a class="viewcode-back" href="../../honeybee.html#honeybee.surfaceproperties.SurfaceProperties.ToString">[docs]</a>    <span class="k">def</span> <span class="nf">ToString</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwrite .NET ToString method.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;State&#39;s represntation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;SurfaceProperties&#39;</span></div>
+
+
+<div class="viewcode-block" id="SurfaceState"><a class="viewcode-back" href="../../honeybee.html#honeybee.surfaceproperties.SurfaceState">[docs]</a><span class="k">class</span> <span class="nc">SurfaceState</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A HBSurface State.</span>
+
+<span class="sd">    A state includes surface data for a single state which includes SurfaceProperties</span>
+<span class="sd">    and optional additional HBSurfaces.</span>
+
+<span class="sd">    This class is useful to define several states for one or a group of HBSurfaces. Each</span>
+<span class="sd">    state can have different material and add additional geometry to the scene. You can</span>
+<span class="sd">    add the states to a HBSurface using HBSurface.addState.</span>
+
+<span class="sd">    Both Attributes are optional but at least one of them should be provided to make the</span>
+<span class="sd">    state meaningful.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        name: Name as a string.</span>
+<span class="sd">        surface_properties: An instance of SurfaceProperties (Default: None).</span>
+<span class="sd">        surfaces: A list of HBSurfaces to be added to the scene. For multi-phase</span>
+<span class="sd">            daylight simulation hb_surfaces can only be located outside the room</span>
+<span class="sd">            (Default: None).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;_surface_properties&#39;</span><span class="p">,</span> <span class="s1">&#39;_surfaces&#39;</span><span class="p">,</span> <span class="s1">&#39;_name&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">surface_properties</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">surfaces</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a state.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">surface_properties</span> <span class="o">=</span> <span class="n">surface_properties</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">surfaces</span> <span class="o">=</span> <span class="n">surfaces</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">surface_properties</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">surfaces</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;A state must have a surface_properties or hb_surfaces.&#39;</span>
+                             <span class="s1">&#39; Both cannot be None.&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">isSurfaceState</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True if a SurfaceState.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The name of this state.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
+
+    <span class="nd">@name</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="n">util</span><span class="o">.</span><span class="n">check_name</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">n</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">surface_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;SurfaceProperties for this state.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_surface_properties</span>
+
+    <span class="nd">@surface_properties</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">surface_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">srf_prop</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">srf_prop</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">srf_prop</span><span class="p">,</span> <span class="s1">&#39;isSurfaceProperties&#39;</span><span class="p">),</span> \
+                <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="s1">&#39;Expected SurfaceProperties not </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">srf_prop</span><span class="p">))</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_surface_properties</span> <span class="o">=</span> <span class="n">srf_prop</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">surfaces</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_surfaces</span>
+
+    <span class="nd">@surfaces</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">surfaces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">srfs</span><span class="p">):</span>
+        <span class="n">srfs</span> <span class="o">=</span> <span class="n">srfs</span> <span class="ow">or</span> <span class="p">()</span>
+        <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="n">srfs</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">srf</span><span class="p">,</span> <span class="s1">&#39;isHBAnalysisSurface&#39;</span><span class="p">),</span> \
+                <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Expected HBSurface for surfaces not </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">srf</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_surfaces</span> <span class="o">=</span> <span class="n">srfs</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">rad_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get Radiance material from SurfaceProperties.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_surface_properties</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_surface_properties</span><span class="o">.</span><span class="n">rad_properties</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">radiance_material</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get Radiance material from SurfaceProperties.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_surface_properties</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_surface_properties</span><span class="o">.</span><span class="n">rad_properties</span><span class="o">.</span><span class="n">radiance_material</span>
+
+<div class="viewcode-block" id="SurfaceState.radiance_materials"><a class="viewcode-back" href="../../honeybee.html#honeybee.surfaceproperties.SurfaceState.radiance_materials">[docs]</a>    <span class="k">def</span> <span class="nf">radiance_materials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blacked</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">to_rad_string</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the full list of materials for surfaces.&quot;&quot;&quot;</span>
+        <span class="n">mt_base</span> <span class="o">=</span> <span class="p">[</span><span class="n">srf</span><span class="o">.</span><span class="n">radiance_material</span> <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">surfaces</span><span class="p">]</span>
+        <span class="n">mt_child</span> <span class="o">=</span> <span class="p">[</span><span class="n">childSrf</span><span class="o">.</span><span class="n">radiance_material</span>
+                    <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">surfaces</span>
+                    <span class="k">for</span> <span class="n">childSrf</span> <span class="ow">in</span> <span class="n">srf</span><span class="o">.</span><span class="n">children_surfaces</span>
+                    <span class="k">if</span> <span class="n">srf</span><span class="o">.</span><span class="n">has_child_surfaces</span><span class="p">]</span>
+        <span class="n">mt</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">mt_base</span> <span class="o">+</span> <span class="n">mt_child</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">mt</span><span class="p">)</span> <span class="k">if</span> <span class="n">to_rad_string</span> <span class="k">else</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">mt</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SurfaceState.to_rad_string"><a class="viewcode-back" href="../../honeybee.html#honeybee.surfaceproperties.SurfaceState.to_rad_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_rad_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">include_materials</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                      <span class="n">flipped</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">blacked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get surfaces as a RadFile. Use str(to_rad_string) to get the full str.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            mode: An integer 0-2 (Default: 1)</span>
+<span class="sd">                0 - Do not include children surfaces.</span>
+<span class="sd">                1 - Include children surfaces.</span>
+<span class="sd">                2 - Only children surfaces.</span>
+<span class="sd">            include_materials: Set to False if you only want the geometry definition</span>
+<span class="sd">             (default:True).</span>
+<span class="sd">            flipped: Flip the surface geometry.</span>
+<span class="sd">            blacked: If True materials will all be set to plastic 0 0 0 0 0.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">surfaces</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span> <span class="ow">or</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">RadFile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">surfaces</span><span class="p">)</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">include_materials</span><span class="p">,</span>
+                                                    <span class="n">flipped</span><span class="p">,</span> <span class="n">blacked</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SurfaceState.ToString"><a class="viewcode-back" href="../../honeybee.html#honeybee.surfaceproperties.SurfaceState.ToString">[docs]</a>    <span class="k">def</span> <span class="nf">ToString</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwrite .NET ToString method.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;State&#39;s represntation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;SurfaceState::</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">sp</span> <span class="o">=</span> <span class="n">SurfaceProperties</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">rad_properties</span><span class="o">.</span><span class="n">radiance_material</span><span class="p">)</span>
+
+    <span class="n">st</span> <span class="o">=</span> <span class="n">SurfaceState</span><span class="p">(</span><span class="s1">&#39;newState&#39;</span><span class="p">,</span> <span class="n">sp</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

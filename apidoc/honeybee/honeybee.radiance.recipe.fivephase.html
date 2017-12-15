@@ -1,0 +1,272 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.recipe.fivephase package &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="honeybee.radiance.recipe.pointintime package" href="honeybee.radiance.recipe.pointintime.html" />
+    <link rel="prev" title="honeybee.radiance.recipe.daylightfactor package" href="honeybee.radiance.recipe.daylightfactor.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="honeybee.html">honeybee package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="honeybee.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="honeybee.energyplus.html">honeybee.energyplus package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="honeybee.radiance.html">honeybee.radiance package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="honeybee.radiance.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.analysisgrid">honeybee.radiance.analysisgrid module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.analysispoint">honeybee.radiance.analysispoint module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.datatype">honeybee.radiance.datatype module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.filemanager">honeybee.radiance.filemanager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.geometry">honeybee.radiance.geometry module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.imagecollection">honeybee.radiance.imagecollection module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.properties">honeybee.radiance.properties module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.radfile">honeybee.radiance.radfile module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.runmanager">honeybee.radiance.runmanager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.scene">honeybee.radiance.scene module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.view">honeybee.radiance.view module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.server.html">honeybee.server package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.vectormath.html">honeybee.vectormath package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.config">honeybee.config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.dataoperation">honeybee.dataoperation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.futil">honeybee.futil module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.geometryoperation">honeybee.geometryoperation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbdynamicsurface">honeybee.hbdynamicsurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbfensurface">honeybee.hbfensurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbobject">honeybee.hbobject module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbshadesurface">honeybee.hbshadesurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbsurface">honeybee.hbsurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbzone">honeybee.hbzone module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.room">honeybee.room module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.schedule">honeybee.schedule module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.surfaceproperties">honeybee.surfaceproperties module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.surfacetype">honeybee.surfacetype module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.utilcol">honeybee.utilcol module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="honeybee.html">honeybee package</a><ul>
+  <li><a href="honeybee.radiance.html">honeybee.radiance package</a><ul>
+  <li><a href="honeybee.radiance.recipe.html">honeybee.radiance.recipe package</a><ul>
+      <li>Previous: <a href="honeybee.radiance.recipe.daylightfactor.html" title="previous chapter">honeybee.radiance.recipe.daylightfactor package</a></li>
+      <li>Next: <a href="honeybee.radiance.recipe.pointintime.html" title="next chapter">honeybee.radiance.recipe.pointintime package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="honeybee-radiance-recipe-fivephase-package">
+<h1>honeybee.radiance.recipe.fivephase package<a class="headerlink" href="#honeybee-radiance-recipe-fivephase-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-honeybee.radiance.recipe.fivephase.gridbased">
+<span id="honeybee-radiance-recipe-fivephase-gridbased-module"></span><h2>honeybee.radiance.recipe.fivephase.gridbased module<a class="headerlink" href="#module-honeybee.radiance.recipe.fivephase.gridbased" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="honeybee.radiance.recipe.fivephase.gridbased.FivePhaseGridBased">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.recipe.fivephase.gridbased.</code><code class="descname">FivePhaseGridBased</code><span class="sig-paren">(</span><em>sky_mtx</em>, <em>analysis_grids</em>, <em>simulation_type=0</em>, <em>view_mtx_parameters=None</em>, <em>daylight_mtx_parameters=None</em>, <em>reuse_view_mtx=True</em>, <em>reuse_daylight_mtx=True</em>, <em>hb_objects=None</em>, <em>sub_folder='gridbased_fivephase'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/fivephase/gridbased.html#FivePhaseGridBased"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.fivephase.gridbased.FivePhaseGridBased" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="honeybee.radiance.recipe.threephase.html#honeybee.radiance.recipe.threephase.gridbased.ThreePhaseGridBased" title="honeybee.radiance.recipe.threephase.gridbased.ThreePhaseGridBased"><code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.recipe.threephase.gridbased.ThreePhaseGridBased</span></code></a></p>
+<p>Grid based five phase analysis recipe.</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.fivephase.gridbased.FivePhaseGridBased.sky_mtx">
+<code class="descname">sky_mtx</code><a class="headerlink" href="#honeybee.radiance.recipe.fivephase.gridbased.FivePhaseGridBased.sky_mtx" title="Permalink to this definition">¶</a></dt>
+<dd><p>A radiance SkyMatrix or SkyVector. For an SkyMatrix the analysis
+will be ran for the analysis period.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.fivephase.gridbased.FivePhaseGridBased.analysis_grids">
+<code class="descname">analysis_grids</code><a class="headerlink" href="#honeybee.radiance.recipe.fivephase.gridbased.FivePhaseGridBased.analysis_grids" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of Honeybee analysis grids. Daylight metrics will
+be calculated for each analysisGrid separately.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.fivephase.gridbased.FivePhaseGridBased.simulation_type">
+<code class="descname">simulation_type</code><a class="headerlink" href="#honeybee.radiance.recipe.fivephase.gridbased.FivePhaseGridBased.simulation_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>0: Illuminance(lux), 1: Radiation (kWh), 2: Luminance (Candela)
+(Default: 0)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.fivephase.gridbased.FivePhaseGridBased.radiance_parameters">
+<code class="descname">radiance_parameters</code><a class="headerlink" href="#honeybee.radiance.recipe.fivephase.gridbased.FivePhaseGridBased.radiance_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radiance parameters for this analysis. Parameters
+should be an instance of RfluxmtxParameters.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.fivephase.gridbased.FivePhaseGridBased.hb_objects">
+<code class="descname">hb_objects</code><a class="headerlink" href="#honeybee.radiance.recipe.fivephase.gridbased.FivePhaseGridBased.hb_objects" title="Permalink to this definition">¶</a></dt>
+<dd><p>An optional list of Honeybee surfaces or zones (Default: None).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.fivephase.gridbased.FivePhaseGridBased.sub_folder">
+<code class="descname">sub_folder</code><a class="headerlink" href="#honeybee.radiance.recipe.fivephase.gridbased.FivePhaseGridBased.sub_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Analysis subfolder for this recipe. (Default: “daylightcoeff”).</p>
+</dd></dl>
+
+<p>Usage:</p>
+<blockquote>
+<div><p># initiate analysis_recipe
+analysis_recipe = ThreePhaseGridBased(</p>
+<blockquote>
+<div>sky_mtx, analysis_grids, rad_parameters
+)</div></blockquote>
+<p># add honeybee object
+analysis_recipe.hb_objects = HBObjs</p>
+<p># write analysis files to local drive
+commandsFile = analysis_recipe.write(_folder_, _name_)</p>
+<p># run the analysis
+analysis_recipe.run(commandsFile)</p>
+<p># get the results
+print(analysis_recipe.results())</p>
+</div></blockquote>
+<dl class="method">
+<dt id="honeybee.radiance.recipe.fivephase.gridbased.FivePhaseGridBased.write">
+<code class="descname">write</code><span class="sig-paren">(</span><em>target_folder</em>, <em>project_name='untitled'</em>, <em>header=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/fivephase/gridbased.html#FivePhaseGridBased.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.fivephase.gridbased.FivePhaseGridBased.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write analysis files to target folder.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>target_folder</strong> – Path to parent folder. Files will be created under
+target_folder/gridbased. use self.sub_folder to change subfolder name.</li>
+<li><strong>project_name</strong> – Name of this project as a string.</li>
+<li><strong>header</strong> – A boolean to include path to radiance folder in commands file.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Path yo commands file.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.recipe.fivephase">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-honeybee.radiance.recipe.fivephase" title="Permalink to this headline">¶</a></h2>
+<p>Radiance five-phase recipes.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/honeybee.radiance.recipe.fivephase.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

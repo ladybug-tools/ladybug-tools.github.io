@@ -1,0 +1,393 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.config &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.config</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Honeybee configurations.</span>
+
+<span class="sd">Import this module in every module that you need to access Honeybee configurations.</span>
+
+<span class="sd">Usage:</span>
+
+<span class="sd">    import config</span>
+<span class="sd">    print(config.radlib_path)</span>
+<span class="sd">    print(config.radbin_path)</span>
+<span class="sd">    print(config.platform)</span>
+<span class="sd">    config.radbin_path = &quot;c:/radiance/bin&quot;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+
+<div class="viewcode-block" id="Folders"><a class="viewcode-back" href="../../honeybee.html#honeybee.config.Folders">[docs]</a><span class="k">class</span> <span class="nc">Folders</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Honeybee folders.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        mute: Set to True if you don&#39;t want the class to print the report</span>
+<span class="sd">            (Default: False)</span>
+
+<span class="sd">    Usage:</span>
+
+<span class="sd">        folders = Folders(mute=False)</span>
+<span class="sd">        print(folders.radbin_path)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__defaultPath</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;path_to_radiance&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="s2">&quot;path_to_energyplus&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="s2">&quot;path_to_openstudio&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="s2">&quot;path_to_perl&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;&#39;</span>
+    <span class="p">}</span>
+
+    <span class="n">__configFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;config.json&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mute</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Find default path for Honeybee.</span>
+
+<span class="sd">        It currently includes:</span>
+<span class="sd">            Default path to Radinace folders.</span>
+<span class="sd">            Default path to EnergyPlus folders.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mute</span> <span class="o">=</span> <span class="n">mute</span>
+
+        <span class="c1"># try to load paths from config file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_from_file</span><span class="p">()</span>
+
+        <span class="c1"># set path for openstudio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">open_studio_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__defaultPath</span><span class="p">[</span><span class="s2">&quot;path_to_openstudio&quot;</span><span class="p">]</span>
+
+        <span class="c1"># set path for radiance, if path to radiance is not set honeybee will</span>
+        <span class="c1"># try to set it up to the radiance installation that comes with openStudio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radiance_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__defaultPath</span><span class="p">[</span><span class="s2">&quot;path_to_radiance&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">perl_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__defaultPath</span><span class="p">[</span><span class="s2">&quot;path_to_perl&quot;</span><span class="p">]</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_which</span><span class="p">(</span><span class="n">program</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Find executable programs.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            program: Full file name for the program (e.g. rad.exe)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            File directory and full path to program in case of success.</span>
+<span class="sd">            None, None in case of failure.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">is_exe</span><span class="p">(</span><span class="n">fpath</span><span class="p">):</span>
+            <span class="c1"># Make sure it&#39;s not part of Dive installation as DIVA doesn&#39;t</span>
+            <span class="c1"># follow the standard structure folder for Daysim and Radiance</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;nt&#39;</span> <span class="ow">and</span> <span class="n">fpath</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;DIVA&quot;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+            <span class="c1"># Return true if file exists and is executable</span>
+            <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">X_OK</span><span class="p">)</span>
+
+        <span class="c1"># check for the file in all path in environment</span>
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PATH&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="p">):</span>
+            <span class="c1"># strip &quot;&quot; from Windows path</span>
+            <span class="n">exe_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">),</span> <span class="n">program</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">is_exe</span><span class="p">(</span><span class="n">exe_file</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">path</span><span class="p">,</span> <span class="n">exe_file</span>
+
+        <span class="c1"># couldn&#39;t find it! return None :|</span>
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">open_studio_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set and get the path to openstudio installation folder.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_open_studio_path</span>
+
+    <span class="nd">@open_studio_path</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">open_studio_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="p">:</span>
+            <span class="c1"># check the default installation folders on Windows</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_open_studio_folder</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_open_studio_path</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;nt&#39;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_open_studio_path</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;bin/openstudio.exe&#39;</span><span class="p">)),</span> \
+                <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not a valid path to openstudio installation.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">mute</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_open_studio_path</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Path to OpenStudio is set to: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_open_studio_path</span><span class="p">)</span>
+
+    <span class="c1"># TODO(mostapha or chris): Update for OpenStudio 2</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_find_open_studio_folder</span><span class="p">():</span>
+
+        <span class="k">def</span> <span class="nf">getversion</span><span class="p">(</span><span class="n">open_studio_path</span><span class="p">):</span>
+            <span class="n">ver</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">open_studio_path</span> <span class="k">if</span> <span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="ow">or</span> <span class="n">s</span> <span class="o">==</span> <span class="s1">&#39;.&#39;</span><span class="p">))</span>
+            <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">*</span> <span class="n">d</span> <span class="o">**</span> <span class="mi">10</span> <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">ver</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">))))</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;nt&#39;</span><span class="p">:</span>
+            <span class="n">os_folders</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;C:/Program Files/&#39;</span> <span class="o">+</span> <span class="n">f</span> <span class="k">for</span> <span class="n">f</span>
+                          <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s1">&#39;C:/Program Files&#39;</span><span class="p">)</span>
+                          <span class="k">if</span> <span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;openstudio&#39;</span><span class="p">)</span> <span class="ow">and</span>
+                              <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="s1">&#39;C:/Program Files/&#39;</span> <span class="o">+</span> <span class="n">f</span><span class="p">))]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os_folders</span><span class="p">:</span>
+                <span class="k">return</span>
+            <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">os_folders</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">getversion</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">radiance_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get and set path to radiance installation folder.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_radiancePath</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">radbin_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Path to Radiance binary folder.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_radbin</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">radlib_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Path to Radiance library folder.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_radlib</span>
+
+    <span class="nd">@radiance_path</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">radiance_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;nt&#39;</span><span class="p">:</span>
+                <span class="n">__radbin</span><span class="p">,</span> <span class="n">__rad_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_which</span><span class="p">(</span><span class="s2">&quot;rad.exe&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">__radbin</span><span class="p">:</span>
+                    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">__radbin</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="c1"># finding by path failed. Let&#39;s check typical folders on Windows</span>
+                <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;c:/radiance/bin/rad.exe&quot;</span><span class="p">):</span>
+                    <span class="n">path</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;c:/radiance&quot;</span>
+                <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;c:/Program Files/radiance/bin/rad.exe&quot;</span><span class="p">):</span>
+                    <span class="n">path</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;c:/Program Files/radiance&quot;</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">open_studio_path</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">open_studio_path</span><span class="p">,</span>
+                                     <span class="sa">r</span><span class="s2">&quot;share/openStudio/Radiance/bin/rad.exe&quot;</span><span class="p">)):</span>
+                    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">open_studio_path</span><span class="p">,</span>
+                                        <span class="sa">r</span><span class="s2">&quot;share/openStudio/Radiance&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;posix&#39;</span><span class="p">:</span>
+                <span class="n">__radbin</span><span class="p">,</span> <span class="n">__rad_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_which</span><span class="p">(</span><span class="s2">&quot;mkillum&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">__radbin</span><span class="p">:</span>
+                    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">__radbin</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_radiancePath</span> <span class="o">=</span> <span class="n">path</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">mute</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Warning: Failed to find radiance installation folder.</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                    <span class="s2">&quot;You can set it up manually in </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__configFile</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_radbin</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_radlib</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># set up lib path</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_radbin</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;bin&#39;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_radlib</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;lib&#39;</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">mute</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_radiancePath</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Path to radiance is set to: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_radiancePath</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_radiancePath</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Radiance path </span><span class="si">{}</span><span class="s1"> has a whitespace. Some of the radiance &#39;</span> \
+                    <span class="s1">&#39;commands may fail.</span><span class="se">\n</span><span class="s1">We strongly suggest you to install radiance &#39;</span> \
+                    <span class="s1">&#39;under a path with no withspace (e.g. c:/radiance)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_radiancePath</span>
+                    <span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">perl_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Path to the folder containing Perl binary files.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_perl_path</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">perl_exe_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Path to perl executable file.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_perlExePath</span>
+
+    <span class="nd">@perl_path</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">perl_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Path to the folder containing Perl binary files.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_perl_path</span> <span class="o">=</span> <span class="n">path</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_perlExePath</span> <span class="o">=</span> <span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;/perl&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_perl_path</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;nt&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_perl_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_perlExePath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_which</span><span class="p">(</span><span class="s2">&quot;perl.exe&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;posix&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_perl_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_perlExePath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_which</span><span class="p">(</span><span class="s2">&quot;perl&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_perl_path</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">open_studio_path</span><span class="p">:</span>
+            <span class="c1"># try to find perl under openstudio</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">open_studio_path</span><span class="p">,</span>
+                             <span class="s1">&#39;strawberry-perl-5.16.2.1-32bit-portable-reduced&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="s1">&#39;perl/bin/perl.exe&#39;</span><span class="p">)):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_perl_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_perlExePath</span> <span class="o">=</span> <span class="n">p</span><span class="p">,</span> \
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="s1">&#39;perl/bin/perl.exe&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">mute</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_perl_path</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Path to perl is set to: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_perl_path</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ep_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Path to EnergyPlus folder.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="c1"># return self._eplus</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">python_exe_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Path to Python folder.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">sys</span><span class="o">.</span><span class="n">executable</span>
+
+<div class="viewcode-block" id="Folders.load_from_file"><a class="viewcode-back" href="../../honeybee.html#honeybee.config.Folders.load_from_file">[docs]</a>    <span class="k">def</span> <span class="nf">load_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load installation folders from a json file.&quot;&quot;&quot;</span>
+        <span class="n">file_path</span> <span class="o">=</span> <span class="n">file_path</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">__configFile</span>
+        <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">file_path</span><span class="p">)),</span> \
+            <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No such a file as </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file_path</span><span class="p">))</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">cfg</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\\\</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">paths</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Failed to load paths from </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file_path</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">paths</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;__&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">p</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">__defaultPath</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span></div></div>
+
+
+<span class="n">f</span> <span class="o">=</span> <span class="n">Folders</span><span class="p">(</span><span class="n">mute</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">radlib_path</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">radlib_path</span>
+<span class="sd">&quot;&quot;&quot;Path to Radinace libraries folder.&quot;&quot;&quot;</span>
+
+<span class="n">radbin_path</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">radbin_path</span>
+<span class="sd">&quot;&quot;&quot;Path to Radinace binaries folder.&quot;&quot;&quot;</span>
+
+<span class="c1"># NotImplemented yet</span>
+<span class="n">epPath</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="sd">&quot;&quot;&quot;Path to EnergyPlus folder.&quot;&quot;&quot;</span>
+
+<span class="n">perlExePath</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">perl_exe_path</span>
+<span class="sd">&quot;&quot;&quot;Path to the perl executable needed for some othe Radiance Scripts.&quot;&quot;&quot;</span>
+
+
+<span class="n">pythonExePath</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">python_exe_path</span>
+<span class="sd">&quot;&quot;&quot;Path to python executable needed for some Radiance scripts from the PyRad</span>
+<span class="sd">library&quot;&quot;&quot;</span>
+
+<span class="n">wrapper</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;nt&#39;</span> <span class="k">else</span> <span class="s2">&quot;&#39;&quot;</span>
+<span class="sd">&quot;&quot;&quot;Wrapper for path with white space.&quot;&quot;&quot;</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

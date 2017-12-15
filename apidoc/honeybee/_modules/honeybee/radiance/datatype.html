@@ -1,0 +1,941 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.datatype &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../index.html">
+    <img class="logo" src="../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.datatype</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="sd">&quot;&quot;&quot;Descriptors, factory classes etc for the Radiance library.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">Iterable</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;RadiancePath&#39;</span><span class="p">,</span> <span class="s1">&#39;RadianceNumber&#39;</span><span class="p">,</span> <span class="s1">&#39;RadianceBoolFlag&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;RadianceTuple&#39;</span><span class="p">,</span> <span class="s1">&#39;RadianceValue&#39;</span><span class="p">,</span> <span class="s1">&#39;RadianceReadOnly&#39;</span><span class="p">]</span>
+
+
+<span class="k">class</span> <span class="nc">RadianceDefault</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The default descriptor for radiance commands.</span>
+
+<span class="sd">    Provides base case attributes for other descriptors.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        name: Required for all cases. Name of the flag, like &#39;ab&#39; for &#39;-ab 5&#39;</span>
+<span class="sd">            in rtrace etc. Note that some of the radiance flags are actually</span>
+<span class="sd">            keywords in python. For example -or in rcollate or -as in rtrace.</span>
+<span class="sd">            In such cases the name of the flag should be specified as orX or</span>
+<span class="sd">            asX respectively. Refer the rcollate definition for an example.</span>
+
+<span class="sd">        descriptive_name: This is the human-readable name of the flag. For</span>
+<span class="sd">            example &#39;ambient divisions&#39; for &#39;ab&#39;, &#39;view file&#39; for &#39;vf&#39; etc.</span>
+<span class="sd">            These descriptions are usually available in the manual pages of</span>
+<span class="sd">            Radiance. Although this is an optional input, for the purposes of</span>
+<span class="sd">            debugging and readability, it is strongly suggested that this input</span>
+<span class="sd">            be specified for all instances.</span>
+
+<span class="sd">        accepted_inputs:Optional. List of inputs that are permissible for a</span>
+<span class="sd">            particular command option. For example, the -h flag in rcollate</span>
+<span class="sd">            only accepts &#39;i&#39; or &#39;o&#39; as options. So, in cases where permissible</span>
+<span class="sd">            inputs are known it is recommended that this input be specified.If</span>
+<span class="sd">            the user-specified input doesn&#39;t exist in _accepted_inputs then a</span>
+<span class="sd">            value error will be raised.</span>
+
+<span class="sd">        valid_range: Optional. The valid range for several prominent radiance</span>
+<span class="sd">            parameters is between 0 and 1. There are likely to be other</span>
+<span class="sd">            parameters with similar valid ranges. If _valid_range is specified,</span>
+<span class="sd">            a warning will be issued in case the provided input is not within</span>
+<span class="sd">            that range.</span>
+
+<span class="sd">        default_value: Optional. The value to be assigned in case no value is</span>
+<span class="sd">            assigned by the user. If the default value is not specified then</span>
+<span class="sd">            the attribute won&#39;t be considered int the creation of the</span>
+<span class="sd">            to_rad_string string representation of the component.</span>
+
+<span class="sd">        is_joined: Optional. A boolean that indicates if the name and value</span>
+<span class="sd">            are joined in Radiance command. For instance it should be False for</span>
+<span class="sd">            -ab 5 and should be True for -of. (Default: False)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;_name&#39;</span><span class="p">,</span> <span class="s1">&#39;_descriptive_name&#39;</span><span class="p">,</span> <span class="s1">&#39;_accepted_inputs&#39;</span><span class="p">,</span> <span class="s1">&#39;_default_value&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;_valid_range&#39;</span><span class="p">,</span> <span class="s1">&#39;_nameString&#39;</span><span class="p">,</span> <span class="s1">&#39;_is_joined&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">accepted_inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">valid_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_joined</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init descriptor.</span>
+
+<span class="sd">        The constructor (__init__) initializes name, descriptive_name,</span>
+<span class="sd">        accepted_inputs and valid_range. If specified, tests if valid_range is</span>
+<span class="sd">        specified properly. Creates a readable description of the command with</span>
+<span class="sd">        the nameString attribute.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_descriptive_name</span> <span class="o">=</span> <span class="n">descriptive_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_accepted_inputs</span> <span class="o">=</span> <span class="n">accepted_inputs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_value</span> <span class="o">=</span> <span class="n">default_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_is_joined</span> <span class="o">=</span> <span class="n">is_joined</span>
+        <span class="c1"># check if the valid range is a 2-number tuple. Sort it if it isn&#39;t</span>
+        <span class="c1"># sorted already.</span>
+        <span class="k">if</span> <span class="n">valid_range</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">valid_range</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span>
+                <span class="n">valid_range</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> \
+                <span class="s2">&quot;The input for valid_range should be a tuple/list containing&quot;</span> \
+                <span class="s2">&quot; expected minimum and maximum values&quot;</span>
+            <span class="n">valid_range</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">valid_range</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_valid_range</span> <span class="o">=</span> <span class="n">valid_range</span>
+
+        <span class="c1"># create nameString.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nameString</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="p">)</span> \
+            <span class="k">if</span> <span class="n">descriptive_name</span> \
+            <span class="k">else</span> <span class="n">name</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">isRadianceDataType</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if object is a RadinaceDataType.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return value.</span>
+
+<span class="sd">        Raise an AttributeError through getattr if the value hasn&#39;t been</span>
+<span class="sd">        specified at all. None value has no meaning in Radiance. So, if None is</span>
+<span class="sd">        spefied as an input, then raise a standard exception. If everything is</span>
+<span class="sd">        the way it should be, then just return the value of the attribute.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">RadianceDataType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_value</span><span class="p">,</span>
+                                         <span class="bp">self</span><span class="o">.</span><span class="n">_is_joined</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># create a radianceDataType with value None</span>
+                <span class="c1"># to_rad_string will return and empty string</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">RadianceDataType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
+                                         <span class="bp">self</span><span class="o">.</span><span class="n">_is_joined</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If _accepted_inputs is specified then check if the input is among the</span>
+<span class="sd">        _accepted_inputs and assign it as an attribute. Else Raise a value</span>
+<span class="sd">        error.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_accepted_inputs</span><span class="p">:</span>
+                <span class="n">inputs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_accepted_inputs</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The value for </span><span class="si">%s</span><span class="s2"> should be one of the&quot;</span>
+                                     <span class="s2">&quot; following: </span><span class="si">%s</span><span class="s2">. The provided value was </span><span class="si">%s</span><span class="s2">&quot;</span>
+                                     <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nameString</span><span class="p">,</span>
+                                        <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)),</span> <span class="n">value</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">instance</span><span class="p">:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span>
+                        <span class="n">RadianceDataType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_joined</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span>
+                    <span class="n">RadianceDataType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_joined</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Value representation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_default_value</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="RadianceValue"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.datatype.RadianceValue">[docs]</a><span class="k">class</span> <span class="nc">RadianceValue</span><span class="p">(</span><span class="n">RadianceDefault</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A Radiance string value.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        name: Required for all cases. Name of the flag, like &#39;ab&#39; for &#39;-ab 5&#39;</span>
+<span class="sd">            in rtrace etc. Note that some of the radiance flags are actually</span>
+<span class="sd">            keywords in python. For example -or in rcollate or -as in rtrace.</span>
+<span class="sd">            In such cases the name of the flag should be specified as orX or</span>
+<span class="sd">            asX respectively. Refer the rcollate definition for an example.</span>
+
+<span class="sd">        descriptive_name: This is the human-readable name of the flag. For</span>
+<span class="sd">            example &#39;ambient divisions&#39; for &#39;ab&#39;, &#39;view file&#39; for &#39;vf&#39; etc.</span>
+<span class="sd">            These descriptions are usually available in the manual pages of</span>
+<span class="sd">            Radiance. Although this is an optional input, for the purposes of</span>
+<span class="sd">            debugging and readability, it is strongly suggested that this input</span>
+<span class="sd">            be specified for all instances.</span>
+
+<span class="sd">        accepted_inputs:Optional. List of inputs that are permissible for a</span>
+<span class="sd">            particular command option. For example, the -h flag in rcollate</span>
+<span class="sd">            only accepts &#39;i&#39; or &#39;o&#39; as options. So, in cases where permissible</span>
+<span class="sd">            inputs are known it is recommended that this input be specified.If</span>
+<span class="sd">            the user-specified input doesn&#39;t exist in _accepted_inputs then a</span>
+<span class="sd">            value error will be raised.</span>
+
+<span class="sd">        default_value: Optional. The value to be assigned in case no value is</span>
+<span class="sd">            assigned by the user. If the default value is not specified then</span>
+<span class="sd">            the attribute won&#39;t be considered int the creation of the</span>
+<span class="sd">            to_rad_string string representation of the component.</span>
+
+<span class="sd">        is_joined: Set to True if the Boolean should be returned as a joined</span>
+<span class="sd">            output (i.e. -of, -od) (Default: False)</span>
+
+<span class="sd">    Usage:</span>
+<span class="sd">        o = RadianceValue(&#39;o&#39;, &#39;output format&#39;, default_value=&#39;f&#39;,</span>
+<span class="sd">                          accepted_inputs=(&#39;f&#39;, &#39;d&#39;))</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">accepted_inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">default_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_joined</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init Radiance value.&quot;&quot;&quot;</span>
+        <span class="n">RadianceDefault</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="o">=</span><span class="n">descriptive_name</span><span class="p">,</span>
+                                 <span class="n">accepted_inputs</span><span class="o">=</span><span class="n">accepted_inputs</span><span class="p">,</span> <span class="n">valid_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                 <span class="n">default_value</span><span class="o">=</span><span class="n">default_value</span><span class="p">,</span> <span class="n">is_joined</span><span class="o">=</span><span class="n">is_joined</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RadianceBoolFlag"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.datatype.RadianceBoolFlag">[docs]</a><span class="k">class</span> <span class="nc">RadianceBoolFlag</span><span class="p">(</span><span class="n">RadianceDefault</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This input is expected to a boolean value (i.e. True or False).</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        name: Required for all cases. Name of the flag, like &#39;ab&#39; for &#39;-ab 5&#39;</span>
+<span class="sd">            in rtrace etc. Note that some of the radiance flags are actually</span>
+<span class="sd">            keywords in python. For example -or in rcollate or -as in rtrace.</span>
+<span class="sd">            In such cases the name of the flag should be specified as orX or</span>
+<span class="sd">            asX respectively. Refer the rcollate definition for an example.</span>
+
+<span class="sd">        descriptive_name: This is the human-readable name of the flag. For</span>
+<span class="sd">            example &#39;ambient divisions&#39; for &#39;ab&#39;, &#39;view file&#39; for &#39;vf&#39; etc.</span>
+<span class="sd">            These descriptions are usually available in the manual pages of</span>
+<span class="sd">            Radiance. Although this is an optional input, for the purposes of</span>
+<span class="sd">            debugging and readability, it is strongly suggested that this input</span>
+<span class="sd">            be specified for all instances.</span>
+
+<span class="sd">        default_value: Optional. The value to be assigned in case no value is</span>
+<span class="sd">            assigned by the user. If the default value is not specified then</span>
+<span class="sd">            the attribute won&#39;t be considered int the creation of the</span>
+<span class="sd">            to_rad_string string representation of the component.</span>
+
+<span class="sd">        is_dual_sign: Set to True if the Boolean should return +/- value.</span>
+<span class="sd">            (i.e. +I/-I) (Default: False)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;_is_dual_sign&#39;</span><span class="p">,)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">is_dual_sign</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init Boolean.&quot;&quot;&quot;</span>
+        <span class="n">RadianceDefault</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="o">=</span><span class="n">descriptive_name</span><span class="p">,</span>
+                                 <span class="n">accepted_inputs</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+                                 <span class="n">valid_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="n">default_value</span><span class="p">)</span>
+
+        <span class="c1"># This is useful for generating radiance string</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_is_dual_sign</span> <span class="o">=</span> <span class="n">is_dual_sign</span>
+
+    <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return value.</span>
+
+<span class="sd">        Raise an AttributeError through getattr if the value hasn&#39;t been</span>
+<span class="sd">        specified at all. None value has no meaning in Radiance. So, if None is</span>
+<span class="sd">        spefied as an input, then raise a standard exception. If everything is</span>
+<span class="sd">        the way it should be, then just return the value of the attribute.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">RadianceBoolType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_value</span><span class="p">,</span>
+                                         <span class="bp">self</span><span class="o">.</span><span class="n">_is_dual_sign</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">RadianceBoolType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
+                                         <span class="bp">self</span><span class="o">.</span><span class="n">_is_dual_sign</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwrite set for RadianceBoolType.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_accepted_inputs</span><span class="p">:</span>
+                <span class="n">inputs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_accepted_inputs</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The value for </span><span class="si">%s</span><span class="s2"> should be one of the&quot;</span>
+                                     <span class="s2">&quot; following: </span><span class="si">%s</span><span class="s2">. The provided value was </span><span class="si">%s</span><span class="s2">&quot;</span>
+                                     <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nameString</span><span class="p">,</span>
+                                        <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)),</span> <span class="n">value</span><span class="p">))</span>
+
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span>
+                    <span class="n">RadianceBoolType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="nb">bool</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_dual_sign</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="RadianceNumber"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.datatype.RadianceNumber">[docs]</a><span class="k">class</span> <span class="nc">RadianceNumber</span><span class="p">(</span><span class="n">RadianceDefault</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This input is expected to be an integer or floating point number.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        name: Required for all cases. Name of the flag, like &#39;ab&#39; for &#39;-ab 5&#39;</span>
+<span class="sd">            in rtrace etc. Note that some of the radiance flags are actually</span>
+<span class="sd">            keywords in python. For example -or in rcollate or -as in rtrace.</span>
+<span class="sd">            In such cases the name of the flag should be specified as orX or</span>
+<span class="sd">            asX respectively. Refer the rcollate definition for an example.</span>
+
+<span class="sd">        descriptive_name: This is the human-readable name of the flag. For</span>
+<span class="sd">            example &#39;ambient divisions&#39; for &#39;ab&#39;, &#39;view file&#39; for &#39;vf&#39; etc.</span>
+<span class="sd">            These descriptions are usually available in the manual pages of</span>
+<span class="sd">            Radiance. Although this is an optional input, for the purposes of</span>
+<span class="sd">            debugging and readability, it is strongly suggested that this input</span>
+<span class="sd">            be specified for all instances.</span>
+
+<span class="sd">        accepted_inputs:Optional. List of inputs that are permissible for a</span>
+<span class="sd">            particular command option. For example, the -h flag in rcollate</span>
+<span class="sd">            only accepts &#39;i&#39; or &#39;o&#39; as options. So, in cases where permissible</span>
+<span class="sd">            inputs are known it is recommended that this input be specified.If</span>
+<span class="sd">            the user-specified input doesn&#39;t exist in _accepted_inputs then a</span>
+<span class="sd">            value error will be raised.</span>
+
+<span class="sd">        valid_range: Optional. The valid range for several prominent radiance</span>
+<span class="sd">            parameters is between 0 and 1. There are likely to be other</span>
+<span class="sd">            parameters with similar valid ranges. If _valid_range is specified,</span>
+<span class="sd">            a warning will be issued in case the provided input is not within</span>
+<span class="sd">            that range.</span>
+
+<span class="sd">        check_positive: Optional. Check if the number should be greater than</span>
+<span class="sd">            or equal to zero.</span>
+
+<span class="sd">        num_type: Optional. Acceptable inputs are float or int. If specified, the</span>
+<span class="sd">            __set__ method will ensure that the value is stored in that type.</span>
+<span class="sd">            Also, if the number changes (for example from 4.212 to 4 due to int</span>
+<span class="sd">            being specified as _type_), then a warning will be issued.</span>
+
+<span class="sd">        default_value: Optional. The value to be assigned in case no value is</span>
+<span class="sd">            assigned by the user. If the default value is not specified then</span>
+<span class="sd">            the attribute won&#39;t be considered int the creation of the</span>
+<span class="sd">            to_rad_string string representation of the component.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;_check_positive&#39;</span><span class="p">,</span> <span class="s1">&#39;_type&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">valid_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">accepted_inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">check_positive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">default_value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="n">RadianceDefault</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="p">,</span> <span class="n">accepted_inputs</span><span class="p">,</span>
+                                 <span class="n">valid_range</span><span class="p">,</span> <span class="n">default_value</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_positive</span> <span class="o">=</span> <span class="n">check_positive</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_type</span> <span class="o">=</span> <span class="nb">int</span> <span class="k">if</span> <span class="n">num_type</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">num_type</span>
+
+    <span class="k">def</span> <span class="nf">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Re-iplements the __set__ method by testing the numeric input,</span>
+<span class="sd">        converting from str to float or int (if required)and checking for valid</span>
+<span class="sd">        values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">var_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nameString</span>
+
+            <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">final_value</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="c1"># Assign type if specified.</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_type</span><span class="p">:</span>
+                        <span class="n">final_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                            <span class="n">final_value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">final_value</span> <span class="o">=</span> <span class="n">value</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_positive</span><span class="p">:</span>
+                        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;The value for </span><span class="si">%s</span><span class="s2"> should be greater than 0.&quot;</span> \
+                              <span class="s2">&quot; The value specified was </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">var_name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+                        <span class="k">assert</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">msg</span>
+                <span class="c1"># Value error will be raised if the input was anything else</span>
+                <span class="c1"># other than a number.</span>
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;The value for </span><span class="si">%s</span><span class="s2"> should be a number. &quot;</span> \
+                          <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> was specified instead &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">var_name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;The type of input for </span><span class="si">%s</span><span class="s2"> should a float or int. &quot;</span> \
+                          <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> was specified instead&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">var_name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;The type of input for </span><span class="si">%s</span><span class="s2"> should a float or int. &quot;</span> \
+                          <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> was specified instead&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">var_name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+            <span class="c1"># Raise a warning if the number got modified.</span>
+            <span class="k">if</span> <span class="nb">hash</span><span class="p">(</span><span class="n">final_value</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">hash</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_type</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;The expected type for </span><span class="si">%s</span><span class="s2"> is </span><span class="si">%s</span><span class="s2">.&quot;</span> \
+                      <span class="s2">&quot;The provided input </span><span class="si">%s</span><span class="s2"> has been converted to </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> \
+                      <span class="p">(</span><span class="n">var_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_type</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">final_value</span><span class="p">)</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+            <span class="c1"># Raise a warning if the number isn&#39;t in the valid range.</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_valid_range</span><span class="p">:</span>
+                <span class="n">minVal</span><span class="p">,</span> <span class="n">maxVal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_valid_range</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">minVal</span> <span class="o">&lt;=</span> <span class="n">final_value</span> <span class="o">&lt;=</span> <span class="n">maxVal</span><span class="p">):</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;The specified input for </span><span class="si">%s</span><span class="s2"> is </span><span class="si">%s</span><span class="s2">. This is beyond &quot;</span> \
+                          <span class="s2">&quot;the valid range. The value for </span><span class="si">%s</span><span class="s2"> should be &quot;</span> \
+                          <span class="s2">&quot;between </span><span class="si">%s</span><span class="s2"> and </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">var_name</span><span class="p">,</span> <span class="n">final_value</span><span class="p">,</span> <span class="n">var_name</span><span class="p">,</span>
+                                                 <span class="n">maxVal</span><span class="p">,</span> <span class="n">minVal</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="n">RadianceNumberType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="n">final_value</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="RadianceTuple"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.datatype.RadianceTuple">[docs]</a><span class="k">class</span> <span class="nc">RadianceTuple</span><span class="p">(</span><span class="n">RadianceDefault</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This input is expected to be a numeric tuple like (0.5,0.3,0.2) etc.</span>
+
+<span class="sd">    (Attributes inherited from base-class are explained there.)</span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        name: Required for all cases. Name of the flag, like &#39;ab&#39; for &#39;-ab 5&#39;</span>
+<span class="sd">            in rtrace etc. Note that some of the radiance flags are actually</span>
+<span class="sd">            keywords in python. For example -or in rcollate or -as in rtrace.</span>
+<span class="sd">            In such cases the name of the flag should be specified as orX or</span>
+<span class="sd">            asX respectively. Refer the rcollate definition for an example.</span>
+
+<span class="sd">        descriptive_name: This is the human-readable name of the flag. For</span>
+<span class="sd">            example &#39;ambient divisions&#39; for &#39;ab&#39;, &#39;view file&#39; for &#39;vf&#39; etc.</span>
+<span class="sd">            These descriptions are usually available in the manual pages of</span>
+<span class="sd">            Radiance. Although this is an optional input, for the purposes of</span>
+<span class="sd">            debugging and readability, it is strongly suggested that this input</span>
+<span class="sd">            be specified for all instances.</span>
+
+<span class="sd">        accepted_inputs:Optional. List of inputs that are permissible for a</span>
+<span class="sd">            particular command option. For example, the -h flag in rcollate</span>
+<span class="sd">            only accepts &#39;i&#39; or &#39;o&#39; as options. So, in cases where permissible</span>
+<span class="sd">            inputs are known it is recommended that this input be specified.If</span>
+<span class="sd">            the user-specified input doesn&#39;t exist in _accepted_inputs then a</span>
+<span class="sd">            value error will be raised.</span>
+
+<span class="sd">        valid_range: Optional. The valid range for several prominent radiance</span>
+<span class="sd">            parameters is between 0 and 1. There are likely to be other</span>
+<span class="sd">            parameters with similar valid ranges. If _valid_range is specified,</span>
+<span class="sd">            a warning will be issued in case the provided input is not within</span>
+<span class="sd">            that range.</span>
+<span class="sd">        tuple_size: Optional. Specify the number of inputs that are expected.</span>
+
+<span class="sd">        num_type: Optional. Acceptable inputs are float or int. If specified, the</span>
+<span class="sd">            __set__ method will ensure that the value is stored in that type.</span>
+
+<span class="sd">        default_value: Optional. The value to be assigned in case no value is</span>
+<span class="sd">            assigned by the user. If the default value is not specified then</span>
+<span class="sd">            the attribute won&#39;t be considered int the creation of the</span>
+<span class="sd">            to_rad_string string representation of the component.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;_tuple_size&#39;</span><span class="p">,</span> <span class="s1">&#39;_type&#39;</span><span class="p">,</span> <span class="s1">&#39;_test_type&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">valid_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">accepted_inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tuple_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">default_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">test_type</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+        <span class="n">RadianceDefault</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="p">,</span> <span class="n">accepted_inputs</span><span class="p">,</span>
+                                 <span class="n">valid_range</span><span class="p">,</span> <span class="n">default_value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tuple_size</span> <span class="o">=</span> <span class="n">tuple_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_type</span> <span class="o">=</span> <span class="n">num_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_test_type</span> <span class="o">=</span> <span class="n">test_type</span>
+
+    <span class="k">def</span> <span class="nf">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check for tuple size and valid range if specified.</span>
+
+<span class="sd">        Parse from strings if input is specified as a string instead of a number.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_test_type</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_type</span><span class="p">:</span>
+                    <span class="n">num_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_type</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">num_type</span> <span class="o">=</span> <span class="nb">float</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">final_value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                <span class="n">final_value</span> <span class="o">=</span> <span class="n">value</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_test_type</span><span class="p">:</span>
+                    <span class="n">final_value</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">num_type</span><span class="p">,</span> <span class="n">final_value</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;The specified input for </span><span class="si">%s</span><span class="s2"> is </span><span class="si">%s</span><span class="s2">. &quot;</span> \
+                      <span class="s2">&quot;The value should be a list or a tuple.&quot;</span> \
+                      <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nameString</span><span class="p">,</span> <span class="n">final_value</span><span class="p">)</span>
+
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tuple_size</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">final_value</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tuple_size</span><span class="p">,</span> \
+                    <span class="s2">&quot;The number of inputs required for </span><span class="si">%s</span><span class="s2"> are </span><span class="si">%s</span><span class="s2">. &quot;</span> \
+                    <span class="s2">&quot;The provided input was </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> \
+                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nameString</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tuple_size</span><span class="p">,</span> <span class="n">final_value</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_valid_range</span><span class="p">:</span>
+                <span class="n">minVal</span><span class="p">,</span> <span class="n">maxVal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_valid_range</span>
+                <span class="n">allin_range</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">for</span> <span class="n">numValue</span> <span class="ow">in</span> <span class="n">final_value</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">minVal</span> <span class="o">&lt;=</span> <span class="n">numValue</span> <span class="o">&lt;=</span> <span class="n">maxVal</span><span class="p">):</span>
+                        <span class="n">allin_range</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="k">break</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">allin_range</span><span class="p">:</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;The specified input for </span><span class="si">%s</span><span class="s2"> is </span><span class="si">%s</span><span class="s2">. &quot;</span> \
+                          <span class="s2">&quot;One or more numbers are not in the valid range&quot;</span> \
+                          <span class="s2">&quot;. The values should be between </span><span class="si">%s</span><span class="s2"> and </span><span class="si">%s</span><span class="s2">&quot;</span> \
+                          <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nameString</span><span class="p">,</span> <span class="n">final_value</span><span class="p">,</span> <span class="n">maxVal</span><span class="p">,</span> <span class="n">minVal</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span>
+                    <span class="n">RadianceDataType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">final_value</span><span class="p">)))</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get item i from tuple.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="RadiancePath"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.datatype.RadiancePath">[docs]</a><span class="k">class</span> <span class="nc">RadiancePath</span><span class="p">(</span><span class="n">RadianceDefault</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This input is expected to be a file path.</span>
+
+<span class="sd">    (Attributes inherited from base-class are explained there.)</span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        name: Required for all cases. Name of the flag, like &#39;ab&#39; for &#39;-ab 5&#39;</span>
+<span class="sd">            in rtrace etc. Note that some of the radiance flags are actually</span>
+<span class="sd">            keywords in python. For example -or in rcollate or -as in rtrace.</span>
+<span class="sd">            In such cases the name of the flag should be specified as orX or</span>
+<span class="sd">            asX respectively. Refer the rcollate definition for an example.</span>
+
+<span class="sd">        descriptive_name: This is the human-readable name of the flag. For</span>
+<span class="sd">            example &#39;ambient divisions&#39; for &#39;ab&#39;, &#39;view file&#39; for &#39;vf&#39; etc.</span>
+<span class="sd">            These descriptions are usually available in the manual pages of</span>
+<span class="sd">            Radiance. Although this is an optional input, for the purposes of</span>
+<span class="sd">            debugging and readability, it is strongly suggested that this input</span>
+<span class="sd">            be specified for all instances.</span>
+
+<span class="sd">        relative_path: Optional. Start folder for relative path. Default is None</span>
+<span class="sd">            which returns absolute path.</span>
+
+<span class="sd">        check_exists: Optional. Check if the file exists. Useful in the case of</span>
+<span class="sd">            input files such as epw files etc. where it is essential for those</span>
+<span class="sd">            files to exist before the command executes.</span>
+
+<span class="sd">        extension: Optional. Test the extension of the file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;_relative_path&#39;</span><span class="p">,</span> <span class="s1">&#39;_check_exists&#39;</span><span class="p">,</span> <span class="s1">&#39;_extension&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">relative_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">check_exists</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init path descriptor.&quot;&quot;&quot;</span>
+        <span class="n">RadianceDefault</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_relative_path</span> <span class="o">=</span> <span class="n">relative_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_exists</span> <span class="o">=</span> <span class="n">check_exists</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_extension</span> <span class="o">=</span> <span class="n">extension</span>
+
+    <span class="k">def</span> <span class="nf">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the  value.</span>
+
+<span class="sd">        Run tests based on _expandRelative, _check_exists and _extension before</span>
+<span class="sd">        assigning the value to attribute.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> \
+                <span class="s2">&quot;The input for </span><span class="si">%s</span><span class="s2"> should be string containing the path name.&quot;</span> \
+                <span class="s2">&quot; </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> was provided instead&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nameString</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_exists</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span>
+                        <span class="s2">&quot;The specified path for </span><span class="si">%s</span><span class="s2"> was not found in </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_nameString</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extension</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_extension</span><span class="o">.</span><span class="n">lower</span><span class="p">()),</span> \
+                    <span class="s2">&quot;The accepted extension for </span><span class="si">%s</span><span class="s2"> is </span><span class="si">%s</span><span class="s2">. The provided input&quot;</span> \
+                    <span class="s2">&quot;was </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nameString</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extension</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span>
+                    <span class="n">RadiancePathType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_relative_path</span><span class="p">))</span></div>
+
+
+<span class="k">class</span> <span class="nc">RadianceDataType</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base type for all Radiance types.&quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;_name&#39;</span><span class="p">,</span> <span class="s1">&#39;_value&#39;</span><span class="p">,</span> <span class="s1">&#39;_is_joined&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">is_joined</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_is_joined</span> <span class="o">=</span> <span class="n">is_joined</span>
+
+    <span class="k">def</span> <span class="nf">to_rad_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return formatted value for Radiance based on the type of descriptor.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">,</span> <span class="n">basestring</span><span class="p">)</span> \
+                    <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
+                <span class="c1"># tuple</span>
+                <span class="k">return</span> <span class="s2">&quot;-</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">)))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_joined</span><span class="p">:</span>
+                    <span class="c1"># joined strings such as -of</span>
+                    <span class="k">return</span> <span class="s2">&quot;-</span><span class="si">%s%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># numbers</span>
+                    <span class="k">return</span> <span class="s2">&quot;-</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">))</span>
+
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Failed to set the value to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">==</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">!=</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">RadianceBoolType</span><span class="p">(</span><span class="n">RadianceDataType</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Radiance boolean.&quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;_is_dual_sign&quot;</span><span class="p">,)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">is_dual_sign</span><span class="p">):</span>
+        <span class="n">RadianceDataType</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_is_dual_sign</span> <span class="o">=</span> <span class="n">is_dual_sign</span>
+
+    <span class="k">def</span> <span class="nf">to_rad_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return formatted value for Radiance based on the type of descriptor.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_dual_sign</span><span class="p">:</span>
+                <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;+</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="ow">is</span> <span class="kc">True</span> \
+                    <span class="k">else</span> <span class="s2">&quot;-</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;-</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="ow">is</span> <span class="kc">True</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+
+            <span class="k">return</span> <span class="n">output</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Failed to set the value to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__int__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__float__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">==</span> <span class="nb">float</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">!=</span> <span class="nb">float</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">&lt;</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">&gt;</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">&lt;=</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">&gt;=</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">+</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">-</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">*</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__floordiv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">//</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__div__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">/</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__mod__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">%</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__pow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">**</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">other</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
+
+    <span class="k">def</span> <span class="nf">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__mul__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__rfloordiv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">other</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
+
+    <span class="k">def</span> <span class="nf">__rdiv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">other</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
+
+    <span class="k">def</span> <span class="nf">__rmod__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">other</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
+
+    <span class="k">def</span> <span class="nf">__rpow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">other</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
+
+
+<span class="k">class</span> <span class="nc">RadiancePathType</span><span class="p">(</span><span class="n">RadianceDataType</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Radiance path.&quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;relPath&quot;</span><span class="p">,)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">relative_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">RadianceDataType</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">relPath</span> <span class="o">=</span> <span class="n">relative_path</span>
+        <span class="sd">&quot;&quot;&quot;Start folder that relative path should be calculated from.</span>
+<span class="sd">        If None absolute path will be returned.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">to_rad_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return formatted value for Radiance based on the type of descriptor.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">relPath</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">relPath</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Failed to set the value to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">normpath</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">RadianceNumberType</span><span class="p">(</span><span class="n">RadianceDataType</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Radiance number.&quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">RadianceDataType</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__int__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__float__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">==</span> <span class="nb">float</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">!=</span> <span class="nb">float</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">&lt;</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">&gt;</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">&lt;=</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">&gt;=</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">+</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">-</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">*</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__floordiv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">//</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__div__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">/</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__mod__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">%</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__pow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">**</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">other</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
+
+    <span class="k">def</span> <span class="nf">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__mul__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__rfloordiv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">other</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
+
+    <span class="k">def</span> <span class="nf">__rdiv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">other</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
+
+    <span class="k">def</span> <span class="nf">__rmod__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">other</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
+
+    <span class="k">def</span> <span class="nf">__rpow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">other</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
+
+
+<div class="viewcode-block" id="RadianceReadOnly"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.datatype.RadianceReadOnly">[docs]</a><span class="k">class</span> <span class="nc">RadianceReadOnly</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A descriptor for creating Readonly values.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="c1"># Let the value be set first time through constructor.</span>
+        <span class="c1"># Block all other attempts.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;The attribute </span><span class="si">%s</span><span class="s2"> is read only. &quot;</span>
+                            <span class="s2">&quot;It&#39;s default value is </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">value</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

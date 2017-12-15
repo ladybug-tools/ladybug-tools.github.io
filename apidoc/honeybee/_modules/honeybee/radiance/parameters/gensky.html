@@ -1,0 +1,285 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.parameters.gensky &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../index.html">
+    <img class="logo" src="../../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.parameters.gensky</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="kn">from</span> <span class="nn">._advancedparametersbase</span> <span class="k">import</span> <span class="n">AdvancedRadianceParameters</span>
+<span class="kn">from</span> <span class="nn">._frozen</span> <span class="k">import</span> <span class="n">frozen</span>
+
+
+<div class="viewcode-block" id="GenskyParameters"><a class="viewcode-back" href="../../../../honeybee.radiance.parameters.html#honeybee.radiance.parameters.gensky.GenskyParameters">[docs]</a><span class="nd">@frozen</span>
+<span class="k">class</span> <span class="nc">GenskyParameters</span><span class="p">(</span><span class="n">AdvancedRadianceParameters</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Gensky parameters.</span>
+
+<span class="sd">    Read more:</span>
+<span class="sd">        http://radsite.lbl.gov/radiance/man_html/gensky.1.html</span>
+
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        altitude_azimuth: [-ang] A tuple corresponding to altitude and azimuth</span>
+<span class="sd">            angle.This input can be used instead of specifying the monthDayTime.</span>
+<span class="sd">        sunny_sky: [-s|+s] A boolean value to generate sunny sky with or without</span>
+<span class="sd">            sun. Set to True to generate a sunnny sky with sun, Fasle to generate</span>
+<span class="sd">            a sunny sky without sun (Default: None)</span>
+<span class="sd">        cloudy_sky: [-c] A boolean value to generate cloudy sky</span>
+<span class="sd">        interm_sky: [-i|+i] A boolean value to generate intermediate sky with or</span>
+<span class="sd">            without sun. Set to True to generate an intermediate sky with sun,</span>
+<span class="sd">            Fasle to generate a intermediate sky without sun (Default: None)</span>
+<span class="sd">        uniform_cloudy_sky: [-u] A boolean value to generate Uniform cloudy sky.</span>
+<span class="sd">        ground_reflect: [-g rfl] A float number to indicate ground reflectance.</span>
+<span class="sd">        zenith_bright: [-b brt] A float number to indicate zenith brightness in</span>
+<span class="sd">            watts/steradian/meter-sq.</span>
+<span class="sd">        zenith_bright_horz_diff: [-B irrad] A float number to indicate zenith</span>
+<span class="sd">            brightness from horizontal diffuse irradiance in watts/meter-sq.</span>
+<span class="sd">        solar_rad: [-r rad] A float number to indicate solar radiance in</span>
+<span class="sd">        watts/steradians/meter-sq.</span>
+<span class="sd">        solar_rad_horz_diff: [-R irrad] A float number to indicate solar radiance</span>
+<span class="sd">            from horizontal direct irradiance in watts/meter-sq.</span>
+<span class="sd">        turbidity: [-t trb] A float number to indicate turbidity.</span>
+<span class="sd">        latitude: [-a lat] A float number to indicate site altitude. Negative</span>
+<span class="sd">            angle indicates south latitude.</span>
+<span class="sd">        longitude: [-o lon] A float number to indicate site latitude. Negative</span>
+<span class="sd">            angle indicates east longitude.</span>
+<span class="sd">        meridian: [-m mer] A float number to indicate site meridian west of</span>
+<span class="sd">        Greenwich.</span>
+
+<span class="sd">        * For the full list of attributes try self.keys</span>
+<span class="sd">        ** values between []&#39;s indicate Radiance equivalent keys for advanced users</span>
+
+<span class="sd">    Usage:</span>
+
+<span class="sd">        # generate sky matrix with default values</span>
+<span class="sd">        gnskyparam = GenskyParameters()</span>
+
+<span class="sd">        # check the current values</span>
+<span class="sd">        print(gnskyparam.to_rad_string())</span>
+<span class="sd">        &gt; -g 0.5</span>
+
+
+<span class="sd">        # set altitude and azimuth angle values</span>
+<span class="sd">        gnsky.altitude_azimuth = (12,31)</span>
+
+<span class="sd">        #check the new values added.</span>
+<span class="sd">        print(gnskyparam.to_rad_string())</span>
+<span class="sd">        &gt; -g 0.5 -ang 12.0 31.0</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">altitude_azimuth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sunny_sky</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">cloudy_sky</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">interm_sky</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">uniform_cloudy_sky</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">ground_reflect</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zenith_bright</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zenith_bright_horz_diff</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">solar_rad</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">solar_rad_horz_diff</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">turbidity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">latitude</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">meridian</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init sky parameters.&quot;&quot;&quot;</span>
+        <span class="n">AdvancedRadianceParameters</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_tuple</span><span class="p">(</span><span class="s1">&#39;ang&#39;</span><span class="p">,</span> <span class="s1">&#39;altitude azimuth&#39;</span><span class="p">,</span> <span class="n">tuple_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;altitude_azimuth&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">altitude_azimuth</span> <span class="o">=</span> <span class="n">altitude_azimuth</span>
+        <span class="sd">&quot;&quot;&quot;[-ang] A tuple corresponding to altitude and azimuth</span>
+<span class="sd">            angle.This input can be used instead of specifying the monthDayTime.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_bool_flag</span><span class="p">(</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="s1">&#39;sunny sky with or without sun&#39;</span><span class="p">,</span>
+                                    <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;sunny_sky&#39;</span><span class="p">,</span>
+                                    <span class="n">is_dual_sign</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># set current value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sunny_sky</span> <span class="o">=</span> <span class="n">sunny_sky</span>
+        <span class="sd">&quot;&quot;&quot;[-s|+s] A boolean value to generate sunny sky with or without sun.</span>
+<span class="sd">        Set to True to generate a sunnny sky with sun, Fasle to generate a sunny</span>
+<span class="sd">        sky without sun (Default: None)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_bool_flag</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;cloudy sky&#39;</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;cloudy_sky&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cloudy_sky</span> <span class="o">=</span> <span class="n">cloudy_sky</span>
+        <span class="sd">&quot;&quot;&quot;[-c] A boolean value to generate cloudy sky&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_bool_flag</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="s1">&#39;intermediate sky with or without sun&#39;</span><span class="p">,</span>
+                                    <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;interm_sky&#39;</span><span class="p">,</span>
+                                    <span class="n">is_dual_sign</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interm_sky</span> <span class="o">=</span> <span class="n">interm_sky</span>
+        <span class="sd">&quot;&quot;&quot;[-i|+i] A boolean value to generate intermediate sky with or without</span>
+<span class="sd">        sun. Set to True to generate an intermediate sky with sun, Fasle to</span>
+<span class="sd">        generate a intermediate sky without sun (Default: None)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_bool_flag</span><span class="p">(</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;uniform cloudy sky&#39;</span><span class="p">,</span>
+                                    <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;uniform_cloudy_sky&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uniform_cloudy_sky</span> <span class="o">=</span> <span class="n">uniform_cloudy_sky</span>
+        <span class="sd">&quot;&quot;&quot;[-u] A boolean value to generate Uniform cloudy sky.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="s1">&#39;ground reflectance&#39;</span><span class="p">,</span>
+                                 <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;ground_reflect&#39;</span><span class="p">,</span>
+                                 <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">valid_range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ground_reflect</span> <span class="o">=</span> <span class="n">ground_reflect</span>
+        <span class="sd">&quot;&quot;&quot;[-g rfl] A float number to indicate ground reflectance &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;zenith brightness&#39;</span><span class="p">,</span>
+                                 <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;zenith_bright&#39;</span><span class="p">,</span>
+                                 <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zenith_bright</span> <span class="o">=</span> <span class="n">zenith_bright</span>
+        <span class="sd">&quot;&quot;&quot; [-b brt] A float number to indicate zenith brightness in</span>
+<span class="sd">         watts/steradian/meter-sq.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;zenith brightness from horizontal diffuse&#39;</span>
+                                 <span class="s1">&#39;irradiance&#39;</span><span class="p">,</span>
+                                 <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;zenith_bright_horz_diff&#39;</span><span class="p">,</span>
+                                 <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zenith_bright_horz_diff</span> <span class="o">=</span> <span class="n">zenith_bright_horz_diff</span>
+        <span class="sd">&quot;&quot;&quot;[-B irrad] A float number to indicate zenith  brightness from</span>
+<span class="sd">        horizontal diffuse irradiance in watts/meter-sq.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;solar radiance&#39;</span><span class="p">,</span>
+                                 <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;solar_rad&#39;</span><span class="p">,</span>
+                                 <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">solar_rad</span> <span class="o">=</span> <span class="n">solar_rad</span>
+        <span class="sd">&quot;&quot;&quot;[-r rad] A float number to indicate solar radiance in</span>
+<span class="sd">        watts/steradians/meter-sq.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;R&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;solar radiance from horizontal diffuse irradiance&#39;</span><span class="p">,</span>
+                                 <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;solar_rad_horz_diff&#39;</span><span class="p">,</span>
+                                 <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">solar_rad_horz_diff</span> <span class="o">=</span> <span class="n">solar_rad_horz_diff</span>
+        <span class="sd">&quot;&quot;&quot; [-R irrad] A float number to indicate solar radiance from horizontal</span>
+<span class="sd">        direct irradiance in watts/meter-sq.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="s1">&#39;turbidity&#39;</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;turbidity&#39;</span><span class="p">,</span>
+                                 <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">turbidity</span> <span class="o">=</span> <span class="n">turbidity</span>
+        <span class="sd">&quot;&quot;&quot; [-t trb] A float number to indicate turbidity.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;latitude&#39;</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;latitude&#39;</span><span class="p">,</span>
+                                 <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span> <span class="o">=</span> <span class="n">latitude</span>
+        <span class="sd">&quot;&quot;&quot;[-a lat] A float number to indicate site altitude. Negative angle</span>
+<span class="sd">        indicates south latitude.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="s1">&#39;longitude&#39;</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;longitude&#39;</span><span class="p">,</span>
+                                 <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">longitude</span> <span class="o">=</span> <span class="n">longitude</span>
+        <span class="sd">&quot;&quot;&quot;[-o lon] A float number to indicate site latitude. Negative angle</span>
+<span class="sd">        indicates east longitude.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_radiance_number</span><span class="p">(</span><span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="s1">&#39;meridian&#39;</span><span class="p">,</span> <span class="n">attribute_name</span><span class="o">=</span><span class="s1">&#39;meridian&#39;</span><span class="p">,</span>
+                                 <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meridian</span> <span class="o">=</span> <span class="n">meridian</span>
+        <span class="sd">&quot;&quot;&quot;[-m mer] A float number to indicate site meridian west of</span>
+<span class="sd">        Greenwich. &quot;&quot;&quot;</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

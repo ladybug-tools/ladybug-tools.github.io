@@ -1,0 +1,301 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.command.genBSDF &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../index.html">
+    <img class="logo" src="../../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.command.genBSDF</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+
+<span class="kn">from</span> <span class="nn">_commandbase</span> <span class="k">import</span> <span class="n">RadianceCommand</span>
+<span class="kn">from</span> <span class="nn">..datatype</span> <span class="k">import</span> <span class="n">RadiancePath</span><span class="p">,</span> <span class="n">RadianceBoolFlag</span><span class="p">,</span> <span class="n">RadianceValue</span>
+<span class="kn">from</span> <span class="nn">..parameters.genBsdf</span> <span class="k">import</span> <span class="n">GenbsdfParameters</span>
+<span class="kn">from</span> <span class="nn">..parameters.gridbased</span> <span class="k">import</span> <span class="n">GridBasedParameters</span>
+<span class="kn">from</span> <span class="nn">getbbox</span> <span class="k">import</span> <span class="n">Getbbox</span>
+<span class="kn">from</span> <span class="nn">xform</span> <span class="k">import</span> <span class="n">Xform</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="c1"># TODO: 30thNov2016:</span>
+
+
+<div class="viewcode-block" id="GenBSDF"><a class="viewcode-back" href="../../../../honeybee.radiance.command.html#honeybee.radiance.command.genBSDF.GenBSDF">[docs]</a><span class="k">class</span> <span class="nc">GenBSDF</span><span class="p">(</span><span class="n">RadianceCommand</span><span class="p">):</span>
+
+    <span class="n">output_file</span> <span class="o">=</span> <span class="n">RadiancePath</span><span class="p">(</span>
+        <span class="s1">&#39;output_file&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;output BSDF file in XML format&#39;</span><span class="p">,</span>
+        <span class="n">extension</span><span class="o">=</span><span class="s1">&#39;.xml&#39;</span><span class="p">)</span>
+    <span class="n">normal_orientation</span> <span class="o">=</span> <span class="n">RadianceValue</span><span class="p">(</span>
+        <span class="s1">&#39;normal_orientation&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;the orientation of the normal for the BSDF geometry&#39;</span><span class="p">,</span>
+        <span class="n">accepted_inputs</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;+X&#39;</span><span class="p">,</span> <span class="s1">&#39;+Y&#39;</span><span class="p">,</span> <span class="s1">&#39;+Z&#39;</span><span class="p">,</span> <span class="s1">&#39;-X&#39;</span><span class="p">,</span> <span class="s1">&#39;-Y&#39;</span><span class="p">,</span> <span class="s1">&#39;-Z&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;+x&#39;</span><span class="p">,</span> <span class="s1">&#39;+y&#39;</span><span class="p">,</span> <span class="s1">&#39;+z&#39;</span><span class="p">,</span> <span class="s1">&#39;-x&#39;</span><span class="p">,</span> <span class="s1">&#39;-y&#39;</span><span class="p">,</span> <span class="s1">&#39;-z&#39;</span><span class="p">))</span>
+    <span class="n">prepare_geometry</span> <span class="o">=</span> <span class="n">RadianceBoolFlag</span><span class="p">(</span><span class="s1">&#39;prepare_geometry&#39;</span><span class="p">,</span>
+                                        <span class="s1">&#39;prepare geometry for BSDF&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_geometry</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gen_bsdf_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">grid_based_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">normal_orientation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">prepare_geometry</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">RadianceCommand</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">executable_name</span><span class="o">=</span><span class="s1">&#39;genBSDF.pl&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">grid_based_parameters</span> <span class="o">=</span> <span class="n">grid_based_parameters</span>
+        <span class="sd">&quot;&quot;&quot;The input for this attribute must be an instance of Grid based parameters&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">gen_bsdf_parameters</span> <span class="o">=</span> <span class="n">gen_bsdf_parameters</span>
+        <span class="sd">&quot;&quot;&quot;These are parameters specific to genBsdf such as sampling, geometry dimensions</span>
+<span class="sd">        etc.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_geometry</span> <span class="o">=</span> <span class="n">input_geometry</span>
+        <span class="sd">&quot;&quot;&quot;Rad or mgf files that are inputs for genBSDF&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="n">output_file</span>
+        <span class="sd">&quot;&quot;&quot;Path name for the XML file created by genBSDF&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">normal_orientation</span> <span class="o">=</span> <span class="n">normal_orientation</span>
+        <span class="sd">&quot;&quot;&quot;Direction of the normal surface for the overall input geometry&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">prepare_geometry</span> <span class="o">=</span> <span class="n">prepare_geometry</span>
+        <span class="sd">&quot;&quot;&quot;A boolean value to decide if the input geometry needs to be translated and</span>
+<span class="sd">        rotated before being sent as input to genBSDf&quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">input_geometry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get and set scene files.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__input_geometry</span>
+
+    <span class="nd">@input_geometry</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">input_geometry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">files</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__input_geometry</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__input_geometry</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">gen_bsdf_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get and set gen_bsdf_parameters.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__gen_bsdf_parameters</span>
+
+    <span class="nd">@gen_bsdf_parameters</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">gen_bsdf_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gen_bsdf_param</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gen_bsdf_parameters</span> <span class="o">=</span> <span class="n">gen_bsdf_param</span> <span class="k">if</span> <span class="n">gen_bsdf_param</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> \
+            <span class="k">else</span> <span class="n">GenbsdfParameters</span><span class="p">()</span>
+
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gen_bsdf_parameters</span><span class="p">,</span> <span class="s2">&quot;isRadianceParameters&quot;</span><span class="p">),</span> \
+            <span class="s2">&quot;input gen_bsdf_parameters is not a valid parameters type.&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">grid_based_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grid_based_parameters</span>
+
+    <span class="nd">@grid_based_parameters</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">grid_based_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid_based_parameters</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">grid_based_parameters</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grid_based_parameters</span><span class="p">,</span> <span class="n">GridBasedParameters</span><span class="p">),</span>\
+                <span class="s1">&#39;The input for rcontribOptions should be an instance of &#39;</span>\
+                <span class="s1">&#39;Gridbased parameters&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__grid_based_parameters</span> <span class="o">=</span> <span class="n">grid_based_parameters</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__grid_based_parameters</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="GenBSDF.prepare_geometry_for_bsdf"><a class="viewcode-back" href="../../../../honeybee.radiance.command.html#honeybee.radiance.command.genBSDF.GenBSDF.prepare_geometry_for_bsdf">[docs]</a>    <span class="k">def</span> <span class="nf">prepare_geometry_for_bsdf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A method that will translate and rotate the model properly for genBSDF.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_geometry</span><span class="p">,</span>\
+            <span class="s1">&#39;The files required for input_geometry have not been specified&#39;</span>
+
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">normal_orientation</span><span class="o">.</span><span class="n">_value</span><span class="p">,</span> \
+            <span class="s1">&#39;The input required for normal_orientation has not been specified&#39;</span>
+
+        <span class="n">temp_for_getbox</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mktemp</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;getb&#39;</span><span class="p">)</span>
+
+        <span class="n">get_b</span> <span class="o">=</span> <span class="n">Getbbox</span><span class="p">()</span>
+        <span class="n">get_b</span><span class="o">.</span><span class="n">rad_files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_geometry</span>
+        <span class="n">get_b</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="n">temp_for_getbox</span>
+        <span class="n">get_b</span><span class="o">.</span><span class="n">header_suppress</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">get_b</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">temp_for_getbox</span><span class="p">)</span> <span class="k">as</span> <span class="n">get_box_data</span><span class="p">:</span>
+            <span class="n">get_box_value</span> <span class="o">=</span> <span class="n">get_box_data</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">yMin</span><span class="p">,</span> <span class="n">yMax</span><span class="p">,</span> <span class="n">zMin</span><span class="p">,</span> <span class="n">zMax</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">get_box_value</span><span class="p">)</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">temp_for_getbox</span><span class="p">)</span>
+
+        <span class="n">temp_for_xform</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mktemp</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;xform&#39;</span><span class="p">)</span>
+
+        <span class="n">xTr</span><span class="p">,</span> <span class="n">yTr</span><span class="p">,</span> <span class="n">zTr</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">-</span> <span class="n">xMin</span><span class="p">,</span> <span class="mi">0</span> <span class="o">-</span> <span class="n">yMin</span><span class="p">,</span> <span class="mi">0</span> <span class="o">-</span> <span class="n">zMin</span>
+        <span class="n">zTr</span> <span class="o">+=</span> <span class="o">-</span><span class="mf">0.001</span>
+
+        <span class="n">rotation_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;+x&#39;</span><span class="p">:</span> <span class="s1">&#39;-ry -90&#39;</span><span class="p">,</span> <span class="s1">&#39;-x&#39;</span><span class="p">:</span> <span class="s1">&#39;-ry 90&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;+y&#39;</span><span class="p">:</span> <span class="s1">&#39;-rx 90&#39;</span><span class="p">,</span> <span class="s1">&#39;-y&#39;</span><span class="p">:</span> <span class="s1">&#39;-rx -90&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;+z&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;-z&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">}</span>
+        <span class="n">rotation_normal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normal_orientation</span><span class="o">.</span><span class="n">_value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="n">rot_tr</span> <span class="o">=</span> <span class="n">rotation_dict</span><span class="p">[</span><span class="n">rotation_normal</span><span class="p">]</span>
+        <span class="n">xfr</span> <span class="o">=</span> <span class="n">Xform</span><span class="p">()</span>
+        <span class="n">xfr</span><span class="o">.</span><span class="n">rad_file</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">geo</span><span class="p">)</span> <span class="k">for</span> <span class="n">geo</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_geometry</span><span class="p">]</span>
+        <span class="n">xfr</span><span class="o">.</span><span class="n">transforms</span> <span class="o">=</span> <span class="s2">&quot;-t </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">xTr</span><span class="p">,</span> <span class="n">yTr</span><span class="p">,</span> <span class="n">zTr</span><span class="p">,</span> <span class="n">rot_tr</span><span class="p">)</span>
+        <span class="n">xfr</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="n">temp_for_xform</span>
+        <span class="n">xfr</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">temp_for_xform</span></div>
+
+<div class="viewcode-block" id="GenBSDF.to_rad_string"><a class="viewcode-back" href="../../../../honeybee.radiance.command.html#honeybee.radiance.command.genBSDF.GenBSDF.to_rad_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_rad_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">relative_path</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">exe_name</span> <span class="o">=</span> <span class="s1">&#39;genBSDF.pl&#39;</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;nt&#39;</span> <span class="k">else</span> <span class="s1">&#39;genBSDF&#39;</span>
+        <span class="n">cmd_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normspace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radbin_path</span><span class="p">,</span> <span class="n">exe_name</span><span class="p">))</span>
+
+        <span class="n">perl_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">perl_exe_path</span><span class="p">)</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;nt&#39;</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;nt&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">perl_path</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Failed to find perl installation.</span><span class="se">\n</span><span class="s1">&#39;</span>
+                              <span class="s1">&#39;genBSDF.pl needs perl to run successfully.&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">cmd_path</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">perl_path</span><span class="p">,</span> <span class="n">cmd_path</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_based_parameters</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;nt&#39;</span><span class="p">:</span>
+                <span class="n">grid_based</span> <span class="o">=</span> <span class="s1">&#39;-r &quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_based_parameters</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">grid_based</span> <span class="o">=</span> <span class="s2">&quot;-r &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_based_parameters</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">grid_based</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen_bsdf_parameters</span><span class="p">:</span>
+            <span class="n">gen_bsdf_para</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen_bsdf_parameters</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">gen_bsdf_para</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span><span class="o">.</span><span class="n">_value</span><span class="p">:</span>
+            <span class="n">output_file</span> <span class="o">=</span> <span class="s2">&quot;&gt; </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">output_file</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="n">file_path</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">normspace</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_geometry</span><span class="p">)</span>
+
+        <span class="n">command_string</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cmd_path</span><span class="p">,</span> <span class="n">gen_bsdf_para</span><span class="p">,</span>
+                                             <span class="n">grid_based</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">command_string</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">input_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_geometry</span>
+
+<div class="viewcode-block" id="GenBSDF.execute"><a class="viewcode-back" href="../../../../honeybee.radiance.command.html#honeybee.radiance.command.genBSDF.GenBSDF.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prepare_geometry</span><span class="o">.</span><span class="n">_value</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input_geometry</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">prepare_geometry_for_bsdf</span><span class="p">()]</span>
+
+        <span class="n">RadianceCommand</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

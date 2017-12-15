@@ -1,0 +1,158 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.hbdynamicsurface &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.hbdynamicsurface</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;A honeybee surface with multiple states.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">hbsurface</span> <span class="k">import</span> <span class="n">HBSurface</span>
+
+
+<div class="viewcode-block" id="HBDynamicSurface"><a class="viewcode-back" href="../../honeybee.html#honeybee.hbdynamicsurface.HBDynamicSurface">[docs]</a><span class="k">class</span> <span class="nc">HBDynamicSurface</span><span class="p">(</span><span class="n">HBSurface</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for Honeybee surface.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        name: A unique string for surface name</span>
+<span class="sd">        sorted_points: A list of 3 points or more as tuple or list with three items</span>
+<span class="sd">            (x, y, z). Points should be sorted. This class won&#39;t sort the points.</span>
+<span class="sd">            If surfaces has multiple subsurfaces you can pass lists of point lists</span>
+<span class="sd">            to this function (e.g. ((0, 0, 0), (10, 0, 0), (0, 10, 0))).</span>
+<span class="sd">        surface_type: Optional input for surface type. You can use any of the surface</span>
+<span class="sd">            types available from surfacetype libraries or use a float number to</span>
+<span class="sd">            indicate the type. If not indicated it will be assigned based on normal</span>
+<span class="sd">            angle of the surface which will be calculated from surface points.</span>
+<span class="sd">                0.0: Wall           0.5: UndergroundWall</span>
+<span class="sd">                1.0: Roof           1.5: UndergroundCeiling</span>
+<span class="sd">                2.0: Floor          2.25: UndergroundSlab</span>
+<span class="sd">                2.5: SlabOnGrade    2.75: ExposedFloor</span>
+<span class="sd">                3.0: Ceiling        4.0: AirWall</span>
+<span class="sd">                6.0: Context</span>
+<span class="sd">        is_name_set_by_user: If you want the name to be changed by honeybee any case</span>
+<span class="sd">            set is_name_set_by_user to True. Default is set to False which let Honeybee</span>
+<span class="sd">            to rename the surface in cases like creating a newHBZone.</span>
+<span class="sd">        rad_properties: Radiance properties for this surface. If empty default</span>
+<span class="sd">            RADProperties will be assigned to surface by Honeybee.</span>
+<span class="sd">        ep_properties: EnergyPlus properties for this surface. If empty default</span>
+<span class="sd">            ep_properties will be assigned to surface by Honeybee.</span>
+<span class="sd">        states: A list of SurfaceStates for this dynamic surface.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">isHBDynamicSurface</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if the surface is HBDynamicSurface.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

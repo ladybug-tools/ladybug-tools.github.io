@@ -1,0 +1,210 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ladybug.wea &#8212; Ladybug 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/ladybug.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Ladybug performs detailed analysis of climate data to produce customized, interactive visualizations for environmentally-informed design.</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=ladybug&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ladybug.html">ladybug package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for ladybug.wea</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Wea weather file.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">.epw</span> <span class="k">import</span> <span class="n">EPW</span>
+<span class="kn">from</span> <span class="nn">.dt</span> <span class="k">import</span> <span class="n">DateTime</span>
+
+<span class="kn">import</span> <span class="nn">itertools</span>
+
+
+<div class="viewcode-block" id="Wea"><a class="viewcode-back" href="../../ladybug.html#ladybug.wea.Wea">[docs]</a><span class="k">class</span> <span class="nc">Wea</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;An annual WEA data for a location.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">direct_normal_radiation</span><span class="p">,</span> <span class="n">diffuse_horizontal_radiation</span><span class="p">,</span>
+                 <span class="n">timestep</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a wea object.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">direct_normal_radiation</span><span class="p">)</span> <span class="o">/</span> <span class="n">timestep</span> <span class="o">==</span> \
+            <span class="nb">len</span><span class="p">(</span><span class="n">diffuse_horizontal_radiation</span><span class="p">)</span> <span class="o">/</span> <span class="n">timestep</span> <span class="o">==</span> <span class="mi">8760</span><span class="p">,</span> \
+            <span class="s1">&#39;direct_normal_radiation and diffuse_horizontal_radiation data must be &#39;</span> \
+            <span class="s1">&#39;annual.&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">location</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">direct_normal_radiation</span> <span class="o">=</span> <span class="n">direct_normal_radiation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">diffuse_horizontal_radiation</span> <span class="o">=</span> <span class="n">diffuse_horizontal_radiation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timestep</span> <span class="o">=</span> <span class="n">timestep</span>
+
+<div class="viewcode-block" id="Wea.from_epw_file"><a class="viewcode-back" href="../../ladybug.html#ladybug.wea.Wea.from_epw_file">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_epw_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">epwfile</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a wea object from an epw file.&quot;&quot;&quot;</span>
+        <span class="n">epw</span> <span class="o">=</span> <span class="n">EPW</span><span class="p">(</span><span class="n">epwfile</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">epw</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">epw</span><span class="o">.</span><span class="n">direct_normal_radiation</span><span class="p">),</span>
+                   <span class="nb">tuple</span><span class="p">(</span><span class="n">epw</span><span class="o">.</span><span class="n">diffuse_horizontal_radiation</span><span class="p">))</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">isWea</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="Wea.get_radiation_values"><a class="viewcode-back" href="../../ladybug.html#ladybug.wea.Wea.get_radiation_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_radiation_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hour</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get direct and diffuse radiation values for a point in time.&quot;&quot;&quot;</span>
+        <span class="n">dt</span> <span class="o">=</span> <span class="n">DateTime</span><span class="p">(</span><span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hour</span><span class="p">)</span>
+        <span class="n">hoy</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dt</span><span class="o">.</span><span class="n">hoy</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestep</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">direct_normal_radiation</span><span class="p">[</span><span class="n">hoy</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">diffuse_horizontal_radiation</span><span class="p">[</span><span class="n">hoy</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Wea.get_radiation_values_for_hoy"><a class="viewcode-back" href="../../ladybug.html#ladybug.wea.Wea.get_radiation_values_for_hoy">[docs]</a>    <span class="k">def</span> <span class="nf">get_radiation_values_for_hoy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hoy</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get direct and diffuse radiation values for an hoy.&quot;&quot;&quot;</span>
+        <span class="n">hoy</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">hoy</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestep</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">direct_normal_radiation</span><span class="p">[</span><span class="n">hoy</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">diffuse_horizontal_radiation</span><span class="p">[</span><span class="n">hoy</span><span class="p">]</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">header</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Wea header.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;place </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">city</span> <span class="o">+</span> \
+            <span class="s2">&quot;latitude </span><span class="si">%.2f</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">latitude</span> <span class="o">+</span> \
+            <span class="s2">&quot;longitude </span><span class="si">%.2f</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">longitude</span> <span class="o">+</span> \
+            <span class="s2">&quot;time_zone </span><span class="si">%d</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">time_zone</span> <span class="o">*</span> <span class="mi">15</span><span class="p">)</span> <span class="o">+</span> \
+            <span class="s2">&quot;site_elevation </span><span class="si">%.1f</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">elevation</span> <span class="o">+</span> \
+            <span class="s2">&quot;weather_data_file_units </span><span class="si">%d</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestep</span>
+
+<div class="viewcode-block" id="Wea.write"><a class="viewcode-back" href="../../ladybug.html#ladybug.wea.Wea.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">hoys</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">write_hours</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write the wea file.</span>
+
+<span class="sd">        WEA carries radiation values from epw and is what gendaymtx uses to</span>
+<span class="sd">        generate the sky.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">hoys</span> <span class="o">=</span> <span class="n">hoys</span> <span class="ow">or</span> <span class="n">xrange</span><span class="p">(</span><span class="mi">8760</span><span class="p">)</span>
+        <span class="n">dts</span> <span class="o">=</span> <span class="p">(</span><span class="n">DateTime</span><span class="o">.</span><span class="n">from_hoy</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">hoys</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">weaFile</span><span class="p">:</span>
+            <span class="c1"># write header</span>
+            <span class="n">weaFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
+            <span class="c1"># write values</span>
+            <span class="k">for</span> <span class="n">dt</span><span class="p">,</span> <span class="n">hoy</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">izip</span><span class="p">(</span><span class="n">dts</span><span class="p">,</span> <span class="n">hoys</span><span class="p">):</span>
+                <span class="n">dir_rad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">direct_normal_radiation</span><span class="p">[</span><span class="n">hoy</span><span class="p">]</span>
+                <span class="n">dif_rad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diffuse_horizontal_radiation</span><span class="p">[</span><span class="n">hoy</span><span class="p">]</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2"> </span><span class="si">%d</span><span class="s2"> </span><span class="si">%.3f</span><span class="s2"> </span><span class="si">%d</span><span class="s2"> </span><span class="si">%d</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                    <span class="o">%</span> <span class="p">(</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">hour</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">dir_rad</span><span class="p">,</span> <span class="n">dif_rad</span><span class="p">)</span>
+
+                <span class="n">weaFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">write_hours</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.hrs&#39;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outf</span><span class="p">:</span>
+                <span class="n">outf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">hoys</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">file_path</span></div>
+
+<div class="viewcode-block" id="Wea.ToString"><a class="viewcode-back" href="../../ladybug.html#ladybug.wea.Wea.ToString">[docs]</a>    <span class="k">def</span> <span class="nf">ToString</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwrite .NET ToString.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;epw file representation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;WEA [</span><span class="si">%s</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">city</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

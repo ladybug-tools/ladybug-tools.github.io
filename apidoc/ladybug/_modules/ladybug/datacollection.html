@@ -1,0 +1,679 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ladybug.datacollection &#8212; Ladybug 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/ladybug.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Ladybug performs detailed analysis of climate data to produce customized, interactive visualizations for environmentally-informed design.</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=ladybug&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ladybug.html">ladybug package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for ladybug.datacollection</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Ladybug data collection.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">.header</span> <span class="k">import</span> <span class="n">Header</span>
+<span class="kn">from</span> <span class="nn">.datatype</span> <span class="k">import</span> <span class="n">DataPoint</span>
+<span class="kn">from</span> <span class="nn">.dt</span> <span class="k">import</span> <span class="n">DateTime</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">izip</span>
+
+
+<div class="viewcode-block" id="DataCollection"><a class="viewcode-back" href="../../ladybug.html#ladybug.datacollection.DataCollection">[docs]</a><span class="k">class</span> <span class="nc">DataCollection</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A list of data with a header.&quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;_header&#39;</span><span class="p">,</span> <span class="s1">&#39;_values&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init class.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">header</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">()</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;__iter__&#39;</span><span class="p">):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span><span class="p">,)</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="s1">&#39;isDataPoint&#39;</span><span class="p">),</span> \
+                <span class="s1">&#39;Expected DataPoint got </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DataCollection.from_list"><a class="viewcode-back" href="../../ladybug.html#ladybug.datacollection.DataCollection.from_list">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_list</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">lst</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">analysis_period</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a data collection from a list.</span>
+
+<span class="sd">        lst items can be DataPoint or other values.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            lst: A list of data.</span>
+<span class="sd">            location: location data as a ladybug Location or location string</span>
+<span class="sd">                (Default: unknown).</span>
+<span class="sd">            data_type: Type of data (e.g. Temperature) (Default: unknown).</span>
+<span class="sd">            unit: data_type unit (Default: unknown).</span>
+<span class="sd">            analysis_period: A Ladybug analysis period (Defualt: None)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="n">Header</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">data_type</span><span class="p">,</span> <span class="n">unit</span><span class="p">,</span> <span class="n">analysis_period</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">analysis_period</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_data_and_datetimes</span><span class="p">(</span><span class="n">lst</span><span class="p">,</span> <span class="n">analysis_period</span><span class="o">.</span><span class="n">datetimes</span><span class="p">,</span> <span class="n">header</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataPoint</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">lst</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">header</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataCollection.from_data_and_datetimes"><a class="viewcode-back" href="../../ladybug.html#ladybug.datacollection.DataCollection.from_data_and_datetimes">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_data_and_datetimes</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">datetimes</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a list from data and dateteimes.&quot;&quot;&quot;</span>
+        <span class="n">_d</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataPoint</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">izip</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">datetimes</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">_d</span><span class="p">,</span> <span class="n">header</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataCollection.from_data_and_analysis_period"><a class="viewcode-back" href="../../ladybug.html#ladybug.datacollection.DataCollection.from_data_and_analysis_period">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_data_and_analysis_period</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">analysis_period</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a list from data and analysis period.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_data_and_datetimes</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">analysis_period</span><span class="o">.</span><span class="n">datetimes</span><span class="p">,</span> <span class="n">header</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">header</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get or set header.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_header</span>
+
+    <span class="nd">@header</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_header</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">h</span> <span class="k">else</span> <span class="n">Header</span><span class="o">.</span><span class="n">from_header</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DataCollection.append"><a class="viewcode-back" href="../../ladybug.html#ladybug.datacollection.DataCollection.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Append a single item to the list.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="s1">&#39;isDataPoint&#39;</span><span class="p">),</span> \
+            <span class="s1">&#39;Expected DataPoint got </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataCollection.extend"><a class="viewcode-back" href="../../ladybug.html#ladybug.datacollection.DataCollection.extend">[docs]</a>    <span class="k">def</span> <span class="nf">extend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Extend a number of items to the end of items.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">new_data</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="s1">&#39;isDataPoint&#39;</span><span class="p">),</span> \
+                <span class="s1">&#39;Expected DataPoint got </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">new_data</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">datetimes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return datetimes for this collection as a tuple.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">datetime</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the list of values.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            header: A boolean that indicates if values should include the header</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            A list of values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span>
+
+<div class="viewcode-block" id="DataCollection.duplicate"><a class="viewcode-back" href="../../ladybug.html#ladybug.datacollection.DataCollection.duplicate">[docs]</a>    <span class="k">def</span> <span class="nf">duplicate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Duplicate current data list.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">DataCollection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataCollection.average"><a class="viewcode-back" href="../../ladybug.html#ladybug.datacollection.DataCollection.average">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">average</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return average value for a list of ladybug data.&quot;&quot;&quot;</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataCollection.group_data_by_month"><a class="viewcode-back" href="../../ladybug.html#ladybug.datacollection.DataCollection.group_data_by_month">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">group_data_by_month</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">month_range</span><span class="o">=</span><span class="n">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">13</span><span class="p">)):</span>
+        <span class="sd">&quot;&quot;&quot;Return a dictionary of values where values are grouped for each month.</span>
+
+<span class="sd">        Key values are between 1-12</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data: A list of DataPoint to be processed</span>
+<span class="sd">            month_range: A list of numbers for months. Default is 1-12</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">hourly_data_by_month</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">month_range</span><span class="p">:</span>
+            <span class="n">hourly_data_by_month</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">hourly_data_by_month</span><span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">month</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="c1"># month is not there</span>
+                <span class="k">pass</span>
+
+        <span class="k">return</span> <span class="n">hourly_data_by_month</span></div>
+
+<div class="viewcode-block" id="DataCollection.group_by_month"><a class="viewcode-back" href="../../ladybug.html#ladybug.datacollection.DataCollection.group_by_month">[docs]</a>    <span class="k">def</span> <span class="nf">group_by_month</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">month_range</span><span class="o">=</span><span class="n">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">13</span><span class="p">)):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a dictionary of values where values are grouped for each month.</span>
+
+<span class="sd">        Key values are between 1-12</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">           month_range: A list of numbers for months. Default is 1-12</span>
+
+<span class="sd">        Usage:</span>
+
+<span class="sd">           epwfile = EPW(&quot;epw file address&quot;)</span>
+<span class="sd">           monthly_values = epwfile.dry_bulb_temperature.group_by_month()</span>
+<span class="sd">           print monthly_values[2] # returns values for the month of March</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_data_by_month</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">month_range</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataCollection.group_data_by_day"><a class="viewcode-back" href="../../ladybug.html#ladybug.datacollection.DataCollection.group_data_by_day">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">group_data_by_day</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">day_range</span><span class="o">=</span><span class="n">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">366</span><span class="p">)):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a dictionary of values where values are grouped by each day of year.</span>
+
+<span class="sd">        Key values are between 1-365</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data: A list of DataPoint to be processed</span>
+<span class="sd">            day_range: A list of numbers for days. Default is 1-365</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">hourly_data_by_day</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">day_range</span><span class="p">:</span>
+            <span class="n">hourly_data_by_day</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">hourly_data_by_day</span><span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">doy</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="c1"># day is not there</span>
+                <span class="k">pass</span>
+
+        <span class="k">return</span> <span class="n">hourly_data_by_day</span></div>
+
+<div class="viewcode-block" id="DataCollection.group_by_day"><a class="viewcode-back" href="../../ladybug.html#ladybug.datacollection.DataCollection.group_by_day">[docs]</a>    <span class="k">def</span> <span class="nf">group_by_day</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">day_range</span><span class="o">=</span><span class="n">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">366</span><span class="p">)):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a dictionary of values where values are grouped by each day of year.</span>
+
+<span class="sd">        Key values are between 1-365</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            day_range: A list of numbers for days. Default is 1-365</span>
+<span class="sd">            user_dataList: An optional data list of DataPoint to be processed</span>
+
+<span class="sd">        Usage:</span>
+
+<span class="sd">            epwfile = EPW(&quot;epw file address&quot;)</span>
+<span class="sd">            daily_values = epwfile.dry_bulb_temperature.group_by_day(range(1, 30))</span>
+<span class="sd">            print daily_values[2] # returns values for the second day of year</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_data_by_day</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">day_range</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataCollection.group_data_by_hour"><a class="viewcode-back" href="../../ladybug.html#ladybug.datacollection.DataCollection.group_data_by_hour">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">group_data_by_hour</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">hour_range</span><span class="o">=</span><span class="n">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">24</span><span class="p">)):</span>
+        <span class="sd">&quot;&quot;&quot;Return a dictionary of values where values are grouped by each hour of day.</span>
+
+<span class="sd">        Key values are between 0-23</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data: A list of DataPoint to be processed</span>
+<span class="sd">            hour_range: A list of numbers for hours. Default is 1-24</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">hourly_data_by_hour</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">hour_range</span><span class="p">:</span>
+            <span class="n">hourly_data_by_hour</span><span class="p">[</span><span class="n">h</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">hourly_data_by_hour</span><span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">hour</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="c1"># day is not there</span>
+                <span class="k">pass</span>
+
+        <span class="k">return</span> <span class="n">hourly_data_by_hour</span></div>
+
+<div class="viewcode-block" id="DataCollection.group_by_hour"><a class="viewcode-back" href="../../ladybug.html#ladybug.datacollection.DataCollection.group_by_hour">[docs]</a>    <span class="k">def</span> <span class="nf">group_by_hour</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hour_range</span><span class="o">=</span><span class="n">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">24</span><span class="p">)):</span>
+        <span class="sd">&quot;&quot;&quot;Return a dictionary of values where values are grouped by each hour of day.</span>
+
+<span class="sd">        Key values are between 0-23</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            hour_range: A list of numbers for hours. Default is 1-24</span>
+<span class="sd">            user_dataList: An optional data list of DataPoint to be processed</span>
+
+<span class="sd">        Usage:</span>
+
+<span class="sd">            epwfile = EPW(&quot;epw file address&quot;)</span>
+<span class="sd">            monthly_values = epwfile.dry_bulb_temperature.group_by_month([1])</span>
+<span class="sd">            grouped_hourly_data = epwfile.dry_bulb_temperature.group_data_dataBy_hour(</span>
+<span class="sd">                monthly_values[1])</span>
+<span class="sd">            for hour, data in grouped_hourly_data.items():</span>
+<span class="sd">                print(&quot;average temperature values for hour {} during JAN is {} {}&quot;</span>
+<span class="sd">                      .format(hour, core._dataList.average(data), DBT.header.unit))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_data_by_hour</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">hour_range</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataCollection.update_data_for_hours_of_year"><a class="viewcode-back" href="../../ladybug.html#ladybug.datacollection.DataCollection.update_data_for_hours_of_year">[docs]</a>    <span class="k">def</span> <span class="nf">update_data_for_hours_of_year</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">hours_of_year</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update values new set of values for a list of hours of the year.</span>
+
+<span class="sd">        Length of values should be equal to number of hours in hours of year.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            values: A list of values to be replaced in the file</span>
+<span class="sd">            hours_of_year: A list of hoy between 1 and 8760</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># check length of data vs length of analysis hours_of_year</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">hours_of_year</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Length of values </span><span class="si">%d</span><span class="s2"> is not equal to &quot;</span> <span class="o">+</span>
+                             <span class="s2">&quot;number of hours in analysis period </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span>
+                             <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">hours_of_year</span><span class="p">)))</span>
+
+        <span class="c1"># update values</span>
+        <span class="n">updated_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># find matching index for input data</span>
+                <span class="n">index</span> <span class="o">=</span> <span class="n">hours_of_year</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">hoy</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># update the value</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+                <span class="n">updated_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="nb">print</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> updated for </span><span class="si">%d</span><span class="s2"> hour</span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> \
+            <span class="p">(</span><span class="s1">&#39;Values are&#39;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="s1">&#39;Value is&#39;</span><span class="p">,</span>
+             <span class="n">updated_count</span><span class="p">,</span>
+             <span class="s1">&#39;s&#39;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="c1"># return self for chaining methods</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="DataCollection.update_data_for_an_hour"><a class="viewcode-back" href="../../ladybug.html#ladybug.datacollection.DataCollection.update_data_for_an_hour">[docs]</a>    <span class="k">def</span> <span class="nf">update_data_for_an_hour</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">hour_of_year</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Replace current value in data list with a new value for a specific hoy.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value: A single value</span>
+<span class="sd">            hours_of_year: The hour of the year</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_data_for_hours_of_year</span><span class="p">((</span><span class="n">value</span><span class="p">,),</span> <span class="p">(</span><span class="n">hour_of_year</span><span class="p">,))</span></div>
+
+<div class="viewcode-block" id="DataCollection.update_data_for_analysis_period"><a class="viewcode-back" href="../../ladybug.html#ladybug.datacollection.DataCollection.update_data_for_analysis_period">[docs]</a>    <span class="k">def</span> <span class="nf">update_data_for_analysis_period</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">analysis_period</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update values with new set of values for an analysis period.</span>
+
+<span class="sd">        Length of values should be equal to number of hours in analysis period.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            values: A list of values to be replaced in the file</span>
+<span class="sd">            analysis_period: An analysis period for input the input values.</span>
+<span class="sd">                Default is set to the whole year.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_data_for_hours_of_year</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">analysis_period</span><span class="o">.</span><span class="n">hoys</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataCollection.interpolate_data"><a class="viewcode-back" href="../../ladybug.html#ladybug.datacollection.DataCollection.interpolate_data">[docs]</a>    <span class="k">def</span> <span class="nf">interpolate_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Interpolate data for a finer timestep.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestep: Target timestep as an integer. Target timestep must be</span>
+<span class="sd">                divisable by current timestep.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">timestep</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">analysis_period</span><span class="o">.</span><span class="n">timestep</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> \
+            <span class="s1">&#39;Target timestep(</span><span class="si">{}</span><span class="s1">) must be divisable by current timestep(</span><span class="si">{}</span><span class="s1">)&#39;</span> \
+            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">timestep</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">analysis_period</span><span class="o">.</span><span class="n">timestep</span><span class="p">)</span>
+
+        <span class="n">_minutesStep</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="nb">int</span><span class="p">(</span><span class="n">timestep</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">analysis_period</span><span class="o">.</span><span class="n">timestep</span><span class="p">))</span>
+        <span class="n">_dataLength</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="c1"># generate new data</span>
+        <span class="n">_data</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">d</span><span class="p">]</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="n">_v</span><span class="p">,</span> <span class="bp">self</span><span class="p">[</span><span class="n">d</span><span class="p">]</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">add_minute</span><span class="p">(</span><span class="n">step</span> <span class="o">*</span> <span class="n">_minutesStep</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">_dataLength</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">_v</span><span class="p">,</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xxrange</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">d</span><span class="p">],</span>
+                                             <span class="bp">self</span><span class="p">[(</span><span class="n">d</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">_dataLength</span><span class="p">],</span>
+                                             <span class="n">timestep</span><span class="p">),</span>
+                                <span class="n">xrange</span><span class="p">(</span><span class="n">timestep</span><span class="p">))</span>
+        <span class="p">)</span>
+        <span class="c1"># generate data for last hour</span>
+        <span class="k">return</span> <span class="n">_data</span></div>
+
+<div class="viewcode-block" id="DataCollection.xxrange"><a class="viewcode-back" href="../../ladybug.html#ladybug.datacollection.DataCollection.xxrange">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">xxrange</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">step_count</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate n values between start and end.&quot;&quot;&quot;</span>
+        <span class="n">_step</span> <span class="o">=</span> <span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">step_count</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">start</span> <span class="o">+</span> <span class="p">(</span><span class="n">i</span> <span class="o">*</span> <span class="n">_step</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">step_count</span><span class="p">)))</span></div>
+
+<div class="viewcode-block" id="DataCollection.filter_by_analysis_period"><a class="viewcode-back" href="../../ladybug.html#ladybug.datacollection.DataCollection.filter_by_analysis_period">[docs]</a>    <span class="k">def</span> <span class="nf">filter_by_analysis_period</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">analysis_period</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Filter a list based on an analysis period.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">           analysis period: A Ladybug analysis period</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            A new _dataList with filtered data</span>
+
+<span class="sd">        Usage:</span>
+
+<span class="sd">           # start of Feb to end of Mar</span>
+<span class="sd">           analysis_period = Analysis_period(2,1,1,3,31,24)</span>
+<span class="sd">           epw = EPW(&quot;c:/ladybug/weatherdata.epw&quot;)</span>
+<span class="sd">           DBT = epw.dry_bulb_temperature</span>
+<span class="sd">           filteredDBT = DBT.filter_by_analysis_period(analysis_period)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">analysis_period</span><span class="o">.</span><span class="n">timestep</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># interpolate data for smaller timestep</span>
+            <span class="n">_int_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolate_data</span><span class="p">(</span><span class="n">timestep</span><span class="o">=</span><span class="n">analysis_period</span><span class="o">.</span><span class="n">timestep</span><span class="p">)</span>
+            <span class="c1"># create a new header</span>
+            <span class="n">_hea</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">duplicate</span><span class="p">()</span>
+            <span class="n">_hea</span><span class="o">.</span><span class="n">analysis_period</span> <span class="o">=</span> <span class="n">analysis_period</span>
+            <span class="n">_data</span> <span class="o">=</span> <span class="n">DataCollection</span><span class="p">(</span><span class="n">_int_data</span><span class="p">,</span> <span class="n">_hea</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_data</span> <span class="o">=</span> <span class="bp">self</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">analysis_period</span> <span class="ow">or</span> <span class="n">analysis_period</span><span class="o">.</span><span class="n">is_annual</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_data</span><span class="o">.</span><span class="n">duplicate</span><span class="p">()</span>
+
+        <span class="c1"># create a new filtered_data</span>
+        <span class="n">_filtered_data</span> <span class="o">=</span> <span class="n">_data</span><span class="o">.</span><span class="n">filter_by_hoys</span><span class="p">(</span><span class="n">analysis_period</span><span class="o">.</span><span class="n">hoys</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">:</span>
+            <span class="n">_filtered_data</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">analysis_period</span> <span class="o">=</span> <span class="n">analysis_period</span>
+
+        <span class="k">return</span> <span class="n">_filtered_data</span></div>
+
+<div class="viewcode-block" id="DataCollection.filter_by_moys"><a class="viewcode-back" href="../../ladybug.html#ladybug.datacollection.DataCollection.filter_by_moys">[docs]</a>    <span class="k">def</span> <span class="nf">filter_by_moys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">moys</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Filter the list based on a list of minutes of the year.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">           moys: A List of minutes of the year [0..8759 * 60]</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            A new _dataList with filtered data</span>
+
+<span class="sd">        Usage:</span>
+
+<span class="sd">           moys = range(0, 48 * 60)  # The first two days of the year</span>
+<span class="sd">           epw = EPW(&quot;c:/ladybug/weatherdata.epw&quot;)</span>
+<span class="sd">           DBT = epw.dry_bulb_temperature</span>
+<span class="sd">           filteredDBT = DBT.filter_bymoys(moys)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># There is no guarantee that data is continuous so I iterate through the</span>
+        <span class="c1"># each data point one by one</span>
+        <span class="n">_filtered_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">moy</span> <span class="ow">in</span> <span class="n">moys</span><span class="p">]</span>
+
+        <span class="c1"># create a new filtered_data</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">:</span>
+            <span class="n">_filteredHeader</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">duplicate</span><span class="p">()</span>
+            <span class="n">_filteredHeader</span><span class="o">.</span><span class="n">analysis_period</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="n">DataCollection</span><span class="p">(</span><span class="n">_filtered_data</span><span class="p">,</span> <span class="n">_filteredHeader</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">DataCollection</span><span class="p">(</span><span class="n">_filtered_data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataCollection.filter_by_hoys"><a class="viewcode-back" href="../../ladybug.html#ladybug.datacollection.DataCollection.filter_by_hoys">[docs]</a>    <span class="k">def</span> <span class="nf">filter_by_hoys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hoys</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Filter the list based on an analysis period.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">           hoys: A List of hours of the year 0..8759</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            A new _dataList with filtered data</span>
+
+<span class="sd">        Usage:</span>
+
+<span class="sd">           hoys = range(1,48)  # The first two days of the year</span>
+<span class="sd">           epw = EPW(&quot;c:/ladybug/weatherdata.epw&quot;)</span>
+<span class="sd">           DBT = epw.dry_bulb_temperature</span>
+<span class="sd">           filteredDBT = DBT.filter_by_hoys(hoys)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_moys</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">hour</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span> <span class="k">for</span> <span class="n">hour</span> <span class="ow">in</span> <span class="n">hoys</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_bymoys</span><span class="p">(</span><span class="n">_moys</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataCollection.filter_by_conditional_statement"><a class="viewcode-back" href="../../ladybug.html#ladybug.datacollection.DataCollection.filter_by_conditional_statement">[docs]</a>    <span class="k">def</span> <span class="nf">filter_by_conditional_statement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">statement</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Filter the list based on an analysis period.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">           statement: A conditional statement as a string (e.g. x&gt;25 and x%5==0).</span>
+<span class="sd">            The variable should always be named as x</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            A new _dataList with filtered data</span>
+
+<span class="sd">        Usage:</span>
+
+<span class="sd">           epw = EPW(&quot;c:/ladybug/weatherdata.epw&quot;)</span>
+<span class="sd">           DBT = epw.dry_bulb_temperature</span>
+<span class="sd">           # filter data for when dry bulb temperature is more then 25</span>
+<span class="sd">           filteredDBT = DBT.filter_by_conditional_statement(&#39;x &gt; 25&#39;)</span>
+<span class="sd">           # get the list of time stamps that meet the conditional statement</span>
+<span class="sd">           print filteredDBT.timeStamps</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">check_input_statement</span><span class="p">(</span><span class="n">statement</span><span class="p">):</span>
+            <span class="n">st_statement</span> <span class="o">=</span> <span class="n">statement</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> \
+                <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> \
+                <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;not&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;is&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+            <span class="n">parsed_st</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">st_statement</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">isalpha</span><span class="p">()]</span>
+            <span class="k">if</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">parsed_st</span><span class="p">))</span> <span class="o">!=</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]:</span>
+                <span class="n">statement_error_msg</span> <span class="o">=</span> <span class="s1">&#39;Invalid input statement. &#39;</span> <span class="o">+</span> \
+                    <span class="s1">&#39;Statement should be a valid Python statement&#39;</span> <span class="o">+</span> \
+                    <span class="s1">&#39; and the variable should be named as x&#39;</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">statement_error_msg</span><span class="p">)</span>
+
+        <span class="n">check_input_statement</span><span class="p">(</span><span class="n">statement</span><span class="p">)</span>
+
+        <span class="n">statement</span> <span class="o">=</span> <span class="n">statement</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;d.value&#39;</span><span class="p">)</span>
+        <span class="n">_filtered_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="k">if</span> <span class="nb">eval</span><span class="p">(</span><span class="n">statement</span><span class="p">)]</span>
+
+        <span class="c1"># create a new filtered_data</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">:</span>
+            <span class="n">_filteredHeader</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">duplicate</span><span class="p">()</span>
+            <span class="n">_filteredHeader</span><span class="o">.</span><span class="n">analysis_period</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="n">DataCollection</span><span class="p">(</span><span class="n">_filtered_data</span><span class="p">,</span> <span class="n">_filteredHeader</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">DataCollection</span><span class="p">(</span><span class="n">_filtered_data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataCollection.filter_by_pattern"><a class="viewcode-back" href="../../ladybug.html#ladybug.datacollection.DataCollection.filter_by_pattern">[docs]</a>    <span class="k">def</span> <span class="nf">filter_by_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Filter the list based on a list of Boolean.</span>
+
+<span class="sd">        Length of Boolean should be equal to length of values in _dataList</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            pattern: A list of True, False values</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            A new _dataList with filtered data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;pattern should be a list of values.&quot;</span><span class="p">)</span>
+
+        <span class="n">_filtered_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span> <span class="k">for</span> <span class="n">count</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+                          <span class="k">if</span> <span class="n">pattern</span><span class="p">[</span><span class="n">count</span> <span class="o">%</span> <span class="n">_len</span><span class="p">]]</span>
+
+        <span class="c1"># create a new filtered_data</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">:</span>
+            <span class="n">_filteredHeader</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">duplicate</span><span class="p">()</span>
+            <span class="n">_filteredHeader</span><span class="o">.</span><span class="n">analysis_period</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="n">DataCollection</span><span class="p">(</span><span class="n">_filtered_data</span><span class="p">,</span> <span class="n">_filteredHeader</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">DataCollection</span><span class="p">(</span><span class="n">_filtered_data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataCollection.average_data_monthly"><a class="viewcode-back" href="../../ladybug.html#ladybug.datacollection.DataCollection.average_data_monthly">[docs]</a>    <span class="k">def</span> <span class="nf">average_data_monthly</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a dictionary of values for average values for available months.&quot;&quot;&quot;</span>
+        <span class="c1"># group data for each month</span>
+        <span class="n">monthly_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_data_by_month</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="n">average_values</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+
+        <span class="c1"># average values for each month</span>
+        <span class="k">for</span> <span class="n">month</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">monthly_values</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="n">average_values</span><span class="p">[</span><span class="n">month</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">average_values</span></div>
+
+<div class="viewcode-block" id="DataCollection.average_monthly"><a class="viewcode-back" href="../../ladybug.html#ladybug.datacollection.DataCollection.average_monthly">[docs]</a>    <span class="k">def</span> <span class="nf">average_monthly</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a dictionary of values for average values for available months.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">average_data_monthly</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataCollection.average_data_monthly_for_each_hour"><a class="viewcode-back" href="../../ladybug.html#ladybug.datacollection.DataCollection.average_data_monthly_for_each_hour">[docs]</a>    <span class="k">def</span> <span class="nf">average_data_monthly_for_each_hour</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate average value for each hour during each month.</span>
+
+<span class="sd">        This method returns a dictionary with nested dictionaries for each hour</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># get monthy values</span>
+        <span class="n">monthly_hourly_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_data_by_month</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="c1"># group data for each hour in each month and collect them in a dictionary</span>
+        <span class="n">averaged_monthly_values_per_hour</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">month</span><span class="p">,</span> <span class="n">monthly_values</span> <span class="ow">in</span> <span class="n">monthly_hourly_values</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">month</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">averaged_monthly_values_per_hour</span><span class="p">:</span>
+                <span class="n">averaged_monthly_values_per_hour</span><span class="p">[</span><span class="n">month</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+
+            <span class="c1"># group data for each hour</span>
+            <span class="n">grouped_hourly_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_data_by_hour</span><span class="p">(</span><span class="n">monthly_values</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">hour</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">grouped_hourly_data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">averaged_monthly_values_per_hour</span><span class="p">[</span><span class="n">month</span><span class="p">][</span><span class="n">hour</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">averaged_monthly_values_per_hour</span></div>
+
+<div class="viewcode-block" id="DataCollection.average_monthly_for_each_hour"><a class="viewcode-back" href="../../ladybug.html#ladybug.datacollection.DataCollection.average_monthly_for_each_hour">[docs]</a>    <span class="k">def</span> <span class="nf">average_monthly_for_each_hour</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate average value for each hour during each month.</span>
+
+<span class="sd">        This method returns a dictionary with nested dictionaries for each hour</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">average_data_monthly_for_each_hour</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Use update_data_for_an_hour to set the values.&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__reversed__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span>
+
+<div class="viewcode-block" id="DataCollection.ToString"><a class="viewcode-back" href="../../ladybug.html#ladybug.datacollection.DataCollection.ToString">[docs]</a>    <span class="k">def</span> <span class="nf">ToString</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwrite .NET ToString method.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;_data collection representation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">data_type</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: #</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">data_type</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;DataCollection: #</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">))</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

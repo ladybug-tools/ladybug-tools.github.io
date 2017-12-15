@@ -1,0 +1,811 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ladybug.datatype &#8212; Ladybug 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/ladybug.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Ladybug performs detailed analysis of climate data to produce customized, interactive visualizations for environmentally-informed design.</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=ladybug&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ladybug.html">ladybug package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for ladybug.datatype</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Ladybug data types.&quot;&quot;&quot;</span>
+<span class="c1"># from abc import ABCMeta, abstractmethod</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">euclid</span> <span class="k">import</span> <span class="n">Vector3</span>
+
+<span class="n">PI</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span>
+
+
+<div class="viewcode-block" id="DataTypeBase"><a class="viewcode-back" href="../../ladybug.html#ladybug.datatype.DataTypeBase">[docs]</a><span class="k">class</span> <span class="nc">DataTypeBase</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base type for data.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        value: Input value</span>
+<span class="sd">        datetime: Date time data for this value (Default: None)</span>
+<span class="sd">        standard: &#39;SI&#39; or &#39;IP&#39; (Default: &#39;SI&#39;)</span>
+<span class="sd">        nickname: Optional nickname for data (e.g. Dew Point Temperature)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;standard&#39;</span><span class="p">,</span> <span class="s1">&#39;_value&#39;</span><span class="p">,</span> <span class="s1">&#39;datetime&#39;</span><span class="p">,</span> <span class="s1">&#39;nickname&#39;</span><span class="p">)</span>
+
+    <span class="n">minimum</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;-inf&#39;</span><span class="p">)</span>
+    <span class="n">maximum</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;+inf&#39;</span><span class="p">)</span>
+    <span class="n">value_type</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">unitSI</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">unitIP</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">mute</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># print warnings for missing data</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">standard</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nickname</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init DataType.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nickname</span> <span class="o">=</span> <span class="n">nickname</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">standard</span> <span class="o">=</span> <span class="n">standard</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">datetime</span> <span class="o">=</span> <span class="n">datetime</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get/set value.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
+
+    <span class="nd">@value</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set value.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_type</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_type</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+                    <span class="n">_v</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">_v</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value_type</span><span class="p">,</span> <span class="p">(</span><span class="n">v</span><span class="p">,))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Failed to convert </span><span class="si">{}</span><span class="s2"> to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_type</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">is_in_range</span><span class="p">(</span><span class="n">_v</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="n">_v</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">unit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return current Unit.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">standard</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">unitSI</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">standard</span> <span class="o">==</span> <span class="s1">&#39;SI&#39;</span> <span class="k">else</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">unitIP</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">to_ip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write a static method that converts a value from SI to IP.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s1">&#39;to_ip is not implemented to </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">to_si</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write a static method that converts a value from IP to SI.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s1">&#39;to_si is not implemented to </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="DataTypeBase.convert_to_si"><a class="viewcode-back" href="../../ladybug.html#ladybug.datatype.DataTypeBase.convert_to_si">[docs]</a>    <span class="k">def</span> <span class="nf">convert_to_si</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Change value to SI.</span>
+
+<span class="sd">        To only get the value in SI use to_si property.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">standard</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Failed to convert to SI. &quot;</span>
+                            <span class="s2">&quot;Current system is unknown.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">standard</span> <span class="o">==</span> <span class="s1">&#39;SI&#39;</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">standard</span> <span class="o">=</span> <span class="s1">&#39;SI&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_si</span></div>
+
+<div class="viewcode-block" id="DataTypeBase.convert_to_ip"><a class="viewcode-back" href="../../ladybug.html#ladybug.datatype.DataTypeBase.convert_to_ip">[docs]</a>    <span class="k">def</span> <span class="nf">convert_to_ip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;change value to IP.</span>
+
+<span class="sd">        To only get the value in IP use to_ip property.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">standard</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Failed to convert to IP. &quot;</span>
+                            <span class="s2">&quot;Current system is unknown.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">standard</span> <span class="o">==</span> <span class="s1">&#39;IP&#39;</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">standard</span> <span class="o">=</span> <span class="s1">&#39;IP&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_ip</span></div>
+
+    <span class="k">def</span> <span class="nf">_is_missed_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if the value is missed data.&quot;&quot;&quot;</span>
+        <span class="n">_isMissed</span> <span class="o">=</span> <span class="n">v</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">missing</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">mute</span> <span class="ow">and</span> <span class="n">_isMissed</span><span class="p">:</span>
+            <span class="nb">print</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> value is missing!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">nickname</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">nickname</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">_isMissed</span>
+
+<div class="viewcode-block" id="DataTypeBase.is_in_range"><a class="viewcode-back" href="../../ladybug.html#ladybug.datatype.DataTypeBase.is_in_range">[docs]</a>    <span class="k">def</span> <span class="nf">is_in_range</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">raise_exception</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;check if the value is in range.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">standard</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_missed_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="n">_isInRange</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimum</span> <span class="o">&lt;=</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maximum</span> \
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">standard</span> <span class="o">==</span> <span class="s1">&#39;SI&#39;</span> \
+            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_ip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">minimum</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_ip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maximum</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">_isInRange</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">raise_exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_isInRange</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> should be between </span><span class="si">{1}</span><span class="s1"> and </span><span class="si">{2}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimum</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">maximum</span>
+                <span class="p">)</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataTypeBase.ToString"><a class="viewcode-back" href="../../ladybug.html#ladybug.datatype.DataTypeBase.ToString">[docs]</a>    <span class="k">def</span> <span class="nf">ToString</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwrite .NET representation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return full information.&quot;&quot;&quot;</span>
+        <span class="c1"># Temperature: 21C</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}{}{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">unit</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; at </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">datetime</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">datetime</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return string representation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__int__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return integer value.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Failed to convert </span><span class="si">{}</span><span class="s2"> to an integer.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__float__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return float value.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="nb">float</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">!=</span> <span class="nb">float</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;=</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;=</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">+</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">-</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__floordiv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">//</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__div__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">/</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__mod__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">%</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__pow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">**</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">other</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__mul__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__rfloordiv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">other</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__rdiv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">other</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__rmod__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">other</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__rpow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">other</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="DataPoint"><a class="viewcode-back" href="../../ladybug.html#ladybug.datatype.DataPoint">[docs]</a><span class="k">class</span> <span class="nc">DataPoint</span><span class="p">(</span><span class="n">DataTypeBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A single Ladybug data point.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        value: Input value</span>
+<span class="sd">        datetime: Date time data for this value (Default: None)</span>
+<span class="sd">        standard: &#39;SI&#39; or &#39;IP&#39; (Default: &#39;SI&#39;)</span>
+<span class="sd">        nickname: Optional nickname for data (e.g. Dew Point Temperature)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">minimum</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;-inf&#39;</span><span class="p">)</span>
+    <span class="n">maximum</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;+inf&#39;</span><span class="p">)</span>
+    <span class="n">value_type</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">unitSI</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">unitIP</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">standard</span><span class="o">=</span><span class="s1">&#39;SI&#39;</span><span class="p">,</span> <span class="n">nickname</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init class.&quot;&quot;&quot;</span>
+        <span class="n">DataTypeBase</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">standard</span><span class="p">,</span> <span class="n">nickname</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DataPoint.from_data"><a class="viewcode-back" href="../../ladybug.html#ladybug.datatype.DataPoint.from_data">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_data</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Try to create a DataPoint from input data.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s1">&#39;isData&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">value</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Failed to create a DataPoint from </span><span class="si">%s</span><span class="s2">!</span><span class="se">\n</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">isDataPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True if Ladybug data point.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<span class="c1"># TODO: Add methods for toKelvin</span>
+<div class="viewcode-block" id="Temperature"><a class="viewcode-back" href="../../ladybug.html#ladybug.datatype.Temperature">[docs]</a><span class="k">class</span> <span class="nc">Temperature</span><span class="p">(</span><span class="n">DataPoint</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base type for temperature.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        value: Input value</span>
+<span class="sd">        datetime: Date time data for this value (Default: None)</span>
+<span class="sd">        standard: &#39;SI&#39; or &#39;IP&#39; (Default: &#39;SI&#39;)</span>
+<span class="sd">        nickname: Optional nickname for data (e.g. Dew Point Temperature)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">minimum</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;-inf&#39;</span><span class="p">)</span>
+    <span class="n">maximum</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="mf">99.9</span>
+    <span class="n">value_type</span> <span class="o">=</span> <span class="nb">float</span>
+    <span class="n">unitSI</span> <span class="o">=</span> <span class="s1">&#39;C&#39;</span>
+    <span class="n">unitIP</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">standard</span><span class="o">=</span><span class="s1">&#39;SI&#39;</span><span class="p">,</span> <span class="n">nickname</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init class.&quot;&quot;&quot;</span>
+        <span class="n">DataPoint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">standard</span><span class="p">,</span> <span class="n">nickname</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">to_ip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the value in F assuming input value is in C.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="mi">9</span> <span class="o">/</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">32</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">to_si</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the value in C assuming input value is in F.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">-</span> <span class="mi">32</span><span class="p">)</span> <span class="o">*</span> <span class="mi">5</span> <span class="o">/</span> <span class="mi">9</span></div>
+
+
+<div class="viewcode-block" id="DryBulbTemperature"><a class="viewcode-back" href="../../ladybug.html#ladybug.datatype.DryBulbTemperature">[docs]</a><span class="k">class</span> <span class="nc">DryBulbTemperature</span><span class="p">(</span><span class="n">Temperature</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Dry bulb temperature.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        value: Input value</span>
+<span class="sd">        datetime: Date time data for this value (Default: None)</span>
+<span class="sd">        standard: &#39;SI&#39; or &#39;IP&#39; (Default: &#39;SI&#39;)</span>
+<span class="sd">        nickname: Optional nickname for data (e.g. Dew Point Temperature)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">minimum</span> <span class="o">=</span> <span class="o">-</span><span class="mi">70</span>
+    <span class="n">maximum</span> <span class="o">=</span> <span class="mi">70</span></div>
+
+
+<div class="viewcode-block" id="DewPointTemperature"><a class="viewcode-back" href="../../ladybug.html#ladybug.datatype.DewPointTemperature">[docs]</a><span class="k">class</span> <span class="nc">DewPointTemperature</span><span class="p">(</span><span class="n">Temperature</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Dew point temperature.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        value: Input value</span>
+<span class="sd">        datetime: Date time data for this value (Default: None)</span>
+<span class="sd">        standard: &#39;SI&#39; or &#39;IP&#39; (Default: &#39;SI&#39;)</span>
+<span class="sd">        nickname: Optional nickname for data (e.g. Dew Point Temperature)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">minimum</span> <span class="o">=</span> <span class="o">-</span><span class="mi">70</span>
+    <span class="n">maximum</span> <span class="o">=</span> <span class="mi">70</span></div>
+
+
+<div class="viewcode-block" id="RelativeHumidity"><a class="viewcode-back" href="../../ladybug.html#ladybug.datatype.RelativeHumidity">[docs]</a><span class="k">class</span> <span class="nc">RelativeHumidity</span><span class="p">(</span><span class="n">DataPoint</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Relative humidity.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        value: Input value</span>
+<span class="sd">        datetime: Date time data for this value (Default: None)</span>
+<span class="sd">        standard: &#39;SI&#39; or &#39;IP&#39; (Default: &#39;SI&#39;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">minimum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">maximum</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="mi">999</span>
+    <span class="n">value_type</span> <span class="o">=</span> <span class="nb">int</span>
+    <span class="n">unitSI</span> <span class="o">=</span> <span class="s1">&#39;%&#39;</span>
+    <span class="n">unitIP</span> <span class="o">=</span> <span class="s1">&#39;%&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">standard</span><span class="o">=</span><span class="s1">&#39;SI&#39;</span><span class="p">,</span> <span class="n">nickname</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init class.&quot;&quot;&quot;</span>
+        <span class="n">DataPoint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">standard</span><span class="p">,</span> <span class="n">nickname</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">to_ip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the value in IP.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">to_si</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the value in SI.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="Pressure"><a class="viewcode-back" href="../../ladybug.html#ladybug.datatype.Pressure">[docs]</a><span class="k">class</span> <span class="nc">Pressure</span><span class="p">(</span><span class="n">DataPoint</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Atmospheric Pressure.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        value: Input value</span>
+<span class="sd">        datetime: Date time data for this value (Default: None)</span>
+<span class="sd">        standard: &#39;SI&#39; or &#39;IP&#39; (Default: &#39;SI&#39;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">minimum</span> <span class="o">=</span> <span class="mi">31000</span>
+    <span class="n">maximum</span> <span class="o">=</span> <span class="mi">120000</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="mi">999999</span>
+    <span class="n">value_type</span> <span class="o">=</span> <span class="nb">int</span>
+    <span class="n">unitSI</span> <span class="o">=</span> <span class="s1">&#39;Pa&#39;</span>
+    <span class="n">unitIP</span> <span class="o">=</span> <span class="s1">&#39;Pa&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">standard</span><span class="o">=</span><span class="s1">&#39;SI&#39;</span><span class="p">,</span> <span class="n">nickname</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init class.&quot;&quot;&quot;</span>
+        <span class="n">DataPoint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">standard</span><span class="p">,</span> <span class="n">nickname</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">to_ip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the value in IP.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">to_si</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the value in SI.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="Radiation"><a class="viewcode-back" href="../../ladybug.html#ladybug.datatype.Radiation">[docs]</a><span class="k">class</span> <span class="nc">Radiation</span><span class="p">(</span><span class="n">DataPoint</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Radiation.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        value: Input value</span>
+<span class="sd">        datetime: Date time data for this value (Default: None)</span>
+<span class="sd">        standard: &#39;SI&#39; or &#39;IP&#39; (Default: &#39;SI&#39;)</span>
+<span class="sd">        nickname: Optional nickname for data (e.g. Dew Point Temperature)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">minimum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="mi">9999</span>
+    <span class="n">value_type</span> <span class="o">=</span> <span class="nb">int</span>
+    <span class="n">unitSI</span> <span class="o">=</span> <span class="s1">&#39;Wh/m2&#39;</span>
+    <span class="n">unitIP</span> <span class="o">=</span> <span class="s1">&#39;BTU/ft2&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">standard</span><span class="o">=</span><span class="s1">&#39;SI&#39;</span><span class="p">,</span> <span class="n">nickname</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init class.&quot;&quot;&quot;</span>
+        <span class="n">DataPoint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">standard</span><span class="p">,</span> <span class="n">nickname</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">to_ip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the value in IP assuming input value is in SI.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="mf">0.316998331</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">to_si</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the value in SI assuming input value is in IP.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">/</span> <span class="mf">0.316998331</span></div>
+
+
+<div class="viewcode-block" id="Illuminance"><a class="viewcode-back" href="../../ladybug.html#ladybug.datatype.Illuminance">[docs]</a><span class="k">class</span> <span class="nc">Illuminance</span><span class="p">(</span><span class="n">DataPoint</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Illuminance.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        value: Input value</span>
+<span class="sd">        datetime: Date time data for this value (Default: None)</span>
+<span class="sd">        standard: &#39;SI&#39; or &#39;IP&#39; (Default: &#39;SI&#39;)</span>
+<span class="sd">        nickname: Optional nickname for data (e.g. Dew Point Temperature)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">minimum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="mi">999999</span>
+    <span class="n">value_type</span> <span class="o">=</span> <span class="nb">int</span>
+    <span class="n">unitSI</span> <span class="o">=</span> <span class="s1">&#39;lux&#39;</span>
+    <span class="n">unitIP</span> <span class="o">=</span> <span class="s1">&#39;fc&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">standard</span><span class="o">=</span><span class="s1">&#39;SI&#39;</span><span class="p">,</span> <span class="n">nickname</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init class.&quot;&quot;&quot;</span>
+        <span class="n">DataPoint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">standard</span><span class="p">,</span> <span class="n">nickname</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">to_ip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the value in IP assuming input value is in SI.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="mf">0.09290304</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">to_si</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the value in SI assuming input value is in IP.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">/</span> <span class="mf">0.09290304</span></div>
+
+
+<div class="viewcode-block" id="Luminance"><a class="viewcode-back" href="../../ladybug.html#ladybug.datatype.Luminance">[docs]</a><span class="k">class</span> <span class="nc">Luminance</span><span class="p">(</span><span class="n">Illuminance</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Luminance.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        value: Input value</span>
+<span class="sd">        datetime: Date time data for this value (Default: None)</span>
+<span class="sd">        standard: &#39;SI&#39; or &#39;IP&#39; (Default: &#39;SI&#39;)</span>
+<span class="sd">        nickname: Optional nickname for data (e.g. Dew Point Temperature)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">minimum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="mi">9999</span>
+    <span class="n">value_type</span> <span class="o">=</span> <span class="nb">int</span>
+    <span class="n">unitSI</span> <span class="o">=</span> <span class="s1">&#39;Cd/m2&#39;</span>
+    <span class="n">unitIP</span> <span class="o">=</span> <span class="s1">&#39;Cd/ft2&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">standard</span><span class="o">=</span><span class="s1">&#39;SI&#39;</span><span class="p">,</span> <span class="n">nickname</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init class.&quot;&quot;&quot;</span>
+        <span class="n">Illuminance</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">standard</span><span class="p">,</span> <span class="n">nickname</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Angle"><a class="viewcode-back" href="../../ladybug.html#ladybug.datatype.Angle">[docs]</a><span class="k">class</span> <span class="nc">Angle</span><span class="p">(</span><span class="n">DataPoint</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Angle.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        value: Input value</span>
+<span class="sd">        datetime: Date time data for this value (Default: None)</span>
+<span class="sd">        standard: &#39;SI&#39; or &#39;IP&#39; (Default: &#39;SI&#39;)</span>
+<span class="sd">        nickname: Optional nickname for data (e.g. Dew Point Temperature)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">minimum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">maximum</span> <span class="o">=</span> <span class="mi">360</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="mi">999</span>
+    <span class="n">value_type</span> <span class="o">=</span> <span class="nb">int</span>
+    <span class="n">unitSI</span> <span class="o">=</span> <span class="s1">&#39;degrees&#39;</span>
+    <span class="n">unitIP</span> <span class="o">=</span> <span class="s1">&#39;radians&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">standard</span><span class="o">=</span><span class="s1">&#39;SI&#39;</span><span class="p">,</span> <span class="n">nickname</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init class.&quot;&quot;&quot;</span>
+        <span class="n">DataPoint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">standard</span><span class="p">,</span> <span class="n">nickname</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">to_ip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the value in IP assuming input value is in SI.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="n">PI</span><span class="p">)</span> <span class="o">/</span> <span class="mi">360</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">to_si</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the value in SI assuming input value is in IP.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">/</span> <span class="n">PI</span><span class="p">)</span> <span class="o">*</span> <span class="mi">360</span></div>
+
+
+<div class="viewcode-block" id="Speed"><a class="viewcode-back" href="../../ladybug.html#ladybug.datatype.Speed">[docs]</a><span class="k">class</span> <span class="nc">Speed</span><span class="p">(</span><span class="n">DataPoint</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Speed.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        value: Input value</span>
+<span class="sd">        datetime: Date time data for this value (Default: None)</span>
+<span class="sd">        standard: &#39;SI&#39; or &#39;IP&#39; (Default: &#39;SI&#39;)</span>
+<span class="sd">        nickname: Optional nickname for data (e.g. Dew Point Temperature)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">minimum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="mi">999</span>
+    <span class="n">value_type</span> <span class="o">=</span> <span class="nb">float</span>
+    <span class="n">unitSI</span> <span class="o">=</span> <span class="s1">&#39;m/s&#39;</span>
+    <span class="n">unitIP</span> <span class="o">=</span> <span class="s1">&#39;mph&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">standard</span><span class="o">=</span><span class="s1">&#39;SI&#39;</span><span class="p">,</span> <span class="n">nickname</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init class.&quot;&quot;&quot;</span>
+        <span class="n">DataPoint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">standard</span><span class="p">,</span> <span class="n">nickname</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">to_ip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the value in IP assuming input value is in SI.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="mf">2.23694</span>  <span class="c1"># m/s to mph</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">to_si</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the value in SI assuming input value is in IP.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">/</span> <span class="mf">2.23694</span>  <span class="c1"># mph to m/s</span></div>
+
+
+<div class="viewcode-block" id="WindSpeed"><a class="viewcode-back" href="../../ladybug.html#ladybug.datatype.WindSpeed">[docs]</a><span class="k">class</span> <span class="nc">WindSpeed</span><span class="p">(</span><span class="n">Speed</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Wind Speed.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        value: Input value</span>
+<span class="sd">        datetime: Date time data for this value (Default: None)</span>
+<span class="sd">        standard: &#39;SI&#39; or &#39;IP&#39; (Default: &#39;SI&#39;)</span>
+<span class="sd">        nickname: Optional nickname for data (e.g. Dew Point Temperature)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">maximum</span> <span class="o">=</span> <span class="mi">40</span></div>
+
+
+<div class="viewcode-block" id="Time"><a class="viewcode-back" href="../../ladybug.html#ladybug.datatype.Time">[docs]</a><span class="k">class</span> <span class="nc">Time</span><span class="p">(</span><span class="n">DataPoint</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Time.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        value: Input value</span>
+<span class="sd">        datetime: Date time data for this value (Default: None)</span>
+<span class="sd">        standard: &#39;SI&#39; or &#39;IP&#39; (Default: &#39;SI&#39;)</span>
+<span class="sd">        nickname: Optional nickname for data (e.g. Dew Point Temperature)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">minimum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="mi">99</span> <span class="o">*</span> <span class="mi">3600</span>
+    <span class="n">value_type</span> <span class="o">=</span> <span class="nb">int</span>
+    <span class="n">unitSI</span> <span class="o">=</span> <span class="s1">&#39;second&#39;</span>
+    <span class="n">unitIP</span> <span class="o">=</span> <span class="s1">&#39;second&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">standard</span><span class="o">=</span><span class="s1">&#39;SI&#39;</span><span class="p">,</span> <span class="n">nickname</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init class.&quot;&quot;&quot;</span>
+        <span class="n">DataPoint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">standard</span><span class="p">,</span> <span class="n">nickname</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Tenth"><a class="viewcode-back" href="../../ladybug.html#ladybug.datatype.Tenth">[docs]</a><span class="k">class</span> <span class="nc">Tenth</span><span class="p">(</span><span class="n">DataPoint</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Tenth.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        value: Input value</span>
+<span class="sd">        datetime: Date time data for this value (Default: None)</span>
+<span class="sd">        standard: &#39;SI&#39; or &#39;IP&#39; (Default: &#39;SI&#39;)</span>
+<span class="sd">        nickname: Optional nickname for data (e.g. Dew Point Temperature)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">minimum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">maximum</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="mi">99</span>
+    <span class="n">value_type</span> <span class="o">=</span> <span class="nb">int</span>
+    <span class="n">unitSI</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">unitIP</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">standard</span><span class="o">=</span><span class="s1">&#39;SI&#39;</span><span class="p">,</span> <span class="n">nickname</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init class.&quot;&quot;&quot;</span>
+        <span class="n">DataPoint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">standard</span><span class="p">,</span> <span class="n">nickname</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Thousandths"><a class="viewcode-back" href="../../ladybug.html#ladybug.datatype.Thousandths">[docs]</a><span class="k">class</span> <span class="nc">Thousandths</span><span class="p">(</span><span class="n">DataPoint</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Thousandths.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        value: Input value</span>
+<span class="sd">        datetime: Date time data for this value (Default: None)</span>
+<span class="sd">        standard: &#39;SI&#39; or &#39;IP&#39; (Default: &#39;SI&#39;)</span>
+<span class="sd">        nickname: Optional nickname for data (e.g. Dew Point Temperature)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">minimum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="mi">999</span>
+    <span class="n">value_type</span> <span class="o">=</span> <span class="nb">float</span>
+    <span class="n">unitSI</span> <span class="o">=</span> <span class="s1">&#39;thousandths&#39;</span>
+    <span class="n">unitIP</span> <span class="o">=</span> <span class="s1">&#39;thousandths&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">standard</span><span class="o">=</span><span class="s1">&#39;SI&#39;</span><span class="p">,</span> <span class="n">nickname</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init class.&quot;&quot;&quot;</span>
+        <span class="n">DataPoint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">standard</span><span class="p">,</span> <span class="n">nickname</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Distance"><a class="viewcode-back" href="../../ladybug.html#ladybug.datatype.Distance">[docs]</a><span class="k">class</span> <span class="nc">Distance</span><span class="p">(</span><span class="n">DataPoint</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Distance.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        value: Input value</span>
+<span class="sd">        datetime: Date time data for this value (Default: None)</span>
+<span class="sd">        standard: &#39;SI&#39; or &#39;IP&#39; (Default: &#39;SI&#39;)</span>
+<span class="sd">        nickname: Optional nickname for data (e.g. Dew Point Temperature)</span>
+<span class="sd">        conversion: Optional value for conversion to meters or foot before</span>
+<span class="sd">            creating the object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">minimum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">value_type</span> <span class="o">=</span> <span class="nb">float</span>
+    <span class="n">unitSI</span> <span class="o">=</span> <span class="s1">&#39;m&#39;</span>
+    <span class="n">unitIP</span> <span class="o">=</span> <span class="s1">&#39;foot&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">standard</span><span class="o">=</span><span class="s1">&#39;SI&#39;</span><span class="p">,</span> <span class="n">nickname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">conversion</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init class.&quot;&quot;&quot;</span>
+        <span class="n">DataPoint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span> <span class="o">*</span> <span class="n">conversion</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">standard</span><span class="p">,</span> <span class="n">nickname</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">to_ip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the value in IP assuming input value is in SI.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="mf">3.28084</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">to_si</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the value in SI assuming input value is in IP.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">/</span> <span class="mf">3.28084</span></div>
+
+
+<div class="viewcode-block" id="SkyPatch"><a class="viewcode-back" href="../../ladybug.html#ladybug.datatype.SkyPatch">[docs]</a><span class="k">class</span> <span class="nc">SkyPatch</span><span class="p">(</span><span class="n">DataPoint</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;SkyPatch.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        value: Input value</span>
+<span class="sd">        vector: Sky vector as a tuple</span>
+<span class="sd">        id: patch number</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;vector&#39;</span><span class="p">,)</span>
+    <span class="n">minimum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">value_type</span> <span class="o">=</span> <span class="nb">float</span>
+    <span class="n">unitSI</span> <span class="o">=</span> <span class="s1">&#39;steradian&#39;</span>
+    <span class="n">unitIP</span> <span class="o">=</span> <span class="s1">&#39;steradian&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">vector</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init class.&quot;&quot;&quot;</span>
+        <span class="n">DataPoint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">standard</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nickname</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vector</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="o">*</span><span class="n">vector</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sky patch number.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nickname</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

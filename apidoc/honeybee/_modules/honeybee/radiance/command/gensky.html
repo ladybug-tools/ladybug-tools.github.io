@@ -1,0 +1,294 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.command.gensky &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../index.html">
+    <img class="logo" src="../../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.command.gensky</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="kn">from</span> <span class="nn">_commandbase</span> <span class="k">import</span> <span class="n">RadianceCommand</span>
+<span class="kn">from</span> <span class="nn">..datatype</span> <span class="k">import</span> <span class="n">RadiancePath</span><span class="p">,</span> <span class="n">RadianceTuple</span>
+<span class="kn">from</span> <span class="nn">..parameters.gensky</span> <span class="k">import</span> <span class="n">GenskyParameters</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<div class="viewcode-block" id="Gensky"><a class="viewcode-back" href="../../../../honeybee.radiance.command.html#honeybee.radiance.command.gensky.Gensky">[docs]</a><span class="k">class</span> <span class="nc">Gensky</span><span class="p">(</span><span class="n">RadianceCommand</span><span class="p">):</span>
+    <span class="sa">u</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    gensky - Generate an annual Perez sky matrix from a weather tape.</span>
+
+<span class="sd">    The attributes for this class and their data descriptors are given below.</span>
+<span class="sd">    Please note that the first two inputs for each descriptor are for internal</span>
+<span class="sd">    naming purposes only.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        output_name: An optional name for output file name (Default: &#39;untitled&#39;).</span>
+<span class="sd">        month_day_hour: A tuple containing inputs for month, day and hour.</span>
+<span class="sd">        gensky_parameters: Radiance parameters for gensky. If None Default</span>
+<span class="sd">            parameters will be set. You can use self.gensky_parameters to view,</span>
+<span class="sd">            add or remove the parameters before executing the command.</span>
+
+<span class="sd">    Usage:</span>
+
+<span class="sd">        from honeybee.radiance.parameters.gensky import GenSkyParameters</span>
+<span class="sd">        from honeybee.radiance.command.gensky import GenSky</span>
+
+<span class="sd">        # create and modify gensky_parameters. In this case a sunny with no sun</span>
+<span class="sd">        # will be generated.</span>
+<span class="sd">        gnsky_param = GenSkyParameters()</span>
+<span class="sd">        gnskyParam.sunny_skyNoSun = True</span>
+
+<span class="sd">        # create the gensky Command.</span>
+<span class="sd">        gnsky = GenSky(month_day_hour=(1,1,11), gensky_parameters=gnskyParam,</span>
+<span class="sd">        output_name = r&#39;d:/sunnyWSun_010111.sky&#39; )</span>
+
+<span class="sd">        # run gensky</span>
+<span class="sd">        gnsky.execute()</span>
+
+<span class="sd">        &gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">month_day_hour</span> <span class="o">=</span> <span class="n">RadianceTuple</span><span class="p">(</span><span class="s1">&#39;month_day_hour&#39;</span><span class="p">,</span> <span class="s1">&#39;month day hour&#39;</span><span class="p">,</span> <span class="n">tuple_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                                   <span class="n">test_type</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">output_file</span> <span class="o">=</span> <span class="n">RadiancePath</span><span class="p">(</span><span class="s1">&#39;output_file&#39;</span><span class="p">,</span> <span class="n">descriptive_name</span><span class="o">=</span><span class="s1">&#39;output sky file&#39;</span><span class="p">,</span>
+                               <span class="n">relative_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">check_exists</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_name</span><span class="o">=</span><span class="s1">&#39;untitled&#39;</span><span class="p">,</span> <span class="n">month_day_hour</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">gensky_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init command.&quot;&quot;&quot;</span>
+        <span class="n">RadianceCommand</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="n">output_name</span> <span class="k">if</span> <span class="n">output_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.sky&quot;</span><span class="p">)</span> \
+            <span class="k">else</span> <span class="n">output_name</span> <span class="o">+</span> <span class="s2">&quot;.sky&quot;</span>
+        <span class="sd">&quot;&quot;&quot;results file for sky (Default: untitled)&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">month_day_hour</span> <span class="o">=</span> <span class="n">month_day_hour</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rotation</span> <span class="o">=</span> <span class="n">rotation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gensky_parameters</span> <span class="o">=</span> <span class="n">gensky_parameters</span>
+
+<div class="viewcode-block" id="Gensky.from_sky_type"><a class="viewcode-back" href="../../../../honeybee.radiance.command.html#honeybee.radiance.command.gensky.Gensky.from_sky_type">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_sky_type</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">output_name</span><span class="o">=</span><span class="s1">&#39;untitled&#39;</span><span class="p">,</span> <span class="n">month_day_hour</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span>
+                      <span class="n">sky_type</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">meridian</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a sky by sky type.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            output_name: An optional name for output file name (Default: &#39;untitled&#39;).</span>
+<span class="sd">            month_day_hour: A tuple containing inputs for month, day and hour.</span>
+<span class="sd">            sky_type: An intger between 0-5 for CIE sky type.</span>
+<span class="sd">                0: [+s] Sunny with sun, 1: [-s] Sunny without sun,</span>
+<span class="sd">                2: [+i] Intermediate with sun, 3: [-i] Intermediate with no sun,</span>
+<span class="sd">                4: [-c] Cloudy overcast sky, 5: [-u] Uniform cloudy sky</span>
+<span class="sd">            latitude: [-a] A float number to indicate site altitude. Negative</span>
+<span class="sd">                angle indicates south latitude.</span>
+<span class="sd">            longitude: [-o] A float number to indicate site latitude. Negative</span>
+<span class="sd">                angle indicates east longitude.</span>
+<span class="sd">            meridian: [-m] A float number to indicate site meridian west of</span>
+<span class="sd">                Greenwich.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_skyParameters</span> <span class="o">=</span> <span class="n">GenskyParameters</span><span class="p">(</span><span class="n">latitude</span><span class="o">=</span><span class="n">latitude</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="n">longitude</span><span class="p">,</span>
+                                          <span class="n">meridian</span><span class="o">=</span><span class="n">meridian</span><span class="p">)</span>
+
+        <span class="c1"># modify parameters based on sky type</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">sky_type</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sky_type</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="s2">&quot;sky_type should be an integer between 0-5.&quot;</span>
+
+        <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">sky_type</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;Sky type should be an integer between 0-5.&quot;</span>
+
+        <span class="k">if</span> <span class="n">sky_type</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">_skyParameters</span><span class="o">.</span><span class="n">sunny_sky</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">sky_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">_skyParameters</span><span class="o">.</span><span class="n">sunny_sky</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="n">sky_type</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">_skyParameters</span><span class="o">.</span><span class="n">interm_sky</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">sky_type</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">_skyParameters</span><span class="o">.</span><span class="n">interm_sky</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="n">sky_type</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">_skyParameters</span><span class="o">.</span><span class="n">cloudy_sky</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">sky_type</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="n">_skyParameters</span><span class="o">.</span><span class="n">uniform_cloudy_sky</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">output_name</span><span class="o">=</span><span class="n">output_name</span><span class="p">,</span> <span class="n">month_day_hour</span><span class="o">=</span><span class="n">month_day_hour</span><span class="p">,</span>
+                   <span class="n">gensky_parameters</span><span class="o">=</span><span class="n">_skyParameters</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="n">rotation</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Gensky.uniform_skyfrom_illuminance_value"><a class="viewcode-back" href="../../../../honeybee.radiance.command.html#honeybee.radiance.command.gensky.Gensky.uniform_skyfrom_illuminance_value">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">uniform_skyfrom_illuminance_value</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">output_name</span><span class="o">=</span><span class="s2">&quot;untitled&quot;</span><span class="p">,</span>
+                                          <span class="n">illuminance_value</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">sky_type</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Uniform CIE sky based on illuminance value.</span>
+
+<span class="sd">        Attributes:</span>
+<span class="sd">            output_name: An optional name for output file name (Default: &#39;untitled&#39;).</span>
+<span class="sd">            illuminance_value: Desired illuminance value in lux</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">float</span><span class="p">(</span><span class="n">illuminance_value</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Illuminace value can&#39;t be negative.&quot;</span>
+
+        <span class="n">_skyParameters</span> <span class="o">=</span> <span class="n">GenskyParameters</span><span class="p">(</span>
+            <span class="n">zenith_bright_horz_diff</span><span class="o">=</span><span class="n">illuminance_value</span> <span class="o">/</span> <span class="mf">179.0</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">sky_type</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">_skyParameters</span><span class="o">.</span><span class="n">cloudy_sky</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">sky_type</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="n">_skyParameters</span><span class="o">.</span><span class="n">uniform_cloudy_sky</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;Invalid sky_type input: </span><span class="si">{}</span><span class="s1">. &#39;</span>
+                <span class="s1">&#39;Sky type can only be 4 [cloudy_sky] or 5 [uniformSky].&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sky_type</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">output_name</span><span class="o">=</span><span class="n">output_name</span><span class="p">,</span> <span class="n">month_day_hour</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span>
+                   <span class="n">gensky_parameters</span><span class="o">=</span><span class="n">_skyParameters</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">gensky_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get and set gensky_parameters.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__gensky_parameters</span>
+
+    <span class="nd">@gensky_parameters</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">gensky_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gensky_param</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__gensky_parameters</span> <span class="o">=</span> <span class="n">gensky_param</span> <span class="k">if</span> <span class="n">gensky_param</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> \
+            <span class="k">else</span> <span class="n">GenskyParameters</span><span class="p">()</span>
+
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gensky_parameters</span><span class="p">,</span> <span class="s2">&quot;isRadianceParameters&quot;</span><span class="p">),</span> \
+            <span class="s2">&quot;Expected GenSkyParameters not </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gensky_parameters</span><span class="p">))</span>
+
+<div class="viewcode-block" id="Gensky.to_rad_string"><a class="viewcode-back" href="../../../../honeybee.radiance.command.html#honeybee.radiance.command.gensky.Gensky.to_rad_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_rad_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return full command as a string.&quot;&quot;&quot;</span>
+        <span class="c1"># generate the name from self.wea_file</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotation</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">rad_string</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> | xform -rz </span><span class="si">%.3f</span><span class="s2"> &gt; </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">normspace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radbin_path</span><span class="p">,</span> <span class="s1">&#39;gensky&#39;</span><span class="p">)),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">month_day_hour</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-monthdayhour &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">gensky_parameters</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">(),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">rotation</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">normspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_file</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rad_string</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> &gt; </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">normspace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radbin_path</span><span class="p">,</span> <span class="s1">&#39;gensky&#39;</span><span class="p">)),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">month_day_hour</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-monthdayhour &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">gensky_parameters</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">(),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">normspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_file</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">rad_string</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">input_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Input files for this command.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

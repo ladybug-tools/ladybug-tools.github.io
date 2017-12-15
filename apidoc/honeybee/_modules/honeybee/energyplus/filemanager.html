@@ -1,0 +1,204 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.energyplus.filemanager &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../index.html">
+    <img class="logo" src="../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.energyplus.filemanager</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;A collection of auxiliary funtions for working with radiance files and objects.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<div class="viewcode-block" id="get_energy_plus_objects_from_string"><a class="viewcode-back" href="../../../honeybee.energyplus.html#honeybee.energyplus.filemanager.get_energy_plus_objects_from_string">[docs]</a><span class="k">def</span> <span class="nf">get_energy_plus_objects_from_string</span><span class="p">(</span><span class="n">ep_file_string</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse idf file string.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ep_file_string: EnergyPlus data as a single string. The string can be multiline</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A list of strings. Each string represents a differnt Rdiance Object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_epObjects</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;zone&quot;</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">&quot;buildingsurface:detailed&quot;</span><span class="p">:</span> <span class="p">{},</span>
+                  <span class="s2">&quot;fenestrationsurface:detailed&quot;</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">&quot;material&quot;</span><span class="p">:</span> <span class="p">{},</span>
+                  <span class="s2">&quot;windowmaterial&quot;</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">&quot;construction&quot;</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">&quot;schedule&quot;</span><span class="p">:</span> <span class="p">{},</span>
+                  <span class="s2">&quot;scheduletypelimits&quot;</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">&quot;globalgeometryrules&quot;</span><span class="p">:</span> <span class="p">{},</span>
+                  <span class="s2">&quot;shading:site:detailed&quot;</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">&quot;shading:building:detailed&quot;</span><span class="p">:</span> <span class="p">{},</span>
+                  <span class="s2">&quot;shading:zone:detailed&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+
+    <span class="n">raw_ep_objects</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span>
+        <span class="sa">r</span><span class="s1">&#39;.[^;]*;.*[^$]&#39;</span><span class="p">,</span>
+        <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">ep_file_string</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">raw_ep_objects</span><span class="p">:</span>
+        <span class="c1"># seperate each segment of EnergyPlus object</span>
+        <span class="n">segments</span> <span class="o">=</span> <span class="p">[</span><span class="n">seg</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;!&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;.+[,|;]&#39;</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)]</span>
+
+        <span class="c1"># clean the objects and join them into a single comma separated string</span>
+        <span class="n">segments</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">segments</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+
+        <span class="c1"># first segment is the type and the second one is the name</span>
+        <span class="c1"># for now we&#39;re just collecting zones, surfaces, materials, constructions</span>
+        <span class="c1"># and schedules. We should later use EnergyPlus.idd file to collect all</span>
+        <span class="c1"># the objects.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">_epObjects</span><span class="p">[</span><span class="n">segments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()][</span><span class="n">segments</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">segments</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+    <span class="k">return</span> <span class="n">_epObjects</span></div>
+
+
+<div class="viewcode-block" id="get_energy_plus_objects_from_file"><a class="viewcode-back" href="../../../honeybee.energyplus.html#honeybee.energyplus.filemanager.get_energy_plus_objects_from_file">[docs]</a><span class="k">def</span> <span class="nf">get_energy_plus_objects_from_file</span><span class="p">(</span><span class="n">ep_file_path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse EnergyPlus file and return a list of radiance objects as separate strings.</span>
+
+<span class="sd">    TODO: Create a class for each EnergyPlus object and return Python objects</span>
+<span class="sd">    instead of strings</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ep_file_path: Path to EnergyPlus file</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A list of strings. Each string represents a differnt Rdiance Object</span>
+
+<span class="sd">    Usage:</span>
+<span class="sd">        get_energy_plus_objects_from_file(r&quot;C:/ladybug/21MAR900/energySimulation/21MAR900.rad&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">ep_file_path</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Can&#39;t find </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="n">ep_file_path</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ep_file_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">epFile</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">get_energy_plus_objects_from_string</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">epFile</span><span class="o">.</span><span class="n">readlines</span><span class="p">()))</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">objects</span> <span class="o">=</span> <span class="n">get_energy_plus_objects_from_file</span><span class="p">(</span>
+        <span class="sa">r</span><span class="s2">&quot;C:/EnergyPlusV8-3-0/ExampleFiles/5ZoneWaterCooled_GasFiredSteamHumidifier.idf&quot;</span><span class="p">)</span>
+
+    <span class="c1"># if the geometry rules is relative then all the points should be added</span>
+    <span class="c1"># to X, Y, Z of zone origin</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">objects</span><span class="p">[</span><span class="s1">&#39;globalgeometryrules&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">[</span><span class="s1">&#39;zone&#39;</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;zone:&quot;</span><span class="p">,</span> <span class="n">objects</span><span class="p">[</span><span class="s1">&#39;zone&#39;</span><span class="p">][</span><span class="n">z</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">[</span><span class="s1">&#39;buildingsurface:detailed&#39;</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;buildingsurface:&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">[</span><span class="s1">&#39;fenestrationsurface:detailed&#39;</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;fenestrationsurface:&quot;</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

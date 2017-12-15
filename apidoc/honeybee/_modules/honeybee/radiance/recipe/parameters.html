@@ -1,0 +1,326 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.recipe.parameters &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../index.html">
+    <img class="logo" src="../../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.recipe.parameters</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Radiance parameters collection for recipes.</span>
+
+
+<span class="sd">Note on default parameters for daylight coefficient based studies</span>
+
+<span class="sd">    1. These parameters are meant specifically for rcontrib-based workflows and are not</span>
+<span class="sd">        applicable to conventional rpict- and rtrace- based simulations.</span>
+<span class="sd">    2. The values in tuples DCDEFAULTS, VMDEFAULTS are geared towards illuminance</span>
+<span class="sd">        simulations. The values for DMDEFAULTS and SMDEFAULTS can be used with</span>
+<span class="sd">        image-based simulations too.</span>
+<span class="sd">    3. The value for limit-weight should be a value less than 1/ambient-divisions. The</span>
+<span class="sd">        current values have been assigned as (1/ambient-divisions)*0.01. This should be</span>
+<span class="sd">        taken into account if these parameters are being changed in the future.</span>
+<span class="sd">    4. Finally, in the present scenario, there are no optimized set of parameters to</span>
+<span class="sd">        bring any simulation results to convergence using Monte-Carlo simulations. So,</span>
+<span class="sd">        these default values are based on best-practice discussions and experience of</span>
+<span class="sd">        developers.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">..parameters.gridbased</span> <span class="k">import</span> <span class="n">GridBasedParameters</span>
+<span class="kn">from</span> <span class="nn">..parameters.imagebased</span> <span class="k">import</span> <span class="n">ImageBasedParameters</span>
+<span class="kn">from</span> <span class="nn">..parameters.rcontrib</span> <span class="k">import</span> <span class="n">RcontribParameters</span>
+<span class="kn">from</span> <span class="nn">..parameters.rfluxmtx</span> <span class="k">import</span> <span class="n">RfluxmtxParameters</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
+
+<span class="c1"># ~~~~~~~~~~~STARTING DEFAULT PARAMETERS</span>
+
+<span class="c1"># Illuminance based daylight-coefficients</span>
+<span class="c1"># Parameter settings explained contextually:</span>
+<span class="c1"># Low: Simple room with almost no external geoemtry.</span>
+<span class="c1"># Medium: Room with some furniture, partitions with some external geometry</span>
+<span class="c1"># (few buildings).</span>
+<span class="c1"># High: A room within a sky-scraper with intricate furnitures, complex</span>
+<span class="c1"># external geometry (complex fins,overhangs etc).</span>
+<span class="n">DCDEFAULTS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">{</span><span class="s1">&#39;ambient_divisions&#39;</span><span class="p">:</span> <span class="mi">5000</span><span class="p">,</span> <span class="s1">&#39;ambient_bounces&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;limit_weight&#39;</span><span class="p">:</span> <span class="mf">0.000002</span><span class="p">,</span>
+     <span class="s1">&#39;sampling_rays_count&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;ambient_divisions&#39;</span><span class="p">:</span> <span class="mi">15000</span><span class="p">,</span> <span class="s1">&#39;ambient_bounces&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;limit_weight&#39;</span><span class="p">:</span> <span class="mf">6.67E-07</span><span class="p">,</span>
+     <span class="s1">&#39;sampling_rays_count&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;ambient_divisions&#39;</span><span class="p">:</span> <span class="mi">25000</span><span class="p">,</span> <span class="s1">&#39;ambient_bounces&#39;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span> <span class="s1">&#39;limit_weight&#39;</span><span class="p">:</span> <span class="mf">4E-07</span><span class="p">,</span>
+     <span class="s1">&#39;sampling_rays_count&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+<span class="p">)</span>
+
+<span class="c1"># Image-based daylight coefficients</span>
+<span class="c1"># Parameter settings explained contextually:</span>
+<span class="c1">#   Low: Regardless of geometry, these settings are suitable for doing a first pass</span>
+<span class="c1">#     simulation.</span>
+<span class="c1">#   Medium: These parameters will be enough for the results from a single room with side</span>
+<span class="c1">#     lighting to converge.</span>
+<span class="c1">#   High: Set these parameters for generating high-quality final renderings.</span>
+<span class="n">IMGDCDEFAULTS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">{</span><span class="s1">&#39;ambient_divisions&#39;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span> <span class="s1">&#39;ambient_bounces&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;limit_weight&#39;</span><span class="p">:</span> <span class="mf">0.0001</span><span class="p">,</span>
+     <span class="s1">&#39;sampling_rays_count&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;ambient_divisions&#39;</span><span class="p">:</span> <span class="mi">5000</span><span class="p">,</span> <span class="s1">&#39;ambient_bounces&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;limit_weight&#39;</span><span class="p">:</span> <span class="mf">0.00002</span><span class="p">,</span>
+     <span class="s1">&#39;sampling_rays_count&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;ambient_divisions&#39;</span><span class="p">:</span> <span class="mi">15000</span><span class="p">,</span> <span class="s1">&#39;ambient_bounces&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;limit_weight&#39;</span><span class="p">:</span> <span class="mf">6.666E-06</span><span class="p">,</span>
+     <span class="s1">&#39;sampling_rays_count&#39;</span><span class="p">:</span> <span class="mi">6</span><span class="p">}</span>
+<span class="p">)</span>
+
+
+<span class="c1"># Image-based View Matrix parameters for Three Phase, Five Phase and F-Matrix simulations</span>
+<span class="c1"># Parameter settings explained contextually:</span>
+<span class="c1">#   Low: Regardless of geometry, these settings are suitable for doing a first pass</span>
+<span class="c1">#     simulation.</span>
+<span class="c1">#   Medium: These parameters will be enough for the results from a single room with side</span>
+<span class="c1">#     lighting to converge.</span>
+<span class="c1">#   High: Set these parameters for generating high-quality final renderings.</span>
+<span class="n">IMGVMDEFAULTS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">{</span><span class="s1">&#39;ambient_divisions&#39;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span> <span class="s1">&#39;ambient_bounces&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;limit_weight&#39;</span><span class="p">:</span> <span class="mf">0.0001</span><span class="p">,</span>
+     <span class="s1">&#39;sampling_rays_count&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;ambient_divisions&#39;</span><span class="p">:</span> <span class="mi">3000</span><span class="p">,</span> <span class="s1">&#39;ambient_bounces&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;limit_weight&#39;</span><span class="p">:</span> <span class="mf">3.33E-05</span><span class="p">,</span>
+     <span class="s1">&#39;sampling_rays_count&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;ambient_divisions&#39;</span><span class="p">:</span> <span class="mi">10000</span><span class="p">,</span> <span class="s1">&#39;ambient_bounces&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;limit_weight&#39;</span><span class="p">:</span> <span class="mf">1E-05</span><span class="p">,</span>
+     <span class="s1">&#39;sampling_rays_count&#39;</span><span class="p">:</span> <span class="mi">6</span><span class="p">}</span>
+<span class="p">)</span>
+
+<span class="c1"># Illuminance based view matrix parameters.</span>
+<span class="c1"># Parameter settings explained contextually:</span>
+<span class="c1"># Low: Simple room with one or two glazing systems and no furniture.</span>
+<span class="c1"># Medium: Room with partitions, furnitures etc. but no occluding surfaces for</span>
+<span class="c1"># calculation grids.</span>
+<span class="c1"># High: Complex room or envrionment, like an Aircraft cabin (!) with lots</span>
+<span class="c1"># of detailing and occulding surfaces.</span>
+<span class="n">VMDEFAULTS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">{</span><span class="s1">&#39;ambient_divisions&#39;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span> <span class="s1">&#39;ambient_bounces&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;limit_weight&#39;</span><span class="p">:</span> <span class="mf">0.00001</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;ambient_divisions&#39;</span><span class="p">:</span> <span class="mi">5000</span><span class="p">,</span> <span class="s1">&#39;ambient_bounces&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;limit_weight&#39;</span><span class="p">:</span> <span class="mf">0.00002</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;ambient_divisions&#39;</span><span class="p">:</span> <span class="mi">20000</span><span class="p">,</span> <span class="s1">&#39;ambient_bounces&#39;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span> <span class="s1">&#39;limit_weight&#39;</span><span class="p">:</span> <span class="mf">5E-7</span><span class="p">}</span>
+<span class="p">)</span>
+
+<span class="c1"># Daylight Matrix</span>
+<span class="c1"># Parameter settings explained contextually:</span>
+<span class="c1"># Low: Room is surrounded by virtually no geometry. The glazing system has a clear view</span>
+<span class="c1"># of the sky.</span>
+<span class="c1"># Medium: Room is surrounded by some buildings.</span>
+<span class="c1"># High: Room is surrounded by several shapes..The glazing might not have a direct view</span>
+<span class="c1"># of the sky.</span>
+<span class="n">DMDEFAULTS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">{</span><span class="s1">&#39;ambient_divisions&#39;</span><span class="p">:</span> <span class="mi">1024</span><span class="p">,</span> <span class="s1">&#39;ambient_bounces&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;limit_weight&#39;</span><span class="p">:</span> <span class="mf">0.00001</span><span class="p">,</span>
+     <span class="s1">&#39;sampling_rays_count&#39;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;ambient_divisions&#39;</span><span class="p">:</span> <span class="mi">3000</span><span class="p">,</span> <span class="s1">&#39;ambient_bounces&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;limit_weight&#39;</span><span class="p">:</span> <span class="mf">3.33E-06</span><span class="p">,</span>
+     <span class="s1">&#39;sampling_rays_count&#39;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;ambient_divisions&#39;</span><span class="p">:</span> <span class="mi">10000</span><span class="p">,</span> <span class="s1">&#39;ambient_bounces&#39;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span> <span class="s1">&#39;limit_weight&#39;</span><span class="p">:</span> <span class="mf">0.000001</span><span class="p">,</span>
+     <span class="s1">&#39;sampling_rays_count&#39;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">}</span>
+<span class="p">)</span>
+
+<span class="c1"># Sun-matrix</span>
+<span class="c1"># These settings are set such that every solar disc disc in the celestial hemisphere is</span>
+<span class="c1"># accounted for and participates in shadow testing.</span>
+<span class="n">SMDEFAULTS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ambient_bounces&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;direct_jitter&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;direct_certainty&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+              <span class="s1">&#39;direct_threshold&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+
+<span class="c1"># ~~~~~~~~~~~ENDING DEFAULT PARAMETERS</span>
+
+<span class="n">Parameters</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;Parameters&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;rad&#39;</span><span class="p">,</span> <span class="s1">&#39;vmtx&#39;</span><span class="p">,</span> <span class="s1">&#39;dmtx&#39;</span><span class="p">,</span> <span class="s1">&#39;smtx&#39;</span><span class="p">])</span>
+
+
+<div class="viewcode-block" id="get_radiance_parameters_grid_based"><a class="viewcode-back" href="../../../../honeybee.radiance.recipe.html#honeybee.radiance.recipe.parameters.get_radiance_parameters_grid_based">[docs]</a><span class="k">def</span> <span class="nf">get_radiance_parameters_grid_based</span><span class="p">(</span><span class="n">quality</span><span class="p">,</span> <span class="n">rec_type</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get Radiance parameters for grid based recipes.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        quality: 0 &gt; low, 1 &gt; Medium, 2 &gt; High</span>
+<span class="sd">        rec_type: Type of recipe.</span>
+<span class="sd">            0 &gt; Point-in-time, 1 &gt; Daylight Coeff., 2 &gt; 3Phase, 3 &gt; 5Phase</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        radiance_parameters, viewMatrixParameters, daylight_matrixParameters,</span>
+<span class="sd">        sun_matrixParameters</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">rec_type</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Parameters</span><span class="p">(</span><span class="n">GridBasedParameters</span><span class="p">(</span><span class="n">quality</span><span class="p">),</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">rec_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># daylight matrix</span>
+        <span class="n">dmtxpar</span> <span class="o">=</span> <span class="n">RfluxmtxParameters</span><span class="p">(</span><span class="n">quality</span><span class="o">=</span><span class="n">quality</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">DCDEFAULTS</span><span class="p">[</span><span class="n">quality</span><span class="p">]</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">dmtxpar</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+
+        <span class="c1"># sun matrix</span>
+        <span class="n">sunmtxpar</span> <span class="o">=</span> <span class="n">RcontribParameters</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">SMDEFAULTS</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">sunmtxpar</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Parameters</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dmtxpar</span><span class="p">,</span> <span class="n">sunmtxpar</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># view matrix</span>
+        <span class="n">vmtxpar</span> <span class="o">=</span> <span class="n">RfluxmtxParameters</span><span class="p">(</span><span class="n">quality</span><span class="o">=</span><span class="n">quality</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">VMDEFAULTS</span><span class="p">[</span><span class="n">quality</span><span class="p">]</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">vmtxpar</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+
+        <span class="c1"># daylight matrix</span>
+        <span class="n">dmtxpar</span> <span class="o">=</span> <span class="n">RfluxmtxParameters</span><span class="p">(</span><span class="n">quality</span><span class="o">=</span><span class="n">quality</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">DMDEFAULTS</span><span class="p">[</span><span class="n">quality</span><span class="p">]</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">dmtxpar</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+
+        <span class="c1"># sun matrix</span>
+        <span class="n">sunmtxpar</span> <span class="o">=</span> <span class="n">RcontribParameters</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">SMDEFAULTS</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">sunmtxpar</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Parameters</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmtxpar</span><span class="p">,</span> <span class="n">dmtxpar</span><span class="p">,</span> <span class="n">sunmtxpar</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_radiance_parameters_image_based"><a class="viewcode-back" href="../../../../honeybee.radiance.recipe.html#honeybee.radiance.recipe.parameters.get_radiance_parameters_image_based">[docs]</a><span class="k">def</span> <span class="nf">get_radiance_parameters_image_based</span><span class="p">(</span><span class="n">quality</span><span class="p">,</span> <span class="n">rec_type</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get Radiance parameters for image based recipes.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        quality: 0 &gt; low, 1 &gt; Medium, 2 &gt; High</span>
+<span class="sd">        rec_type: Type of recipe.</span>
+<span class="sd">            0 &gt; Point-in-time, 1 &gt; Daylight Coeff., 2 &gt; 3Phase, 3 &gt; 5Phase</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        radiance_parameters, viewMatrixParameters, daylight_matrixParameters</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">rec_type</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Parameters</span><span class="p">(</span><span class="n">ImageBasedParameters</span><span class="p">(</span><span class="n">quality</span><span class="p">),</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">rec_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># this is a place holder.</span>
+        <span class="c1"># daylight matrix</span>
+        <span class="n">dmtxpar</span> <span class="o">=</span> <span class="n">RfluxmtxParameters</span><span class="p">(</span><span class="n">quality</span><span class="o">=</span><span class="n">quality</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">IMGDCDEFAULTS</span><span class="p">[</span><span class="n">quality</span><span class="p">]</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">dmtxpar</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+
+        <span class="c1"># sun matrix</span>
+        <span class="n">sunmtxpar</span> <span class="o">=</span> <span class="n">RcontribParameters</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">SMDEFAULTS</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">sunmtxpar</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Parameters</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dmtxpar</span><span class="p">,</span> <span class="n">sunmtxpar</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># view matrix</span>
+        <span class="n">vmtxpar</span> <span class="o">=</span> <span class="n">RfluxmtxParameters</span><span class="p">(</span><span class="n">quality</span><span class="o">=</span><span class="n">quality</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">IMGVMDEFAULTS</span><span class="p">[</span><span class="n">quality</span><span class="p">]</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">vmtxpar</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+
+        <span class="c1"># daylight matrix</span>
+        <span class="n">dmtxpar</span> <span class="o">=</span> <span class="n">RfluxmtxParameters</span><span class="p">(</span><span class="n">quality</span><span class="o">=</span><span class="n">quality</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">DMDEFAULTS</span><span class="p">[</span><span class="n">quality</span><span class="p">]</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">dmtxpar</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+
+        <span class="c1"># sun matrix</span>
+        <span class="n">sunmtxpar</span> <span class="o">=</span> <span class="n">RcontribParameters</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">SMDEFAULTS</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">sunmtxpar</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Parameters</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmtxpar</span><span class="p">,</span> <span class="n">dmtxpar</span><span class="p">,</span> <span class="n">sunmtxpar</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

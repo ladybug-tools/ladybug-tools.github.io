@@ -1,0 +1,472 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.recipe.solaraccess package &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="honeybee.radiance.recipe.threephase package" href="honeybee.radiance.recipe.threephase.html" />
+    <link rel="prev" title="honeybee.radiance.recipe.radiation package" href="honeybee.radiance.recipe.radiation.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="honeybee.html">honeybee package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="honeybee.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="honeybee.energyplus.html">honeybee.energyplus package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="honeybee.radiance.html">honeybee.radiance package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="honeybee.radiance.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.analysisgrid">honeybee.radiance.analysisgrid module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.analysispoint">honeybee.radiance.analysispoint module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.datatype">honeybee.radiance.datatype module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.filemanager">honeybee.radiance.filemanager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.geometry">honeybee.radiance.geometry module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.imagecollection">honeybee.radiance.imagecollection module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.properties">honeybee.radiance.properties module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.radfile">honeybee.radiance.radfile module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.runmanager">honeybee.radiance.runmanager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.scene">honeybee.radiance.scene module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.view">honeybee.radiance.view module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.server.html">honeybee.server package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.vectormath.html">honeybee.vectormath package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.config">honeybee.config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.dataoperation">honeybee.dataoperation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.futil">honeybee.futil module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.geometryoperation">honeybee.geometryoperation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbdynamicsurface">honeybee.hbdynamicsurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbfensurface">honeybee.hbfensurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbobject">honeybee.hbobject module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbshadesurface">honeybee.hbshadesurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbsurface">honeybee.hbsurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbzone">honeybee.hbzone module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.room">honeybee.room module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.schedule">honeybee.schedule module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.surfaceproperties">honeybee.surfaceproperties module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.surfacetype">honeybee.surfacetype module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.utilcol">honeybee.utilcol module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="honeybee.html">honeybee package</a><ul>
+  <li><a href="honeybee.radiance.html">honeybee.radiance package</a><ul>
+  <li><a href="honeybee.radiance.recipe.html">honeybee.radiance.recipe package</a><ul>
+      <li>Previous: <a href="honeybee.radiance.recipe.radiation.html" title="previous chapter">honeybee.radiance.recipe.radiation package</a></li>
+      <li>Next: <a href="honeybee.radiance.recipe.threephase.html" title="next chapter">honeybee.radiance.recipe.threephase package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="honeybee-radiance-recipe-solaraccess-package">
+<h1>honeybee.radiance.recipe.solaraccess package<a class="headerlink" href="#honeybee-radiance-recipe-solaraccess-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-honeybee.radiance.recipe.solaraccess.gridbased">
+<span id="honeybee-radiance-recipe-solaraccess-gridbased-module"></span><h2>honeybee.radiance.recipe.solaraccess.gridbased module<a class="headerlink" href="#module-honeybee.radiance.recipe.solaraccess.gridbased" title="Permalink to this headline">¶</a></h2>
+<p>Radiance Solar Access Grid-based Analysis Recipe.</p>
+<dl class="class">
+<dt id="honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.recipe.solaraccess.gridbased.</code><code class="descname">SolarAccessGridBased</code><span class="sig-paren">(</span><em>sun_vectors</em>, <em>hoys</em>, <em>analysis_grids</em>, <em>timestep=1</em>, <em>hb_objects=None</em>, <em>sub_folder='solaraccess'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/solaraccess/gridbased.html#SolarAccessGridBased"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.recipe._gridbasedbase.GenericGridBased</span></code></p>
+<p>Solar access recipe.</p>
+<p>This class calculates number of sunlight hours for a group of test points.</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.sun_vectors">
+<code class="descname">sun_vectors</code><a class="headerlink" href="#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.sun_vectors" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of ladybug sun vectors as (x, y, z) values. Z value
+for sun vectors should be negative (coming from sun toward earth)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.hoys">
+<code class="descname">hoys</code><a class="headerlink" href="#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.hoys" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of hours of the year for each sun vector.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.analysis_grids">
+<code class="descname">analysis_grids</code><a class="headerlink" href="#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.analysis_grids" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of analysis grids.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.timestep">
+<code class="descname">timestep</code><a class="headerlink" href="#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.timestep" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of timesteps per hour for sun vectors. This number
+should be smaller than 60 and divisible by 60. The default is set to
+1 such that one sun vector is generated for each hour (Default: 1).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.hb_objects">
+<code class="descname">hb_objects</code><a class="headerlink" href="#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.hb_objects" title="Permalink to this definition">¶</a></dt>
+<dd><p>An optional list of Honeybee surfaces or zones (Default: None).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.sub_folder">
+<code class="descname">sub_folder</code><a class="headerlink" href="#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.sub_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Analysis subfolder for this recipe. (Default: “sunlighthours”)</p>
+</dd></dl>
+
+<dl class="docutils">
+<dt>Usage:</dt>
+<dd><p class="first"># initiate analysis_recipe
+analysis_recipe = SolarAccess(sun_vectors, analysis_grids)</p>
+<p># add honeybee object
+analysis_recipe.hb_objects = HBObjs</p>
+<p># write analysis files to local drive
+analysis_recipe.write_to_file(_folder_, _name_)</p>
+<p># run the analysis
+analysis_recipe.run(debaug=False)</p>
+<p class="last"># get the results
+print(analysis_recipe.results())</p>
+</dd>
+</dl>
+<dl class="classmethod">
+<dt id="honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.from_json">
+<em class="property">classmethod </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>rec_json</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/solaraccess/gridbased.html#SolarAccessGridBased.from_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the solar access recipe from json.
+{</p>
+<blockquote>
+<div>“id”: 0, // do NOT overwrite this id
+“location”: null, // a honeybee location - see below
+“hoys”: [], // list of hours of the year
+“surfaces”: [], // list of honeybee surfaces
+“analysis_grids”: [] // list of analysis grids
+“sun_vectors”: [] // list of sun vectors if location is not provided</div></blockquote>
+<p>}</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.from_location_and_analysis_period">
+<em class="property">classmethod </em><code class="descname">from_location_and_analysis_period</code><span class="sig-paren">(</span><em>location</em>, <em>analysis_period</em>, <em>point_groups</em>, <em>vector_groups=None</em>, <em>hb_objects=None</em>, <em>sub_folder='sunlighthour'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/solaraccess/gridbased.html#SolarAccessGridBased.from_location_and_analysis_period"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.from_location_and_analysis_period" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create sunlighthours recipe from Location and analysis period.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.from_location_and_hoys">
+<em class="property">classmethod </em><code class="descname">from_location_and_hoys</code><span class="sig-paren">(</span><em>location</em>, <em>hoys</em>, <em>point_groups</em>, <em>vector_groups=[]</em>, <em>timestep=1</em>, <em>hb_objects=None</em>, <em>sub_folder='sunlighthour'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/solaraccess/gridbased.html#SolarAccessGridBased.from_location_and_hoys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.from_location_and_hoys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create sunlighthours recipe from Location and hours of year.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.from_points_and_vectors">
+<em class="property">classmethod </em><code class="descname">from_points_and_vectors</code><span class="sig-paren">(</span><em>sun_vectors</em>, <em>hoys</em>, <em>point_groups</em>, <em>vector_groups=[]</em>, <em>timestep=1</em>, <em>hb_objects=None</em>, <em>sub_folder='sunlighthour'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/solaraccess/gridbased.html#SolarAccessGridBased.from_points_and_vectors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.from_points_and_vectors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create sunlighthours recipe from points and vectors.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sun_vectors</strong> – A list of ladybug sun vectors as (x, y, z) values. Z value
+for sun vectors should be negative (coming from sun toward earth)</li>
+<li><strong>hoys</strong> – A list of hours of the year for each sun vector.</li>
+<li><strong>point_groups</strong> – A list of (x, y, z) test points or lists of (x, y, z) test
+points. Each list of test points will be converted to a
+TestPointGroup. If testPts is a single flattened list only one
+TestPointGroup will be created.</li>
+<li><strong>vector_groups</strong> – An optional list of (x, y, z) vectors. Each vector
+represents direction of corresponding point in testPts. If the
+vector is not provided (0, 0, 1) will be assigned.</li>
+<li><strong>timestep</strong> – The number of timesteps per hour for sun vectors. This number
+should be smaller than 60 and divisible by 60. The default is set to
+1 such that one sun vector is generated for each hour (Default: 1).</li>
+<li><strong>hb_objects</strong> – An optional list of Honeybee surfaces or zones (Default: None).</li>
+<li><strong>sub_folder</strong> – Analysis subfolder for this recipe. (Default: “sunlighthours”)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.from_suns">
+<em class="property">classmethod </em><code class="descname">from_suns</code><span class="sig-paren">(</span><em>suns</em>, <em>point_groups</em>, <em>vector_groups=[]</em>, <em>timestep=1</em>, <em>hb_objects=None</em>, <em>sub_folder='sunlighthour'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/solaraccess/gridbased.html#SolarAccessGridBased.from_suns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.from_suns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create sunlighthours recipe from LB sun objects.</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.suns">
+<code class="descname">suns</code><a class="headerlink" href="#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.suns" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of ladybug suns.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.point_groups">
+<code class="descname">point_groups</code><a class="headerlink" href="#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.point_groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of (x, y, z) test points or lists of (x, y, z) test
+points. Each list of test points will be converted to a
+TestPointGroup. If testPts is a single flattened list only one
+TestPointGroup will be created.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.vector_groups">
+<code class="descname">vector_groups</code><a class="headerlink" href="#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.vector_groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>An optional list of (x, y, z) vectors. Each vector
+represents direction of corresponding point in testPts. If the
+vector is not provided (0, 0, 1) will be assigned.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">timestep</code></dt>
+<dd><p>The number of timesteps per hour for sun vectors. This number
+should be smaller than 60 and divisible by 60. The default is set to
+1 such that one sun vector is generated for each hour (Default: 1).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">hb_objects</code></dt>
+<dd><p>An optional list of Honeybee surfaces or zones (Default: None).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">sub_folder</code></dt>
+<dd><p>Analysis subfolder for this recipe. (Default: “sunlighthours”)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">hoys</code></dt>
+<dd><p>Return list of hours of the year.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.legend_parameters">
+<code class="descname">legend_parameters</code><a class="headerlink" href="#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.legend_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Legend parameters for solar access analysis.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.results">
+<code class="descname">results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/solaraccess/gridbased.html#SolarAccessGridBased.results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return results for this analysis.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">sun_vectors</code></dt>
+<dd><p>A list of ladybug sun vectors as (x, y, z) values.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">timestep</code></dt>
+<dd><p>An intger for the number of timesteps per hour for sun vectors.</p>
+<p>This number should be smaller than 60 and divisible by 60.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/solaraccess/gridbased.html#SolarAccessGridBased.to_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the solar access recipe from json.
+{</p>
+<blockquote>
+<div>“id”: 0, // do NOT overwrite this id
+“location”: null, // a honeybee location - see below
+“hoys”: [], // list of hours of the year
+“surfaces”: [], // list of honeybee surfaces
+“analysis_grids”: [], // list of analysis grids
+“sun_vectors”: []</div></blockquote>
+<p>}</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.write">
+<code class="descname">write</code><span class="sig-paren">(</span><em>target_folder</em>, <em>project_name='untitled'</em>, <em>header=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/solaraccess/gridbased.html#SolarAccessGridBased.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write analysis files to target folder.</p>
+<dl class="docutils">
+<dt>Files for sunlight hours analysis are:</dt>
+<dd><p class="first">test points &lt;project_name.pts&gt;: List of analysis points.
+suns file &lt;<em>.sun&gt;: list of sun sources .
+suns material file &lt;*_suns.mat&gt;: Radiance materials for sun sources.
+suns geometry file &lt;*_suns.rad&gt;: Radiance geometries for sun sources.
+material file &lt;</em>.mat&gt;: Radiance materials. Will be empty if hb_objects is</p>
+<blockquote>
+<div>None.</div></blockquote>
+<dl class="last docutils">
+<dt>geometry file &lt;<a href="#id1"><span class="problematic" id="id2">*</span></a>.rad&gt;: Radiance geometries. Will be empty if hb_objects is</dt>
+<dd>None.</dd>
+<dt>batch file &lt;<a href="#id3"><span class="problematic" id="id4">*</span></a>.bat&gt;: An executable batch file which has the list of commands.</dt>
+<dd><dl class="first last docutils">
+<dt>oconv [material file] [geometry file] [sun materials file] [sun</dt>
+<dd>geometries file] &gt; [octree file]</dd>
+<dt>rcontrib -ab 0 -ad 10000 -I -M [sunlist.txt] -dc 1 [octree file]&lt; [pts</dt>
+<dd>file] &gt; [rcontrib results file]</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>target_folder</strong> – Path to parent folder. Files will be created under
+target_folder/gridbased. use self.sub_folder to change subfolder name.</li>
+<li><strong>project_name</strong> – Name of this project as a string.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">True in case of success.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.write_suns">
+<code class="descname">write_suns</code><span class="sig-paren">(</span><em>target_dir</em>, <em>project_name</em>, <em>mkdir=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/solaraccess/gridbased.html#SolarAccessGridBased.write_suns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.solaraccess.gridbased.SolarAccessGridBased.write_suns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write sunlist, sun geometry and sun material files.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>target_dir</strong> – Path to project directory (e.g. c:/ladybug)</li>
+<li><strong>project_name</strong> – Project name as string. Suns will be saved as
+project_name.sun</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A tuple of paths to sunlist file, sun materials and sun geometries</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>Exceptions:</dt>
+<dd>ValueError if target_dir doesn’t exist and mkdir is False.</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.recipe.solaraccess">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-honeybee.radiance.recipe.solaraccess" title="Permalink to this headline">¶</a></h2>
+<p>Point-in-time recipes.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/honeybee.radiance.recipe.solaraccess.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

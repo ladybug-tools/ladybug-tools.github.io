@@ -1,0 +1,292 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ladybug.dt &#8212; Ladybug 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/ladybug.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Ladybug performs detailed analysis of climate data to produce customized, interactive visualizations for environmentally-informed design.</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=ladybug&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ladybug.html">ladybug package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for ladybug.dt</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Ladybug datetime.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+
+
+<div class="viewcode-block" id="DateTime"><a class="viewcode-back" href="../../ladybug.html#ladybug.dt.DateTime">[docs]</a><span class="k">class</span> <span class="nc">DateTime</span><span class="p">(</span><span class="n">datetime</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create Ladybug Date time.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        month: A value for month between 1-12. (Defualt: 1)</span>
+<span class="sd">        day: A value for day between 1-31. (Defualt: 1)</span>
+<span class="sd">        hour: A value for hour between 0-23. (Defualt: 0)</span>
+<span class="sd">        minute: A value for month between 0-59. (Defualt: 0)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">hour</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create Ladybug datetime.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            month: A value for month between 1-12. (Defualt: 1)</span>
+<span class="sd">            day: A value for day between 1-31. (Defualt: 1)</span>
+<span class="sd">            hour: A value for hour between 0-23. (Defualt: 0)</span>
+<span class="sd">            minute: A value for month between 0-59. (Defualt: 0)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">hour</span><span class="p">,</span> <span class="n">minute</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_calculate_hour_and_minute</span><span class="p">(</span><span class="n">hour</span> <span class="o">+</span> <span class="n">minute</span> <span class="o">/</span> <span class="mf">60.0</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="mi">2017</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hour</span><span class="p">,</span> <span class="n">minute</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">:</span><span class="se">\n\t</span><span class="s2">(</span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2">@</span><span class="si">{}</span><span class="s2">:</span><span class="si">{}</span><span class="s2">)(m/d@h:m)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">e</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hour</span><span class="p">,</span> <span class="n">minute</span>
+            <span class="p">))</span>
+
+<div class="viewcode-block" id="DateTime.from_hoy"><a class="viewcode-back" href="../../ladybug.html#ladybug.dt.DateTime.from_hoy">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_hoy</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">hoy</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create Ladybug Datetime from an hour of the year.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            hoy: A float value 0 &lt;= and &lt; 8760</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_moy</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">hoy</span> <span class="o">*</span> <span class="mi">60</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="DateTime.from_moy"><a class="viewcode-back" href="../../ladybug.html#ladybug.dt.DateTime.from_moy">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_moy</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">moy</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create Ladybug Datetime from a minute of the year.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            moy: An integer value 0 &lt;= and &lt; 525600</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">num_of_minutes_until_month</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">44640</span><span class="p">,</span> <span class="mi">84960</span><span class="p">,</span> <span class="mi">129600</span><span class="p">,</span> <span class="mi">172800</span><span class="p">,</span> <span class="mi">217440</span><span class="p">,</span>
+                                      <span class="mi">260640</span><span class="p">,</span> <span class="mi">305280</span><span class="p">,</span> <span class="mi">349920</span><span class="p">,</span> <span class="mi">393120</span><span class="p">,</span> <span class="mi">437760</span><span class="p">,</span>
+                                      <span class="mi">480960</span><span class="p">,</span> <span class="mi">525600</span><span class="p">)</span>
+
+        <span class="c1"># find month</span>
+        <span class="k">for</span> <span class="n">monthCount</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">12</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">moy</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">num_of_minutes_until_month</span><span class="p">[</span><span class="n">monthCount</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]:</span>
+                <span class="n">month</span> <span class="o">=</span> <span class="n">monthCount</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="k">break</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">day</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">moy</span> <span class="o">-</span> <span class="n">num_of_minutes_until_month</span><span class="p">[</span><span class="n">month</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="mi">60</span> <span class="o">*</span> <span class="mi">24</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">except</span> <span class="ne">UnboundLocalError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;moy must be positive and smaller than 525600. Invalid input </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">moy</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">hour</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">moy</span> <span class="o">/</span> <span class="mi">60</span><span class="p">)</span> <span class="o">%</span> <span class="mi">24</span><span class="p">)</span>
+            <span class="n">minute</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">moy</span> <span class="o">%</span> <span class="mi">60</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hour</span><span class="p">,</span> <span class="n">minute</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DateTime.from_date_time_string"><a class="viewcode-back" href="../../ladybug.html#ladybug.dt.DateTime.from_date_time_string">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_date_time_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">datetime_string</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create Ladybug DateTime from a DateTime string.</span>
+
+<span class="sd">        Usage:</span>
+
+<span class="sd">            dt = DateTime.from_date_time_string(&quot;31 Dec 12:00&quot;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">datetime_string</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%d</span><span class="s1"> %b %H:%M&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">minute</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">isDateTime</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if data is ladybug data.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">doy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate day of the year for this date time.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">timetuple</span><span class="p">()</span><span class="o">.</span><span class="n">tm_yday</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">hoy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate hour of the year for this date time.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">doy</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">float_hour</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">moy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate minute of the year for this date time.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">int_hoy</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">minute</span>  <span class="c1"># minute of the year</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">float_hour</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get hour and minute as a float value (e.g. 6.25 for 6:15).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hour</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">minute</span> <span class="o">/</span> <span class="mf">60.0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">int_hoy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate hour of the year for this date time as an integer.</span>
+
+<span class="sd">        This output assumes the minute is 0.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">doy</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">hour</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_calculate_hour_and_minute</span><span class="p">(</span><span class="n">float_hour</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate hour and minutes as integers from a float hour.&quot;&quot;&quot;</span>
+        <span class="n">hour</span><span class="p">,</span> <span class="n">minute</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">float_hour</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">((</span><span class="n">float_hour</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="n">float_hour</span><span class="p">))</span> <span class="o">*</span> <span class="mi">60</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">minute</span> <span class="o">==</span> <span class="mi">60</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">hour</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">hour</span><span class="p">,</span> <span class="n">minute</span>
+
+<div class="viewcode-block" id="DateTime.add_minute"><a class="viewcode-back" href="../../ladybug.html#ladybug.dt.DateTime.add_minute">[docs]</a>    <span class="k">def</span> <span class="nf">add_minute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">minute</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a new DateTime after the minutes are added.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            minute: An integer value for minutes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_moy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">moy</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">minute</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">from_moy</span><span class="p">(</span><span class="n">_moy</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DateTime.sub_minute"><a class="viewcode-back" href="../../ladybug.html#ladybug.dt.DateTime.sub_minute">[docs]</a>    <span class="k">def</span> <span class="nf">sub_minute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">minute</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a new DateTime after the minutes are subtracted.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            minute: An integer value for the number of minutes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_minute</span><span class="p">(</span><span class="o">-</span><span class="n">minute</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DateTime.add_hour"><a class="viewcode-back" href="../../ladybug.html#ladybug.dt.DateTime.add_hour">[docs]</a>    <span class="k">def</span> <span class="nf">add_hour</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hour</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a new DateTime from this time + timedelta.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            hours: A float value in hours (e.g. .5 = half an hour)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_minute</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">hoy</span> <span class="o">+</span> <span class="n">hour</span><span class="p">)</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DateTime.sub_hour"><a class="viewcode-back" href="../../ladybug.html#ladybug.dt.DateTime.sub_hour">[docs]</a>    <span class="k">def</span> <span class="nf">sub_hour</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hour</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a new DateTime from this time - timedelta.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            hour: A float value in hours (e.g. .5 is half an hour and 2 is two hours).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_hour</span><span class="p">(</span><span class="o">-</span><span class="n">hour</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DateTime.to_simple_string"><a class="viewcode-back" href="../../ladybug.html#ladybug.dt.DateTime.to_simple_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_simple_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">separator</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a simplified string.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1">_%b_%H_%M&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">separator</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return date time as a string.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1"> %b %H:%M&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DateTime.ToString"><a class="viewcode-back" href="../../ladybug.html#ladybug.dt.DateTime.ToString">[docs]</a>    <span class="k">def</span> <span class="nf">ToString</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwrite .NET ToString.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return date time as a string.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

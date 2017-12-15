@@ -1,0 +1,314 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ladybug.location &#8212; Ladybug 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/ladybug.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Ladybug performs detailed analysis of climate data to produce customized, interactive visualizations for environmentally-informed design.</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=ladybug&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ladybug.html">ladybug package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for ladybug.location</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Ladybug location.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+
+<div class="viewcode-block" id="Location"><a class="viewcode-back" href="../../ladybug.html#ladybug.location.Location">[docs]</a><span class="k">class</span> <span class="nc">Location</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Ladybug Location.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        city: Name of the city as a string.</span>
+<span class="sd">        country: Name of the country as a string.</span>
+<span class="sd">        latitude: Location latitude between -90 and 90 (Default: 0).</span>
+<span class="sd">        longitude: Location longitude between -180 (west) and 180 (east) (Default: 0).</span>
+<span class="sd">        time_zone: Time zone between -12 hours (west) and 12 hours (east) (Default: 0).</span>
+<span class="sd">        elevation: A number for elevation of the location.</span>
+<span class="sd">        station_id: Id of the location if the location is represnting a weather station.</span>
+<span class="sd">        source: Source of data (e.g. TMY, TMY3).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;city&quot;</span><span class="p">,</span> <span class="s2">&quot;country&quot;</span><span class="p">,</span> <span class="s2">&quot;_lat&quot;</span><span class="p">,</span> <span class="s2">&quot;_lon&quot;</span><span class="p">,</span> <span class="s2">&quot;_tz&quot;</span><span class="p">,</span> <span class="s2">&quot;_elev&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;station_id&quot;</span><span class="p">,</span> <span class="s2">&quot;source&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">city</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">country</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">time_zone</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">elevation</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">station_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a Ladybug location.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">city</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">city</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">city</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">country</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">country</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">country</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span> <span class="o">=</span> <span class="n">latitude</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">longitude</span> <span class="o">=</span> <span class="n">longitude</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_zone</span> <span class="o">=</span> <span class="n">time_zone</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elevation</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">elevation</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">station_id</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">station_id</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">station_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">source</span>
+
+<div class="viewcode-block" id="Location.from_json"><a class="viewcode-back" href="../../ladybug.html#ladybug.location.Location.from_json">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_json</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">loc_json</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a location from json.</span>
+<span class="sd">        {</span>
+<span class="sd">          &quot;city&quot;: &quot;-&quot;,</span>
+<span class="sd">          &quot;latitude&quot;: 0,</span>
+<span class="sd">          &quot;longitude&quot;: 0,</span>
+<span class="sd">          &quot;time_zone&quot;: 0,</span>
+<span class="sd">          &quot;elevation&quot;: 0</span>
+<span class="sd">        }</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">loc_json</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;city&#39;</span><span class="p">],</span> <span class="kc">None</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;latitude&#39;</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;longitude&#39;</span><span class="p">],</span>
+                   <span class="n">d</span><span class="p">[</span><span class="s1">&#39;time_zone&#39;</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;elevation&#39;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Location.from_location"><a class="viewcode-back" href="../../ladybug.html#ladybug.location.Location.from_location">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_location</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">location</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Try to create a Ladybug location from a location string.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            locationString: Location string</span>
+
+<span class="sd">        Usage:</span>
+
+<span class="sd">            l = Location.from_location(locationString)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">location</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="s1">&#39;isLocation&#39;</span><span class="p">):</span>
+                <span class="c1"># Ladybug location</span>
+                <span class="k">return</span> <span class="n">location</span>
+
+            <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="s1">&#39;Latitude&#39;</span><span class="p">):</span>
+                <span class="c1"># Revit&#39;s location</span>
+                <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">city</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">location</span><span class="o">.</span><span class="n">Name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)),</span>
+                           <span class="n">latitude</span><span class="o">=</span><span class="n">location</span><span class="o">.</span><span class="n">Latitude</span><span class="p">,</span>
+                           <span class="n">longitude</span><span class="o">=</span><span class="n">location</span><span class="o">.</span><span class="n">Longitude</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">location</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Site:&#39;</span><span class="p">):</span>
+                <span class="n">loc</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">latitude</span><span class="p">,</span> <span class="n">longitude</span><span class="p">,</span> <span class="n">time_zone</span><span class="p">,</span> <span class="n">elevation</span> <span class="o">=</span> \
+                    <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\r*\n*([a-zA-Z0-9.:_-]*)[,|;]&#39;</span><span class="p">,</span>
+                               <span class="n">location</span><span class="p">,</span>
+                               <span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">city</span><span class="p">,</span> <span class="n">latitude</span><span class="p">,</span> <span class="n">longitude</span><span class="p">,</span> <span class="n">time_zone</span><span class="p">,</span> <span class="n">elevation</span> <span class="o">=</span> \
+                        <span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">location</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)]</span>
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="c1"># it&#39;s just the city name</span>
+                    <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">city</span><span class="o">=</span><span class="n">location</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">city</span><span class="o">=</span><span class="n">city</span><span class="p">,</span> <span class="n">country</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="n">latitude</span><span class="p">,</span>
+                       <span class="n">longitude</span><span class="o">=</span><span class="n">longitude</span><span class="p">,</span> <span class="n">time_zone</span><span class="o">=</span><span class="n">time_zone</span><span class="p">,</span>
+                       <span class="n">elevation</span><span class="o">=</span><span class="n">elevation</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Failed to create a Location from </span><span class="si">%s</span><span class="s2">!</span><span class="se">\n</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">isLocation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return Ture.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">latitude</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Location latitude.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lat</span>
+
+    <span class="nd">@latitude</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">latitude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lat</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">lat</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="o">-</span><span class="mi">90</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lat</span> <span class="o">&lt;=</span> <span class="mi">90</span><span class="p">,</span> <span class="s2">&quot;latitude should be between -90..90.&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">longitude</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Location latitude.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lon</span>
+
+    <span class="nd">@longitude</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">longitude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lon</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lon</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">lon</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">lon</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="o">-</span><span class="mi">180</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lon</span> <span class="o">&lt;=</span> <span class="mi">180</span><span class="p">,</span> <span class="s2">&quot;longitude should be between -180..180.&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">time_zone</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Location latitude.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tz</span>
+
+    <span class="nd">@time_zone</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">time_zone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tz</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tz</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">tz</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">tz</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="o">-</span><span class="mi">12</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tz</span> <span class="o">&lt;=</span> <span class="mi">12</span><span class="p">,</span> <span class="s2">&quot;Time zone should be between -12.0..12.0&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">elevation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Location latitude.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elev</span>
+
+    <span class="nd">@elevation</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">elevation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elev</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_elev</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">elev</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Failed to convert </span><span class="si">{}</span><span class="s2"> to an elevation&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">elev</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">meridian</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Location meridian west of Greenwich.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">15</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_zone</span>
+
+<div class="viewcode-block" id="Location.duplicate"><a class="viewcode-back" href="../../ladybug.html#ladybug.location.Location.duplicate">[docs]</a>    <span class="k">def</span> <span class="nf">duplicate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Duplicate location.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">city</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">country</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">longitude</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">time_zone</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">elevation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">station_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ep_style_location_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return EnergyPlus&#39;s location string.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;Site:Location,</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">city</span> <span class="o">+</span> <span class="s1">&#39;,</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> \
+            <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;,      !Latitude</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> \
+            <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">longitude</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;,     !Longitude</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> \
+            <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_zone</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;,     !Time Zone</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> \
+            <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">elevation</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;;       !Elevation&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return location as a string.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ep_style_location_string</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Location.ToString"><a class="viewcode-back" href="../../ladybug.html#ladybug.location.Location.ToString">[docs]</a>    <span class="k">def</span> <span class="nf">ToString</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwrite .NET ToString.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Location.to_json"><a class="viewcode-back" href="../../ladybug.html#ladybug.location.Location.to_json">[docs]</a>    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a location from json.</span>
+<span class="sd">            {</span>
+<span class="sd">              &quot;city&quot;: &quot;-&quot;,</span>
+<span class="sd">              &quot;latitude&quot;: 0,</span>
+<span class="sd">              &quot;longitude&quot;: 0,</span>
+<span class="sd">              &quot;time_zone&quot;: 0,</span>
+<span class="sd">              &quot;elevation&quot;: 0</span>
+<span class="sd">            }</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;city&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">city</span><span class="p">,</span>
+            <span class="s2">&quot;latitude&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span>
+            <span class="s2">&quot;longitude&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">longitude</span><span class="p">,</span>
+            <span class="s2">&quot;time_zone&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_zone</span><span class="p">,</span>
+            <span class="s2">&quot;elevation&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">elevation</span>
+        <span class="p">}</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return location as a string.&quot;&quot;&quot;</span>
+        <span class="c1"># Tehran, lat:36, lon:34, tz:3.5, elev:54</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">, lat:</span><span class="si">%.2f</span><span class="s2">, lon:</span><span class="si">%.2f</span><span class="s2">, tz:</span><span class="si">%.1f</span><span class="s2">, elev:</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">city</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">longitude</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">time_zone</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">elevation</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

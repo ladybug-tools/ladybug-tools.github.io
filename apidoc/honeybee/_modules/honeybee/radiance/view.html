@@ -1,0 +1,489 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.view &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../index.html">
+    <img class="logo" src="../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.view</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="sa">u</span><span class="sd">&quot;&quot;&quot;Create a radiance view.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">datatype</span> <span class="k">import</span> <span class="n">RadianceTuple</span><span class="p">,</span> <span class="n">RadianceNumber</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">deepcopy</span>
+
+
+<span class="c1"># TODO: Add a method to add paramters from string.</span>
+<span class="c1"># I want to make sure that this won&#39;t be duplicated by parameters class</span>
+<div class="viewcode-block" id="View"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.view.View">[docs]</a><span class="k">class</span> <span class="nc">View</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sa">u</span><span class="sd">&quot;&quot;&quot;A radiance view.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        view_point: Set the view point (-vp) to (x, y, z). This is the focal</span>
+<span class="sd">            point of a perspective view or the center of a parallel projection.</span>
+<span class="sd">            Default: (0, 0, 0)</span>
+<span class="sd">        view_direction: Set the view direction (-vd) vector to (x, y, z). The</span>
+<span class="sd">            length of this vector indicates the focal distance as needed by</span>
+<span class="sd">            the pixle depth of field (-pd) in rpict. Default: (0, 0, 1)</span>
+<span class="sd">        view_up_vector: Set the view up (-vu) vector (vertical direction) to</span>
+<span class="sd">            (x, y, z) default: (0, 1, 0).</span>
+<span class="sd">        view_type: Set view type (-vt) to one of the choices below.</span>
+<span class="sd">                0: Perspective (v)</span>
+<span class="sd">                1: Hemispherical fisheye (h)</span>
+<span class="sd">                2: Parallel (l)</span>
+<span class="sd">                3: Cylindrical panorma (c)</span>
+<span class="sd">                4: Angular fisheye (a)</span>
+<span class="sd">                5: Planisphere [stereographic] projection (s)</span>
+<span class="sd">            For more detailed description about view types check rpict manual</span>
+<span class="sd">            page: (http://radsite.lbl.gov/radiance/man_html/rpict.1.html)</span>
+<span class="sd">        view_h_size: Set the view horizontal size (-vh). For a perspective</span>
+<span class="sd">            projection (including fisheye views), val is the horizontal field</span>
+<span class="sd">            of view (in degrees). For a parallel projection, val is the view</span>
+<span class="sd">            width in world coordinates.</span>
+<span class="sd">        view_v_size: Set the view vertical size (-vv). For a perspective</span>
+<span class="sd">            projection (including fisheye views), val is the horizontal field</span>
+<span class="sd">            of view (in degrees). For a parallel projection, val is the view</span>
+<span class="sd">            width in world coordinates.</span>
+<span class="sd">        x_resolution: Set the maximum x resolution (-x) to an integer.</span>
+<span class="sd">        y_resolution: Set the maximum y resolution (-y) to an integer.</span>
+<span class="sd">        view_shift: Set the view shift (-vs). This is the amount the actual</span>
+<span class="sd">            image will be shifted to the right of the specified view. This</span>
+<span class="sd">            option is useful for generating skewed perspectives or rendering</span>
+<span class="sd">            an image a piece at a time. A value of 1 means that the rendered</span>
+<span class="sd">            image starts just to the right of the normal view. A value of −1</span>
+<span class="sd">            would be to the left. Larger or fractional values are permitted</span>
+<span class="sd">            as well.</span>
+<span class="sd">        view_lift: Set the view lift (-vl) to a value. This is the amount the</span>
+<span class="sd">            actual image will be lifted up from the specified view.</span>
+
+<span class="sd">    Usage:</span>
+
+<span class="sd">        v = View()</span>
+<span class="sd">        # set x and y resolution</span>
+<span class="sd">        v.x_resolution = v.y_resolution = 600</span>
+<span class="sd">        # add a fore clip</span>
+<span class="sd">        v.add_fore_clip(distance=100)</span>
+<span class="sd">        print(v)</span>
+
+<span class="sd">        &gt; -vtv -vp 0.000 0.000 0.000 -vd 0.000 0.000 1.000 -vu 0.000 1.000</span>
+<span class="sd">           0.000 -vh 60.000 -vv 60.000 -x 600 -y 600 -vo 100.000</span>
+
+<span class="sd">        # split the view into a view grid</span>
+<span class="sd">        gridViews = v.calculate_view_grid(2, 2)</span>
+<span class="sd">        for g in gridViews:</span>
+<span class="sd">            print(g)</span>
+
+<span class="sd">        &gt; -vtv -vp 0.000 0.000 0.000 -vd 0.000 0.000 1.000 -vu 0.000 1.000</span>
+<span class="sd">           0.000 -vh 29.341 -vv 32.204 -x 300 -y 300 -vs -0.500 -vl -0.500</span>
+<span class="sd">           -vo 100.000</span>
+
+<span class="sd">        &gt; -vtv -vp 0.000 0.000 0.000 -vd 0.000 0.000 1.000 -vu 0.000 1.000</span>
+<span class="sd">           0.000 -vh 29.341 -vv 32.204 -x 300 -y 300 -vs 0.500 -vl -0.500</span>
+<span class="sd">           -vo 100.000</span>
+
+<span class="sd">        &gt; -vtv -vp 0.000 0.000 0.000 -vd 0.000 0.000 1.000 -vu 0.000 1.000</span>
+<span class="sd">           0.000 -vh 29.341 -vv 32.204 -x 300 -y 300 -vs -0.500 -vl 0.500</span>
+<span class="sd">           -vo 100.000</span>
+
+<span class="sd">        &gt; -vtv -vp 0.000 0.000 0.000 -vd 0.000 0.000 1.000 -vu 0.000 1.000</span>
+<span class="sd">          0.000 -vh 29.341 -vv 32.204 -x 300 -y 300 -vs 0.500 -vl 0.500</span>
+<span class="sd">          -vo 100.000</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># init radiance types</span>
+    <span class="n">view_point</span> <span class="o">=</span> <span class="n">RadianceTuple</span><span class="p">(</span><span class="s1">&#39;vp&#39;</span><span class="p">,</span> <span class="s1">&#39;view point&#39;</span><span class="p">,</span> <span class="n">tuple_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+                               <span class="n">default_value</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+    <span class="n">view_direction</span> <span class="o">=</span> <span class="n">RadianceTuple</span><span class="p">(</span><span class="s1">&#39;vd&#39;</span><span class="p">,</span> <span class="s1">&#39;view direction&#39;</span><span class="p">,</span> <span class="n">tuple_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                                   <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="n">view_up_vector</span> <span class="o">=</span> <span class="n">RadianceTuple</span><span class="p">(</span><span class="s1">&#39;vu&#39;</span><span class="p">,</span> <span class="s1">&#39;view up vector&#39;</span><span class="p">,</span> <span class="n">tuple_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                                   <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+    <span class="n">view_h_size</span> <span class="o">=</span> <span class="n">RadianceNumber</span><span class="p">(</span><span class="s1">&#39;vh&#39;</span><span class="p">,</span> <span class="s1">&#39;view horizontal size&#39;</span><span class="p">,</span> <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">view_v_size</span> <span class="o">=</span> <span class="n">RadianceNumber</span><span class="p">(</span><span class="s1">&#39;vv&#39;</span><span class="p">,</span> <span class="s1">&#39;view vertical size&#39;</span><span class="p">,</span> <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="n">x_resolution</span> <span class="o">=</span> <span class="n">RadianceNumber</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;x resolution&#39;</span><span class="p">,</span> <span class="n">num_type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">y_resolution</span> <span class="o">=</span> <span class="n">RadianceNumber</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;y resolution&#39;</span><span class="p">,</span> <span class="n">num_type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">view_shift</span> <span class="o">=</span> <span class="n">RadianceNumber</span><span class="p">(</span><span class="s1">&#39;vs&#39;</span><span class="p">,</span> <span class="s1">&#39;view shift&#39;</span><span class="p">,</span> <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">view_lift</span> <span class="o">=</span> <span class="n">RadianceNumber</span><span class="p">(</span><span class="s1">&#39;vl&#39;</span><span class="p">,</span> <span class="s1">&#39;view lift&#39;</span><span class="p">,</span> <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="n">__viewForeClip</span> <span class="o">=</span> <span class="n">RadianceNumber</span><span class="p">(</span><span class="s1">&#39;vo&#39;</span><span class="p">,</span> <span class="s1">&#39;view fore clip distance&#39;</span><span class="p">,</span> <span class="n">num_type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="n">_view_types</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;vtv&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;vth&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39;vtl&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s1">&#39;vtc&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">:</span> <span class="s1">&#39;vta&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">:</span> <span class="s1">&#39;vts&#39;</span><span class="p">}</span>
+    <span class="n">__view_type</span> <span class="o">=</span> <span class="n">RadianceNumber</span><span class="p">(</span><span class="s1">&#39;vt&#39;</span><span class="p">,</span> <span class="s1">&#39;view type&#39;</span><span class="p">,</span> <span class="n">num_type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">valid_range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+                                 <span class="n">default_value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">view_point</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">view_direction</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">view_up_vector</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">view_type</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">view_h_size</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">view_v_size</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">x_resolution</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+                 <span class="n">y_resolution</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">view_shift</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">view_lift</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sa">u</span><span class="sd">&quot;&quot;&quot;Init view.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="sd">&quot;&quot;&quot;View name.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">view_point</span> <span class="o">=</span> <span class="n">view_point</span>
+        <span class="sd">&quot;&quot;&quot;Set the view point (-vp) to (x, y, z).&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">view_direction</span> <span class="o">=</span> <span class="n">view_direction</span>
+        <span class="sd">&quot;&quot;&quot;Set the view direction (-vd) vector to (x, y, z).&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">view_up_vector</span> <span class="o">=</span> <span class="n">view_up_vector</span>
+        <span class="sd">&quot;&quot;&quot;Set the view up (-vu) vector (vertical direction) to (x, y, z).&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">view_h_size</span> <span class="o">=</span> <span class="n">view_h_size</span>
+        <span class="sd">&quot;&quot;&quot;Set the view horizontal size (-vs). For a perspective projection</span>
+<span class="sd">        (including fisheye views), val is the horizontal field of view (in</span>
+<span class="sd">        degrees). For a parallel projection, val is the view width in world</span>
+<span class="sd">        coordinates.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">view_v_size</span> <span class="o">=</span> <span class="n">view_v_size</span>
+        <span class="sd">&quot;&quot;&quot;Set the view vertical size (-vv). For a perspective projection</span>
+<span class="sd">        (including fisheye views), val is the horizontal field of view (in</span>
+<span class="sd">        degrees). For a parallel projection, val is the view width in world</span>
+<span class="sd">        coordinates.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_resolution</span> <span class="o">=</span> <span class="n">x_resolution</span>
+        <span class="sd">&quot;&quot;&quot;Set the maximum x resolution (-x).&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_resolution</span> <span class="o">=</span> <span class="n">y_resolution</span>
+        <span class="sd">&quot;&quot;&quot;Set the maximum y resolution (-y).&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">view_shift</span> <span class="o">=</span> <span class="n">view_shift</span>
+        <span class="sd">&quot;&quot;&quot;Set the view shift (-vs). This is the amount the actual</span>
+<span class="sd">            image will be shifted to the right of the specified view.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">view_lift</span> <span class="o">=</span> <span class="n">view_lift</span>
+        <span class="sd">&quot;&quot;&quot;Set the view lift (-vl) to a value. This is the amount the</span>
+<span class="sd">            actual image will be lifted up from the specified view.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">view_type</span> <span class="o">=</span> <span class="n">view_type</span>
+        <span class="sd">&quot;&quot;&quot;Set and get view type (-vt) to one of the choices below (0-5).</span>
+<span class="sd">        0: Perspective (v), 1: Hemispherical fisheye (h),</span>
+<span class="sd">        2: Parallel (l),    3: Cylindrical panorma (c),</span>
+<span class="sd">        4: Angular fisheye (a),</span>
+<span class="sd">        5: Planisphere [stereographic] projection (s)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">isView</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True for view.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">view_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set and get view type (-vt) to one of the choices below (0-5).</span>
+
+<span class="sd">        0: Perspective (v), 1: Hemispherical fisheye (h),</span>
+<span class="sd">        2: Parallel (l),    3: Cylindrical panorma (c),</span>
+<span class="sd">        4: Angular fisheye (a),</span>
+<span class="sd">        5: Planisphere [stereographic] projection (s)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__view_type</span>
+
+    <span class="nd">@view_type</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">view_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__view_type</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="c1"># set view size to 180 degrees for fisheye views</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_type</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">view_h_size</span> <span class="o">=</span> <span class="mi">180</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">view_v_size</span> <span class="o">=</span> <span class="mi">180</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Changed view_h_size and view_v_size to 180 for fisheye view type.&quot;</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_type</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_h_size</span> <span class="o">&lt;</span> <span class="mi">180</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;</span><span class="se">\n</span><span class="si">{}</span><span class="s1"> is an invalid horizontal view size for Perspective view.</span><span class="se">\n</span><span class="s1">&#39;</span>
+                <span class="s1">&#39;The size should be smaller than 180.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">view_h_size</span><span class="p">))</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_v_size</span> <span class="o">&lt;</span> <span class="mi">180</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;</span><span class="se">\n</span><span class="si">{}</span><span class="s1"> is an invalid vertical view size for Perspective view.</span><span class="se">\n</span><span class="s1">&#39;</span>
+                <span class="s1">&#39;The size should be smaller than 180.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">view_v_size</span><span class="p">))</span>
+
+<div class="viewcode-block" id="View.get_view_dimension"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.view.View.get_view_dimension">[docs]</a>    <span class="k">def</span> <span class="nf">get_view_dimension</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get dimensions for this view as x, y.</span>
+
+<span class="sd">        This method is same as vwrays -d</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">max_x</span> <span class="o">=</span> <span class="n">max_x</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_resolution</span>
+        <span class="n">max_y</span> <span class="o">=</span> <span class="n">max_y</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_resolution</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_type</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">max_x</span><span class="p">,</span> <span class="n">max_y</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">max_x</span><span class="p">,</span> <span class="n">max_y</span><span class="p">)</span>
+
+        <span class="n">vh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_h_size</span>
+        <span class="n">vv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_v_size</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_type</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">hv_ratio</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">vh</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">/</span> \
+                <span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">vv</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">hv_ratio</span> <span class="o">=</span> <span class="n">vh</span> <span class="o">/</span> <span class="n">vv</span>
+
+        <span class="c1"># radiance keeps the larges max size and tries to scale the other size</span>
+        <span class="c1"># to fit the aspect ratio. In case the size doesn&#39;t match it reverses</span>
+        <span class="c1"># the process.</span>
+        <span class="k">if</span> <span class="n">max_y</span> <span class="o">&lt;=</span> <span class="n">max_x</span><span class="p">:</span>
+            <span class="n">newx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">hv_ratio</span> <span class="o">*</span> <span class="n">max_y</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">newx</span> <span class="o">&lt;=</span> <span class="n">max_x</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">newx</span><span class="p">,</span> <span class="n">max_y</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">newy</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">max_x</span> <span class="o">/</span> <span class="n">hv_ratio</span><span class="p">))</span>
+                <span class="k">return</span> <span class="n">max_x</span><span class="p">,</span> <span class="n">newy</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">newy</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">max_x</span> <span class="o">/</span> <span class="n">hv_ratio</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">newy</span> <span class="o">&lt;=</span> <span class="n">max_y</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">max_x</span><span class="p">,</span> <span class="n">newy</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">newx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">hv_ratio</span> <span class="o">*</span> <span class="n">max_y</span><span class="p">))</span>
+                <span class="k">return</span> <span class="n">newx</span><span class="p">,</span> <span class="n">max_y</span></div>
+
+<div class="viewcode-block" id="View.calculate_view_grid"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.view.View.calculate_view_grid">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_view_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_div_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">y_div_count</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a list of views for grid of views.</span>
+
+<span class="sd">        Views will be returned row by row from right to left.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            x_div_count: Set number of divisions in x direction (Default: 1).</span>
+<span class="sd">            y_div_count: Set number of divisions in y direction (Default: 1).</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            A tuple of views. Views are sorted row by row from right to left.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">PI</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">x_div_count</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x_div_count</span><span class="p">)</span>
+            <span class="n">y_div_count</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">y_div_count</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Division count should be a number.</span><span class="se">\n</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+        <span class="k">assert</span> <span class="n">x_div_count</span> <span class="o">*</span> <span class="n">y_div_count</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Division count should be larger than 0.&quot;</span>
+
+        <span class="k">if</span> <span class="n">x_div_count</span> <span class="o">==</span> <span class="n">y_div_count</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="p">]</span>
+
+        <span class="n">_views</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">x_div_count</span> <span class="o">*</span> <span class="n">y_div_count</span><span class="p">)</span>
+        <span class="n">_x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_resolution</span> <span class="o">/</span> <span class="n">x_div_count</span><span class="p">)</span>
+        <span class="n">_y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_resolution</span> <span class="o">/</span> <span class="n">y_div_count</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_type</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># parallel view (vtl)</span>
+            <span class="n">_vh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_h_size</span> <span class="o">/</span> <span class="n">x_div_count</span>
+            <span class="n">_vv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_v_size</span> <span class="o">/</span> <span class="n">y_div_count</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_type</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># perspective (vtv)</span>
+            <span class="n">_vh</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="mf">180.</span> <span class="o">/</span> <span class="n">PI</span><span class="p">)</span> <span class="o">*</span> \
+                <span class="n">math</span><span class="o">.</span><span class="n">atan</span><span class="p">(((</span><span class="n">PI</span> <span class="o">/</span> <span class="mf">180.</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_h_size</span><span class="p">)</span> <span class="o">/</span> <span class="n">x_div_count</span><span class="p">)</span>
+            <span class="n">_vv</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="mf">180.</span> <span class="o">/</span> <span class="n">PI</span><span class="p">)</span> <span class="o">*</span> \
+                <span class="n">math</span><span class="o">.</span><span class="n">atan</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">((</span><span class="n">PI</span> <span class="o">/</span> <span class="mf">180.</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_v_size</span><span class="p">)</span> <span class="o">/</span> <span class="n">y_div_count</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_type</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]:</span>
+            <span class="c1"># fish eye</span>
+            <span class="n">_vh</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="mf">180.</span> <span class="o">/</span> <span class="n">PI</span><span class="p">)</span> <span class="o">*</span> \
+                <span class="n">math</span><span class="o">.</span><span class="n">asin</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">((</span><span class="n">PI</span> <span class="o">/</span> <span class="mf">180.</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_h_size</span><span class="p">)</span> <span class="o">/</span> <span class="n">x_div_count</span><span class="p">)</span>
+            <span class="n">_vv</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="mf">180.</span> <span class="o">/</span> <span class="n">PI</span><span class="p">)</span> <span class="o">*</span> \
+                <span class="n">math</span><span class="o">.</span><span class="n">asin</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">((</span><span class="n">PI</span> <span class="o">/</span> <span class="mf">180.</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_v_size</span><span class="p">)</span> <span class="o">/</span> <span class="n">y_div_count</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Grid views are not supported for </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_type</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="p">]</span>
+
+        <span class="c1"># create a set of new views</span>
+        <span class="k">for</span> <span class="n">viewCount</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">_views</span><span class="p">)):</span>
+            <span class="c1"># calculate view shift and view lift</span>
+            <span class="k">if</span> <span class="n">x_div_count</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">_vs</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_vs</span> <span class="o">=</span> <span class="p">(((</span><span class="n">viewCount</span> <span class="o">%</span> <span class="n">x_div_count</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">x_div_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> \
+                    <span class="o">*</span> <span class="p">(</span><span class="n">x_div_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">y_div_count</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">_vl</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_vl</span> <span class="o">=</span> <span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="n">viewCount</span> <span class="o">/</span> <span class="n">y_div_count</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">y_div_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> \
+                    <span class="o">*</span> <span class="p">(</span><span class="n">y_div_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># create a copy from the current copy</span>
+            <span class="n">_nView</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+            <span class="c1"># update parameters</span>
+            <span class="n">_nView</span><span class="o">.</span><span class="n">view_h_size</span> <span class="o">=</span> <span class="n">_vh</span>
+            <span class="n">_nView</span><span class="o">.</span><span class="n">view_v_size</span> <span class="o">=</span> <span class="n">_vv</span>
+            <span class="n">_nView</span><span class="o">.</span><span class="n">x_resolution</span> <span class="o">=</span> <span class="n">_x</span>
+            <span class="n">_nView</span><span class="o">.</span><span class="n">y_resolution</span> <span class="o">=</span> <span class="n">_y</span>
+            <span class="n">_nView</span><span class="o">.</span><span class="n">view_shift</span> <span class="o">=</span> <span class="n">_vs</span>
+            <span class="n">_nView</span><span class="o">.</span><span class="n">view_lift</span> <span class="o">=</span> <span class="n">_vl</span>
+
+            <span class="c1"># add the new view to views list</span>
+            <span class="n">_views</span><span class="p">[</span><span class="n">viewCount</span><span class="p">]</span> <span class="o">=</span> <span class="n">_nView</span>
+
+        <span class="k">return</span> <span class="n">_views</span></div>
+
+<div class="viewcode-block" id="View.add_fore_clip"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.view.View.add_fore_clip">[docs]</a>    <span class="k">def</span> <span class="nf">add_fore_clip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distance</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set view fore clip (-vo) at a distance from the view point.</span>
+
+<span class="sd">        The plane will be perpendicular to the view direction for perspective</span>
+<span class="sd">        and parallel view types. For fisheye view types, the clipping plane is</span>
+<span class="sd">        actually a clipping sphere, centered on the view point with radius val.</span>
+<span class="sd">        Objects in front of this imaginary surface will not be visible. This may</span>
+<span class="sd">        be useful for seeing through walls (to get a longer perspective from an</span>
+<span class="sd">        exterior view point) or for incremental rendering. A value of zero implies</span>
+<span class="sd">        no foreground clipping. A negative value produces some interesting effects,</span>
+<span class="sd">        since it creates an inverted image for objects behind the viewpoint.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__viewForeClip</span> <span class="o">=</span> <span class="n">distance</span></div>
+
+<div class="viewcode-block" id="View.to_rad_string"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.view.View.to_rad_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_rad_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return full Radiance definition.&quot;&quot;&quot;</span>
+        <span class="c1"># create base information of view</span>
+        <span class="n">_view</span> <span class="o">=</span> <span class="s2">&quot;-</span><span class="si">%s</span><span class="s2"> -vp </span><span class="si">%.3f</span><span class="s2"> </span><span class="si">%.3f</span><span class="s2"> </span><span class="si">%.3f</span><span class="s2"> -vd </span><span class="si">%.3f</span><span class="s2"> </span><span class="si">%.3f</span><span class="s2"> </span><span class="si">%.3f</span><span class="s2"> -vu </span><span class="si">%.3f</span><span class="s2"> </span><span class="si">%.3f</span><span class="s2"> </span><span class="si">%.3f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_view_types</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">view_type</span><span class="p">)],</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">view_point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_point</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_point</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">view_direction</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_direction</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_direction</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">view_up_vector</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_up_vector</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_up_vector</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="c1"># view size properties</span>
+        <span class="n">_viewSize</span> <span class="o">=</span> <span class="s2">&quot;-vh </span><span class="si">%.3f</span><span class="s2"> -vv </span><span class="si">%.3f</span><span class="s2"> -x </span><span class="si">%d</span><span class="s2"> -y </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">view_h_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_v_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_resolution</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_resolution</span>
+        <span class="p">)</span>
+
+        <span class="n">__viewComponents</span> <span class="o">=</span> <span class="p">[</span><span class="n">_view</span><span class="p">,</span> <span class="n">_viewSize</span><span class="p">]</span>
+
+        <span class="c1"># add lift and shift if not 0</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_lift</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_shift</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">__viewComponents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="s2">&quot;-vs </span><span class="si">%.3f</span><span class="s2"> -vl </span><span class="si">%.3f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">view_shift</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_lift</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__viewForeClip</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">__viewComponents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;-vo </span><span class="si">%.3f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">__viewForeClip</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+        <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">__viewComponents</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="View.save_to_file"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.view.View.save_to_file">[docs]</a>    <span class="k">def</span> <span class="nf">save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">working</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Save view to a file.&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="View.ToString"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.view.View.ToString">[docs]</a>    <span class="k">def</span> <span class="nf">ToString</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwrite .NET ToString.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;View representation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

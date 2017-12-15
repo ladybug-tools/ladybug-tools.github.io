@@ -1,0 +1,253 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>butterfly.turbulenceProperties &#8212; Butterfly 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/butterfly.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Butterfly is a python library to create and run advanced computational fluid dynamic (CFD) simulations using OpenFOAM.</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=butterfly&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../butterfly.html">butterfly package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for butterfly.turbulenceProperties</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="sd">&quot;&quot;&quot;turbulenceProperties class.</span>
+
+<span class="sd">Use turbulenceProperties for versions prior to 3.0+</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">foamfile</span> <span class="k">import</span> <span class="n">FoamFile</span><span class="p">,</span> <span class="n">foam_file_from_file</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+
+
+<div class="viewcode-block" id="TurbulenceProperties"><a class="viewcode-back" href="../../butterfly.html#butterfly.turbulenceProperties.TurbulenceProperties">[docs]</a><span class="k">class</span> <span class="nc">TurbulenceProperties</span><span class="p">(</span><span class="n">FoamFile</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Turbulence Properties class.&quot;&quot;&quot;</span>
+
+    <span class="c1"># set default valus for this class</span>
+    <span class="n">__default_values</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;simulationType&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;laminar&#39;</span>
+    <span class="n">__RASModels</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;LRR&#39;</span><span class="p">,</span> <span class="s1">&#39;LamBremhorstKE&#39;</span><span class="p">,</span> <span class="s1">&#39;LaunderSharmaKE&#39;</span><span class="p">,</span> <span class="s1">&#39;LienCubicKE&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;LienLeschziner&#39;</span><span class="p">,</span> <span class="s1">&#39;RNGkEpsilon&#39;</span><span class="p">,</span> <span class="s1">&#39;SSG&#39;</span><span class="p">,</span> <span class="s1">&#39;ShihQuadraticKE&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;SpalartAllmaras&#39;</span><span class="p">,</span> <span class="s1">&#39;kEpsilon&#39;</span><span class="p">,</span> <span class="s1">&#39;kOmega&#39;</span><span class="p">,</span> <span class="s1">&#39;kOmegaSSTSAS&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;kkLOmega&#39;</span><span class="p">,</span> <span class="s1">&#39;qZeta&#39;</span><span class="p">,</span> <span class="s1">&#39;realizableKE&#39;</span><span class="p">,</span> <span class="s1">&#39;v2f&#39;</span><span class="p">,</span> <span class="s1">&#39;buoyantKEpsilon&#39;</span><span class="p">)</span>
+    <span class="n">__LESModels</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;DeardorffDiffStress&#39;</span><span class="p">,</span> <span class="s1">&#39;Smagorinsky&#39;</span><span class="p">,</span> <span class="s1">&#39;SpalartAllmarasDDES&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;SpalartAllmarasDES&#39;</span><span class="p">,</span> <span class="s1">&#39;SpalartAllmarasIDDES&#39;</span><span class="p">,</span> <span class="s1">&#39;WALE&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;dynamicKEqn&#39;</span><span class="p">,</span> <span class="s1">&#39;dynamicLagrangian&#39;</span><span class="p">,</span> <span class="s1">&#39;kEqn&#39;</span><span class="p">,</span> <span class="s1">&#39;kOmegaSSTDES&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init class.&quot;&quot;&quot;</span>
+        <span class="n">FoamFile</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;turbulenceProperties&#39;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="s1">&#39;dictionary&#39;</span><span class="p">,</span>
+                          <span class="n">location</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">default_values</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__default_values</span><span class="p">,</span>
+                          <span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TurbulenceProperties.from_file"><a class="viewcode-back" href="../../butterfly.html#butterfly.turbulenceProperties.TurbulenceProperties.from_file">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a FoamFile from a file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath: Full file path to dictionary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="n">foam_file_from_file</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="TurbulenceProperties.laminar"><a class="viewcode-back" href="../../butterfly.html#butterfly.turbulenceProperties.TurbulenceProperties.laminar">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">laminar</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Laminar model.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TurbulenceProperties.RAS"><a class="viewcode-back" href="../../butterfly.html#butterfly.turbulenceProperties.TurbulenceProperties.RAS">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">RAS</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">RASModel</span><span class="o">=</span><span class="s1">&#39;RNGkEpsilon&#39;</span><span class="p">,</span> <span class="n">turbulence</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">printCoeffs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">RASModel_coeffs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Reynolds-averaged simulation (RAS) turbulence model.</span>
+
+<span class="sd">        Read more: http://cfd.direct/openfoam/user-guide/turbulence/</span>
+<span class="sd">        Watch this: https://www.youtube.com/watch?v=Eu_4ppppQmw</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            RASModel: Name of RAS turbulence model (default: RNGkEpsilon).</span>
+<span class="sd">                Incompressible RAS turbulence models:</span>
+<span class="sd">                    LRR, LamBremhorstKE, LaunderSharmaKE, LienCubicKE,</span>
+<span class="sd">                    LienLeschziner, RNGkEpsilon, SSG, ShihQuadraticKE,</span>
+<span class="sd">                    SpalartAllmaras, kEpsilon, kOmega, kOmegaSSTSAS, kkLOmega,</span>
+<span class="sd">                    qZeta, realizableKE, v2f</span>
+<span class="sd">                Compressible RAS turbulence models:</span>
+<span class="sd">                    LRR, LaunderSharmaKE, RNGkEpsilon, SSG, SpalartAllmaras,</span>
+<span class="sd">                    buoyantKEpsilon, kEpsilon, kOmega, kOmegaSSTSAS,</span>
+<span class="sd">                    realizableKE, v2f</span>
+<span class="sd">            turbulence: Boolean switch to turn the solving of turbulence</span>
+<span class="sd">                modelling on/off (default: True).</span>
+<span class="sd">            printCoeffs: Boolean switch to print model coeffs to terminal at</span>
+<span class="sd">                simulation start up (default: True).</span>
+<span class="sd">            RASModel_coeffs: Optional dictionary of coefficients for the respective</span>
+<span class="sd">                RASModel, to override the default coefficients.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># check RASModel input</span>
+        <span class="k">assert</span> <span class="n">RASModel</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__RASModels</span><span class="p">,</span> \
+            <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not a valid input for RASModel.&#39;</span> \
+            <span class="s1">&#39; Try one of the models below:</span><span class="se">\n</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">RASModel</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__RASModels</span><span class="p">)</span>
+
+        <span class="n">values</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;simulationType&#39;</span><span class="p">:</span> <span class="s1">&#39;RAS&#39;</span><span class="p">,</span> <span class="s1">&#39;RAS&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;RASModel&#39;</span><span class="p">:</span> <span class="n">RASModel</span><span class="p">,</span>
+            <span class="s1">&#39;turbulence&#39;</span><span class="p">:</span> <span class="n">FoamFile</span><span class="o">.</span><span class="n">convert_bool_value</span><span class="p">(</span><span class="n">turbulence</span><span class="p">),</span>
+            <span class="s1">&#39;printCoeffs&#39;</span><span class="p">:</span> <span class="n">FoamFile</span><span class="o">.</span><span class="n">convert_bool_value</span><span class="p">(</span><span class="n">printCoeffs</span><span class="p">)}</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">RASModel_coeffs</span><span class="p">:</span>
+            <span class="n">values</span><span class="p">[</span><span class="s1">&#39;RAS&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">Coeffs&#39;</span> <span class="o">%</span> <span class="n">RASModel</span><span class="p">:</span> <span class="n">RASModel_coeffs</span><span class="p">})</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TurbulenceProperties.LES"><a class="viewcode-back" href="../../butterfly.html#butterfly.turbulenceProperties.TurbulenceProperties.LES">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">LES</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">LESModel</span><span class="o">=</span><span class="s1">&#39;kEqn&#39;</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="s1">&#39;cubeRootVol&#39;</span><span class="p">,</span> <span class="n">turbulence</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">printCoeffs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">LESModel_coeffs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delta_coeffs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Large eddy simulation (LES) modelling.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            LESModel: Name of LES turbulence model.</span>
+<span class="sd">                Incompressible LES turbulence models.</span>
+<span class="sd">                    DeardorffDiffStress, Smagorinsky, SpalartAllmarasDDES,</span>
+<span class="sd">                    SpalartAllmarasDES, SpalartAllmarasIDDES, WALE, dynamicKEqn,</span>
+<span class="sd">                    dynamicLagrangian, kEqn, kOmegaSSTDES</span>
+<span class="sd">                Compressible LES turbulence models.</span>
+<span class="sd">                    DeardorffDiffStress, Smagorinsky, SpalartAllmarasDDES,</span>
+<span class="sd">                    SpalartAllmarasDES, SpalartAllmarasIDDES, WALE, dynamicKEqn,</span>
+<span class="sd">                    dynamicLagrangian, kEqn, kOmegaSSTDES</span>
+<span class="sd">            delta: Name of delta model.</span>
+<span class="sd">            turbulence: Boolean switch to turn the solving of turbulence</span>
+<span class="sd">                modelling on/off (default: True).</span>
+<span class="sd">            printCoeffs: Boolean switch to print model coeffs to terminal at</span>
+<span class="sd">                simulation start up (default: True).</span>
+<span class="sd">            LESModel_coeffs: Dictionary of coefficients for the respective LESModel,</span>
+<span class="sd">                to override the default coefficients.</span>
+<span class="sd">            delta_coeffs: Dictionary of coefficients for the delta model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">LESModel</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__LESModels</span><span class="p">,</span> \
+            <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not a valid input for LESModels.&#39;</span> \
+            <span class="s1">&#39; Try one of the models below:</span><span class="se">\n</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">LESModel</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__LESModels</span><span class="p">)</span>
+
+        <span class="n">values</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;simulationType&#39;</span><span class="p">:</span> <span class="s1">&#39;LES&#39;</span><span class="p">,</span> <span class="s1">&#39;LES&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;LESModel&#39;</span><span class="p">:</span> <span class="n">LESModel</span><span class="p">,</span>
+            <span class="s1">&#39;delta&#39;</span><span class="p">:</span> <span class="n">delta</span><span class="p">,</span>
+            <span class="s1">&#39;turbulence&#39;</span><span class="p">:</span> <span class="n">FoamFile</span><span class="o">.</span><span class="n">convert_bool_value</span><span class="p">(</span><span class="n">turbulence</span><span class="p">),</span>
+            <span class="s1">&#39;printCoeffs&#39;</span><span class="p">:</span> <span class="n">FoamFile</span><span class="o">.</span><span class="n">convert_bool_value</span><span class="p">(</span><span class="n">printCoeffs</span><span class="p">)}</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">LESModel_coeffs</span><span class="p">:</span>
+            <span class="n">values</span><span class="p">[</span><span class="s1">&#39;LES&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">Coeffs&#39;</span> <span class="o">%</span> <span class="n">LESModel</span><span class="p">:</span> <span class="n">LESModel_coeffs</span><span class="p">})</span>
+
+        <span class="k">if</span> <span class="n">delta_coeffs</span><span class="p">:</span>
+            <span class="n">values</span><span class="p">[</span><span class="s1">&#39;LES&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">Coeffs&#39;</span> <span class="o">%</span> <span class="n">delta_coeffs</span><span class="p">:</span> <span class="n">delta_coeffs</span><span class="p">})</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">isTurbulenceProperties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

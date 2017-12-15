@@ -1,0 +1,301 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>butterfly.parser &#8212; Butterfly 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/butterfly.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Butterfly is a python library to create and run advanced computational fluid dynamic (CFD) simulations using OpenFOAM.</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=butterfly&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../butterfly.html">butterfly package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for butterfly.parser</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;OpenFOAM/c++ dictionary parser.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+
+
+<div class="viewcode-block" id="CppDictParser"><a class="viewcode-back" href="../../butterfly.html#butterfly.parser.CppDictParser">[docs]</a><span class="k">class</span> <span class="nc">CppDictParser</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Parse OpenFOAM dictionary to Python dictionary.</span>
+
+<span class="sd">    Use values property to get the dictionary.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        text: OpenFOAM dictionary as a single multiline string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init an OpenFOAMDictParser.&quot;&quot;&quot;</span>
+        <span class="n">_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_comments</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="n">_t</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_t</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_to_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parse_nested</span><span class="p">(</span><span class="n">_t</span><span class="p">))</span>
+
+<div class="viewcode-block" id="CppDictParser.from_file"><a class="viewcode-back" href="../../butterfly.html#butterfly.parser.CppDictParser.from_file">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a parser from an OpenFOAM file.&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()))</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get OpenFOAM dictionary values as a python dictionary.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__values</span>
+
+<div class="viewcode-block" id="CppDictParser.remove_comments"><a class="viewcode-back" href="../../butterfly.html#butterfly.parser.CppDictParser.remove_comments">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">remove_comments</span><span class="p">(</span><span class="n">code</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Remove comments from c++ codes.&quot;&quot;&quot;</span>
+        <span class="c1"># remove all occurance streamed comments (/*COMMENT */) from string</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;/\*.*?\*/&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">),</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">code</span><span class="p">)</span>
+        <span class="c1"># remove all occurance singleline comments (//COMMENT\n ) from string</span>
+        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;//.*?</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">),</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_convert_to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convert parsed list to a dictionary.&quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">itp</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">parsed</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">pp</span> <span class="ow">in</span> <span class="n">itp</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">pp</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="c1"># if not a list and doesn&#39;t include &#39;;&#39; it&#39;s a key and</span>
+                    <span class="c1"># next item is the value</span>
+                    <span class="n">d</span><span class="p">[</span><span class="n">pp</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_to_dict</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">itp</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">s</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">pp</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">):</span>
+                        <span class="c1"># last item is a key and next item is the value</span>
+                        <span class="n">d</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_to_dict</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">itp</span><span class="p">))</span>
+                        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="k">for</span> <span class="n">ppp</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                        <span class="n">ss</span> <span class="o">=</span> <span class="n">ppp</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="n">ss</span><span class="p">:</span>
+                            <span class="n">d</span><span class="p">[</span><span class="n">ss</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ss</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">d</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_nested</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;[{]&#39;</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;[}]&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;#&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parse nested.</span>
+
+<span class="sd">        http://stackoverflow.com/a/14715850/4394669</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pat</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;(</span><span class="si">{}</span><span class="s1">|</span><span class="si">{}</span><span class="s1">|</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">sep</span><span class="p">)</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">pat</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+        <span class="n">stack</span> <span class="o">=</span> <span class="p">[[]]</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">or</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">sep</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+                <span class="c1"># Nest a new list inside the current list</span>
+                <span class="n">current</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+                <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+                <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">stack</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;error: opening bracket is missing&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">stack</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">stack</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;error: closing bracket is missing&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+
+<div class="viewcode-block" id="CppDictParser.ToString"><a class="viewcode-back" href="../../butterfly.html#butterfly.parser.CppDictParser.ToString">[docs]</a>    <span class="k">def</span> <span class="nf">ToString</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwrite ToString method.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Class representation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ResidualParser"><a class="viewcode-back" href="../../butterfly.html#butterfly.parser.ResidualParser">[docs]</a><span class="k">class</span> <span class="nc">ResidualParser</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Paeser for residual values from a log file.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        filepath: Full file path to .log file.</span>
+<span class="sd">        parser: If ture Parser will start parsing the values once initiated.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="n">parse</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init residual parser.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filepath</span> <span class="o">=</span> <span class="n">filepath</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__residuals</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">parse</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parse</span><span class="p">()</span>
+
+<div class="viewcode-block" id="ResidualParser.parse"><a class="viewcode-back" href="../../butterfly.html#butterfly.parser.ResidualParser.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parse the log file.&quot;&quot;&quot;</span>
+        <span class="c1"># open the file</span>
+        <span class="c1"># try to find the first line with Time =</span>
+        <span class="c1"># send the file to a recursive residualParser</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Time =&#39;</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">timestep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_time</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">__residuals</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">timestep</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">__parse_residuals</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="s1">&#39;Failed to parse </span><span class="si">{}</span><span class="s1">:</span><span class="se">\n\t</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filepath</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">residuals</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get residuals as a dictionary.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__residuals</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">time_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get time range as a tuple.&quot;&quot;&quot;</span>
+        <span class="n">_times</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_times</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">_times</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">_times</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<div class="viewcode-block" id="ResidualParser.get_times"><a class="viewcode-back" href="../../butterfly.html#butterfly.parser.ResidualParser.get_times">[docs]</a>    <span class="k">def</span> <span class="nf">get_times</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get time steps.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__residuals</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ResidualParser.get_residuals"><a class="viewcode-back" href="../../butterfly.html#butterfly.parser.ResidualParser.get_residuals">[docs]</a>    <span class="k">def</span> <span class="nf">get_residuals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantity</span><span class="p">,</span> <span class="n">time_range</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get residuals for a quantity.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">quantity</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantities</span><span class="p">:</span>
+            <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;Invalid quantity [</span><span class="si">{}</span><span class="s1">]. Try from the list below:</span><span class="se">\n</span><span class="si">{}</span><span class="s1">&#39;</span>
+                   <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">quantity</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantities</span><span class="p">))</span>
+            <span class="k">return</span> <span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">time_range</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">quantity</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__residuals</span><span class="o">.</span><span class="n">itervalues</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">available_time_range</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_range</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">t0</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">available_time_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">time_range</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">t1</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">available_time_range</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">time_range</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">except</span> <span class="ne">IndexError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Failed to read time_range:</span><span class="se">\n</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+            <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__residuals</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">)][</span><span class="n">quantity</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">t0</span><span class="p">,</span> <span class="n">t1</span><span class="p">))</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__get_time</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;Time =&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">__parse_residuals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Time =&#39;</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="c1"># quantity, Initial residual, Final residual, No Iterations</span>
+                    <span class="n">q</span><span class="p">,</span> <span class="n">ir</span><span class="p">,</span> <span class="n">fr</span><span class="p">,</span> <span class="n">ni</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:  Solving for &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">__residuals</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">timestep</span><span class="p">][</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;= &#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">timestep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_time</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__residuals</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">timestep</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">quantities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__residuals</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">timestep</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,487 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.recipe.daylightcoeff package &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="honeybee.radiance.recipe.daylightfactor package" href="honeybee.radiance.recipe.daylightfactor.html" />
+    <link rel="prev" title="honeybee.radiance.recipe.annual package" href="honeybee.radiance.recipe.annual.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="honeybee.html">honeybee package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="honeybee.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="honeybee.energyplus.html">honeybee.energyplus package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="honeybee.radiance.html">honeybee.radiance package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="honeybee.radiance.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.analysisgrid">honeybee.radiance.analysisgrid module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.analysispoint">honeybee.radiance.analysispoint module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.datatype">honeybee.radiance.datatype module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.filemanager">honeybee.radiance.filemanager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.geometry">honeybee.radiance.geometry module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.imagecollection">honeybee.radiance.imagecollection module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.properties">honeybee.radiance.properties module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.radfile">honeybee.radiance.radfile module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.runmanager">honeybee.radiance.runmanager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.scene">honeybee.radiance.scene module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance.view">honeybee.radiance.view module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="honeybee.radiance.html#module-honeybee.radiance">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.server.html">honeybee.server package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.vectormath.html">honeybee.vectormath package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.config">honeybee.config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.dataoperation">honeybee.dataoperation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.futil">honeybee.futil module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.geometryoperation">honeybee.geometryoperation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbdynamicsurface">honeybee.hbdynamicsurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbfensurface">honeybee.hbfensurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbobject">honeybee.hbobject module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbshadesurface">honeybee.hbshadesurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbsurface">honeybee.hbsurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbzone">honeybee.hbzone module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.room">honeybee.room module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.schedule">honeybee.schedule module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.surfaceproperties">honeybee.surfaceproperties module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.surfacetype">honeybee.surfacetype module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.utilcol">honeybee.utilcol module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="honeybee.html">honeybee package</a><ul>
+  <li><a href="honeybee.radiance.html">honeybee.radiance package</a><ul>
+  <li><a href="honeybee.radiance.recipe.html">honeybee.radiance.recipe package</a><ul>
+      <li>Previous: <a href="honeybee.radiance.recipe.annual.html" title="previous chapter">honeybee.radiance.recipe.annual package</a></li>
+      <li>Next: <a href="honeybee.radiance.recipe.daylightfactor.html" title="next chapter">honeybee.radiance.recipe.daylightfactor package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="honeybee-radiance-recipe-daylightcoeff-package">
+<h1>honeybee.radiance.recipe.daylightcoeff package<a class="headerlink" href="#honeybee-radiance-recipe-daylightcoeff-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-honeybee.radiance.recipe.daylightcoeff.gridbased">
+<span id="honeybee-radiance-recipe-daylightcoeff-gridbased-module"></span><h2>honeybee.radiance.recipe.daylightcoeff.gridbased module<a class="headerlink" href="#module-honeybee.radiance.recipe.daylightcoeff.gridbased" title="Permalink to this headline">¶</a></h2>
+<p>Radiance Daylight Coefficient Grid-Based Analysis Recipe.</p>
+<dl class="class">
+<dt id="honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.recipe.daylightcoeff.gridbased.</code><code class="descname">DaylightCoeffGridBased</code><span class="sig-paren">(</span><em>sky_mtx</em>, <em>analysis_grids</em>, <em>simulation_type=0</em>, <em>radiance_parameters=None</em>, <em>reuse_daylight_mtx=True</em>, <em>hb_objects=None</em>, <em>sub_folder='gridbased_daylightcoeff'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/daylightcoeff/gridbased.html#DaylightCoeffGridBased"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.recipe._gridbasedbase.GenericGridBased</span></code></p>
+<p>Grid based daylight coefficient analysis recipe.</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased.sky_mtx">
+<code class="descname">sky_mtx</code><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased.sky_mtx" title="Permalink to this definition">¶</a></dt>
+<dd><p>A radiance SkyMatrix or SkyVector. For an SkyMatrix the analysis
+will be ran for the analysis period.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased.analysis_grids">
+<code class="descname">analysis_grids</code><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased.analysis_grids" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of Honeybee analysis grids. Daylight metrics will
+be calculated for each analysisGrid separately.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased.simulation_type">
+<code class="descname">simulation_type</code><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased.simulation_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>0: Illuminance(lux), 1: Radiation (kWh), 2: Luminance (Candela)
+(Default: 0)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased.radiance_parameters">
+<code class="descname">radiance_parameters</code><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased.radiance_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radiance parameters for this analysis. Parameters
+should be an instance of RfluxmtxParameters.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased.hb_objects">
+<code class="descname">hb_objects</code><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased.hb_objects" title="Permalink to this definition">¶</a></dt>
+<dd><p>An optional list of Honeybee surfaces or zones (Default: None).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased.sub_folder">
+<code class="descname">sub_folder</code><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased.sub_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Analysis subfolder for this recipe. (Default: “daylightcoeff”).</p>
+</dd></dl>
+
+<p>Usage:</p>
+<blockquote>
+<div><p># initiate analysis_recipe
+analysis_recipe = DaylightCoeffGridBased(</p>
+<blockquote>
+<div>sky_mtx, analysis_grids, rad_parameters
+)</div></blockquote>
+<p># add honeybee object
+analysis_recipe.hb_objects = HBObjs</p>
+<p># write analysis files to local drive
+commandsFile = analysis_recipe.write(_folder_, _name_)</p>
+<p># run the analysis
+analysis_recipe.run(commandsFile)</p>
+<p># get the results
+print(analysis_recipe.results())</p>
+</div></blockquote>
+<dl class="classmethod">
+<dt id="honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased.from_points_file">
+<em class="property">classmethod </em><code class="descname">from_points_file</code><span class="sig-paren">(</span><em>epw_file</em>, <em>points_file</em>, <em>sky_density=1</em>, <em>simulation_type=0</em>, <em>radiance_parameters=None</em>, <em>reuse_daylight_mtx=True</em>, <em>hb_objects=None</em>, <em>sub_folder='gridbased_daylightcoeff'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/daylightcoeff/gridbased.html#DaylightCoeffGridBased.from_points_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased.from_points_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create grid based daylight coefficient recipe from points file.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased.from_weather_file_points_and_vectors">
+<em class="property">classmethod </em><code class="descname">from_weather_file_points_and_vectors</code><span class="sig-paren">(</span><em>epw_file</em>, <em>point_groups</em>, <em>vector_groups=None</em>, <em>sky_density=1</em>, <em>simulation_type=0</em>, <em>radiance_parameters=None</em>, <em>reuse_daylight_mtx=True</em>, <em>hb_objects=None</em>, <em>sub_folder='gridbased_daylightcoeff'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/daylightcoeff/gridbased.html#DaylightCoeffGridBased.from_weather_file_points_and_vectors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased.from_weather_file_points_and_vectors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create grid based daylight coefficient from weather file, points and vectors.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>epw_file</strong> – An EnergyPlus weather file.</li>
+<li><strong>point_groups</strong> – A list of (x, y, z) test points or lists of (x, y, z)
+test points. Each list of test points will be converted to a
+TestPointGroup. If testPts is a single flattened list only one
+TestPointGroup will be created.</li>
+<li><strong>vector_groups</strong> – An optional list of (x, y, z) vectors. Each vector
+represents direction of corresponding point in testPts. If the
+vector is not provided (0, 0, 1) will be assigned.</li>
+<li><strong>sky_density</strong> – A positive intger for sky density. 1: Tregenza Sky,
+2: Reinhart Sky, etc. (Default: 1)</li>
+<li><strong>hb_objects</strong> – An optional list of Honeybee surfaces or zones (Default: None).</li>
+<li><strong>sub_folder</strong> – Analysis subfolder for this recipe. (Default: “sunlighthours”)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased.preproc_commands">
+<code class="descname">preproc_commands</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/daylightcoeff/gridbased.html#DaylightCoeffGridBased.preproc_commands"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased.preproc_commands" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add echo in front of comments in batch file comments.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">radiance_parameters</code></dt>
+<dd><p>Radiance parameters for annual analysis.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased.results">
+<code class="descname">results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/daylightcoeff/gridbased.html#DaylightCoeffGridBased.results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased.results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return results for this analysis.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">simulation_type</code></dt>
+<dd><p><a href="#id1"><span class="problematic" id="id2">**</span></a>Simulation type* – 0* – Illuminance(lux), 1: Radiation (kWh),
+2: Luminance (Candela) (Default: 2)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased.sky_density">
+<code class="descname">sky_density</code><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased.sky_density" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radiance sky type e.g. r1, r2, r4.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased.sky_matrix">
+<code class="descname">sky_matrix</code><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased.sky_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get and set sky definition.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased.total_runs_count">
+<code class="descname">total_runs_count</code><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased.total_runs_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of total runs for all window groups and states.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased.write">
+<code class="descname">write</code><span class="sig-paren">(</span><em>target_folder</em>, <em>project_name='untitled'</em>, <em>header=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/daylightcoeff/gridbased.html#DaylightCoeffGridBased.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.gridbased.DaylightCoeffGridBased.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write analysis files to target folder.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>target_folder</strong> – Path to parent folder. Files will be created under
+target_folder/gridbased. use self.sub_folder to change subfolder name.</li>
+<li><strong>project_name</strong> – Name of this project as a string.</li>
+<li><strong>header</strong> – A boolean to include the header lines in commands.bat. header
+includes PATH and cd toFolder</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Full path to command.bat</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.recipe.daylightcoeff.imagebased">
+<span id="honeybee-radiance-recipe-daylightcoeff-imagebased-module"></span><h2>honeybee.radiance.recipe.daylightcoeff.imagebased module<a class="headerlink" href="#module-honeybee.radiance.recipe.daylightcoeff.imagebased" title="Permalink to this headline">¶</a></h2>
+<p>Radiance Daylight Coefficient Image-Based Analysis Recipe.</p>
+<dl class="class">
+<dt id="honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased">
+<em class="property">class </em><code class="descclassname">honeybee.radiance.recipe.daylightcoeff.imagebased.</code><code class="descname">DaylightCoeffImageBased</code><span class="sig-paren">(</span><em>sky_mtx</em>, <em>views</em>, <em>simulation_type=2</em>, <em>daylight_mtx_parameters=None</em>, <em>vwrays_parameters=None</em>, <em>reuse_daylight_mtx=True</em>, <em>hb_objects=None</em>, <em>sub_folder='imagebased_daylightcoeff'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/daylightcoeff/imagebased.html#DaylightCoeffImageBased"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">honeybee.radiance.recipe._imagebasedbase.GenericImageBased</span></code></p>
+<p>Daylight Coefficient Image-Based.</p>
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.sky_mtx">
+<code class="descname">sky_mtx</code><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.sky_mtx" title="Permalink to this definition">¶</a></dt>
+<dd><p>A honeybee sky for the analysis</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.views">
+<code class="descname">views</code><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.views" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of views.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.simulation_type">
+<code class="descname">simulation_type</code><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.simulation_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>0: Illuminance(lux), 1: Radiation (kWh), 2: Luminance (Candela)
+(Default: 2)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.rad_parameters">
+<code class="descname">rad_parameters</code><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.rad_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radiance parameters for grid based analysis (rtrace).
+(Default: imagebased.LowQualityImage)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.hb_objects">
+<code class="descname">hb_objects</code><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.hb_objects" title="Permalink to this definition">¶</a></dt>
+<dd><p>An optional list of Honeybee surfaces or zones (Default: None).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.sub_folder">
+<code class="descname">sub_folder</code><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.sub_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Analysis subfolder for this recipe. (Default: “gridbased”)</p>
+</dd></dl>
+
+<p>Usage:</p>
+<dl class="method">
+<dt id="honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.ToString">
+<code class="descname">ToString</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/daylightcoeff/imagebased.html#DaylightCoeffImageBased.ToString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.ToString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrite .NET ToString method.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.daylight_mtx_parameters">
+<code class="descname">daylight_mtx_parameters</code><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.daylight_mtx_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radiance parameters for image based analysis (rfluxmtx).
+(Default: imagebased.LowQualityImage)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.is_daylight_mtx_created">
+<code class="descname">is_daylight_mtx_created</code><span class="sig-paren">(</span><em>study_folder</em>, <em>view</em>, <em>wg</em>, <em>state</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/daylightcoeff/imagebased.html#DaylightCoeffImageBased.is_daylight_mtx_created"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.is_daylight_mtx_created" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if hdr images for daylight matrix are already created.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.is_hdr_mtx_created">
+<code class="descname">is_hdr_mtx_created</code><span class="sig-paren">(</span><em>study_folder</em>, <em>view</em>, <em>wg</em>, <em>state</em>, <em>stype</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/daylightcoeff/imagebased.html#DaylightCoeffImageBased.is_hdr_mtx_created"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.is_hdr_mtx_created" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if hourly hdr images for daylight matrix are already created.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.is_sun_mtx_created">
+<code class="descname">is_sun_mtx_created</code><span class="sig-paren">(</span><em>study_folder</em>, <em>view</em>, <em>wg</em>, <em>state</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/daylightcoeff/imagebased.html#DaylightCoeffImageBased.is_sun_mtx_created"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.is_sun_mtx_created" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if hdr images for daylight matrix are already created.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.results">
+<code class="descname">results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/daylightcoeff/imagebased.html#DaylightCoeffImageBased.results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return results for this analysis.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">simulation_type</code></dt>
+<dd><p><a href="#id3"><span class="problematic" id="id4">**</span></a>Simulation type* – 0* – Illuminance(lux), 1: Radiation (kWh),
+2: Luminance (Candela) (Default: 2)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.sky_density">
+<code class="descname">sky_density</code><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.sky_density" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radiance sky type e.g. r1, r2, r4.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.sky_matrix">
+<code class="descname">sky_matrix</code><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.sky_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>A honeybee sky for the analysis.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.vwrays_parameters">
+<code class="descname">vwrays_parameters</code><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.vwrays_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radiance parameters for vwrays.
+(Default: imagebased.LowQualityImage)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.write">
+<code class="descname">write</code><span class="sig-paren">(</span><em>target_folder</em>, <em>project_name='untitled'</em>, <em>header=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/radiance/recipe/daylightcoeff/imagebased.html#DaylightCoeffImageBased.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.radiance.recipe.daylightcoeff.imagebased.DaylightCoeffImageBased.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write analysis files to target folder.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>target_folder</strong> – Path to parent folder. Files will be created under
+target_folder/gridbased. use self.sub_folder to change subfolder name.</li>
+<li><strong>project_name</strong> – Name of this project as a string.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Full path to command.bat</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.radiance.recipe.daylightcoeff">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-honeybee.radiance.recipe.daylightcoeff" title="Permalink to this headline">¶</a></h2>
+<p>Radiance daylight coefficient recipes.</p>
+<p>Daylight coefficient recipes support both grid-based and image-based analysis.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/honeybee.radiance.recipe.daylightcoeff.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

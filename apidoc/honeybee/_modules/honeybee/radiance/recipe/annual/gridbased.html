@@ -1,0 +1,228 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.recipe.annual.gridbased &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../../index.html">
+    <img class="logo" src="../../../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.recipe.annual.gridbased</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Radiance Annual Grid-Based Analysis Recipe.</span>
+
+<span class="sd">This recipe is identical to daylight coefficient recipe with the exception of how</span>
+<span class="sd">it loads the results. This class is more memory efficient in loading the results</span>
+<span class="sd">however it can only be used for models with no window groups.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">..daylightcoeff.gridbased</span> <span class="k">import</span> <span class="n">DaylightCoeffGridBased</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<div class="viewcode-block" id="GridBased"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.annual.html#honeybee.radiance.recipe.annual.gridbased.GridBased">[docs]</a><span class="k">class</span> <span class="nc">GridBased</span><span class="p">(</span><span class="n">DaylightCoeffGridBased</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Grid based annual recipe based on daylight coefficient analysis recipe.</span>
+
+<span class="sd">    This recipe is identical to daylight coefficient recipe with the exception of how</span>
+<span class="sd">    it loads the results. This class is more memory efficient in loading the results</span>
+<span class="sd">    however it can only be used for models with no window groups.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        sky_mtx: A radiance SkyMatrix or SkyVector. For an SkyMatrix the analysis</span>
+<span class="sd">            will be ran for the analysis period.</span>
+<span class="sd">        analysis_grids: A list of Honeybee analysis grids. Daylight metrics will</span>
+<span class="sd">            be calculated for each analysisGrid separately.</span>
+<span class="sd">        simulation_type: 0: Illuminance(lux), 1: Radiation (kWh), 2: Luminance (Candela)</span>
+<span class="sd">            (Default: 0)</span>
+<span class="sd">        radiance_parameters: Radiance parameters for this analysis. Parameters</span>
+<span class="sd">            should be an instance of RfluxmtxParameters.</span>
+<span class="sd">        hb_objects: An optional list of Honeybee surfaces or zones (Default: None).</span>
+<span class="sd">        sub_folder: Analysis subfolder for this recipe. (Default: &quot;daylightcoeff&quot;).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sky_mtx</span><span class="p">,</span> <span class="n">analysis_grids</span><span class="p">,</span> <span class="n">simulation_type</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">radiance_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reuse_daylight_mtx</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">hb_objects</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">sub_folder</span><span class="o">=</span><span class="s2">&quot;gridbased_annual&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create an annual recipe.&quot;&quot;&quot;</span>
+
+        <span class="n">DaylightCoeffGridBased</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">sky_mtx</span><span class="p">,</span> <span class="n">analysis_grids</span><span class="p">,</span> <span class="n">simulation_type</span><span class="p">,</span> <span class="n">radiance_parameters</span><span class="p">,</span>
+            <span class="n">reuse_daylight_mtx</span><span class="p">,</span> <span class="n">hb_objects</span><span class="p">,</span> <span class="n">sub_folder</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GridBased.write"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.annual.html#honeybee.radiance.recipe.annual.gridbased.GridBased.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_folder</span><span class="p">,</span> <span class="n">project_name</span><span class="o">=</span><span class="s1">&#39;untitled&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write analysis files to target folder.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            target_folder: Path to parent folder. Files will be created under</span>
+<span class="sd">                target_folder/gridbased. use self.sub_folder to change subfolder name.</span>
+<span class="sd">            project_name: Name of this project as a string.</span>
+<span class="sd">            header: A boolean to include the header lines in commands.bat. header</span>
+<span class="sd">                includes PATH and cd toFolder</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Full path to command.bat</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># check for window_groups</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window_groups</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> \
+            <span class="s1">&#39;You cannot use the annual recipe for a scene with window_groups. &#39;</span> \
+            <span class="s1">&#39;Try daylightcoeff recipe instead.&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sub_folder</span> <span class="o">==</span> <span class="s2">&quot;gridbased_daylightcoeff&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sub_folder</span> <span class="o">==</span> <span class="s2">&quot;gridbased_annual&quot;</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">GridBased</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">target_folder</span><span class="p">,</span> <span class="n">project_name</span><span class="p">,</span> <span class="n">header</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GridBased.results"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.annual.html#honeybee.radiance.recipe.annual.gridbased.GridBased.results">[docs]</a>    <span class="k">def</span> <span class="nf">results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return results for this analysis.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_isCalculated</span><span class="p">,</span> \
+            <span class="s2">&quot;You haven&#39;t run the Recipe yet. Use self.run &quot;</span> <span class="o">+</span> \
+            <span class="s2">&quot;to run the analysis before loading the results.&quot;</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Unloading the current values from the analysis grids.&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ag</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_grids</span><span class="p">:</span>
+            <span class="n">ag</span><span class="o">.</span><span class="n">unload</span><span class="p">()</span>
+
+        <span class="c1"># results are merged as a single file</span>
+        <span class="k">for</span> <span class="n">rf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result_files</span><span class="p">:</span>
+            <span class="n">folder</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">rf</span><span class="p">)</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="s1">&#39;sun..</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+            <span class="n">mode</span> <span class="o">=</span> <span class="mi">179</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_type</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="n">start_line</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">count</span><span class="p">,</span> <span class="n">analysisGrid</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">analysis_grids</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">count</span><span class="p">:</span>
+                    <span class="n">start_line</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">analysis_grids</span><span class="p">[</span><span class="n">count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Adding </span><span class="si">{}</span><span class="s1"> to result files for </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span>
+                          <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="n">analysisGrid</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+                    <span class="c1"># total value only</span>
+                    <span class="n">analysisGrid</span><span class="o">.</span><span class="n">add_result_files</span><span class="p">(</span>
+                        <span class="n">rf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky_matrix</span><span class="o">.</span><span class="n">hoys</span><span class="p">,</span> <span class="n">start_line</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">mode</span><span class="o">=</span><span class="n">mode</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># total and direct values</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Adding </span><span class="si">{}</span><span class="s1"> and </span><span class="si">{}</span><span class="s1"> to result files for </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span>
+                          <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">analysisGrid</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+
+                    <span class="n">analysisGrid</span><span class="o">.</span><span class="n">add_result_files</span><span class="p">(</span>
+                        <span class="n">rf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky_matrix</span><span class="o">.</span><span class="n">hoys</span><span class="p">,</span> <span class="n">start_line</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">mode</span><span class="o">=</span><span class="n">mode</span>
+                    <span class="p">)</span>
+
+                    <span class="n">analysisGrid</span><span class="o">.</span><span class="n">add_result_files</span><span class="p">(</span>
+                        <span class="n">df</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky_matrix</span><span class="o">.</span><span class="n">hoys</span><span class="p">,</span> <span class="n">start_line</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">mode</span><span class="o">=</span><span class="n">mode</span>
+                    <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_grids</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

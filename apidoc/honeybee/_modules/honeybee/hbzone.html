@@ -1,0 +1,374 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.hbzone &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.hbzone</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">utilcol</span> <span class="k">as</span> <span class="nn">util</span>
+<span class="kn">from</span> <span class="nn">hbobject</span> <span class="k">import</span> <span class="n">HBObject</span>
+<span class="kn">from</span> <span class="nn">vectormath.euclid</span> <span class="k">import</span> <span class="n">Point3</span>
+<span class="kn">from</span> <span class="nn">radiance.radfile</span> <span class="k">import</span> <span class="n">RadFile</span>
+<span class="kn">from</span> <span class="nn">energyplus.geometryrules</span> <span class="k">import</span> <span class="n">GlobalGeometryRules</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<div class="viewcode-block" id="HBZone"><a class="viewcode-back" href="../../honeybee.html#honeybee.hbzone.HBZone">[docs]</a><span class="k">class</span> <span class="nc">HBZone</span><span class="p">(</span><span class="n">HBObject</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Honeybee base class.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name: Unique name for this zone.</span>
+<span class="sd">        origin: Zone origin point (default: 0, 0, 0)</span>
+<span class="sd">        geometry_rules: EnergyPlus geometry_rules. (default: &quot;LowerLeftCorner&quot;;</span>
+<span class="sd">            &quot;CounterClockWise&quot;; &quot;Absolute&quot;)</span>
+<span class="sd">        building_program: HBZone building program.</span>
+<span class="sd">        zone_program: Specific program for this zone from the available building</span>
+<span class="sd">            programs.</span>
+<span class="sd">        is_conditioned: A boolean that indicates if the zone is conditioned.</span>
+<span class="sd">            (default: True)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">geometry_rules</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">building_program</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zone_program</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_conditioned</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init Honeybee Zone.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="sd">&quot;&quot;&quot;Zone name&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="n">origin</span>
+        <span class="sd">&quot;&quot;&quot;origin of the zone.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">geometry_rules</span> <span class="o">=</span> <span class="n">geometry_rules</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">building_program</span> <span class="o">=</span> <span class="n">building_program</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">zone_program</span> <span class="o">=</span> <span class="n">zone_program</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_surfaces</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="HBZone.from_ep_string"><a class="viewcode-back" href="../../honeybee.html#honeybee.hbzone.HBZone.from_ep_string">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_ep_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">ep_string</span><span class="p">,</span> <span class="n">geometry_rules</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">building_program</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">zone_program</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_conditioned</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init Honeybee zone from an ep_string.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            ep_string: The full ep_string for an EnergyPlus Zone.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># clean input ep_string - split based on comma</span>
+        <span class="n">segments</span> <span class="o">=</span> <span class="n">ep_string</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> \
+            <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+
+        <span class="n">name</span> <span class="o">=</span> <span class="n">segments</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">north</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">segments</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">origin</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="n">origin</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">geometry_rules</span><span class="p">,</span> <span class="n">building_program</span><span class="p">,</span> <span class="n">zone_program</span><span class="p">,</span>
+                   <span class="n">is_conditioned</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">isHBZone</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True if a HBZone.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retuen surface name.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
+
+    <span class="nd">@name</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set name and isSetByUser property.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            new_name: A name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">new_name</span> <span class="o">=</span> <span class="n">new_name</span> <span class="ow">or</span> <span class="n">util</span><span class="o">.</span><span class="n">random_name</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">new_name</span><span class="p">)</span>
+        <span class="n">util</span><span class="o">.</span><span class="n">check_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">origin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get set origin of the zone.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_origin</span>
+
+    <span class="nd">@origin</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">origin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_origin</span> <span class="o">=</span> <span class="n">Point3</span><span class="p">(</span><span class="o">*</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Failed to set zone origin: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">geometry_rules</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get and set global geometry rules for this zone.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_geometry_rules</span>
+
+    <span class="nd">@geometry_rules</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">geometry_rules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geometry_rules</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">geometry_rules</span><span class="p">:</span>
+            <span class="n">geometry_rules</span> <span class="o">=</span> <span class="n">GlobalGeometryRules</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_geometry_rules</span> <span class="o">=</span> <span class="n">geometry_rules</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_relative_system</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True if coordinate system is relative.</span>
+
+<span class="sd">        To find the absolute coordinate values in a relative system you should</span>
+<span class="sd">        add surface coordinates to zone origin.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">geometry_rules</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;relative&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">floors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get floor surfaces.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">srf</span> <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">surfaces</span> <span class="k">if</span> <span class="n">srf</span><span class="o">.</span><span class="n">is_floor</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">walls</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get wall surfaces.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">srf</span> <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">surfaces</span> <span class="k">if</span> <span class="n">srf</span><span class="o">.</span><span class="n">is_wall</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ceilings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get ceilings surfaces.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">srf</span> <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">surfaces</span> <span class="k">if</span> <span class="n">srf</span><span class="o">.</span><span class="n">is_ceiling</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">surfaces</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get list of HBSurfaces for this zone.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_surfaces</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">children_surfaces</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get list of children Surfaces for this zone.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">childrenSurfaces</span>
+                     <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">surfaces</span>
+                     <span class="k">for</span> <span class="n">childrenSurfaces</span> <span class="ow">in</span> <span class="n">srf</span><span class="o">.</span><span class="n">children_surfaces</span>
+                     <span class="p">)</span>
+
+<div class="viewcode-block" id="HBZone.add_surface"><a class="viewcode-back" href="../../honeybee.html#honeybee.hbzone.HBZone.add_surface">[docs]</a>    <span class="k">def</span> <span class="nf">add_surface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">surface</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add a surface to Honeybee zone.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="s2">&quot;isHBSurface&quot;</span><span class="p">),</span> \
+            <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> input is not a Honeybee surface.&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_surfaces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+
+        <span class="c1"># update surface parent</span>
+        <span class="n">surface</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="bp">self</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">radiance_materials</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get list of Radiance materials for zone including fenestration.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">material</span> <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">surfaces</span>
+                         <span class="k">for</span> <span class="n">material</span> <span class="ow">in</span> <span class="n">srf</span><span class="o">.</span><span class="n">radiance_materials</span><span class="p">))</span>
+
+<div class="viewcode-block" id="HBZone.to_rad_file"><a class="viewcode-back" href="../../honeybee.html#honeybee.hbzone.HBZone.to_rad_file">[docs]</a>    <span class="k">def</span> <span class="nf">to_rad_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a RadFile like object.</span>
+
+<span class="sd">        Use this method to get easy access to radiance geometries and materials for this</span>
+<span class="sd">        zone. For a full definition as a string use to_rad_string method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">RadFile</span><span class="p">((</span><span class="n">srf</span> <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">surfaces</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="HBZone.to_rad_string"><a class="viewcode-back" href="../../honeybee.html#honeybee.hbzone.HBZone.to_rad_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_rad_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">include_materials</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                      <span class="n">flipped</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">blacked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get full radiance file as a string.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            mode: An integer 0-2 (Default: 1)</span>
+<span class="sd">                0 - Do not include children surfaces.</span>
+<span class="sd">                1 - Include children surfaces.</span>
+<span class="sd">                2 - Only children surfaces.</span>
+<span class="sd">            include_materials: Set to False if you only want the geometry definition</span>
+<span class="sd">             (default:True).</span>
+<span class="sd">            flipped: Flip the surface geometry.</span>
+<span class="sd">            blacked: If True materials will all be set to plastic 0 0 0 0 0.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span> <span class="ow">or</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_rad_file</span><span class="p">()</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">include_materials</span><span class="p">,</span> <span class="n">flipped</span><span class="p">,</span>
+                                                <span class="n">blacked</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HBZone.rad_string_to_file"><a class="viewcode-back" href="../../honeybee.html#honeybee.hbzone.HBZone.rad_string_to_file">[docs]</a>    <span class="k">def</span> <span class="nf">rad_string_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">include_materials</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                           <span class="n">flipped</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">blacked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write Radiance definition for this surface to a file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath: Full filepath (e.g c:/ladybug/geo.rad).</span>
+<span class="sd">            mode: An integer 0-2 (Default: 1)</span>
+<span class="sd">                0 - Do not include children surfaces.</span>
+<span class="sd">                1 - Include children surfaces.</span>
+<span class="sd">                2 - Only children surfaces.</span>
+<span class="sd">            include_materials: Set to False if you only want the geometry definition</span>
+<span class="sd">             (default:True).</span>
+<span class="sd">            flipped: Flip the surface geometry.</span>
+<span class="sd">            blacked: If True materials will all be set to plastic 0 0 0 0 0.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span> <span class="ow">or</span> <span class="mi">1</span>
+        <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">file_path</span><span class="p">)[</span><span class="mi">0</span><span class="p">]),</span> \
+            <span class="s2">&quot;Cannot find </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">file_path</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outf</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">outf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">include_materials</span><span class="p">,</span> <span class="n">flipped</span><span class="p">,</span> <span class="n">blacked</span><span class="p">))</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Failed to write </span><span class="si">%s</span><span class="s2"> to file:</span><span class="se">\n</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+                <span class="k">return</span> <span class="kc">False</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">geometry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return zone geometry for visualization.&quot;&quot;&quot;</span>
+        <span class="n">_geo</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">surface</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">surfaces</span><span class="p">:</span>
+            <span class="n">_geo</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">geometry</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">surface</span><span class="o">.</span><span class="n">has_child_surfaces</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">childSurface</span> <span class="ow">in</span> <span class="n">surface</span><span class="o">.</span><span class="n">children_surfaces</span><span class="p">:</span>
+                    <span class="n">_geo</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">childSurface</span><span class="o">.</span><span class="n">geometry</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">_geo</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">profile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return zone profile for visualization.&quot;&quot;&quot;</span>
+        <span class="n">_profile</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">surface</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">surfaces</span><span class="p">:</span>
+            <span class="n">_profile</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">surface</span><span class="o">.</span><span class="n">has_child_surfaces</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">childSurface</span> <span class="ow">in</span> <span class="n">surface</span><span class="o">.</span><span class="n">children_surfaces</span><span class="p">:</span>
+                    <span class="n">_profile</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">childSurface</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">_profile</span>
+
+<div class="viewcode-block" id="HBZone.ToString"><a class="viewcode-back" href="../../honeybee.html#honeybee.hbzone.HBZone.ToString">[docs]</a>    <span class="k">def</span> <span class="nf">ToString</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwrite .NET ToString.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Zone representation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">zone_program</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">building_program</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;HBZone </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">:</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">zone_program</span><span class="p">,</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">building_program</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;HBZone: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

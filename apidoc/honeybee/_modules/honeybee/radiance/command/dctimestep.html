@@ -1,0 +1,236 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.command.dctimestep &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../index.html">
+    <img class="logo" src="../../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.command.dctimestep</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="sd">&quot;&quot;&quot;dctimestep - transform a RADIANCE scene description&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">._commandbase</span> <span class="k">import</span> <span class="n">RadianceCommand</span>
+<span class="kn">from</span> <span class="nn">..datatype</span> <span class="k">import</span> <span class="n">RadiancePath</span><span class="p">,</span> <span class="n">RadianceValue</span>
+<span class="kn">from</span> <span class="nn">..parameters.dctimestep</span> <span class="k">import</span> <span class="n">DctimestepParameters</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<div class="viewcode-block" id="Dctimestep"><a class="viewcode-back" href="../../../../honeybee.radiance.command.html#honeybee.radiance.command.dctimestep.Dctimestep">[docs]</a><span class="k">class</span> <span class="nc">Dctimestep</span><span class="p">(</span><span class="n">RadianceCommand</span><span class="p">):</span>
+    <span class="c1"># It makes sense to always use the output_file_name_format input to specify the</span>
+    <span class="c1"># output file instead of using the stdout parameter.</span>
+    <span class="n">vmatrix_spec</span> <span class="o">=</span> <span class="n">RadianceValue</span><span class="p">(</span><span class="s1">&#39;vmatrix&#39;</span><span class="p">,</span> <span class="s1">&#39;V matrix specification&#39;</span><span class="p">)</span>
+    <span class="n">tmatrix_file</span> <span class="o">=</span> <span class="n">RadiancePath</span><span class="p">(</span><span class="s1">&#39;tmatrix&#39;</span><span class="p">,</span> <span class="s1">&#39;T matrix XML file&#39;</span><span class="p">)</span>
+    <span class="n">dmatrix_file</span> <span class="o">=</span> <span class="n">RadiancePath</span><span class="p">(</span><span class="s1">&#39;dmatrix&#39;</span><span class="p">,</span> <span class="s1">&#39;D matrix file&#39;</span><span class="p">)</span>
+    <span class="n">sky_vector_file</span> <span class="o">=</span> <span class="n">RadiancePath</span><span class="p">(</span><span class="s1">&#39;sky_vector_file&#39;</span><span class="p">,</span> <span class="s1">&#39;sky vector file&#39;</span><span class="p">,</span>
+                                   <span class="n">relative_path</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">output_file</span> <span class="o">=</span> <span class="n">RadiancePath</span><span class="p">(</span><span class="s1">&#39;output_file&#39;</span><span class="p">,</span> <span class="s1">&#39;output file name&#39;</span><span class="p">,</span>
+                               <span class="n">relative_path</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">daylight_coeff_spec</span> <span class="o">=</span> <span class="n">RadiancePath</span><span class="p">(</span><span class="s1">&#39;dayCoeff&#39;</span><span class="p">,</span>
+                                       <span class="s1">&#39;Daylight Coefficients Specification&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmatrix_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dmatrix_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sky_vector_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">vmatrix_spec</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dctimestep_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">output_filename_format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">daylight_coeff_spec</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">RadianceCommand</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">vmatrix_spec</span> <span class="o">=</span> <span class="n">vmatrix_spec</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmatrix_file</span> <span class="o">=</span> <span class="n">tmatrix_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dmatrix_file</span> <span class="o">=</span> <span class="n">dmatrix_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sky_vector_file</span> <span class="o">=</span> <span class="n">sky_vector_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dctimestep_parameters</span> <span class="o">=</span> <span class="n">dctimestep_parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_filename_format</span> <span class="o">=</span> <span class="n">output_filename_format</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="n">output_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">daylight_coeff_spec</span> <span class="o">=</span> <span class="n">daylight_coeff_spec</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">dctimestep_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get and set gendaymtx_parameters.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dctimestep_parameters</span>
+
+    <span class="nd">@dctimestep_parameters</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">dctimestep_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__dctimestep_parameters</span> <span class="o">=</span> <span class="n">parameters</span> <span class="k">if</span> <span class="n">parameters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> \
+            <span class="k">else</span> <span class="n">DctimestepParameters</span><span class="p">()</span>
+
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dctimestep_parameters</span><span class="p">,</span> <span class="s2">&quot;isRadianceParameters&quot;</span><span class="p">),</span> \
+            <span class="s2">&quot;input dctimestep_parameters is not a valid parameters type.&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">output_filename_format</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;-o option in dctimestep.</span>
+
+<span class="sd">        The -o option may be used to specify a file or a set of output files to</span>
+<span class="sd">        use rather than the standard output. If the given specification contains</span>
+<span class="sd">        a &#39;%d&#39; format string, this will be replaced by the time step index,</span>
+<span class="sd">        starting from 1. In this way, multiple output pictures may be produced,</span>
+<span class="sd">        or separate result vectors (one per timestep).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_filename_format</span>
+
+    <span class="nd">@output_filename_format</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">output_filename_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="c1"># TODO: Add testing logic for this !</span>
+        <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_output_filename_format</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_output_filename_format</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="Dctimestep.to_rad_string"><a class="viewcode-back" href="../../../../honeybee.radiance.command.html#honeybee.radiance.command.dctimestep.Dctimestep.to_rad_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_rad_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">relative_path</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return radiance command line.&quot;&quot;&quot;</span>
+        <span class="n">cmd_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normspace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radbin_path</span><span class="p">,</span> <span class="s1">&#39;dctimestep&#39;</span><span class="p">))</span>
+        <span class="n">vmatrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vmatrix_spec</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-vmatrix&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">tmatrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmatrix_file</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+        <span class="n">dmatrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dmatrix_file</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+        <span class="n">three_phase_inputs</span> <span class="o">=</span> <span class="n">vmatrix</span> <span class="ow">and</span> <span class="n">tmatrix</span> <span class="ow">and</span> <span class="n">dmatrix</span>
+        <span class="n">sky_vector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sky_vector_file</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+        <span class="n">dctimestep_param</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dctimestep_parameters</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+        <span class="n">op_file_fmt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_filename_format</span>
+        <span class="n">output_file_name_format</span> <span class="o">=</span> <span class="s1">&#39;-o </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">op_file_fmt</span> <span class="k">if</span> <span class="n">op_file_fmt</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">output_file_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_file</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+        <span class="n">output_file_name</span> <span class="o">=</span> <span class="s1">&#39;&gt; </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">output_file_name</span> <span class="k">if</span> <span class="n">output_file_name</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">daylight_coeff_spec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">daylight_coeff_spec</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+
+        <span class="k">assert</span> <span class="ow">not</span> <span class="p">(</span><span class="n">three_phase_inputs</span> <span class="ow">and</span> <span class="n">daylight_coeff_spec</span><span class="p">),</span>\
+            <span class="s1">&#39;The inputs for both daylight coefficients as well as the 3 Phase method&#39;</span> \
+            <span class="s1">&#39; have been specified. Only one of those methods should be used for &#39;</span> \
+            <span class="s1">&#39;calculation at a given time. Please check your inputs.&#39;</span>
+
+        <span class="c1"># Creating the string this way because it might change again in the</span>
+        <span class="c1"># future.</span>
+        <span class="n">rad_string</span> <span class="o">=</span> <span class="p">[</span><span class="n">cmd_path</span><span class="p">]</span>
+        <span class="n">rad_string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dctimestep_param</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">rad_string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output_file_name_format</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">rad_string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vmatrix</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">rad_string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tmatrix</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">rad_string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dmatrix</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">rad_string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">daylight_coeff_spec</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">rad_string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sky_vector</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">rad_string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output_file_name</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="n">rad_string</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rad_string</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_input_files</span><span class="p">(</span><span class="n">rad_string</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">rad_string</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">input_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">dc_input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">daylight_coeff_spec</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">dc_input</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky_vector_file</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">(),</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmatrix_file</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">dmatrix_file</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">(),</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">sky_vector_file</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

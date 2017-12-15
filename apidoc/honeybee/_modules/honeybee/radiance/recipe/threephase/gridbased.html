@@ -1,0 +1,369 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.recipe.threephase.gridbased &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../../index.html">
+    <img class="logo" src="../../../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.recipe.threephase.gridbased</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">..parameters</span> <span class="k">import</span> <span class="n">get_radiance_parameters_grid_based</span>
+
+<span class="kn">from</span> <span class="nn">..recipeutil</span> <span class="k">import</span> <span class="n">write_extra_files</span>
+<span class="kn">from</span> <span class="nn">..recipedcutil</span> <span class="k">import</span> <span class="n">get_commands_scene_daylight_coeff</span><span class="p">,</span> <span class="n">get_commands_sky</span>
+
+<span class="kn">from</span> <span class="nn">..recipexphaseutil</span> <span class="k">import</span> <span class="n">matrix_calculation_three_phase</span><span class="p">,</span> \
+    <span class="n">write_rad_files_multi_phase</span>
+<span class="kn">from</span> <span class="nn">..recipexphaseutil</span> <span class="k">import</span> <span class="n">get_commands_view_daylight_matrices</span>
+
+<span class="kn">from</span> <span class="nn">..daylightcoeff.gridbased</span> <span class="k">import</span> <span class="n">DaylightCoeffGridBased</span>
+<span class="kn">from</span> <span class="nn">...sky.skymatrix</span> <span class="k">import</span> <span class="n">SkyMatrix</span>
+<span class="kn">from</span> <span class="nn">....futil</span> <span class="k">import</span> <span class="n">write_to_file</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<div class="viewcode-block" id="ThreePhaseGridBased"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.threephase.html#honeybee.radiance.recipe.threephase.gridbased.ThreePhaseGridBased">[docs]</a><span class="k">class</span> <span class="nc">ThreePhaseGridBased</span><span class="p">(</span><span class="n">DaylightCoeffGridBased</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Grid based three phase analysis recipe.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        sky_mtx: A radiance SkyMatrix or SkyVector. For an SkyMatrix the analysis</span>
+<span class="sd">            will be ran for the analysis period.</span>
+<span class="sd">        analysis_grids: A list of Honeybee analysis grids. Daylight metrics will</span>
+<span class="sd">            be calculated for each analysisGrid separately.</span>
+<span class="sd">        simulation_type: 0: Illuminance(lux), 1: Radiation (kWh), 2: Luminance (Candela)</span>
+<span class="sd">            (Default: 0)</span>
+<span class="sd">        radiance_parameters: Radiance parameters for this analysis. Parameters</span>
+<span class="sd">            should be an instance of RfluxmtxParameters.</span>
+<span class="sd">        hb_objects: An optional list of Honeybee surfaces or zones (Default: None).</span>
+<span class="sd">        sub_folder: Analysis subfolder for this recipe. (Default: &quot;daylightcoeff&quot;).</span>
+
+<span class="sd">    Usage:</span>
+
+<span class="sd">        # initiate analysis_recipe</span>
+<span class="sd">        analysis_recipe = ThreePhaseGridBased(</span>
+<span class="sd">            sky_mtx, analysis_grids, rad_parameters</span>
+<span class="sd">            )</span>
+
+<span class="sd">        # add honeybee object</span>
+<span class="sd">        analysis_recipe.hb_objects = HBObjs</span>
+
+<span class="sd">        # write analysis files to local drive</span>
+<span class="sd">        commandsFile = analysis_recipe.write(_folder_, _name_)</span>
+
+<span class="sd">        # run the analysis</span>
+<span class="sd">        analysis_recipe.run(commandsFile)</span>
+
+<span class="sd">        # get the results</span>
+<span class="sd">        print(analysis_recipe.results())</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sky_mtx</span><span class="p">,</span> <span class="n">analysis_grids</span><span class="p">,</span> <span class="n">simulation_type</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">view_mtx_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">daylight_mtx_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">reuse_view_mtx</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">reuse_daylight_mtx</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">hb_objects</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">sub_folder</span><span class="o">=</span><span class="s2">&quot;gridbased_threephase&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create an annual recipe.&quot;&quot;&quot;</span>
+        <span class="n">DaylightCoeffGridBased</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">sky_mtx</span><span class="p">,</span> <span class="n">analysis_grids</span><span class="p">,</span> <span class="n">simulation_type</span><span class="p">,</span>
+            <span class="n">reuse_daylight_mtx</span><span class="o">=</span><span class="n">reuse_daylight_mtx</span><span class="p">,</span> <span class="n">hb_objects</span><span class="o">=</span><span class="n">hb_objects</span><span class="p">,</span>
+            <span class="n">sub_folder</span><span class="o">=</span><span class="n">sub_folder</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">view_mtx_parameters</span> <span class="o">=</span> <span class="n">view_mtx_parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">daylight_mtx_parameters</span> <span class="o">=</span> <span class="n">daylight_mtx_parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reuse_view_mtx</span> <span class="o">=</span> <span class="n">reuse_view_mtx</span>
+
+<div class="viewcode-block" id="ThreePhaseGridBased.from_weather_file_points_and_vectors"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.threephase.html#honeybee.radiance.recipe.threephase.gridbased.ThreePhaseGridBased.from_weather_file_points_and_vectors">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_weather_file_points_and_vectors</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">epw_file</span><span class="p">,</span> <span class="n">point_groups</span><span class="p">,</span> <span class="n">vector_groups</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sky_density</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">simulation_type</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">view_mtx_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">daylight_mtx_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">reuse_view_mtx</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">reuse_daylight_mtx</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">hb_window_surfaces</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">hb_objects</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sub_folder</span><span class="o">=</span><span class="s2">&quot;gridbased_threephase&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create three-phase recipe from weather file, points and vectors.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            epw_file: An EnergyPlus weather file.</span>
+<span class="sd">            point_groups: A list of (x, y, z) test points or lists of (x, y, z)</span>
+<span class="sd">                test points. Each list of test points will be converted to a</span>
+<span class="sd">                TestPointGroup. If testPts is a single flattened list only one</span>
+<span class="sd">                TestPointGroup will be created.</span>
+<span class="sd">            vector_groups: An optional list of (x, y, z) vectors. Each vector</span>
+<span class="sd">                represents direction of corresponding point in testPts. If the</span>
+<span class="sd">                vector is not provided (0, 0, 1) will be assigned.</span>
+<span class="sd">            sky_density: A positive intger for sky density. 1: Tregenza Sky,</span>
+<span class="sd">                2: Reinhart Sky, etc. (Default: 1)</span>
+<span class="sd">            hb_objects: An optional list of Honeybee surfaces or zones (Default: None).</span>
+<span class="sd">            sub_folder: Analysis subfolder for this recipe. (Default: &quot;sunlighthours&quot;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">epw_file</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.epw&#39;</span><span class="p">),</span> \
+            <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not a an EnergyPlus weather file.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">epw_file</span><span class="p">))</span>
+        <span class="n">sky_mtx</span> <span class="o">=</span> <span class="n">SkyMatrix</span><span class="p">(</span><span class="n">epw_file</span><span class="p">,</span> <span class="n">sky_density</span><span class="p">)</span>
+        <span class="n">analysis_grids</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">analysis_grids_from_points_and_vectors</span><span class="p">(</span><span class="n">point_groups</span><span class="p">,</span>
+                                                                    <span class="n">vector_groups</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+            <span class="n">sky_mtx</span><span class="p">,</span> <span class="n">analysis_grids</span><span class="p">,</span> <span class="n">simulation_type</span><span class="p">,</span> <span class="n">view_mtx_parameters</span><span class="p">,</span>
+            <span class="n">daylight_mtx_parameters</span><span class="p">,</span> <span class="n">reuse_view_mtx</span><span class="p">,</span> <span class="n">reuse_daylight_mtx</span><span class="p">,</span>
+            <span class="n">hb_window_surfaces</span><span class="p">,</span> <span class="n">hb_objects</span><span class="p">,</span> <span class="n">sub_folder</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ThreePhaseGridBased.from_points_file"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.threephase.html#honeybee.radiance.recipe.threephase.gridbased.ThreePhaseGridBased.from_points_file">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_points_file</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">epw_file</span><span class="p">,</span> <span class="n">points_file</span><span class="p">,</span> <span class="n">sky_density</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">simulation_type</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">view_mtx_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">daylight_mtx_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reuse_view_mtx</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">reuse_daylight_mtx</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">hb_window_surfaces</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hb_objects</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">sub_folder</span><span class="o">=</span><span class="s2">&quot;gridbased_threephase&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create an annual recipe from points file.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">points_file</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">inf</span><span class="p">:</span>
+                <span class="n">point_groups</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[:</span><span class="mi">3</span><span class="p">]</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">inf</span><span class="o">.</span><span class="n">readline</span><span class="p">())</span>
+                <span class="n">vector_groups</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">3</span><span class="p">:]</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">inf</span><span class="o">.</span><span class="n">readline</span><span class="p">())</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Couldn&#39;t import points from </span><span class="si">{}</span><span class="s2">:</span><span class="se">\n\t</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">points_file</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_weather_file_points_and_vectors</span><span class="p">(</span>
+            <span class="n">epw_file</span><span class="p">,</span> <span class="n">point_groups</span><span class="p">,</span> <span class="n">vector_groups</span><span class="p">,</span> <span class="n">sky_density</span><span class="p">,</span> <span class="n">simulation_type</span><span class="p">,</span>
+            <span class="n">view_mtx_parameters</span><span class="p">,</span> <span class="n">daylight_mtx_parameters</span><span class="p">,</span> <span class="n">reuse_view_mtx</span><span class="p">,</span>
+            <span class="n">reuse_daylight_mtx</span><span class="p">,</span> <span class="n">hb_window_surfaces</span><span class="p">,</span> <span class="n">hb_objects</span><span class="p">,</span> <span class="n">sub_folder</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">view_mtx_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;View matrix parameters.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_view_mtx_parameters</span>
+
+    <span class="nd">@view_mtx_parameters</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">view_mtx_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vm</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">vm</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_view_mtx_parameters</span> <span class="o">=</span> <span class="n">get_radiance_parameters_grid_based</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">vmtx</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">vm</span><span class="p">,</span> <span class="s1">&#39;isRfluxmtxParameters&#39;</span><span class="p">),</span> \
+                <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Expected RfluxmtxParameters not </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">vm</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_view_mtx_parameters</span> <span class="o">=</span> <span class="n">vm</span>
+
+        <span class="c1"># reset -I option for when parameters are updated.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simType</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_view_mtx_parameters</span><span class="o">.</span><span class="n">irradiance_calc</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_view_mtx_parameters</span><span class="o">.</span><span class="n">irradiance_calc</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">daylight_mtx_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;View matrix parameters.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_daylight_mtx_parameters</span>
+
+    <span class="nd">@daylight_mtx_parameters</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">daylight_mtx_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dm</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">dm</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_daylight_mtx_parameters</span> <span class="o">=</span> <span class="n">get_radiance_parameters_grid_based</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">dmtx</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">dm</span><span class="p">,</span> <span class="s1">&#39;isRfluxmtxParameters&#39;</span><span class="p">),</span> \
+                <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Expected RfluxmtxParameters not </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">dm</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_daylight_mtx_parameters</span> <span class="o">=</span> <span class="n">dm</span>
+
+        <span class="c1"># reset -I option for when parameters are updated.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simType</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_daylight_mtx_parameters</span><span class="o">.</span><span class="n">irradiance_calc</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_daylight_mtx_parameters</span><span class="o">.</span><span class="n">irradiance_calc</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sky_density</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Radiance sky type e.g. r1, r2, r4.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;r</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sky_matrix</span><span class="o">.</span><span class="n">sky_density</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ThreePhaseGridBased.write"><a class="viewcode-back" href="../../../../../honeybee.radiance.recipe.threephase.html#honeybee.radiance.recipe.threephase.gridbased.ThreePhaseGridBased.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_folder</span><span class="p">,</span> <span class="n">project_name</span><span class="o">=</span><span class="s1">&#39;untitled&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write analysis files to target folder.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            target_folder: Path to parent folder. Files will be created under</span>
+<span class="sd">                target_folder/gridbased. use self.sub_folder to change subfolder name.</span>
+<span class="sd">            project_name: Name of this project as a string.</span>
+<span class="sd">            header: A boolean to include path to radiance folder in commands file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Path yo commands file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># 0.prepare target folder</span>
+        <span class="c1"># create main folder target_folder/project_name</span>
+        <span class="n">project_folder</span> <span class="o">=</span> \
+            <span class="nb">super</span><span class="p">(</span><span class="n">DaylightCoeffGridBased</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">write_content</span><span class="p">(</span>
+                <span class="n">target_folder</span><span class="p">,</span> <span class="n">project_name</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">subfolders</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;tmp&#39;</span><span class="p">,</span> <span class="s1">&#39;result/matrix&#39;</span><span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="c1"># write geometry and material files</span>
+        <span class="n">opqfiles</span><span class="p">,</span> <span class="n">glzfiles</span><span class="p">,</span> <span class="n">wgsfiles</span> <span class="o">=</span> <span class="n">write_rad_files_multi_phase</span><span class="p">(</span>
+            <span class="n">project_folder</span> <span class="o">+</span> <span class="s1">&#39;/scene&#39;</span><span class="p">,</span> <span class="n">project_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">opaque_rad_file</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">glazing_rad_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">window_groups_rad_files</span>
+        <span class="p">)</span>
+
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window_groups</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> \
+            <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;Found no window groups! If you do not have a window group&#39;</span>
+                <span class="s1">&#39; in the scene use daylight coefficient &#39;</span><span class="p">)</span>
+
+        <span class="c1"># additional radiance files added to the recipe as scene</span>
+        <span class="n">extrafiles</span> <span class="o">=</span> <span class="n">write_extra_files</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="p">,</span> <span class="n">project_folder</span> <span class="o">+</span> <span class="s1">&#39;/scene&#39;</span><span class="p">)</span>
+
+        <span class="c1"># 0.write points</span>
+        <span class="n">points_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_analysis_grids</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="n">project_name</span><span class="p">)</span>
+        <span class="n">number_of_points</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ag</span><span class="p">)</span> <span class="k">for</span> <span class="n">ag</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_grids</span><span class="p">)</span>
+
+        <span class="c1"># 2.write batch file</span>
+        <span class="k">if</span> <span class="n">header</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="n">project_folder</span><span class="p">))</span>
+
+        <span class="c1"># # 2.1.Create sky matrix.</span>
+        <span class="c1"># # 2.2. Create sun matrix</span>
+        <span class="n">skycommands</span><span class="p">,</span> <span class="n">skyfiles</span> <span class="o">=</span> <span class="n">get_commands_sky</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky_matrix</span><span class="p">,</span>
+                                                 <span class="n">reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">skycommands</span><span class="p">)</span>
+
+        <span class="c1"># for statcic glazing - calculate total, direct and direct-analemma results</span>
+        <span class="c1"># calculate the contribution of glazing if any with all window groups blacked</span>
+        <span class="n">inputfiles</span> <span class="o">=</span> <span class="n">opqfiles</span><span class="p">,</span> <span class="n">glzfiles</span><span class="p">,</span> <span class="n">wgsfiles</span><span class="p">,</span> <span class="n">extrafiles</span>
+        <span class="n">commands</span><span class="p">,</span> <span class="n">results</span> <span class="o">=</span> <span class="n">get_commands_scene_daylight_coeff</span><span class="p">(</span>
+            <span class="n">project_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky_matrix</span><span class="o">.</span><span class="n">sky_density</span><span class="p">,</span> <span class="n">project_folder</span><span class="p">,</span> <span class="n">skyfiles</span><span class="p">,</span>
+            <span class="n">inputfiles</span><span class="p">,</span> <span class="n">points_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_point_count</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">radiance_parameters</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reuse_daylight_mtx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_runs_count</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">commands</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_result_files</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">result</span><span class="p">))</span> <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span>
+        <span class="p">)</span>
+
+        <span class="c1"># calculate three-phase for window groups</span>
+        <span class="k">for</span> <span class="n">count</span><span class="p">,</span> <span class="n">wg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window_groups</span><span class="p">):</span>
+
+            <span class="n">commands</span><span class="p">,</span> <span class="n">v_matrix</span><span class="p">,</span> <span class="n">d_matrix</span> <span class="o">=</span> <span class="n">get_commands_view_daylight_matrices</span><span class="p">(</span>
+                <span class="n">project_folder</span><span class="p">,</span> <span class="n">wg</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">inputfiles</span><span class="p">,</span> <span class="n">points_file</span><span class="p">,</span> <span class="n">number_of_points</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sky_matrix</span><span class="o">.</span><span class="n">sky_density</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_mtx_parameters</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">daylight_mtx_parameters</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reuse_view_mtx</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reuse_daylight_mtx</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">commands</span><span class="p">)</span>
+
+            <span class="c1"># t_matrix</span>
+            <span class="n">cmd</span><span class="p">,</span> <span class="n">results</span> <span class="o">=</span> <span class="n">matrix_calculation_three_phase</span><span class="p">(</span>
+                <span class="n">project_folder</span><span class="p">,</span> <span class="n">wg</span><span class="p">,</span> <span class="n">v_matrix</span><span class="p">,</span> <span class="n">d_matrix</span><span class="p">,</span> <span class="n">skyfiles</span><span class="o">.</span><span class="n">sky_mtx_total</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_result_files</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+
+        <span class="c1"># # 5. write batch file</span>
+        <span class="n">batch_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_folder</span><span class="p">,</span> <span class="s2">&quot;commands.bat&quot;</span><span class="p">)</span>
+        <span class="n">write_to_file</span><span class="p">(</span><span class="n">batch_file</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">preproc_commands</span><span class="p">()))</span>
+
+        <span class="k">return</span> <span class="n">batch_file</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

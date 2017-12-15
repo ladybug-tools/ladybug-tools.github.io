@@ -1,0 +1,534 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.radfile &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../index.html">
+    <img class="logo" src="../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.radfile</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Radiance file.</span>
+
+<span class="sd">Create, modify and generate radiance files from a collection of hbobjects.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">..futil</span> <span class="k">import</span> <span class="n">write_to_file_by_name</span><span class="p">,</span> <span class="n">copy_files_to_folder</span><span class="p">,</span> <span class="n">preparedir</span>
+<span class="kn">from</span> <span class="nn">.geometry</span> <span class="k">import</span> <span class="n">polygon</span>
+<span class="kn">from</span> <span class="nn">.material.plastic</span> <span class="k">import</span> <span class="n">BlackMaterial</span>
+<span class="kn">from</span> <span class="nn">.material.glow</span> <span class="k">import</span> <span class="n">WhiteGlowMaterial</span>
+
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<div class="viewcode-block" id="RadFile"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.radfile.RadFile">[docs]</a><span class="k">class</span> <span class="nc">RadFile</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Radiance file.</span>
+
+<span class="sd">    Create, modify and generate radiance files from a collection of hbobjects.</span>
+<span class="sd">    You can also use this class for a single HBSurface or HBZone to get to_rad_string.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        hb_surfaces: A collection of honeybee surfaces.</span>
+<span class="sd">        additional_matrials: Additional radiance material objects that will be added on</span>
+<span class="sd">            top of the file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;hb_surfaces&#39;</span><span class="p">,</span> <span class="s1">&#39;additional_matrials&#39;</span><span class="p">)</span>
+
+    <span class="c1"># TODO(Mostapha) add property for inputs to check the input values</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hb_surfaces</span><span class="p">,</span> <span class="n">additional_matrials</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initiate a radiance file.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hb_surfaces</span> <span class="o">=</span> <span class="n">hb_surfaces</span>
+        <span class="k">if</span> <span class="n">additional_matrials</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;additional_matrials is not implemented!&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RadFile.from_file"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.radfile.RadFile.from_file">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="c1"># parse the file and get the materials and geometries</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="RadFile.find_bsdf_materials"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.radfile.RadFile.find_bsdf_materials">[docs]</a>    <span class="k">def</span> <span class="nf">find_bsdf_materials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a list fo BSDF materials if any.&quot;&quot;&quot;</span>
+        <span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span> <span class="ow">or</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># do not include children surface</span>
+            <span class="n">mt</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">srf</span><span class="o">.</span><span class="n">radiance_material</span> <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hb_surfaces</span>
+                     <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">srf</span><span class="o">.</span><span class="n">radiance_material</span><span class="p">,</span> <span class="s1">&#39;xmlfile&#39;</span><span class="p">))</span>
+
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># do not include children surface</span>
+            <span class="n">mt_base</span> <span class="o">=</span> <span class="p">[</span><span class="n">srf</span><span class="o">.</span><span class="n">radiance_material</span> <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hb_surfaces</span>
+                       <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">srf</span><span class="o">.</span><span class="n">radiance_material</span><span class="p">,</span> <span class="s1">&#39;xmlfile&#39;</span><span class="p">)]</span>
+            <span class="n">mt_child</span> <span class="o">=</span> <span class="p">[</span><span class="n">childSrf</span><span class="o">.</span><span class="n">radiance_material</span>
+                        <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hb_surfaces</span>
+                        <span class="k">for</span> <span class="n">childSrf</span> <span class="ow">in</span> <span class="n">srf</span><span class="o">.</span><span class="n">children_surfaces</span>
+                        <span class="k">if</span> <span class="n">srf</span><span class="o">.</span><span class="n">has_child_surfaces</span> <span class="ow">and</span>
+                        <span class="nb">hasattr</span><span class="p">(</span><span class="n">childSrf</span><span class="o">.</span><span class="n">radiance_material</span><span class="p">,</span> <span class="s1">&#39;xmlfile&#39;</span><span class="p">)]</span>
+            <span class="n">mt</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">mt_base</span> <span class="o">+</span> <span class="n">mt_child</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># only child surfaces</span>
+            <span class="n">mt</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">childSrf</span><span class="o">.</span><span class="n">radiance_material</span>
+                     <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hb_surfaces</span>
+                     <span class="k">for</span> <span class="n">childSrf</span> <span class="ow">in</span> <span class="n">srf</span><span class="o">.</span><span class="n">children_surfaces</span>
+                     <span class="k">if</span> <span class="n">srf</span><span class="o">.</span><span class="n">has_child_surfaces</span> <span class="ow">and</span>
+                     <span class="nb">hasattr</span><span class="p">(</span><span class="n">childSrf</span><span class="o">.</span><span class="n">radiance_material</span><span class="p">,</span> <span class="s1">&#39;xmlfile&#39;</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">mt</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RadFile.radiance_material_names"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.radfile.RadFile.radiance_material_names">[docs]</a>    <span class="k">def</span> <span class="nf">radiance_material_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get list of material names.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            mode: An integer 0-2 (Default: 1)</span>
+<span class="sd">                0 - Do not include children surfaces.</span>
+<span class="sd">                1 - Include children surfaces.</span>
+<span class="sd">                2 - Only children surfaces.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span> <span class="ow">or</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># do not include children surface</span>
+            <span class="n">mt</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">srf</span><span class="o">.</span><span class="n">radiance_material</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hb_surfaces</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># do not include children surface</span>
+            <span class="n">mt_base</span> <span class="o">=</span> <span class="p">[</span><span class="n">srf</span><span class="o">.</span><span class="n">radiance_material</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hb_surfaces</span><span class="p">]</span>
+            <span class="n">mt_child</span> <span class="o">=</span> <span class="p">[</span><span class="n">childSrf</span><span class="o">.</span><span class="n">radiance_material</span><span class="o">.</span><span class="n">name</span>
+                        <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hb_surfaces</span>
+                        <span class="k">for</span> <span class="n">childSrf</span> <span class="ow">in</span> <span class="n">srf</span><span class="o">.</span><span class="n">children_surfaces</span>
+                        <span class="k">if</span> <span class="n">srf</span><span class="o">.</span><span class="n">has_child_surfaces</span><span class="p">]</span>
+            <span class="n">mt</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">mt_base</span> <span class="o">+</span> <span class="n">mt_child</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># only child surfaces</span>
+            <span class="n">mt</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">childSrf</span><span class="o">.</span><span class="n">radiance_material</span><span class="o">.</span><span class="n">name</span>
+                     <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hb_surfaces</span>
+                     <span class="k">for</span> <span class="n">childSrf</span> <span class="ow">in</span> <span class="n">srf</span><span class="o">.</span><span class="n">children_surfaces</span>
+                     <span class="k">if</span> <span class="n">srf</span><span class="o">.</span><span class="n">has_child_surfaces</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">mt</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RadFile.copy_and_replace_xml_files"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.radfile.RadFile.copy_and_replace_xml_files">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">copy_and_replace_xml_files</span><span class="p">(</span><span class="n">material_string</span><span class="p">,</span> <span class="n">bsdf_materials</span><span class="p">,</span> <span class="n">target_folder</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Find and replace xml files full path and copy XML files under bsdf folder.</span>
+
+<span class="sd">        The root folder in Radiance is the place that commands are executed</span>
+<span class="sd">        which in honeybee is the root so the relative path is scene/bsdf</span>
+<span class="sd">        this will make this mathod fairly inflexible.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            material_string: A joined string of radiance materials.</span>
+<span class="sd">            bsdf_materials: A collection of BSDF materials.</span>
+<span class="sd">            target_folder: The study folder where the materials will be written.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">bsdf_files</span> <span class="o">=</span> <span class="p">(</span><span class="n">mat</span><span class="o">.</span><span class="n">xmlfile</span> <span class="k">for</span> <span class="n">mat</span> <span class="ow">in</span> <span class="n">bsdf_materials</span><span class="p">)</span>
+        <span class="n">basefolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">target_folder</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">target_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">basefolder</span><span class="p">,</span> <span class="s1">&#39;bsdf&#39;</span><span class="p">)</span>
+        <span class="n">is_created</span> <span class="o">=</span> <span class="n">preparedir</span><span class="p">(</span><span class="n">target_folder</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">is_created</span><span class="p">,</span> <span class="s1">&#39;Failed to create </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_folder</span><span class="p">)</span>
+        <span class="c1"># copy the xml file locally</span>
+        <span class="n">copy_files_to_folder</span><span class="p">(</span><span class="n">bsdf_files</span><span class="p">,</span> <span class="n">target_folder</span><span class="p">)</span>
+        <span class="c1"># replace the full path with relative path</span>
+        <span class="c1"># The root folder in Radiance is the place that commands are executed</span>
+        <span class="c1"># which in honeybee is the root so the relative path is scene/glazing/bsdf</span>
+        <span class="c1"># this will make this mathod fairly inflexible.</span>
+        <span class="k">for</span> <span class="n">mat</span> <span class="ow">in</span> <span class="n">bsdf_materials</span><span class="p">:</span>
+            <span class="n">path</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">mat</span><span class="o">.</span><span class="n">xmlfile</span><span class="p">)</span>
+            <span class="n">material_string</span> <span class="o">=</span> <span class="n">material_string</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">mat</span><span class="o">.</span><span class="n">xmlfile</span><span class="p">),</span> <span class="s1">&#39;scene/bsdf/</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">name</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">material_string</span></div>
+
+<div class="viewcode-block" id="RadFile.materials"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.radfile.RadFile.materials">[docs]</a>    <span class="k">def</span> <span class="nf">materials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">join</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">blacked</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">glowed</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get materials as a list of radiance strings.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            mode: An integer 0-2 (Default: 1)</span>
+<span class="sd">                0 - Do not include children surfaces.</span>
+<span class="sd">                1 - Include children surfaces.</span>
+<span class="sd">                2 - Only children surfaces.</span>
+<span class="sd">            join: Set to True to join the output strings (Default: False).</span>
+<span class="sd">            blacked: If True materials will all be set to plastic 0 0 0 0 0.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="p">(</span><span class="n">blacked</span> <span class="ow">and</span> <span class="n">glowed</span><span class="p">),</span> \
+            <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;You can either use blacked or glowed option.&#39;</span><span class="p">)</span>
+
+        <span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span> <span class="ow">or</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># do not include children surface</span>
+            <span class="k">if</span> <span class="n">blacked</span><span class="p">:</span>
+                <span class="n">mt</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">BlackMaterial</span><span class="p">(</span><span class="n">srf</span><span class="o">.</span><span class="n">radiance_material</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+                         <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hb_surfaces</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">glowed</span><span class="p">:</span>
+                <span class="n">mt</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">WhiteGlowMaterial</span><span class="p">(</span><span class="n">srf</span><span class="o">.</span><span class="n">radiance_material</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+                         <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hb_surfaces</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">mt</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">srf</span><span class="o">.</span><span class="n">radiance_material</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+                         <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hb_surfaces</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># do not include children surface</span>
+            <span class="k">if</span> <span class="n">blacked</span><span class="p">:</span>
+                <span class="n">mt_base</span> <span class="o">=</span> <span class="p">[</span><span class="n">BlackMaterial</span><span class="p">(</span><span class="n">srf</span><span class="o">.</span><span class="n">radiance_material</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+                           <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hb_surfaces</span><span class="p">]</span>
+                <span class="n">mt_child</span> <span class="o">=</span> <span class="p">[</span><span class="n">BlackMaterial</span><span class="p">(</span><span class="n">childSrf</span><span class="o">.</span><span class="n">radiance_material</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                            <span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+                            <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hb_surfaces</span>
+                            <span class="k">for</span> <span class="n">childSrf</span> <span class="ow">in</span> <span class="n">srf</span><span class="o">.</span><span class="n">children_surfaces</span>
+                            <span class="k">if</span> <span class="n">srf</span><span class="o">.</span><span class="n">has_child_surfaces</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">glowed</span><span class="p">:</span>
+                <span class="n">mt_base</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">WhiteGlowMaterial</span><span class="p">(</span><span class="n">srf</span><span class="o">.</span><span class="n">radiance_material</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+                    <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hb_surfaces</span><span class="p">]</span>
+                <span class="n">mt_child</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">WhiteGlowMaterial</span><span class="p">(</span><span class="n">childSrf</span><span class="o">.</span><span class="n">radiance_material</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+                    <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hb_surfaces</span>
+                    <span class="k">for</span> <span class="n">childSrf</span> <span class="ow">in</span> <span class="n">srf</span><span class="o">.</span><span class="n">children_surfaces</span>
+                    <span class="k">if</span> <span class="n">srf</span><span class="o">.</span><span class="n">has_child_surfaces</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">mt_base</span> <span class="o">=</span> <span class="p">[</span><span class="n">srf</span><span class="o">.</span><span class="n">radiance_material</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+                           <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hb_surfaces</span><span class="p">]</span>
+                <span class="n">mt_child</span> <span class="o">=</span> <span class="p">[</span><span class="n">childSrf</span><span class="o">.</span><span class="n">radiance_material</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+                            <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hb_surfaces</span>
+                            <span class="k">for</span> <span class="n">childSrf</span> <span class="ow">in</span> <span class="n">srf</span><span class="o">.</span><span class="n">children_surfaces</span>
+                            <span class="k">if</span> <span class="n">srf</span><span class="o">.</span><span class="n">has_child_surfaces</span><span class="p">]</span>
+            <span class="n">mt</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">mt_base</span> <span class="o">+</span> <span class="n">mt_child</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># only child surfaces</span>
+            <span class="k">if</span> <span class="n">blacked</span><span class="p">:</span>
+                <span class="n">mt</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">BlackMaterial</span><span class="p">(</span><span class="n">childSrf</span><span class="o">.</span><span class="n">radiance_material</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+                         <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hb_surfaces</span>
+                         <span class="k">for</span> <span class="n">childSrf</span> <span class="ow">in</span> <span class="n">srf</span><span class="o">.</span><span class="n">children_surfaces</span>
+                         <span class="k">if</span> <span class="n">srf</span><span class="o">.</span><span class="n">has_child_surfaces</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">glowed</span><span class="p">:</span>
+                <span class="n">mt</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">WhiteGlowMaterial</span><span class="p">(</span><span class="n">childSrf</span><span class="o">.</span><span class="n">radiance_material</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                         <span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+                         <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hb_surfaces</span>
+                         <span class="k">for</span> <span class="n">childSrf</span> <span class="ow">in</span> <span class="n">srf</span><span class="o">.</span><span class="n">children_surfaces</span>
+                         <span class="k">if</span> <span class="n">srf</span><span class="o">.</span><span class="n">has_child_surfaces</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">mt</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">childSrf</span><span class="o">.</span><span class="n">radiance_material</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+                         <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hb_surfaces</span>
+                         <span class="k">for</span> <span class="n">childSrf</span> <span class="ow">in</span> <span class="n">srf</span><span class="o">.</span><span class="n">children_surfaces</span>
+                         <span class="k">if</span> <span class="n">srf</span><span class="o">.</span><span class="n">has_child_surfaces</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mt</span><span class="p">)</span> <span class="k">if</span> <span class="n">join</span> <span class="k">else</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">mt</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RadFile.geometries"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.radfile.RadFile.geometries">[docs]</a>    <span class="k">def</span> <span class="nf">geometries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">join</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">flipped</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get geometry as a list of radiance strings.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            mode: An integer 0-2 (Default: 1)</span>
+<span class="sd">                0 - Do not include children surfaces.</span>
+<span class="sd">                1 - Include children surfaces.</span>
+<span class="sd">                2 - Only children surfaces.</span>
+<span class="sd">            join: Set to True to join the output strings (Default: False).</span>
+<span class="sd">            flipped: Flip the surface geometry.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span> <span class="ow">or</span> <span class="mi">1</span>
+        <span class="n">get_polygon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_surface_rad_string</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># do not include children surface</span>
+            <span class="n">geo</span> <span class="o">=</span> <span class="p">(</span><span class="n">get_polygon</span><span class="p">(</span><span class="n">srf</span><span class="p">,</span> <span class="n">flipped</span><span class="p">)</span> <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hb_surfaces</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># do not include children surface</span>
+            <span class="n">geo_base</span> <span class="o">=</span> <span class="p">[</span><span class="n">get_polygon</span><span class="p">(</span><span class="n">srf</span><span class="p">,</span> <span class="n">flipped</span><span class="p">)</span> <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hb_surfaces</span><span class="p">]</span>
+            <span class="n">geo_child</span> <span class="o">=</span> <span class="p">[</span><span class="n">get_polygon</span><span class="p">(</span><span class="n">childSrf</span><span class="p">,</span> <span class="n">flipped</span><span class="p">)</span> <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hb_surfaces</span>
+                         <span class="k">for</span> <span class="n">childSrf</span> <span class="ow">in</span> <span class="n">srf</span><span class="o">.</span><span class="n">children_surfaces</span> <span class="k">if</span> <span class="n">srf</span><span class="o">.</span><span class="n">has_child_surfaces</span><span class="p">]</span>
+            <span class="n">geo</span> <span class="o">=</span> <span class="n">geo_base</span> <span class="o">+</span> <span class="n">geo_child</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># only child surfaces</span>
+            <span class="n">geo</span> <span class="o">=</span> <span class="p">(</span><span class="n">get_polygon</span><span class="p">(</span><span class="n">childSrf</span><span class="p">,</span> <span class="n">flipped</span><span class="p">)</span> <span class="k">for</span> <span class="n">srf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hb_surfaces</span>
+                   <span class="k">for</span> <span class="n">childSrf</span> <span class="ow">in</span> <span class="n">srf</span><span class="o">.</span><span class="n">children_surfaces</span> <span class="k">if</span> <span class="n">srf</span><span class="o">.</span><span class="n">has_child_surfaces</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">geo</span><span class="p">)</span> <span class="k">if</span> <span class="n">join</span> <span class="k">else</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">geo</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RadFile.to_rad_string"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.radfile.RadFile.to_rad_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_rad_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">include_materials</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">flipped</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">blacked</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                      <span class="n">glowed</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get full radiance file as a string.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            mode: An integer 0-2 (Default: 1)</span>
+<span class="sd">                0 - Do not include children surfaces.</span>
+<span class="sd">                1 - Include children surfaces.</span>
+<span class="sd">                2 - Only children surfaces.</span>
+<span class="sd">            include_materials: Set to False if you only want the geometry definition</span>
+<span class="sd">             (default:True).</span>
+<span class="sd">            flipped: Flip the surface geometry.</span>
+<span class="sd">            blacked: If True materials will all be set to plastic 0 0 0 0 0.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span> <span class="ow">or</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">include_materials</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">materials</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">blacked</span><span class="p">,</span> <span class="n">glowed</span><span class="p">),</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">geometries</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">flipped</span><span class="p">)))</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">geometries</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">flipped</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span></div>
+
+<div class="viewcode-block" id="RadFile.write"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.radfile.RadFile.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">include_materials</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">flipped</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">blacked</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">glowed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mkdir</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;write materials and geometries to a file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            folder: Target folder.</span>
+<span class="sd">            filename: File name and extension as a string.</span>
+<span class="sd">            mode: An integer 0-2 (Default: 1)</span>
+<span class="sd">                0 - Do not include children surfaces.</span>
+<span class="sd">                1 - Include children surfaces.</span>
+<span class="sd">                2 - Only children surfaces.</span>
+<span class="sd">            include_materials: Set to False if you only want the geometry definition</span>
+<span class="sd">             (default:True).</span>
+<span class="sd">            flipped: Flip the surface geometry.</span>
+<span class="sd">            blacked: If True materials will all be set to plastic 0 0 0 0 0.</span>
+<span class="sd">            mkdir: Create the folder if does not exist already.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">include_materials</span><span class="p">,</span> <span class="n">flipped</span><span class="p">,</span> <span class="n">blacked</span><span class="p">,</span> <span class="n">glowed</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">glowed</span> <span class="ow">or</span> <span class="n">blacked</span><span class="p">):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_and_replace_xml_files</span><span class="p">(</span>
+                <span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_bsdf_materials</span><span class="p">(</span><span class="n">mode</span><span class="p">),</span> <span class="n">folder</span>
+            <span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">data</span>
+        <span class="k">return</span> <span class="n">write_to_file_by_name</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">mkdir</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RadFile.write_materials"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.radfile.RadFile.write_materials">[docs]</a>    <span class="k">def</span> <span class="nf">write_materials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">blacked</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">glowed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">mkdir</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write materials to a file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            folder: Target folder.</span>
+<span class="sd">            filename: File name and extension as a string.</span>
+<span class="sd">            mode: An integer 0-2 (Default: 1)</span>
+<span class="sd">                0 - Do not include children surfaces.</span>
+<span class="sd">                1 - Include children surfaces.</span>
+<span class="sd">                2 - Only children surfaces.</span>
+<span class="sd">            include_materials: Set to False if you only want the geometry definition</span>
+<span class="sd">             (default:True).</span>
+<span class="sd">            flipped: Flip the surface geometry.</span>
+<span class="sd">            blacked: If True materials will all be set to plastic 0 0 0 0 0 0 0.</span>
+<span class="sd">            glowed: If True materials will all be set to glow 0 0 1 1 1 0. You can</span>
+<span class="sd">                either use blacked or glowed.</span>
+<span class="sd">            mkdir: Create the folder if does not exist already.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">materials</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">blacked</span><span class="p">,</span> <span class="n">glowed</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">glowed</span> <span class="ow">or</span> <span class="n">blacked</span><span class="p">):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_and_replace_xml_files</span><span class="p">(</span>
+                <span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_bsdf_materials</span><span class="p">(</span><span class="n">mode</span><span class="p">),</span> <span class="n">folder</span>
+            <span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">data</span>
+        <span class="k">return</span> <span class="n">write_to_file_by_name</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">mkdir</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RadFile.write_geometries"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.radfile.RadFile.write_geometries">[docs]</a>    <span class="k">def</span> <span class="nf">write_geometries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">flipped</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mkdir</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;write geometries to a file.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            folder: Target folder.</span>
+<span class="sd">            filename: File name and extension as a string.</span>
+<span class="sd">            mode: An integer 0-2 (Default: 1)</span>
+<span class="sd">                0 - Do not include children surfaces.</span>
+<span class="sd">                1 - Include children surfaces.</span>
+<span class="sd">                2 - Only children surfaces.</span>
+<span class="sd">            flipped: Flip the surface geometry.</span>
+<span class="sd">            mkdir: Create the folder if does not exist already.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">flipped</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">data</span>
+        <span class="k">return</span> <span class="n">write_to_file_by_name</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">mkdir</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RadFile.write_black_material"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.radfile.RadFile.write_black_material">[docs]</a>    <span class="k">def</span> <span class="nf">write_black_material</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">mkdir</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write black material to a file.&quot;&quot;&quot;</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">BlackMaterial</span><span class="p">()</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">write_to_file_by_name</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">mkdir</span><span class="p">)</span></div>
+
+    <span class="c1"># TODO(): fix the bug for multiple surfaces. The material only changes for</span>
+    <span class="c1"># the first one.</span>
+<div class="viewcode-block" id="RadFile.write_geometries_blacked"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.radfile.RadFile.write_geometries_blacked">[docs]</a>    <span class="k">def</span> <span class="nf">write_geometries_blacked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">flipped</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                 <span class="n">mkdir</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write all the surfaces to a file with BlackMaterial.</span>
+
+<span class="sd">        Use this method to write objects like window-groups.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">geo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">geometries</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">join</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">flipped</span><span class="o">=</span><span class="n">flipped</span><span class="p">)</span>
+        <span class="n">mat_name</span> <span class="o">=</span> <span class="n">BlackMaterial</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
+        <span class="c1"># replace the material in string with BlackMaterial.name</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radiance_material_names</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+            <span class="n">geo</span> <span class="o">=</span> <span class="n">geo</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">mat_name</span><span class="p">)</span>
+
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">geo</span>
+        <span class="k">return</span> <span class="n">write_to_file_by_name</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">mkdir</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RadFile.write_glow_material"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.radfile.RadFile.write_glow_material">[docs]</a>    <span class="k">def</span> <span class="nf">write_glow_material</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">mkdir</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write white glow material to a file.&quot;&quot;&quot;</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">WhiteGlowMaterial</span><span class="p">()</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">write_to_file_by_name</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">mkdir</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RadFile.write_geometries_glowed"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.radfile.RadFile.write_geometries_glowed">[docs]</a>    <span class="k">def</span> <span class="nf">write_geometries_glowed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">flipped</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                <span class="n">mkdir</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write all the surfaces to a file with WhiteGlowMaterial.</span>
+
+<span class="sd">        Use this method to write objects like window-groups.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">geo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">geometries</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">flipped</span><span class="o">=</span><span class="n">flipped</span><span class="p">)</span>
+        <span class="n">mat_name</span> <span class="o">=</span> <span class="n">WhiteGlowMaterial</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
+        <span class="c1"># replace the material in string with BlackMaterial.name</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radiance_material_names</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+            <span class="n">geo</span> <span class="o">=</span> <span class="n">geo</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">mat_name</span><span class="p">)</span>
+
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">geo</span>
+        <span class="k">return</span> <span class="n">write_to_file_by_name</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">mkdir</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RadFile.header"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.radfile.RadFile.header">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">header</span><span class="p">():</span>
+        <span class="n">fmt</span> <span class="o">=</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="s1">&#39;# Created by Honeybee[+] at </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">fmt</span><span class="p">)</span>
+        <span class="n">note</span> <span class="o">=</span> <span class="s1">&#39;# www.ladybug.tools&#39;</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">header</span><span class="p">,</span> <span class="n">note</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RadFile.get_surface_rad_string"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.radfile.RadFile.get_surface_rad_string">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_surface_rad_string</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">flipped</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the polygon definition for a honeybee surface.</span>
+
+<span class="sd">        This is a static method. For the full string try geometries method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="n">surface</span><span class="o">.</span><span class="n">duplicate_vertices</span><span class="p">(</span><span class="n">flipped</span><span class="p">)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">surface</span><span class="o">.</span><span class="n">name</span>
+
+        <span class="n">sub_srf_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+
+        <span class="c1"># create a place holder for each point group (face)</span>
+        <span class="c1"># for a planar surface sub_srf_count is one</span>
+        <span class="n">place_holder</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">sub_srf_count</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">ptCount</span><span class="p">,</span> <span class="n">pts</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">points</span><span class="p">):</span>
+
+            <span class="c1"># modify name for each sub_surface</span>
+            <span class="n">_name</span> <span class="o">=</span> <span class="n">name</span> <span class="k">if</span> <span class="n">sub_srf_count</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">ptCount</span><span class="p">)</span>
+
+            <span class="c1"># collect definition for each subsurface</span>
+            <span class="n">place_holder</span><span class="p">[</span><span class="n">ptCount</span><span class="p">]</span> <span class="o">=</span> <span class="n">polygon</span><span class="p">(</span><span class="n">_name</span><span class="p">,</span> <span class="n">surface</span><span class="o">.</span><span class="n">radiance_material</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">pts</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">place_holder</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RadFile.ToString"><a class="viewcode-back" href="../../../honeybee.radiance.html#honeybee.radiance.radfile.RadFile.ToString">[docs]</a>    <span class="k">def</span> <span class="nf">ToString</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwrite .NET&#39;s ToString.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the full string of the file.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;rad file.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;RadFile::#</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hb_surfaces</span><span class="p">))</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

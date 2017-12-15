@@ -1,0 +1,222 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.hbshadesurface &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.hbshadesurface</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">_hbanalysissurface</span> <span class="k">import</span> <span class="n">HBAnalysisSurface</span>
+<span class="kn">from</span> <span class="nn">surfaceproperties</span> <span class="k">import</span> <span class="n">SurfaceProperties</span><span class="p">,</span> <span class="n">SurfaceState</span>
+
+
+<div class="viewcode-block" id="HBShadingSurface"><a class="viewcode-back" href="../../honeybee.html#honeybee.hbshadesurface.HBShadingSurface">[docs]</a><span class="k">class</span> <span class="nc">HBShadingSurface</span><span class="p">(</span><span class="n">HBAnalysisSurface</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Honeybee shading surface.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name: A unique string for surface name</span>
+<span class="sd">        sorted_points: A list of 3 points or more as tuple or list with three items</span>
+<span class="sd">            (x, y, z). Points should be sorted. This class won&#39;t sort the points.</span>
+<span class="sd">            If surfaces has multiple subsurfaces you can pass lists of point lists</span>
+<span class="sd">            to this function (e.g. ((0, 0, 0), (10, 0, 0), (0, 10, 0))).</span>
+<span class="sd">        is_name_set_by_user: If you want the name to be changed by honeybee any case</span>
+<span class="sd">            set is_name_set_by_user to True. Default is set to False which let Honeybee</span>
+<span class="sd">            to rename the surface in cases like creating a newHBZone.</span>
+<span class="sd">        rad_properties: Radiance properties for this surface. If empty default</span>
+<span class="sd">            RADProperties will be assigned to surface by Honeybee.</span>
+<span class="sd">        ep_properties: EnergyPlus properties for this surface. If empty default</span>
+<span class="sd">            ep_properties will be assigned to surface by Honeybee.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># TODO: Separate Zone:Detailed:Sahding</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">sorted_points</span><span class="o">=</span><span class="p">[],</span> <span class="n">is_name_set_by_user</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">rad_properties</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ep_properties</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">states</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init honeybee surface.&quot;&quot;&quot;</span>
+        <span class="n">_surface_type</span> <span class="o">=</span> <span class="mi">6</span>
+        <span class="n">_is_type_set_by_user</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">states</span> <span class="o">=</span> <span class="n">states</span> <span class="ow">or</span> <span class="p">()</span>
+        <span class="n">HBAnalysisSurface</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">sorted_points</span><span class="p">,</span> <span class="n">_surface_type</span><span class="p">,</span>
+                                   <span class="n">is_name_set_by_user</span><span class="p">,</span> <span class="n">_is_type_set_by_user</span><span class="p">)</span>
+
+        <span class="n">sp</span> <span class="o">=</span> <span class="n">SurfaceProperties</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">surface_type</span><span class="p">,</span> <span class="n">rad_properties</span><span class="p">,</span> <span class="n">ep_properties</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_states</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">SurfaceState</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">sp</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_surface_state</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__isChildSurface</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__parent</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># TODO: Parse EnergyPlus properties</span>
+<div class="viewcode-block" id="HBShadingSurface.from_ep_string"><a class="viewcode-back" href="../../honeybee.html#honeybee.hbshadesurface.HBShadingSurface.from_ep_string">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_ep_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">ep_string</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init Honeybee shading from an ep_string.</span>
+
+<span class="sd">        Supported types are Shading:Site:Detailed, Shading:Building:Detailed,</span>
+<span class="sd">        Shading:Zone:Detailed</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            ep_string: The full ep_string for an EnergyPlus shading object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># clean input ep_string - split based on comma</span>
+        <span class="n">_segments</span> <span class="o">=</span> <span class="n">ep_string</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> \
+            <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+
+        <span class="n">_type</span> <span class="o">=</span> <span class="n">_segments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">_segments</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">_type</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;shading:site:detailed&#39;</span><span class="p">,</span> <span class="s1">&#39;shading:building:detailed&#39;</span><span class="p">):</span>
+            <span class="n">start_item</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="k">elif</span> <span class="n">_type</span> <span class="o">==</span> <span class="s2">&quot;shading:zone:detailed&quot;</span><span class="p">:</span>
+            <span class="n">start_item</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> is an invalid shading type.&quot;</span> <span class="o">%</span> <span class="n">_type</span><span class="p">)</span>
+
+        <span class="n">_pts</span> <span class="o">=</span> <span class="nb">range</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">_segments</span><span class="p">)</span> <span class="o">-</span> <span class="n">start_item</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
+
+        <span class="c1"># create points</span>
+        <span class="k">for</span> <span class="n">count</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">xrange</span><span class="p">(</span><span class="n">start_item</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">_segments</span><span class="p">),</span> <span class="mi">3</span><span class="p">)):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">_pts</span><span class="p">[</span><span class="n">count</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">_segments</span><span class="p">[</span><span class="n">i</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]]</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> is an invalid value for points.&quot;</span> <span class="o">%</span> <span class="n">_segments</span><span class="p">[</span><span class="n">i</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span>
+                <span class="p">)</span>
+
+        <span class="c1"># create the surfaceString</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">sorted_points</span><span class="o">=</span><span class="n">_pts</span><span class="p">,</span> <span class="n">is_name_set_by_user</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">isHBShadingSurface</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True for HBFenSurface.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_child_surface</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True if Honeybee surface is Fenestration Surface.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__isChildSurface</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">parent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get or set parent zone.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__parent</span>
+
+    <span class="nd">@parent</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">parent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set parent zone.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="s1">&#39;isHBSurface&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__parent</span> <span class="o">=</span> <span class="n">parent</span></div>
+            <span class="c1"># parent.add_fenestration_surface(self)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

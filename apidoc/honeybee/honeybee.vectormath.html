@@ -1,0 +1,1064 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.vectormath package &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="honeybee.server package" href="honeybee.server.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="honeybee.html">honeybee package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="honeybee.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="honeybee.energyplus.html">honeybee.energyplus package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.radiance.html">honeybee.radiance package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="honeybee.server.html">honeybee.server package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">honeybee.vectormath package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-honeybee.vectormath.euclid">honeybee.vectormath.euclid module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-honeybee.vectormath">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.config">honeybee.config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.dataoperation">honeybee.dataoperation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.futil">honeybee.futil module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.geometryoperation">honeybee.geometryoperation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbdynamicsurface">honeybee.hbdynamicsurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbfensurface">honeybee.hbfensurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbobject">honeybee.hbobject module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbshadesurface">honeybee.hbshadesurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbsurface">honeybee.hbsurface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.hbzone">honeybee.hbzone module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.room">honeybee.room module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.schedule">honeybee.schedule module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.surfaceproperties">honeybee.surfaceproperties module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.surfacetype">honeybee.surfacetype module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee.utilcol">honeybee.utilcol module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="honeybee.html#module-honeybee">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="honeybee.html">honeybee package</a><ul>
+      <li>Previous: <a href="honeybee.server.html" title="previous chapter">honeybee.server package</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="honeybee-vectormath-package">
+<h1>honeybee.vectormath package<a class="headerlink" href="#honeybee-vectormath-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-honeybee.vectormath.euclid">
+<span id="honeybee-vectormath-euclid-module"></span><h2>honeybee.vectormath.euclid module<a class="headerlink" href="#module-honeybee.vectormath.euclid" title="Permalink to this headline">¶</a></h2>
+<p>euclid graphics maths module</p>
+<p>Documentation and tests are included in the file “euclid.txt”, or online
+at <a class="reference external" href="http://code.google.com/p/pyeuclid">http://code.google.com/p/pyeuclid</a></p>
+<dl class="class">
+<dt id="honeybee.vectormath.euclid.Circle">
+<em class="property">class </em><code class="descclassname">honeybee.vectormath.euclid.</code><code class="descname">Circle</code><span class="sig-paren">(</span><em>center</em>, <em>radius</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Circle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Circle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.vectormath.euclid.Geometry" title="honeybee.vectormath.euclid.Geometry"><code class="xref py py-class docutils literal"><span class="pre">honeybee.vectormath.euclid.Geometry</span></code></a>, <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Circle.c">
+<code class="descname">c</code><a class="headerlink" href="#honeybee.vectormath.euclid.Circle.c" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Circle.connect">
+<code class="descname">connect</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Circle.connect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Circle.connect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Circle.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.vectormath.euclid.Circle.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Circle.intersect">
+<code class="descname">intersect</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Circle.intersect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Circle.intersect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Circle.r">
+<code class="descname">r</code><a class="headerlink" href="#honeybee.vectormath.euclid.Circle.r" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.vectormath.euclid.Geometry">
+<em class="property">class </em><code class="descclassname">honeybee.vectormath.euclid.</code><code class="descname">Geometry</code><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Geometry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Geometry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Geometry.connect">
+<code class="descname">connect</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Geometry.connect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Geometry.connect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Geometry.distance">
+<code class="descname">distance</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Geometry.distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Geometry.distance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Geometry.intersect">
+<code class="descname">intersect</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Geometry.intersect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Geometry.intersect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.vectormath.euclid.Line2">
+<em class="property">class </em><code class="descclassname">honeybee.vectormath.euclid.</code><code class="descname">Line2</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Line2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Line2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.vectormath.euclid.Geometry" title="honeybee.vectormath.euclid.Geometry"><code class="xref py py-class docutils literal"><span class="pre">honeybee.vectormath.euclid.Geometry</span></code></a>, <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Line2.connect">
+<code class="descname">connect</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Line2.connect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Line2.connect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Line2.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.vectormath.euclid.Line2.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Line2.intersect">
+<code class="descname">intersect</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Line2.intersect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Line2.intersect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Line2.p">
+<code class="descname">p</code><a class="headerlink" href="#honeybee.vectormath.euclid.Line2.p" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Line2.p1">
+<code class="descname">p1</code><a class="headerlink" href="#honeybee.vectormath.euclid.Line2.p1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Line2.p2">
+<code class="descname">p2</code><a class="headerlink" href="#honeybee.vectormath.euclid.Line2.p2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Line2.v">
+<code class="descname">v</code><a class="headerlink" href="#honeybee.vectormath.euclid.Line2.v" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.vectormath.euclid.Line3">
+<em class="property">class </em><code class="descclassname">honeybee.vectormath.euclid.</code><code class="descname">Line3</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Line3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Line3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Line3.connect">
+<code class="descname">connect</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Line3.connect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Line3.connect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Line3.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.vectormath.euclid.Line3.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Line3.intersect">
+<code class="descname">intersect</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Line3.intersect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Line3.intersect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Line3.p">
+<code class="descname">p</code><a class="headerlink" href="#honeybee.vectormath.euclid.Line3.p" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Line3.p1">
+<code class="descname">p1</code><a class="headerlink" href="#honeybee.vectormath.euclid.Line3.p1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Line3.p2">
+<code class="descname">p2</code><a class="headerlink" href="#honeybee.vectormath.euclid.Line3.p2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Line3.v">
+<code class="descname">v</code><a class="headerlink" href="#honeybee.vectormath.euclid.Line3.v" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.vectormath.euclid.LineSegment2">
+<em class="property">class </em><code class="descclassname">honeybee.vectormath.euclid.</code><code class="descname">LineSegment2</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#LineSegment2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.LineSegment2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.vectormath.euclid.Line2" title="honeybee.vectormath.euclid.Line2"><code class="xref py py-class docutils literal"><span class="pre">honeybee.vectormath.euclid.Line2</span></code></a>, <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.LineSegment2.length">
+<code class="descname">length</code><a class="headerlink" href="#honeybee.vectormath.euclid.LineSegment2.length" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.LineSegment2.magnitude_squared">
+<code class="descname">magnitude_squared</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#LineSegment2.magnitude_squared"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.LineSegment2.magnitude_squared" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.vectormath.euclid.LineSegment3">
+<em class="property">class </em><code class="descclassname">honeybee.vectormath.euclid.</code><code class="descname">LineSegment3</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#LineSegment3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.LineSegment3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.vectormath.euclid.Line3" title="honeybee.vectormath.euclid.Line3"><code class="xref py py-class docutils literal"><span class="pre">honeybee.vectormath.euclid.Line3</span></code></a>, <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.LineSegment3.length">
+<code class="descname">length</code><a class="headerlink" href="#honeybee.vectormath.euclid.LineSegment3.length" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.LineSegment3.magnitude_squared">
+<code class="descname">magnitude_squared</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#LineSegment3.magnitude_squared"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.LineSegment3.magnitude_squared" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.vectormath.euclid.Matrix3">
+<em class="property">class </em><code class="descclassname">honeybee.vectormath.euclid.</code><code class="descname">Matrix3</code><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Matrix3.a">
+<code class="descname">a</code><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix3.a" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Matrix3.b">
+<code class="descname">b</code><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix3.b" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Matrix3.c">
+<code class="descname">c</code><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix3.c" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Matrix3.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix3.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Matrix3.determinant">
+<code class="descname">determinant</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix3.determinant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix3.determinant" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Matrix3.e">
+<code class="descname">e</code><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix3.e" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Matrix3.f">
+<code class="descname">f</code><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix3.f" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Matrix3.g">
+<code class="descname">g</code><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix3.g" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Matrix3.i">
+<code class="descname">i</code><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix3.i" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Matrix3.identity">
+<code class="descname">identity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix3.identity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix3.identity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Matrix3.inverse">
+<code class="descname">inverse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix3.inverse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix3.inverse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Matrix3.j">
+<code class="descname">j</code><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix3.j" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Matrix3.k">
+<code class="descname">k</code><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix3.k" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.vectormath.euclid.Matrix3.new_identity">
+<em class="property">classmethod </em><code class="descname">new_identity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix3.new_identity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix3.new_identity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.vectormath.euclid.Matrix3.new_rotate">
+<em class="property">classmethod </em><code class="descname">new_rotate</code><span class="sig-paren">(</span><em>angle</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix3.new_rotate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix3.new_rotate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.vectormath.euclid.Matrix3.new_scale">
+<em class="property">classmethod </em><code class="descname">new_scale</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix3.new_scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix3.new_scale" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.vectormath.euclid.Matrix3.new_translate">
+<em class="property">classmethod </em><code class="descname">new_translate</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix3.new_translate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix3.new_translate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Matrix3.rotate">
+<code class="descname">rotate</code><span class="sig-paren">(</span><em>angle</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix3.rotate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix3.rotate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Matrix3.scale">
+<code class="descname">scale</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix3.scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix3.scale" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Matrix3.translate">
+<code class="descname">translate</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix3.translate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix3.translate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.vectormath.euclid.Matrix4">
+<em class="property">class </em><code class="descclassname">honeybee.vectormath.euclid.</code><code class="descname">Matrix4</code><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix4"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Matrix4.a">
+<code class="descname">a</code><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.a" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Matrix4.b">
+<code class="descname">b</code><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.b" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Matrix4.c">
+<code class="descname">c</code><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.c" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Matrix4.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Matrix4.d">
+<code class="descname">d</code><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.d" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Matrix4.determinant">
+<code class="descname">determinant</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix4.determinant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.determinant" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Matrix4.e">
+<code class="descname">e</code><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.e" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Matrix4.f">
+<code class="descname">f</code><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.f" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Matrix4.g">
+<code class="descname">g</code><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.g" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Matrix4.h">
+<code class="descname">h</code><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.h" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Matrix4.i">
+<code class="descname">i</code><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.i" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Matrix4.identity">
+<code class="descname">identity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix4.identity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.identity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Matrix4.inverse">
+<code class="descname">inverse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix4.inverse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.inverse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Matrix4.j">
+<code class="descname">j</code><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.j" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Matrix4.k">
+<code class="descname">k</code><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.k" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Matrix4.l">
+<code class="descname">l</code><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.l" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Matrix4.m">
+<code class="descname">m</code><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.m" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Matrix4.n">
+<code class="descname">n</code><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.n" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.vectormath.euclid.Matrix4.new">
+<em class="property">classmethod </em><code class="descname">new</code><span class="sig-paren">(</span><em>*values</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix4.new"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.new" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.vectormath.euclid.Matrix4.new_identity">
+<em class="property">classmethod </em><code class="descname">new_identity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix4.new_identity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.new_identity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.vectormath.euclid.Matrix4.new_look_at">
+<em class="property">classmethod </em><code class="descname">new_look_at</code><span class="sig-paren">(</span><em>eye</em>, <em>at</em>, <em>up</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix4.new_look_at"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.new_look_at" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.vectormath.euclid.Matrix4.new_perspective">
+<em class="property">classmethod </em><code class="descname">new_perspective</code><span class="sig-paren">(</span><em>fov_y</em>, <em>aspect</em>, <em>near</em>, <em>far</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix4.new_perspective"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.new_perspective" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.vectormath.euclid.Matrix4.new_rotate_axis">
+<em class="property">classmethod </em><code class="descname">new_rotate_axis</code><span class="sig-paren">(</span><em>angle</em>, <em>axis</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix4.new_rotate_axis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.new_rotate_axis" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.vectormath.euclid.Matrix4.new_rotate_euler">
+<em class="property">classmethod </em><code class="descname">new_rotate_euler</code><span class="sig-paren">(</span><em>heading</em>, <em>attitude</em>, <em>bank</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix4.new_rotate_euler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.new_rotate_euler" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.vectormath.euclid.Matrix4.new_rotate_triple_axis">
+<em class="property">classmethod </em><code class="descname">new_rotate_triple_axis</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>z</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix4.new_rotate_triple_axis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.new_rotate_triple_axis" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.vectormath.euclid.Matrix4.new_rotatex">
+<em class="property">classmethod </em><code class="descname">new_rotatex</code><span class="sig-paren">(</span><em>angle</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix4.new_rotatex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.new_rotatex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.vectormath.euclid.Matrix4.new_rotatey">
+<em class="property">classmethod </em><code class="descname">new_rotatey</code><span class="sig-paren">(</span><em>angle</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix4.new_rotatey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.new_rotatey" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.vectormath.euclid.Matrix4.new_rotatez">
+<em class="property">classmethod </em><code class="descname">new_rotatez</code><span class="sig-paren">(</span><em>angle</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix4.new_rotatez"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.new_rotatez" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.vectormath.euclid.Matrix4.new_scale">
+<em class="property">classmethod </em><code class="descname">new_scale</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>z</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix4.new_scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.new_scale" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.vectormath.euclid.Matrix4.new_translate">
+<em class="property">classmethod </em><code class="descname">new_translate</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>z</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix4.new_translate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.new_translate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Matrix4.o">
+<code class="descname">o</code><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.o" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Matrix4.p">
+<code class="descname">p</code><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.p" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Matrix4.rotate_axis">
+<code class="descname">rotate_axis</code><span class="sig-paren">(</span><em>angle</em>, <em>axis</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix4.rotate_axis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.rotate_axis" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Matrix4.rotate_euler">
+<code class="descname">rotate_euler</code><span class="sig-paren">(</span><em>heading</em>, <em>attitude</em>, <em>bank</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix4.rotate_euler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.rotate_euler" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Matrix4.rotate_triple_axis">
+<code class="descname">rotate_triple_axis</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>z</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix4.rotate_triple_axis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.rotate_triple_axis" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Matrix4.rotatex">
+<code class="descname">rotatex</code><span class="sig-paren">(</span><em>angle</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix4.rotatex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.rotatex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Matrix4.rotatey">
+<code class="descname">rotatey</code><span class="sig-paren">(</span><em>angle</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix4.rotatey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.rotatey" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Matrix4.rotatez">
+<code class="descname">rotatez</code><span class="sig-paren">(</span><em>angle</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix4.rotatez"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.rotatez" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Matrix4.scale">
+<code class="descname">scale</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>z</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix4.scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.scale" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Matrix4.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix4.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Matrix4.translate">
+<code class="descname">translate</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>z</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix4.translate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.translate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Matrix4.transpose">
+<code class="descname">transpose</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix4.transpose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.transpose" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Matrix4.transposed">
+<code class="descname">transposed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Matrix4.transposed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Matrix4.transposed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.vectormath.euclid.Plane">
+<em class="property">class </em><code class="descclassname">honeybee.vectormath.euclid.</code><code class="descname">Plane</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Plane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Plane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Plane.connect">
+<code class="descname">connect</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Plane.connect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Plane.connect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Plane.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.vectormath.euclid.Plane.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Plane.intersect">
+<code class="descname">intersect</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Plane.intersect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Plane.intersect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Plane.k">
+<code class="descname">k</code><a class="headerlink" href="#honeybee.vectormath.euclid.Plane.k" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Plane.n">
+<code class="descname">n</code><a class="headerlink" href="#honeybee.vectormath.euclid.Plane.n" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.vectormath.euclid.Point2">
+<em class="property">class </em><code class="descclassname">honeybee.vectormath.euclid.</code><code class="descname">Point2</code><span class="sig-paren">(</span><em>x=0</em>, <em>y=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Point2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Point2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.vectormath.euclid.Vector2" title="honeybee.vectormath.euclid.Vector2"><code class="xref py py-class docutils literal"><span class="pre">honeybee.vectormath.euclid.Vector2</span></code></a>, <a class="reference internal" href="#honeybee.vectormath.euclid.Geometry" title="honeybee.vectormath.euclid.Geometry"><code class="xref py py-class docutils literal"><span class="pre">honeybee.vectormath.euclid.Geometry</span></code></a>, <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Point2.connect">
+<code class="descname">connect</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Point2.connect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Point2.connect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Point2.intersect">
+<code class="descname">intersect</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Point2.intersect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Point2.intersect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.vectormath.euclid.Point3">
+<em class="property">class </em><code class="descclassname">honeybee.vectormath.euclid.</code><code class="descname">Point3</code><span class="sig-paren">(</span><em>x=0</em>, <em>y=0</em>, <em>z=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Point3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Point3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.vectormath.euclid.Vector3" title="honeybee.vectormath.euclid.Vector3"><code class="xref py py-class docutils literal"><span class="pre">honeybee.vectormath.euclid.Vector3</span></code></a>, <a class="reference internal" href="#honeybee.vectormath.euclid.Geometry" title="honeybee.vectormath.euclid.Geometry"><code class="xref py py-class docutils literal"><span class="pre">honeybee.vectormath.euclid.Geometry</span></code></a>, <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Point3.connect">
+<code class="descname">connect</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Point3.connect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Point3.connect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Point3.intersect">
+<code class="descname">intersect</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Point3.intersect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Point3.intersect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.vectormath.euclid.Quaternion">
+<em class="property">class </em><code class="descclassname">honeybee.vectormath.euclid.</code><code class="descname">Quaternion</code><span class="sig-paren">(</span><em>w=1</em>, <em>x=0</em>, <em>y=0</em>, <em>z=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Quaternion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Quaternion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Quaternion.conjugated">
+<code class="descname">conjugated</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Quaternion.conjugated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Quaternion.conjugated" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Quaternion.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.vectormath.euclid.Quaternion.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Quaternion.get_angle_axis">
+<code class="descname">get_angle_axis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Quaternion.get_angle_axis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Quaternion.get_angle_axis" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Quaternion.get_euler">
+<code class="descname">get_euler</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Quaternion.get_euler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Quaternion.get_euler" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Quaternion.get_matrix">
+<code class="descname">get_matrix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Quaternion.get_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Quaternion.get_matrix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Quaternion.identity">
+<code class="descname">identity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Quaternion.identity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Quaternion.identity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Quaternion.magnitude">
+<code class="descname">magnitude</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.vectormath.euclid.Quaternion.magnitude" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Quaternion.magnitude_squared">
+<code class="descname">magnitude_squared</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Quaternion.magnitude_squared"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Quaternion.magnitude_squared" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.vectormath.euclid.Quaternion.new_identity">
+<em class="property">classmethod </em><code class="descname">new_identity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Quaternion.new_identity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Quaternion.new_identity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.vectormath.euclid.Quaternion.new_interpolate">
+<em class="property">classmethod </em><code class="descname">new_interpolate</code><span class="sig-paren">(</span><em>q1</em>, <em>q2</em>, <em>t</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Quaternion.new_interpolate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Quaternion.new_interpolate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.vectormath.euclid.Quaternion.new_rotate_axis">
+<em class="property">classmethod </em><code class="descname">new_rotate_axis</code><span class="sig-paren">(</span><em>angle</em>, <em>axis</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Quaternion.new_rotate_axis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Quaternion.new_rotate_axis" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.vectormath.euclid.Quaternion.new_rotate_euler">
+<em class="property">classmethod </em><code class="descname">new_rotate_euler</code><span class="sig-paren">(</span><em>heading</em>, <em>attitude</em>, <em>bank</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Quaternion.new_rotate_euler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Quaternion.new_rotate_euler" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="honeybee.vectormath.euclid.Quaternion.new_rotate_matrix">
+<em class="property">classmethod </em><code class="descname">new_rotate_matrix</code><span class="sig-paren">(</span><em>m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Quaternion.new_rotate_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Quaternion.new_rotate_matrix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Quaternion.normalize">
+<code class="descname">normalize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Quaternion.normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Quaternion.normalize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Quaternion.normalized">
+<code class="descname">normalized</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Quaternion.normalized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Quaternion.normalized" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Quaternion.rotate_axis">
+<code class="descname">rotate_axis</code><span class="sig-paren">(</span><em>angle</em>, <em>axis</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Quaternion.rotate_axis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Quaternion.rotate_axis" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Quaternion.rotate_euler">
+<code class="descname">rotate_euler</code><span class="sig-paren">(</span><em>heading</em>, <em>attitude</em>, <em>bank</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Quaternion.rotate_euler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Quaternion.rotate_euler" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Quaternion.rotate_matrix">
+<code class="descname">rotate_matrix</code><span class="sig-paren">(</span><em>m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Quaternion.rotate_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Quaternion.rotate_matrix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Quaternion.w">
+<code class="descname">w</code><a class="headerlink" href="#honeybee.vectormath.euclid.Quaternion.w" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Quaternion.x">
+<code class="descname">x</code><a class="headerlink" href="#honeybee.vectormath.euclid.Quaternion.x" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Quaternion.y">
+<code class="descname">y</code><a class="headerlink" href="#honeybee.vectormath.euclid.Quaternion.y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Quaternion.z">
+<code class="descname">z</code><a class="headerlink" href="#honeybee.vectormath.euclid.Quaternion.z" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.vectormath.euclid.Ray2">
+<em class="property">class </em><code class="descclassname">honeybee.vectormath.euclid.</code><code class="descname">Ray2</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Ray2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Ray2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.vectormath.euclid.Line2" title="honeybee.vectormath.euclid.Line2"><code class="xref py py-class docutils literal"><span class="pre">honeybee.vectormath.euclid.Line2</span></code></a>, <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.vectormath.euclid.Ray3">
+<em class="property">class </em><code class="descclassname">honeybee.vectormath.euclid.</code><code class="descname">Ray3</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Ray3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Ray3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#honeybee.vectormath.euclid.Line3" title="honeybee.vectormath.euclid.Line3"><code class="xref py py-class docutils literal"><span class="pre">honeybee.vectormath.euclid.Line3</span></code></a>, <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.vectormath.euclid.Sphere">
+<em class="property">class </em><code class="descclassname">honeybee.vectormath.euclid.</code><code class="descname">Sphere</code><span class="sig-paren">(</span><em>center</em>, <em>radius</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Sphere"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Sphere" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Sphere.c">
+<code class="descname">c</code><a class="headerlink" href="#honeybee.vectormath.euclid.Sphere.c" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Sphere.connect">
+<code class="descname">connect</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Sphere.connect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Sphere.connect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Sphere.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.vectormath.euclid.Sphere.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Sphere.intersect">
+<code class="descname">intersect</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Sphere.intersect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Sphere.intersect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Sphere.r">
+<code class="descname">r</code><a class="headerlink" href="#honeybee.vectormath.euclid.Sphere.r" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.vectormath.euclid.Vector2">
+<em class="property">class </em><code class="descclassname">honeybee.vectormath.euclid.</code><code class="descname">Vector2</code><span class="sig-paren">(</span><em>x=0</em>, <em>y=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Vector2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Vector2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Vector2.angle">
+<code class="descname">angle</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Vector2.angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Vector2.angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the angle to the vector other</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Vector2.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.vectormath.euclid.Vector2.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Vector2.cross">
+<code class="descname">cross</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Vector2.cross"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Vector2.cross" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Vector2.dot">
+<code class="descname">dot</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Vector2.dot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Vector2.dot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Vector2.magnitude">
+<code class="descname">magnitude</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.vectormath.euclid.Vector2.magnitude" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Vector2.magnitude_squared">
+<code class="descname">magnitude_squared</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Vector2.magnitude_squared"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Vector2.magnitude_squared" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Vector2.normalize">
+<code class="descname">normalize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Vector2.normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Vector2.normalize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Vector2.normalized">
+<code class="descname">normalized</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Vector2.normalized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Vector2.normalized" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Vector2.project">
+<code class="descname">project</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Vector2.project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Vector2.project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return one vector projected on the vector other</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Vector2.reflect">
+<code class="descname">reflect</code><span class="sig-paren">(</span><em>normal</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Vector2.reflect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Vector2.reflect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Vector2.x">
+<code class="descname">x</code><a class="headerlink" href="#honeybee.vectormath.euclid.Vector2.x" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Vector2.y">
+<code class="descname">y</code><a class="headerlink" href="#honeybee.vectormath.euclid.Vector2.y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="honeybee.vectormath.euclid.Vector3">
+<em class="property">class </em><code class="descclassname">honeybee.vectormath.euclid.</code><code class="descname">Vector3</code><span class="sig-paren">(</span><em>x=0</em>, <em>y=0</em>, <em>z=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Vector3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Vector3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Vector3.X">
+<code class="descname">X</code><a class="headerlink" href="#honeybee.vectormath.euclid.Vector3.X" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return x value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Vector3.Y">
+<code class="descname">Y</code><a class="headerlink" href="#honeybee.vectormath.euclid.Vector3.Y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return y value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Vector3.Z">
+<code class="descname">Z</code><a class="headerlink" href="#honeybee.vectormath.euclid.Vector3.Z" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return z value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Vector3.angle">
+<code class="descname">angle</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Vector3.angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Vector3.angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the angle to the vector other</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Vector3.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.vectormath.euclid.Vector3.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Vector3.cross">
+<code class="descname">cross</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Vector3.cross"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Vector3.cross" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Vector3.dot">
+<code class="descname">dot</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Vector3.dot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Vector3.dot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Vector3.flip">
+<code class="descname">flip</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Vector3.flip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Vector3.flip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flip vector</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Vector3.flipped">
+<code class="descname">flipped</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Vector3.flipped"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Vector3.flipped" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return flipped vector</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Vector3.magnitude">
+<code class="descname">magnitude</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#honeybee.vectormath.euclid.Vector3.magnitude" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Vector3.magnitude_squared">
+<code class="descname">magnitude_squared</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Vector3.magnitude_squared"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Vector3.magnitude_squared" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Vector3.normalize">
+<code class="descname">normalize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Vector3.normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Vector3.normalize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Vector3.normalized">
+<code class="descname">normalized</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Vector3.normalized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Vector3.normalized" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Vector3.project">
+<code class="descname">project</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Vector3.project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Vector3.project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return one vector projected on the vector other</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Vector3.reflect">
+<code class="descname">reflect</code><span class="sig-paren">(</span><em>normal</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Vector3.reflect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Vector3.reflect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="honeybee.vectormath.euclid.Vector3.rotate_around">
+<code class="descname">rotate_around</code><span class="sig-paren">(</span><em>axis</em>, <em>theta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/honeybee/vectormath/euclid.html#Vector3.rotate_around"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#honeybee.vectormath.euclid.Vector3.rotate_around" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the vector rotated around axis through angle theta.</p>
+<p>Right hand rule applies.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Vector3.x">
+<code class="descname">x</code><a class="headerlink" href="#honeybee.vectormath.euclid.Vector3.x" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Vector3.y">
+<code class="descname">y</code><a class="headerlink" href="#honeybee.vectormath.euclid.Vector3.y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="honeybee.vectormath.euclid.Vector3.z">
+<code class="descname">z</code><a class="headerlink" href="#honeybee.vectormath.euclid.Vector3.z" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-honeybee.vectormath">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-honeybee.vectormath" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/honeybee.vectormath.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

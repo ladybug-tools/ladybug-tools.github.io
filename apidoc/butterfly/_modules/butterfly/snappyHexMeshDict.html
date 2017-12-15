@@ -1,0 +1,513 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>butterfly.snappyHexMeshDict &#8212; Butterfly 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/butterfly.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Butterfly is a python library to create and run advanced computational fluid dynamic (CFD) simulations using OpenFOAM.</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=butterfly&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../butterfly.html">butterfly package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for butterfly.snappyHexMeshDict</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="sd">&quot;&quot;&quot;snappyHexMeshDict class.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">from</span> <span class="nn">.foamfile</span> <span class="k">import</span> <span class="n">FoamFile</span><span class="p">,</span> <span class="n">foam_file_from_file</span>
+<span class="kn">from</span> <span class="nn">.utilities</span> <span class="k">import</span> <span class="n">get_snappyHexMesh_geometry_feild</span><span class="p">,</span> \
+    <span class="n">get_snappyHexMesh_refinement_surfaces</span><span class="p">,</span> <span class="n">get_snappyHexMesh_surface_layers</span>
+<span class="kn">from</span> <span class="nn">.refinementRegion</span> <span class="k">import</span> <span class="n">refinement_mode_from_dict</span>
+
+
+<span class="c1"># TODO(mostapha): Move default values into a separate file.</span>
+<span class="c1"># TODO(mostapha): Add specific methods to access most common values</span>
+<div class="viewcode-block" id="SnappyHexMeshDict"><a class="viewcode-back" href="../../butterfly.html#butterfly.snappyHexMeshDict.SnappyHexMeshDict">[docs]</a><span class="k">class</span> <span class="nc">SnappyHexMeshDict</span><span class="p">(</span><span class="n">FoamFile</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Control dict class.&quot;&quot;&quot;</span>
+
+    <span class="c1"># set default valus for this class</span>
+    <span class="n">__default_values</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;castellatedMesh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;true&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;snap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;true&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;addLayers&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;false&#39;</span>
+
+    <span class="c1"># geometry</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;geometry&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># castellatedMeshControls</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;castellatedMeshControls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;castellatedMeshControls&#39;</span><span class="p">][</span><span class="s1">&#39;maxLocalCells&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1000000&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;castellatedMeshControls&#39;</span><span class="p">][</span><span class="s1">&#39;maxGlobalCells&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;2000000&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;castellatedMeshControls&#39;</span><span class="p">][</span><span class="s1">&#39;minRefinementCells&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;10&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;castellatedMeshControls&#39;</span><span class="p">][</span><span class="s1">&#39;maxLoadUnbalance&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0.10&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;castellatedMeshControls&#39;</span><span class="p">][</span><span class="s1">&#39;nCellsBetweenLevels&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;3&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;castellatedMeshControls&#39;</span><span class="p">][</span><span class="s1">&#39;features&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;()&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;castellatedMeshControls&#39;</span><span class="p">][</span><span class="s1">&#39;refinementSurfaces&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;castellatedMeshControls&#39;</span><span class="p">][</span><span class="s1">&#39;resolveFeatureAngle&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;180&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;castellatedMeshControls&#39;</span><span class="p">][</span><span class="s1">&#39;refinementRegions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;castellatedMeshControls&#39;</span><span class="p">][</span><span class="s1">&#39;locationInMesh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;(0 0 0)&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;castellatedMeshControls&#39;</span><span class="p">][</span><span class="s1">&#39;allowFreeStandingZoneFaces&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;true&#39;</span>
+
+    <span class="c1"># snap controls</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;snapControls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;snapControls&#39;</span><span class="p">][</span><span class="s1">&#39;nSmoothPatch&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;5&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;snapControls&#39;</span><span class="p">][</span><span class="s1">&#39;tolerance&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;5&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;snapControls&#39;</span><span class="p">][</span><span class="s1">&#39;nSolveIter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;100&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;snapControls&#39;</span><span class="p">][</span><span class="s1">&#39;nRelaxIter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;8&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;snapControls&#39;</span><span class="p">][</span><span class="s1">&#39;nFeatureSnapIter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;10&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;snapControls&#39;</span><span class="p">][</span><span class="s1">&#39;extractFeaturesRefineLevel&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;snapControls&#39;</span><span class="p">][</span><span class="s1">&#39;explicitFeatureSnap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;snapControls&#39;</span><span class="p">][</span><span class="s1">&#39;implicitFeatureSnap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;true&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;snapControls&#39;</span><span class="p">][</span><span class="s1">&#39;multiRegionFeatureSnap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;true&#39;</span>
+
+    <span class="c1"># layer control</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;addLayersControls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;addLayersControls&#39;</span><span class="p">][</span><span class="s1">&#39;relativeSizes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;true&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;addLayersControls&#39;</span><span class="p">][</span><span class="s1">&#39;layers&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;addLayersControls&#39;</span><span class="p">][</span><span class="s1">&#39;expansionRatio&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1.0&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;addLayersControls&#39;</span><span class="p">][</span><span class="s1">&#39;finalLayerThickness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0.3&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;addLayersControls&#39;</span><span class="p">][</span><span class="s1">&#39;minThickness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0.2&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;addLayersControls&#39;</span><span class="p">][</span><span class="s1">&#39;nGrow&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;addLayersControls&#39;</span><span class="p">][</span><span class="s1">&#39;featureAngle&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;110&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;addLayersControls&#39;</span><span class="p">][</span><span class="s1">&#39;nRelaxIter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;3&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;addLayersControls&#39;</span><span class="p">][</span><span class="s1">&#39;nSmoothSurfaceNormals&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;addLayersControls&#39;</span><span class="p">][</span><span class="s1">&#39;nSmoothThickness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;10&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;addLayersControls&#39;</span><span class="p">][</span><span class="s1">&#39;nSmoothNormals&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;3&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;addLayersControls&#39;</span><span class="p">][</span><span class="s1">&#39;maxFaceThicknessRatio&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0.5&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;addLayersControls&#39;</span><span class="p">][</span><span class="s1">&#39;maxThicknessToMedialRatio&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0.3&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;addLayersControls&#39;</span><span class="p">][</span><span class="s1">&#39;minMedianAxisAngle&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;130&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;addLayersControls&#39;</span><span class="p">][</span><span class="s1">&#39;nBufferCellsNoExtrude&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;addLayersControls&#39;</span><span class="p">][</span><span class="s1">&#39;nLayerIter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;50&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;addLayersControls&#39;</span><span class="p">][</span><span class="s1">&#39;nRelaxedIter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;20&#39;</span>
+
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;meshQualityControls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;meshQualityControls&#39;</span><span class="p">][</span><span class="s1">&#39;maxNonOrtho&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;60&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;meshQualityControls&#39;</span><span class="p">][</span><span class="s1">&#39;maxBoundarySkewness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;20&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;meshQualityControls&#39;</span><span class="p">][</span><span class="s1">&#39;maxInternalSkewness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;4&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;meshQualityControls&#39;</span><span class="p">][</span><span class="s1">&#39;maxConcave&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;80&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;meshQualityControls&#39;</span><span class="p">][</span><span class="s1">&#39;minFlatness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0.5&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;meshQualityControls&#39;</span><span class="p">][</span><span class="s1">&#39;minVol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1e-13&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;meshQualityControls&#39;</span><span class="p">][</span><span class="s1">&#39;minTetQuality&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1e-15&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;meshQualityControls&#39;</span><span class="p">][</span><span class="s1">&#39;minArea&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;-1&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;meshQualityControls&#39;</span><span class="p">][</span><span class="s1">&#39;minTwist&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0.02&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;meshQualityControls&#39;</span><span class="p">][</span><span class="s1">&#39;minDeterminant&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0.001&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;meshQualityControls&#39;</span><span class="p">][</span><span class="s1">&#39;minFaceWeight&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0.02&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;meshQualityControls&#39;</span><span class="p">][</span><span class="s1">&#39;minVolRatio&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0.01&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;meshQualityControls&#39;</span><span class="p">][</span><span class="s1">&#39;minTriangleTwist&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;-1&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;meshQualityControls&#39;</span><span class="p">][</span><span class="s1">&#39;nSmoothScale&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;4&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;meshQualityControls&#39;</span><span class="p">][</span><span class="s1">&#39;errorReduction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0.75&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;meshQualityControls&#39;</span><span class="p">][</span><span class="s1">&#39;relaxed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;maxNonOrtho&#39;</span><span class="p">:</span> <span class="s1">&#39;75&#39;</span><span class="p">}</span>
+
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;debug&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;mergeTolerance&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1E-6&#39;</span>
+    <span class="n">__globRefineLevel</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init class.&quot;&quot;&quot;</span>
+        <span class="n">FoamFile</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;snappyHexMeshDict&#39;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="s1">&#39;dictionary&#39;</span><span class="p">,</span>
+                          <span class="n">location</span><span class="o">=</span><span class="s1">&#39;system&#39;</span><span class="p">,</span> <span class="n">default_values</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__default_values</span><span class="p">,</span>
+                          <span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__geometries</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__isFeatureEdgeRefinementImplicit</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">convertToMeters</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># This is useful to scale the locationInMesh</span>
+
+<div class="viewcode-block" id="SnappyHexMeshDict.from_file"><a class="viewcode-back" href="../../butterfly.html#butterfly.snappyHexMeshDict.SnappyHexMeshDict.from_file">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a FoamFile from a file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath: Full file path to dictionary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="n">foam_file_from_file</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="SnappyHexMeshDict.from_bf_geometries"><a class="viewcode-back" href="../../butterfly.html#butterfly.snappyHexMeshDict.SnappyHexMeshDict.from_bf_geometries">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_bf_geometries</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">project_name</span><span class="p">,</span> <span class="n">geometries</span><span class="p">,</span> <span class="n">meshing_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">convertToMeters</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create snappyHexMeshDict from HBGeometries.&quot;&quot;&quot;</span>
+        <span class="n">_cls</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">_cls</span><span class="o">.</span><span class="n">convertToMeters</span> <span class="o">=</span> <span class="n">convertToMeters</span>
+        <span class="n">_cls</span><span class="o">.</span><span class="n">project_name</span> <span class="o">=</span> <span class="n">project_name</span>
+        <span class="n">_cls</span><span class="o">.</span><span class="n">__geometries</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_check_input_geometries</span><span class="p">(</span><span class="n">geometries</span><span class="p">)</span>
+        <span class="n">_cls</span><span class="o">.</span><span class="n">update_meshing_parameters</span><span class="p">(</span><span class="n">meshing_parameters</span><span class="p">)</span>
+        <span class="n">_cls</span><span class="o">.</span><span class="n">set_geometry</span><span class="p">()</span>
+        <span class="n">_cls</span><span class="o">.</span><span class="n">set_refinement_surfaces</span><span class="p">()</span>
+        <span class="n">_cls</span><span class="o">.</span><span class="n">set_nSurfaceLayers</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">_cls</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">project_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Project name.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__project_name</span>
+
+    <span class="c1"># TODO(mostapha): updating the name should update refinementSurfaces and setGeometry</span>
+    <span class="c1"># when happens from Case.from_file() with no butterfly geometry.</span>
+    <span class="nd">@project_name</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">project_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">&quot;^[a-zA-Z0-9_]*$&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span> \
+            <span class="s1">&#39;Invalid project name: &quot;</span><span class="si">{}</span><span class="s1">&quot;.</span><span class="se">\n</span><span class="s1">&#39;</span> \
+            <span class="s1">&#39;Do not use whitespace or special charecters.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__project_name</span> <span class="o">=</span> <span class="n">name</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">geometries</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Butterfly geometries.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__geometries</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_featureEdgeRefinement_implicit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True if implicit feature refinment is used.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__isFeatureEdgeRefinementImplicit</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">locationInMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A tuple for the location of the volume the should be meshed.</span>
+
+<span class="sd">        x, y, z values will be multiplied to self.convertToMeters. If the units</span>
+<span class="sd">        are not Meters you can set the convertToMeters using self.convertToMeters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;castellatedMeshControls&#39;</span><span class="p">][</span><span class="s1">&#39;locationInMesh&#39;</span><span class="p">]</span>
+
+    <span class="nd">@locationInMesh</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">locationInMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">point</span><span class="p">:</span>
+            <span class="n">point</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">point</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
+
+        <span class="c1"># scale point based on convertToMeters</span>
+        <span class="n">point</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">convertToMeters</span><span class="p">,</span> \
+            <span class="n">y</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">convertToMeters</span><span class="p">,</span> \
+            <span class="n">z</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">convertToMeters</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;castellatedMeshControls&#39;</span><span class="p">][</span><span class="s1">&#39;locationInMesh&#39;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="nb">str</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">point</span><span class="p">))</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">globRefineLevel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A tuple of (min, max) values for global refinment.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__globRefineLevel</span>
+
+    <span class="nd">@globRefineLevel</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">globRefineLevel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__globRefineLevel</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">r</span> <span class="k">else</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__globRefineLevel</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_refinement_surfaces</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">castellatedMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set if castellatedMesh should be ran.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;castellatedMesh&#39;</span><span class="p">]</span>
+
+    <span class="nd">@castellatedMesh</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">castellatedMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">value</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="k">else</span> \
+            <span class="nb">bool</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">capitalize</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;castellatedMesh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">snap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set if snap should be ran.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;snap&#39;</span><span class="p">]</span>
+
+    <span class="nd">@snap</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">snap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">value</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="k">else</span> \
+            <span class="nb">bool</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">capitalize</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;snap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">addLayers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set if addLayers should be ran.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;addLayers&#39;</span><span class="p">]</span>
+
+    <span class="nd">@addLayers</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">addLayers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">value</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="k">else</span> \
+            <span class="nb">bool</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">capitalize</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;addLayers&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">features</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set features for castellatedMeshControls.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;castellatedMeshControls&#39;</span><span class="p">][</span><span class="s1">&#39;features&#39;</span><span class="p">]</span>
+
+    <span class="nd">@features</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">value</span> <span class="ow">or</span> <span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;castellatedMeshControls&#39;</span><span class="p">][</span><span class="s1">&#39;features&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">extractFeaturesRefineLevel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A refinment value for extract feature level.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;snapControls&#39;</span><span class="p">][</span><span class="s1">&#39;extractFeaturesRefineLevel&#39;</span><span class="p">]</span>
+
+    <span class="nd">@extractFeaturesRefineLevel</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">extractFeaturesRefineLevel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;snapControls&#39;</span><span class="p">][</span><span class="s1">&#39;extractFeaturesRefineLevel&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">nCellsBetweenLevels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Number of cells between levels for castellatedMeshControls (default: 3).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;castellatedMeshControls&#39;</span><span class="p">][</span><span class="s1">&#39;nCellsBetweenLevels&#39;</span><span class="p">]</span>
+
+    <span class="nd">@nCellsBetweenLevels</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">nCellsBetweenLevels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">value</span> <span class="ow">or</span> <span class="mi">3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;castellatedMeshControls&#39;</span><span class="p">][</span><span class="s1">&#39;nCellsBetweenLevels&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">maxGlobalCells</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Number of max global cells for castellatedMeshControls (default: 2000000).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;castellatedMeshControls&#39;</span><span class="p">][</span><span class="s1">&#39;maxGlobalCells&#39;</span><span class="p">]</span>
+
+    <span class="nd">@maxGlobalCells</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">maxGlobalCells</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">2000000</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">value</span> <span class="ow">or</span> <span class="mi">2000000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;castellatedMeshControls&#39;</span><span class="p">][</span><span class="s1">&#39;maxGlobalCells&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">stl_file_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;List of names for stl files if any.</span>
+
+<span class="sd">        This method doesn&#39;t return stl files for refinementRegions. You can use</span>
+<span class="sd">        self.refinementRegion_names to get the names for refinment regions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">stl_f_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;geometry&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">f</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">stl_f_names</span>
+                     <span class="k">if</span> <span class="ow">not</span> <span class="n">f</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">refinementRegion_names</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">refinementRegions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Refinement regions.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;castellatedMeshControls&#39;</span><span class="p">][</span><span class="s1">&#39;refinementRegions&#39;</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">refinementRegion_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;List of stl files if any.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;castellatedMeshControls&#39;</span><span class="p">][</span><span class="s1">&#39;refinementRegions&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+<div class="viewcode-block" id="SnappyHexMeshDict.update_meshing_parameters"><a class="viewcode-back" href="../../butterfly.html#butterfly.snappyHexMeshDict.SnappyHexMeshDict.update_meshing_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">update_meshing_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meshing_parameters</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update meshing parameters for blockMeshDict.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">meshing_parameters</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">meshing_parameters</span><span class="p">,</span> <span class="s1">&#39;isMeshingParameters&#39;</span><span class="p">),</span> \
+            <span class="s1">&#39;Expected MeshingParameters not </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">meshing_parameters</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">meshing_parameters</span><span class="o">.</span><span class="n">locationInMesh</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">locationInMesh</span> <span class="o">=</span> <span class="n">meshing_parameters</span><span class="o">.</span><span class="n">locationInMesh</span>
+
+        <span class="k">if</span> <span class="n">meshing_parameters</span><span class="o">.</span><span class="n">globRefineLevel</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">globRefineLevel</span> <span class="o">=</span> <span class="n">meshing_parameters</span><span class="o">.</span><span class="n">globRefineLevel</span></div>
+
+<div class="viewcode-block" id="SnappyHexMeshDict.refinementRegion_mode"><a class="viewcode-back" href="../../butterfly.html#butterfly.snappyHexMeshDict.SnappyHexMeshDict.refinementRegion_mode">[docs]</a>    <span class="k">def</span> <span class="nf">refinementRegion_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">refinementRegion_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Refinement region mode for a refinement region.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">refinementRegion_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">refinementRegion_names</span><span class="p">,</span> \
+            <span class="s1">&#39;Failed to find </span><span class="si">{}</span><span class="s1"> in </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">refinementRegion_name</span><span class="p">,</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">refinementRegion_names</span><span class="p">)</span>
+
+        <span class="n">c_mesh_control</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;castellatedMeshControls&#39;</span><span class="p">]</span>
+        <span class="n">mode</span> <span class="o">=</span> <span class="n">c_mesh_control</span><span class="p">[</span><span class="s1">&#39;refinementRegions&#39;</span><span class="p">][</span><span class="n">refinementRegion_name</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">refinement_mode_from_dict</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SnappyHexMeshDict.set_geometry"><a class="viewcode-back" href="../../butterfly.html#butterfly.snappyHexMeshDict.SnappyHexMeshDict.set_geometry">[docs]</a>    <span class="k">def</span> <span class="nf">set_geometry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set geometry from bf_geometries.&quot;&quot;&quot;</span>
+        <span class="n">_geoField</span> <span class="o">=</span> <span class="n">get_snappyHexMesh_geometry_feild</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_name</span><span class="p">,</span>
+                                                     <span class="bp">self</span><span class="o">.</span><span class="n">geometries</span><span class="p">,</span>
+                                                     <span class="n">meshing_type</span><span class="o">=</span><span class="s1">&#39;triSurfaceMesh&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;geometry&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_geoField</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SnappyHexMeshDict.set_refinement_surfaces"><a class="viewcode-back" href="../../butterfly.html#butterfly.snappyHexMeshDict.SnappyHexMeshDict.set_refinement_surfaces">[docs]</a>    <span class="k">def</span> <span class="nf">set_refinement_surfaces</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set refinement values for geometries.&quot;&quot;&quot;</span>
+        <span class="n">_ref</span> <span class="o">=</span> <span class="n">get_snappyHexMesh_refinement_surfaces</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_name</span><span class="p">,</span>
+                                                     <span class="bp">self</span><span class="o">.</span><span class="n">geometries</span><span class="p">,</span>
+                                                     <span class="bp">self</span><span class="o">.</span><span class="n">globRefineLevel</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;castellatedMeshControls&#39;</span><span class="p">][</span><span class="s1">&#39;refinementSurfaces&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_ref</span></div>
+
+<div class="viewcode-block" id="SnappyHexMeshDict.set_nSurfaceLayers"><a class="viewcode-back" href="../../butterfly.html#butterfly.snappyHexMeshDict.SnappyHexMeshDict.set_nSurfaceLayers">[docs]</a>    <span class="k">def</span> <span class="nf">set_nSurfaceLayers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set number of surface layers for geometries.&quot;&quot;&quot;</span>
+        <span class="n">layers</span> <span class="o">=</span> <span class="n">get_snappyHexMesh_surface_layers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">geometries</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;addLayersControls&#39;</span><span class="p">][</span><span class="s1">&#39;layers&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">layers</span></div>
+
+<div class="viewcode-block" id="SnappyHexMeshDict.set_featureEdgeRefinement_to_implicit"><a class="viewcode-back" href="../../butterfly.html#butterfly.snappyHexMeshDict.SnappyHexMeshDict.set_featureEdgeRefinement_to_implicit">[docs]</a>    <span class="k">def</span> <span class="nf">set_featureEdgeRefinement_to_implicit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set meshing snap to implicitFeatureSnap.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;snapControls&#39;</span><span class="p">][</span><span class="s1">&#39;implicitFeatureSnap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;true&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;snapControls&#39;</span><span class="p">][</span><span class="s1">&#39;multiRegionFeatureSnap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;true&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;snapControls&#39;</span><span class="p">][</span><span class="s1">&#39;explicitFeatureSnap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;snapControls&#39;</span><span class="p">][</span><span class="s1">&#39;extractFeaturesRefineLevel&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;castellatedMeshControls&#39;</span><span class="p">][</span><span class="s1">&#39;features&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;()&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__isFeatureEdgeRefinementImplicit</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="SnappyHexMeshDict.set_featureEdgeRefinement_to_explicit"><a class="viewcode-back" href="../../butterfly.html#butterfly.snappyHexMeshDict.SnappyHexMeshDict.set_featureEdgeRefinement_to_explicit">[docs]</a>    <span class="k">def</span> <span class="nf">set_featureEdgeRefinement_to_explicit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">refinement_level</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set meshing snap to explicitFeatureSnap.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file_name: eMesh file name.</span>
+<span class="sd">            refinement_level: extractFeaturesRefineLevel (default: 2)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="n">file_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.eMesh&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">refinement_level</span><span class="p">,</span> <span class="s1">&#39;levels&#39;</span><span class="p">):</span>
+            <span class="c1"># in case it&#39;s a distance refinment</span>
+            <span class="n">refinement_level</span> <span class="o">=</span> <span class="n">refinement_level</span><span class="o">.</span><span class="n">levels</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">refinement_level</span> <span class="o">=</span> <span class="n">refinement_level</span> <span class="ow">or</span> <span class="mi">2</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;castellatedMeshControls&#39;</span><span class="p">][</span><span class="s1">&#39;features&#39;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="s1">&#39;({file &quot;</span><span class="si">%s</span><span class="s1">.eMesh&quot;; level </span><span class="si">%s</span><span class="s1">;} )&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">refinement_level</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;snapControls&#39;</span><span class="p">][</span><span class="s1">&#39;implicitFeatureSnap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;snapControls&#39;</span><span class="p">][</span><span class="s1">&#39;multiRegionFeatureSnap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;snapControls&#39;</span><span class="p">][</span><span class="s1">&#39;explicitFeatureSnap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;true&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;snapControls&#39;</span><span class="p">][</span><span class="s1">&#39;extractFeaturesRefineLevel&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;true&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__isFeatureEdgeRefinementImplicit</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="SnappyHexMeshDict.add_stl_geometry"><a class="viewcode-back" href="../../butterfly.html#butterfly.snappyHexMeshDict.SnappyHexMeshDict.add_stl_geometry">[docs]</a>    <span class="k">def</span> <span class="nf">add_stl_geometry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add stl geometry to snappyHexMeshDict.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file_name: Stl file name. This file should be located under</span>
+<span class="sd">                /constant/triSurface.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">stl</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.stl&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file_name</span><span class="p">):</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;triSurfaceMesh&#39;</span><span class="p">,</span>
+                                            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">file_name</span><span class="p">}}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;geometry&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">stl</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SnappyHexMeshDict.add_refinementRegion"><a class="viewcode-back" href="../../butterfly.html#butterfly.snappyHexMeshDict.SnappyHexMeshDict.add_refinementRegion">[docs]</a>    <span class="k">def</span> <span class="nf">add_refinementRegion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">refinementRegion</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add refinement region to snappyHexMeshDict.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">refinementRegion</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">refinementRegion</span><span class="p">,</span> <span class="s1">&#39;isRefinementRegion&#39;</span><span class="p">),</span> \
+            <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not a refinement region.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">refinementRegion</span><span class="p">)</span>
+
+        <span class="c1"># add geometry to stl</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_stl_geometry</span><span class="p">(</span><span class="n">refinementRegion</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="n">rg</span> <span class="o">=</span> <span class="p">{</span><span class="n">refinementRegion</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+              <span class="n">refinementRegion</span><span class="o">.</span><span class="n">refinement_mode</span><span class="o">.</span><span class="n">to_openfoam_dict</span><span class="p">()}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;castellatedMeshControls&#39;</span><span class="p">][</span><span class="s1">&#39;refinementRegions&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">rg</span><span class="p">)</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_check_input_geometries</span><span class="p">(</span><span class="n">geos</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">geo</span> <span class="ow">in</span> <span class="n">geos</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">geo</span><span class="p">,</span> <span class="s1">&#39;isBFMesh&#39;</span><span class="p">),</span> \
+                <span class="s1">&#39;Expected butterfly.Mesh not </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">geo</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">geos</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

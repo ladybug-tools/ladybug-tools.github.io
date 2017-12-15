@@ -1,0 +1,319 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.sky.skyvector &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../index.html">
+    <img class="logo" src="../../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.sky.skyvector</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">._skyBase</span> <span class="k">import</span> <span class="n">RadianceSky</span>
+<span class="kn">from</span> <span class="nn">..command.genskyvec</span> <span class="k">import</span> <span class="n">Genskyvec</span>
+<span class="kn">from</span> <span class="nn">..command.gensky</span> <span class="k">import</span> <span class="n">Gensky</span>
+<span class="kn">from</span> <span class="nn">..command.gendaylit</span> <span class="k">import</span> <span class="n">Gendaylit</span>
+<span class="kn">from</span> <span class="nn">..parameters.gendaylit</span> <span class="k">import</span> <span class="n">GendaylitParameters</span>
+
+<span class="kn">from</span> <span class="nn">ladybug.epw</span> <span class="k">import</span> <span class="n">EPW</span>
+<span class="kn">from</span> <span class="nn">ladybug.dt</span> <span class="k">import</span> <span class="n">DateTime</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<div class="viewcode-block" id="SkyVector"><a class="viewcode-back" href="../../../../honeybee.radiance.sky.html#honeybee.radiance.sky.skyvector.SkyVector">[docs]</a><span class="k">class</span> <span class="nc">SkyVector</span><span class="p">(</span><span class="n">RadianceSky</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Radiance sky vector.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        sky: A sky object generated either by gensky or gendaylit. If you&#39;re not</span>
+<span class="sd">            sure how to create them use one of the classmethods.</span>
+<span class="sd">        sky_density: A positive intger for sky density. [1] Tregenza Sky,</span>
+<span class="sd">            [2] Reinhart Sky, etc. (Default: 1)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sky</span><span class="p">,</span> <span class="n">sky_density</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">is_climate_based</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create sky.&quot;&quot;&quot;</span>
+        <span class="n">RadianceSky</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sky</span> <span class="o">=</span> <span class="n">sky</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__month</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky</span><span class="o">.</span><span class="n">month_day_hour</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__day</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky</span><span class="o">.</span><span class="n">month_day_hour</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__hour</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky</span><span class="o">.</span><span class="n">month_day_hour</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sky_density</span> <span class="o">=</span> <span class="n">sky_density</span> <span class="ow">or</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__is_climate_based</span> <span class="o">=</span> <span class="n">is_climate_based</span>
+
+    <span class="c1"># from radiation values</span>
+<div class="viewcode-block" id="SkyVector.from_radiation_values"><a class="viewcode-back" href="../../../../honeybee.radiance.sky.html#honeybee.radiance.sky.skyvector.SkyVector.from_radiation_values">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_radiation_values</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">direct_normal_radiation</span><span class="p">,</span> <span class="n">diffuse_horizontal_radiation</span><span class="p">,</span>
+            <span class="n">month</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span> <span class="n">hour</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">sky_density</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">north</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;From radiation values.&quot;&quot;&quot;</span>
+        <span class="n">skyfile</span> <span class="o">=</span> <span class="s1">&#39;CB_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.sky&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">location</span><span class="o">.</span><span class="n">stationId</span><span class="p">,</span> <span class="n">location</span><span class="o">.</span><span class="n">city</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="n">location</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span>
+            <span class="n">location</span><span class="o">.</span><span class="n">longitude</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hour</span><span class="p">,</span> <span class="n">north</span>
+        <span class="p">)</span>
+
+        <span class="n">gdp</span> <span class="o">=</span> <span class="n">GendaylitParameters</span><span class="p">(</span><span class="n">dir_norm_dif_horz_irrad</span><span class="o">=</span><span class="p">(</span><span class="n">direct_normal_radiation</span><span class="p">,</span>
+                                                           <span class="n">diffuse_horizontal_radiation</span><span class="p">))</span>
+
+        <span class="n">gendl</span> <span class="o">=</span> <span class="n">Gendaylit</span><span class="p">(</span><span class="n">month_day_hour</span><span class="o">=</span><span class="p">(</span><span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hour</span><span class="p">),</span> <span class="n">rotation</span><span class="o">=</span><span class="n">north</span><span class="p">,</span>
+                          <span class="n">gendaylit_parameters</span><span class="o">=</span><span class="n">gdp</span><span class="p">)</span>
+
+        <span class="n">gendl</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="n">skyfile</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">gendl</span><span class="p">,</span> <span class="n">sky_density</span><span class="p">,</span> <span class="n">is_climate_based</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SkyVector.from_epw_file"><a class="viewcode-back" href="../../../../honeybee.radiance.sky.html#honeybee.radiance.sky.skyvector.SkyVector.from_epw_file">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_epw_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">epw_file</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span> <span class="n">hour</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">sky_density</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                      <span class="n">north</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate a climate-based sky vector.</span>
+
+<span class="sd">        This methos uses Radiance&#39;s gendaylit.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            epw_file: Full path to epw weather file.</span>
+<span class="sd">            month: Month [1..12] (default: 6).</span>
+<span class="sd">            day: Day [1..31] (default: 21).</span>
+<span class="sd">            hour: Hour [0..23] (default: 12).</span>
+<span class="sd">            sky_type: An intger between 0-5 for CIE sky type.</span>
+<span class="sd">                0: [+s] Sunny with sun, 1: [-s] Sunny without sun,</span>
+<span class="sd">                2: [+i] Intermediate with sun, 3: [-i] Intermediate with no sun,</span>
+<span class="sd">                4: [-c] Cloudy overcast sky, 5: [-u] Uniform cloudy sky</span>
+<span class="sd">            sky_density: A positive intger for sky density. [1] Tregenza Sky,</span>
+<span class="sd">                [2] Reinhart Sky, etc. (Default: 1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">epw</span> <span class="o">=</span> <span class="n">EPW</span><span class="p">(</span><span class="n">epw_file</span><span class="p">)</span>
+        <span class="n">location</span> <span class="o">=</span> <span class="n">epw</span><span class="o">.</span><span class="n">location</span>
+        <span class="n">hoy</span> <span class="o">=</span> <span class="n">DateTime</span><span class="p">(</span><span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hour</span><span class="p">)</span><span class="o">.</span><span class="n">hoy</span>
+        <span class="n">dnr</span> <span class="o">=</span> <span class="n">epw</span><span class="o">.</span><span class="n">direct_normal_radiation</span><span class="o">.</span><span class="n">values</span><span class="p">()[</span><span class="n">hoy</span><span class="p">]</span>
+        <span class="n">dhr</span> <span class="o">=</span> <span class="n">epw</span><span class="o">.</span><span class="n">diffuse_horizontal_radiation</span><span class="o">.</span><span class="n">values</span><span class="p">()[</span><span class="n">hoy</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_radiation_values</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">dnr</span><span class="p">,</span> <span class="n">dhr</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hour</span><span class="p">,</span>
+                                         <span class="n">sky_density</span><span class="p">,</span> <span class="n">north</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SkyVector.from_cie_sky"><a class="viewcode-back" href="../../../../honeybee.radiance.sky.html#honeybee.radiance.sky.skyvector.SkyVector.from_cie_sky">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_cie_sky</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span> <span class="n">hour</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">sky_type</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                     <span class="n">sky_density</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">north</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate a sky vector from an standard CIE sky.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            month: Month [1..12] (default: 6).</span>
+<span class="sd">            day: Day [1..31] (default: 21).</span>
+<span class="sd">            hour: Hour [0..23] (default: 12).</span>
+<span class="sd">            sky_type: An intger between 0-5 for CIE sky type.</span>
+<span class="sd">                0: [+s] Sunny with sun, 1: [-s] Sunny without sun,</span>
+<span class="sd">                2: [+i] Intermediate with sun, 3: [-i] Intermediate with no sun,</span>
+<span class="sd">                4: [-c] Cloudy overcast sky, 5: [-u] Uniform cloudy sky</span>
+<span class="sd">        sky_density: A positive intger for sky density. [1] Tregenza Sky,</span>
+<span class="sd">            [2] Reinhart Sky, etc. (Default: 1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">skyfile</span> <span class="o">=</span> <span class="s1">&#39;CIE_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.sky&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">location</span><span class="o">.</span><span class="n">stationId</span><span class="p">,</span> <span class="n">location</span><span class="o">.</span><span class="n">city</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="n">location</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span>
+            <span class="n">location</span><span class="o">.</span><span class="n">longitude</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hour</span><span class="p">,</span> <span class="n">sky_type</span><span class="p">,</span> <span class="n">north</span>
+        <span class="p">)</span>
+        <span class="n">gensk</span> <span class="o">=</span> <span class="n">Gensky</span><span class="o">.</span><span class="n">from_sky_type</span><span class="p">(</span><span class="n">skyfile</span><span class="p">,</span> <span class="n">month_day_hour</span><span class="o">=</span><span class="p">(</span><span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hour</span><span class="p">),</span>
+                                     <span class="n">sky_type</span><span class="o">=</span><span class="n">sky_type</span><span class="p">,</span>
+                                     <span class="n">latitude</span><span class="o">=</span><span class="n">location</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span>
+                                     <span class="n">longitude</span><span class="o">=</span><span class="n">location</span><span class="o">.</span><span class="n">longitude</span><span class="p">,</span>
+                                     <span class="n">meridian</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">location</span><span class="o">.</span><span class="n">timeZone</span><span class="p">)</span> <span class="o">*</span> <span class="o">-</span><span class="mi">15</span><span class="p">,</span>
+                                     <span class="n">rotation</span><span class="o">=</span><span class="n">north</span><span class="p">)</span>
+        <span class="n">gensk</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="n">skyfile</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">gensk</span><span class="p">,</span> <span class="n">sky_density</span><span class="p">,</span> <span class="n">is_climate_based</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_climate_based</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True if the sky is generated from values from weather file.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__is_climate_based</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">isSkyVector</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">hour</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return hour.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__hour</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">day</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return hour.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__day</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">month</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return hour.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__month</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sky default name.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;SKYVEC_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sky</span><span class="o">.</span><span class="n">output_file</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;SKYVEC_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sky</span><span class="o">.</span><span class="n">output_file</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="p">)</span>
+
+    <span class="c1"># TODO: re-write the method! It&#39;s Currently very shaky</span>
+<div class="viewcode-block" id="SkyVector.to_rad_string"><a class="viewcode-back" href="../../../../honeybee.radiance.sky.html#honeybee.radiance.sky.skyvector.SkyVector.to_rad_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_rad_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">working_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">relative_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return Radiance command line.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">working_dir</span><span class="p">:</span>
+            <span class="c1"># make sure the original sky (*.sky) will be writtern to working dir</span>
+            <span class="n">skyoutput_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">working_dir</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sky</span><span class="o">.</span><span class="n">output_file</span><span class="p">))</span>
+            <span class="c1"># set the sky vector to be written to the working dir (*.vec)</span>
+            <span class="n">outfilepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">working_dir</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.vec&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">relative_path</span><span class="p">:</span>
+                <span class="n">outfilepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">outfilepath</span><span class="p">,</span> <span class="n">relative_path</span><span class="p">)</span>
+                <span class="n">skyoutput_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">skyoutput_file</span><span class="p">,</span> <span class="n">relative_path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">outfilepath</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.vec&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">skyoutput_file</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sky</span><span class="o">.</span><span class="n">output_file</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sky</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="n">skyoutput_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sky</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+
+        <span class="n">genskv</span> <span class="o">=</span> <span class="n">Genskyvec</span><span class="p">()</span>
+        <span class="n">genskv</span><span class="o">.</span><span class="n">input_sky_file</span> <span class="o">=</span> <span class="n">skyoutput_file</span>
+        <span class="n">genskv</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="n">outfilepath</span>
+        <span class="n">genskv</span><span class="o">.</span><span class="n">sky_subdivision</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky_density</span>
+        <span class="k">return</span> <span class="n">genskv</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SkyVector.execute"><a class="viewcode-back" href="../../../../honeybee.radiance.sky.html#honeybee.radiance.sky.skyvector.SkyVector.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">working_dir</span><span class="p">,</span> <span class="n">reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate sky vector.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            working_dir: Folder to execute and write the output.</span>
+<span class="sd">            reuse: Reuse the matrix if already existed in the folder.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">outfilepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">working_dir</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.vec&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">reuse</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">outfilepath</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">outfilepath</span>
+
+        <span class="c1">#  update path for the sky file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sky</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">working_dir</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sky</span><span class="o">.</span><span class="n">output_file</span><span class="p">))</span>
+        <span class="n">genskv</span> <span class="o">=</span> <span class="n">Genskyvec</span><span class="p">()</span>
+        <span class="n">genskv</span><span class="o">.</span><span class="n">input_sky_file</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sky</span><span class="o">.</span><span class="n">execute</span><span class="p">())</span>
+        <span class="n">genskv</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="n">outfilepath</span>
+        <span class="n">genskv</span><span class="o">.</span><span class="n">sky_subdivision</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sky_density</span>
+        <span class="n">genskv</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">outfilepath</span></div>
+
+<div class="viewcode-block" id="SkyVector.ToString"><a class="viewcode-back" href="../../../../honeybee.radiance.sky.html#honeybee.radiance.sky.skyvector.SkyVector.ToString">[docs]</a>    <span class="k">def</span> <span class="nf">ToString</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwrite .NET ToString method.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sky representation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

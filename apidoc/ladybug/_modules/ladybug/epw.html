@@ -1,0 +1,1170 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ladybug.epw &#8212; Ladybug 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/ladybug.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Ladybug performs detailed analysis of climate data to produce customized, interactive visualizations for environmentally-informed design.</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=ladybug&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ladybug.html">ladybug package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for ladybug.epw</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">.location</span> <span class="k">import</span> <span class="n">Location</span>
+<span class="kn">from</span> <span class="nn">.analysisperiod</span> <span class="k">import</span> <span class="n">AnalysisPeriod</span>
+<span class="kn">from</span> <span class="nn">.datatype</span> <span class="k">import</span> <span class="n">DataPoint</span>  <span class="c1"># Temperature, RelativeHumidity, Radiation, Illuminance</span>
+<span class="kn">from</span> <span class="nn">.header</span> <span class="k">import</span> <span class="n">Header</span>
+<span class="kn">from</span> <span class="nn">.datacollection</span> <span class="k">import</span> <span class="n">DataCollection</span>
+<span class="kn">from</span> <span class="nn">.dt</span> <span class="k">import</span> <span class="n">DateTime</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<div class="viewcode-block" id="EPW"><a class="viewcode-back" href="../../ladybug.html#ladybug.epw.EPW">[docs]</a><span class="k">class</span> <span class="nc">EPW</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Import epw data from a local epw file.</span>
+
+<span class="sd">    args:</span>
+<span class="sd">        file_path: Local file address to an epw file.</span>
+
+<span class="sd">    properties:</span>
+<span class="sd">        years</span>
+<span class="sd">        dry_bulb_temperature</span>
+<span class="sd">        dew_point_temperature</span>
+<span class="sd">        relative_humidity</span>
+<span class="sd">        atmospheric_station_pressure</span>
+<span class="sd">        extraterrestrial_horizontal_radiation</span>
+<span class="sd">        extraterrestrial_direct_normal_radiation</span>
+<span class="sd">        horizontal_infrared_radiation_intensity</span>
+<span class="sd">        global_horizontal_radiation</span>
+<span class="sd">        direct_normal_radiation</span>
+<span class="sd">        diffuse_horizontal_radiation</span>
+<span class="sd">        global_horizontal_illuminance</span>
+<span class="sd">        direct_normal_illuminance</span>
+<span class="sd">        diffuse_horizontal_illuminance</span>
+<span class="sd">        zenith_luminance</span>
+<span class="sd">        wind_direction</span>
+<span class="sd">        wind_speed</span>
+<span class="sd">        total_sky_cover</span>
+<span class="sd">        opaque_sky_cover</span>
+<span class="sd">        visibility</span>
+<span class="sd">        ceiling_height</span>
+<span class="sd">        present_weather_observation</span>
+<span class="sd">        present_weather_codes</span>
+<span class="sd">        precipitable_water</span>
+<span class="sd">        aerosol_optical_depth</span>
+<span class="sd">        snow_depth</span>
+<span class="sd">        days_since_last_snowfall</span>
+<span class="sd">        albedo</span>
+<span class="sd">        liquid_precipitation_depth</span>
+<span class="sd">        liquid_precipitation_quantity</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init class.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">file_path</span> <span class="o">=</span> <span class="n">file_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_is_data_loaded</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_is_location_loaded</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># place holder for data as ladybug data collection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_header</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># epw header</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_num_of_fields</span> <span class="o">=</span> <span class="mi">35</span>  <span class="c1"># it is 35 for TMY3 files</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">file_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get or set path to epw file.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_path</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">folder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get epw file folder.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_folder</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">file_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get epw file name.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_name</span>
+
+    <span class="nd">@file_path</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">file_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epw_file_path</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">epw_file_path</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_file_path</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;Cannot find an epw file at </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_file_path</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">epw_file_path</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;epw&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">epw_file_path</span> <span class="o">+</span> <span class="s1">&#39; is not an .epw file.&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_folder</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_path</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_data_loaded</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True if weather data is loaded.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_data_loaded</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_location_loaded</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True if location data is loaded.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_location_loaded</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">header</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return epw file header.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_location_loaded</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">import_data</span><span class="p">(</span><span class="n">import_location_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_header</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">location</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return location data.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_location_loaded</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">import_data</span><span class="p">(</span><span class="n">import_location_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_location</span>
+
+    <span class="c1"># TODO: import EPW header. Currently I just ignore header data</span>
+<div class="viewcode-block" id="EPW.import_data"><a class="viewcode-back" href="../../ladybug.html#ladybug.epw.EPW.import_data">[docs]</a>    <span class="k">def</span> <span class="nf">import_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">import_location_only</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Import data from an epw file.</span>
+
+<span class="sd">        Hourly data will be saved in self.data and location data</span>
+<span class="sd">        will be saved in self.location</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">epwin</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">epwin</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+
+            <span class="c1"># import location data</span>
+            <span class="c1"># first line has location data - Here is an example</span>
+            <span class="c1"># LOCATION,Denver Centennial  Golden   Nr,CO,USA,TMY3,724666,39.74,</span>
+            <span class="c1"># -105.18,-7.0,1829.0</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_location_loaded</span><span class="p">:</span>
+                <span class="n">location_data</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_location</span> <span class="o">=</span> <span class="n">Location</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_location</span><span class="o">.</span><span class="n">city</span> <span class="o">=</span> <span class="n">location_data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span> \
+                    <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_location</span><span class="o">.</span><span class="n">country</span> <span class="o">=</span> <span class="n">location_data</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_location</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">location_data</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_location</span><span class="o">.</span><span class="n">station_id</span> <span class="o">=</span> <span class="n">location_data</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_location</span><span class="o">.</span><span class="n">latitude</span> <span class="o">=</span> <span class="n">location_data</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_location</span><span class="o">.</span><span class="n">longitude</span> <span class="o">=</span> <span class="n">location_data</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_location</span><span class="o">.</span><span class="n">time_zone</span> <span class="o">=</span> <span class="n">location_data</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_location</span><span class="o">.</span><span class="n">elevation</span> <span class="o">=</span> <span class="n">location_data</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_is_location_loaded</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="c1"># TODO: add parsing for header</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_header</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">epwin</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="mi">7</span><span class="p">)]</span>
+
+            <span class="k">if</span> <span class="n">import_location_only</span><span class="p">:</span>
+                <span class="k">return</span>
+
+            <span class="c1"># read first line of data to overwrite the number of fields</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">epwin</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_num_of_fields</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">))</span>
+
+            <span class="c1"># create an annual analysis period</span>
+            <span class="n">analysis_period</span> <span class="o">=</span> <span class="n">AnalysisPeriod</span><span class="p">()</span>
+
+            <span class="c1"># create an empty collection for each field in epw file</span>
+            <span class="k">for</span> <span class="n">field_number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_num_of_fields</span><span class="p">):</span>
+                <span class="c1"># create header</span>
+                <span class="n">field</span> <span class="o">=</span> <span class="n">EPWFields</span><span class="o">.</span><span class="n">field_by_number</span><span class="p">(</span><span class="n">field_number</span><span class="p">)</span>
+                <span class="c1"># the header of data collection</span>
+                <span class="n">header</span> <span class="o">=</span> <span class="n">Header</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">,</span>
+                                <span class="n">analysis_period</span><span class="o">=</span><span class="n">analysis_period</span><span class="p">,</span>
+                                <span class="n">data_type</span><span class="o">=</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">field</span><span class="o">.</span><span class="n">unit</span><span class="p">)</span>
+
+                <span class="c1"># create an empty data list with the header</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">DataCollection</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">))</span>
+
+            <span class="c1"># collect hourly data</span>
+            <span class="k">while</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+                <span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hour</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">data</span><span class="p">[:</span><span class="mi">4</span><span class="p">])</span>
+
+                <span class="c1"># in an epw file year can be different for each month</span>
+                <span class="c1"># since I&#39;m using this timestamp as the key and will be using it for</span>
+                <span class="c1"># sorting. I&#39;m setting it up to 2015 - the real year will be collected</span>
+                <span class="c1"># under modelYear</span>
+                <span class="n">timestamp</span> <span class="o">=</span> <span class="n">DateTime</span><span class="p">(</span><span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hour</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">field_number</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_num_of_fields</span><span class="p">):</span>
+                    <span class="n">value_type</span> <span class="o">=</span> <span class="n">EPWFields</span><span class="o">.</span><span class="n">field_by_number</span><span class="p">(</span><span class="n">field_number</span><span class="p">)</span><span class="o">.</span><span class="n">value_type</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">value</span> <span class="o">=</span> <span class="n">value_type</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">field_number</span><span class="p">])</span>
+                    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="c1"># failed to convert the value for the specific TypeError</span>
+                        <span class="k">if</span> <span class="n">value_type</span> <span class="o">!=</span> <span class="nb">int</span><span class="p">:</span>
+                            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                        <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">field_number</span><span class="p">])))</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="n">field_number</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">DataPoint</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">))</span>
+
+                <span class="n">line</span> <span class="o">=</span> <span class="n">epwin</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_is_data_loaded</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_data_by_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_number</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a data field by field number.</span>
+
+<span class="sd">        This is a useful method to get the values for fields that Ladybug</span>
+<span class="sd">        currently doesn&#39;t import by default. You can find list of fields by typing</span>
+<span class="sd">        EPWFields.fields</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            field_number: a value between 0 to 34 for different available epw fields.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            An annual Ladybug list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_data_loaded</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">import_data</span><span class="p">()</span>
+
+        <span class="c1"># check input data</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">field_number</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_of_fields</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Field number should be between 0-</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_of_fields</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="n">field_number</span><span class="p">]</span>
+
+    <span class="c1"># TODO: Add utility library to check file path, filename, etc</span>
+<div class="viewcode-block" id="EPW.save"><a class="viewcode-back" href="../../ladybug.html#ladybug.epw.EPW.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">file_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Save epw object as an epw file.&quot;&quot;&quot;</span>
+        <span class="c1"># check file_path</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">folder</span><span class="p">:</span>
+            <span class="n">folder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">folder</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">file_name</span><span class="p">:</span>
+            <span class="n">file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_name</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_modified.epw&#39;</span>
+
+        <span class="n">full_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
+
+        <span class="c1"># load data if it&#39;s  not loaded</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_data_loaded</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">import_data</span><span class="p">()</span>
+
+        <span class="c1"># write the file</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">modEpwFile</span><span class="p">:</span>
+            <span class="n">modEpwFile</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_header</span><span class="p">)</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">hour</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8760</span><span class="p">):</span>
+                    <span class="n">line</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_of_fields</span><span class="p">):</span>
+                        <span class="n">line</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">hour</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                <span class="c1"># cleaning up</span>
+                <span class="n">modEpwFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="n">length_error_msg</span> <span class="o">=</span> <span class="s1">&#39;Data length is not 8760 hours and cannot be &#39;</span> <span class="o">+</span> \
+                    <span class="s1">&#39;saved as an EPW file.&#39;</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">length_error_msg</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">modEpwFile</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+            <span class="k">finally</span><span class="p">:</span>
+                <span class="k">del</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">full_path</span></div>
+
+<div class="viewcode-block" id="EPW.import_data_by_field"><a class="viewcode-back" href="../../ladybug.html#ladybug.epw.EPW.import_data_by_field">[docs]</a>    <span class="k">def</span> <span class="nf">import_data_by_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_number</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return annual values for any field_number in epw file.</span>
+
+<span class="sd">        This is a useful method to get the values for fields that Ladybug currently</span>
+<span class="sd">        doesn&#39;t import by default. You can find list of fields by typing</span>
+<span class="sd">        EPWFields.fields</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            field_number: a value between 0 to 34 for different available epw fields.</span>
+<span class="sd">            0 Year</span>
+<span class="sd">            1 Month</span>
+<span class="sd">            2 Day</span>
+<span class="sd">            3 Hour</span>
+<span class="sd">            4 Minute</span>
+<span class="sd">            -</span>
+<span class="sd">            6 Dry Bulb Temperature</span>
+<span class="sd">            7 Dew Point Temperature</span>
+<span class="sd">            8 Relative Humidity</span>
+<span class="sd">            9 Atmospheric Station Pressure</span>
+<span class="sd">            10 Extraterrestrial Horizontal Radiation</span>
+<span class="sd">            11 Extraterrestrial Direct Normal Radiation</span>
+<span class="sd">            12 Horizontal Infrared Radiation Intensity</span>
+<span class="sd">            13 Global Horizontal Radiation</span>
+<span class="sd">            14 Direct Normal Radiation</span>
+<span class="sd">            15 Diffuse Horizontal Radiation</span>
+<span class="sd">            16 Global Horizontal Illuminance</span>
+<span class="sd">            17 Direct Normal Illuminance</span>
+<span class="sd">            18 Diffuse Horizontal Illuminance</span>
+<span class="sd">            19 Zenith Luminance</span>
+<span class="sd">            20 Wind Direction</span>
+<span class="sd">            21 Wind Speed</span>
+<span class="sd">            22 Total Sky Cover</span>
+<span class="sd">            23 Opaque Sky Cover</span>
+<span class="sd">            24 Visibility</span>
+<span class="sd">            25 Ceiling Height</span>
+<span class="sd">            26 Present Weather Observation</span>
+<span class="sd">            27 Present Weather Codes</span>
+<span class="sd">            28 Precipitable Water</span>
+<span class="sd">            29 Aerosol Optical Depth</span>
+<span class="sd">            30 Snow Depth</span>
+<span class="sd">            31 Days Since Last Snowfall</span>
+<span class="sd">            32 Albedo</span>
+<span class="sd">            33 Liquid Precipitation Depth</span>
+<span class="sd">            34 Liquid Precipitation Quantity</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            An annual Ladybug list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="n">field_number</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">years</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return years as a Ladybug Data List.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">dry_bulb_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return annual Dry Bulb Temperature as a Ladybug Data List.</span>
+
+<span class="sd">        This is the dry bulb temperature in C at the time indicated. Note that</span>
+<span class="sd">        this is a full numeric field (i.e. 23.6) and not an integer representation</span>
+<span class="sd">        with tenths. Valid values range from -70C to 70 C. Missing value for this</span>
+<span class="sd">        field is 99.9</span>
+
+<span class="sd">        Read more at: https://energyplus.net/sites/all/modules/custom/nrel_custom/pdfs</span>
+<span class="sd">            /pdfs_v8.4.0/AuxiliaryPrograms.pdf (Chapter 2.9.1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">dew_point_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">u</span><span class="sd">&quot;&quot;&quot;Return annual Dew Point Temperature as a Ladybug Data List.</span>
+
+<span class="sd">        This is the dew point temperature in C at the time indicated. Note that this is</span>
+<span class="sd">        a full numeric field (i.e. 23.6) and not an integer representation with tenths.</span>
+<span class="sd">        Valid values range from -70 C to 70 C. Missing value for this field is 99.9</span>
+<span class="sd">        Read more at: https://energyplus.net/sites/all/modules/custom/nrel_custom/pdfs</span>
+<span class="sd">            /pdfs_v8.4.0/AuxiliaryPrograms.pdf (Chapter 2.9.1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">relative_humidity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">u</span><span class="sd">&quot;&quot;&quot;Return annual Relative Humidity as a Ladybug Data List.</span>
+
+<span class="sd">        This is the Relative Humidity in percent at the time indicated. Valid values</span>
+<span class="sd">        range from 0% to 110%. Missing value for this field is 999.</span>
+<span class="sd">        Read more at: https://energyplus.net/sites/all/modules/custom/nrel_custom/pdfs</span>
+<span class="sd">            /pdfs_v8.4.0/AuxiliaryPrograms.pdf (Chapter 2.9.1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">atmospheric_station_pressure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return annual Atmospheric Station Pressure as a Ladybug Data List.</span>
+
+<span class="sd">        This is the station pressure in Pa at the time indicated. Valid values range</span>
+<span class="sd">        from 31,000 to 120,000. (These values were chosen from the standard barometric</span>
+<span class="sd">        pressure for all elevations of the World). Missing value for this field is 999999</span>
+<span class="sd">        Read more at: https://energyplus.net/sites/all/modules/custom/nrel_custom/pdfs</span>
+<span class="sd">            /pdfs_v8.4.0/AuxiliaryPrograms.pdf (Chapter 2.9.1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">extraterrestrial_horizontal_radiation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return annual Extraterrestrial Horizontal Radiation as a Ladybug Data List.</span>
+
+<span class="sd">        This is the Extraterrestrial Horizontal Radiation in Wh/m2. It is not currently</span>
+<span class="sd">        used in EnergyPlus calculations. It should have a minimum value of 0; missing</span>
+<span class="sd">        value for this field is 9999.</span>
+<span class="sd">        Read more at: https://energyplus.net/sites/all/modules/custom/nrel_custom/pdfs</span>
+<span class="sd">            /pdfs_v8.4.0/AuxiliaryPrograms.pdf (Chapter 2.9.1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">extraterrestrial_direct_normal_radiation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return annual Extraterrestrial Direct Normal Radiation as a Ladybug Data List.</span>
+
+<span class="sd">        This is the Extraterrestrial Direct Normal Radiation in Wh/m2. (Amount of solar</span>
+<span class="sd">        radiation in Wh/m2 received on a surface normal to the rays of the sun at the top</span>
+<span class="sd">        of the atmosphere during the number of minutes preceding the time indicated).</span>
+<span class="sd">        It is not currently used in EnergyPlus calculations. It should have a minimum</span>
+<span class="sd">        value of 0; missing value for this field is 9999.</span>
+<span class="sd">        Read more at: https://energyplus.net/sites/all/modules/custom/nrel_custom/pdfs</span>
+<span class="sd">            /pdfs_v8.4.0/AuxiliaryPrograms.pdf (Chapter 2.9.1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">horizontal_infrared_radiation_intensity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return annual Horizontal Infrared Radiation Intensity as a Ladybug Data List.</span>
+
+<span class="sd">        This is the Horizontal Infrared Radiation Intensity in Wh/m2. If it is missing,</span>
+<span class="sd">        it is calculated from the Opaque Sky Cover field as shown in the following</span>
+<span class="sd">        explanation. It should have a minimum value of 0; missing value for this field</span>
+<span class="sd">        is 9999.</span>
+<span class="sd">        Read more at: https://energyplus.net/sites/all/modules/custom/nrel_custom/pdfs</span>
+<span class="sd">            /pdfs_v8.4.0/AuxiliaryPrograms.pdf (Chapter 2.9.1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">global_horizontal_radiation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return annual Global Horizontal Radiation as a Ladybug Data List.</span>
+
+<span class="sd">        This is the Global Horizontal Radiation in Wh/m2. (Total amount of direct and</span>
+<span class="sd">        diffuse solar radiation in Wh/m2 received on a horizontal surface during the</span>
+<span class="sd">        number of minutes preceding the time indicated.) It is not currently used in</span>
+<span class="sd">        EnergyPlus calculations. It should have a minimum value of 0; missing value</span>
+<span class="sd">        for this field is 9999.</span>
+<span class="sd">        Read more at: https://energyplus.net/sites/all/modules/custom/nrel_custom/pdfs</span>
+<span class="sd">            /pdfs_v8.4.0/AuxiliaryPrograms.pdf (Chapter 2.9.1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">direct_normal_radiation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return annual Direct Normal Radiation as a Ladybug Data List.</span>
+
+<span class="sd">        This is the Direct Normal Radiation in Wh/m2. (Amount of solar radiation in</span>
+<span class="sd">        Wh/m2 received directly from the solar disk on a surface perpendicular to the</span>
+<span class="sd">        sun&#39;s rays, during the number of minutes preceding the time indicated.) If the</span>
+<span class="sd">        field is missing ( &gt;= 9999) or invalid ( &lt; 0), it is set to 0. Counts of such</span>
+<span class="sd">        missing values are totaled and presented at the end of the runperiod.</span>
+<span class="sd">        Read more at: https://energyplus.net/sites/all/modules/custom/nrel_custom/pdfs</span>
+<span class="sd">            /pdfs_v8.4.0/AuxiliaryPrograms.pdf (Chapter 2.9.1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">14</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">diffuse_horizontal_radiation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return annual Diffuse Horizontal Radiation as a Ladybug Data List.</span>
+
+<span class="sd">        This is the Diffuse Horizontal Radiation in Wh/m2. (Amount of solar radiation in</span>
+<span class="sd">        Wh/m2 received from the sky (excluding the solar disk) on a horizontal surface</span>
+<span class="sd">        during the number of minutes preceding the time indicated.) If the field is</span>
+<span class="sd">        missing ( &gt;= 9999) or invalid ( &lt; 0), it is set to 0. Counts of such missing</span>
+<span class="sd">        values are totaled and presented at the end of the runperiod</span>
+<span class="sd">        Read more at: https://energyplus.net/sites/all/modules/custom/nrel_custom/pdfs</span>
+<span class="sd">        /pdfs_v8.4.0/AuxiliaryPrograms.pdf (Chapter 2.9.1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">global_horizontal_illuminance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return annual Global Horizontal Illuminance as a Ladybug Data List.</span>
+
+<span class="sd">        This is the Global Horizontal Illuminance in lux. (Average total amount of</span>
+<span class="sd">        direct and diffuse illuminance in hundreds of lux received on a horizontal</span>
+<span class="sd">        surface during the number of minutes preceding the time indicated.) It is not</span>
+<span class="sd">        currently used in EnergyPlus calculations. It should have a minimum value of 0;</span>
+<span class="sd">        missing value for this field is 999999 and will be considered missing if greater</span>
+<span class="sd">        than or equal to 999900.</span>
+<span class="sd">        Read more at: https://energyplus.net/sites/all/modules/custom/nrel_custom/pdfs</span>
+<span class="sd">            /pdfs_v8.4.0/AuxiliaryPrograms.pdf (Chapter 2.9.1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">direct_normal_illuminance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return annual Direct Normal Illuminance as a Ladybug Data List.</span>
+
+<span class="sd">        This is the Direct Normal Illuminance in lux. (Average amount of illuminance in</span>
+<span class="sd">        hundreds of lux received directly from the solar disk on a surface perpendicular</span>
+<span class="sd">        to the sun&#39;s rays, during the number of minutes preceding the time indicated.)</span>
+<span class="sd">        It is not currently used in EnergyPlus calculations. It should have a minimum</span>
+<span class="sd">        value of 0; missing value for this field is 999999 and will be considered missing</span>
+<span class="sd">        if greater than or equal to 999900.</span>
+
+<span class="sd">        Read more at: https://energyplus.net/sites/all/modules/custom/nrel_custom/pdfs</span>
+<span class="sd">            /pdfs_v8.4.0/AuxiliaryPrograms.pdf (Chapter 2.9.1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">17</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">diffuse_horizontal_illuminance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return annual Diffuse Horizontal Illuminance as a Ladybug Data List.</span>
+
+<span class="sd">        This is the Diffuse Horizontal Illuminance in lux. (Average amount of illuminance</span>
+<span class="sd">        in hundreds of lux received from the sky (excluding the solar disk) on a</span>
+<span class="sd">        horizontal surface during the number of minutes preceding the time indicated.)</span>
+<span class="sd">        It is not currently used in EnergyPlus calculations. It should have a minimum</span>
+<span class="sd">        value of 0; missing value for this field is 999999 and will be considered missing</span>
+<span class="sd">        if greater than or equal to 999900.</span>
+
+<span class="sd">        Read more at: https://energyplus.net/sites/all/modules/custom/nrel_custom/pdfs</span>
+<span class="sd">            /pdfs_v8.4.0/AuxiliaryPrograms.pdf (Chapter 2.9.1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">18</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">zenith_luminance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return annual Zenith Luminance as a Ladybug Data List.</span>
+
+<span class="sd">        This is the Zenith Illuminance in Cd/m2. (Average amount of luminance at</span>
+<span class="sd">        the sky&#39;s zenith in tens of Cd/m2 during the number of minutes preceding</span>
+<span class="sd">        the time indicated.) It is not currently used in EnergyPlus calculations.</span>
+<span class="sd">        It should have a minimum value of 0; missing value for this field is 9999.</span>
+
+<span class="sd">        Read more at: https://energyplus.net/sites/all/modules/custom/nrel_custom/pdfs</span>
+<span class="sd">            /pdfs_v8.4.0/AuxiliaryPrograms.pdf (Chapter 2.9.1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">19</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">wind_direction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return annual Wind Direction as a Ladybug Data List.</span>
+
+<span class="sd">        This is the Wind Direction in degrees where the convention is that North=0.0,</span>
+<span class="sd">        East=90.0, South=180.0, West=270.0. (Wind direction in degrees at the time</span>
+<span class="sd">        indicated. If calm, direction equals zero.) Values can range from 0 to 360.</span>
+<span class="sd">        Missing value is 999.</span>
+
+<span class="sd">        Read more at: https://energyplus.net/sites/all/modules/custom/nrel_custom/pdfs</span>
+<span class="sd">            /pdfs_v8.4.0/AuxiliaryPrograms.pdf (Chapter 2.9.1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">wind_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return annual Wind Speed as a Ladybug Data List.</span>
+
+<span class="sd">        This is the wind speed in m/sec. (Wind speed at time indicated.) Values can</span>
+<span class="sd">        range from 0 to 40. Missing value is 999.</span>
+
+<span class="sd">        Read more at: https://energyplus.net/sites/all/modules/custom/nrel_custom/pdfs</span>
+<span class="sd">            /pdfs_v8.4.0/AuxiliaryPrograms.pdf (Chapter 2.9.1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">21</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">total_sky_cover</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return annual Total Sky Cover as a Ladybug Data List.</span>
+
+<span class="sd">        This is the value for total sky cover (tenths of coverage). (i.e. 1 is 1/10</span>
+<span class="sd">        covered. 10 is total coverage). (Amount of sky dome in tenths covered by clouds</span>
+<span class="sd">        or obscuring phenomena at the hour indicated at the time indicated.) Minimum</span>
+<span class="sd">        value is 0; maximum value is 10; missing value is 99.</span>
+
+<span class="sd">        Read more at: https://energyplus.net/sites/all/modules/custom/nrel_custom/pdfs</span>
+<span class="sd">            /pdfs_v8.4.0/AuxiliaryPrograms.pdf (Chapter 2.9.1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">22</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">opaque_sky_cover</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return annual Opaque Sky Cover as a Ladybug Data List.</span>
+
+<span class="sd">        This is the value for opaque sky cover (tenths of coverage). (i.e. 1 is 1/10</span>
+<span class="sd">        covered. 10 is total coverage). (Amount of sky dome in tenths covered by</span>
+<span class="sd">        clouds or obscuring phenomena that prevent observing the sky or higher cloud</span>
+<span class="sd">        layers at the time indicated.) This is not used unless the field for Horizontal</span>
+<span class="sd">        Infrared Radiation Intensity is missing and then it is used to calculate</span>
+<span class="sd">        Horizontal Infrared Radiation Intensity. Minimum value is 0; maximum value is</span>
+<span class="sd">        10; missing value is 99.</span>
+
+<span class="sd">        Read more at: https://energyplus.net/sites/all/modules/custom/nrel_custom/pdfs</span>
+<span class="sd">            /pdfs_v8.4.0/AuxiliaryPrograms.pdf (Chapter 2.9.1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">23</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">visibility</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return annual Visibility as a Ladybug Data List.</span>
+
+<span class="sd">        This is the value for visibility in km. (Horizontal visibility at the time</span>
+<span class="sd">        indicated.) It is not currently used in EnergyPlus calculations. Missing</span>
+<span class="sd">        value is 9999.</span>
+
+<span class="sd">        Read more at: https://energyplus.net/sites/all/modules/custom/nrel_custom/pdfs</span>
+<span class="sd">            /pdfs_v8.4.0/AuxiliaryPrograms.pdf (Chapter 2.9.1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ceiling_height</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return annual Ceiling Height as a Ladybug Data List.</span>
+
+<span class="sd">        This is the value for ceiling height in m. (77777 is unlimited ceiling height.</span>
+<span class="sd">        88888 is cirroform ceiling.) It is not currently used in EnergyPlus calculations.</span>
+<span class="sd">        Missing value is 99999</span>
+
+<span class="sd">        Read more at: https://energyplus.net/sites/all/modules/custom/nrel_custom/pdfs</span>
+<span class="sd">            /pdfs_v8.4.0/AuxiliaryPrograms.pdf (Chapter 2.9.1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">present_weather_observation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return annual Present Weather Observation as a Ladybug Data List.</span>
+
+<span class="sd">        If the value of the field is 0, then the observed weather codes are taken from</span>
+<span class="sd">        the following field. If the value of the field is 9, then &quot;missing&quot; weather is</span>
+<span class="sd">        assumed. Since the primary use of these fields (Present Weather Observation and</span>
+<span class="sd">        Present Weather Codes) is for rain/wet surfaces, a missing observation field or</span>
+<span class="sd">        a missing weather code implies no rain.</span>
+
+<span class="sd">        Read more at: https://energyplus.net/sites/all/modules/custom/nrel_custom/pdfs</span>
+<span class="sd">            /pdfs_v8.4.0/AuxiliaryPrograms.pdf (Chapter 2.9.1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">26</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">present_weather_codes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return annual Present Weather Codes as a Ladybug Data List.</span>
+
+<span class="sd">        The present weather codes field is assumed to follow the TMY2 conventions for</span>
+<span class="sd">        this field. Note that though this field may be represented as numeric (e.g. in</span>
+<span class="sd">        the CSV format), it is really a text field of 9 single digits. This convention</span>
+<span class="sd">        along with values for each &quot;column&quot; (left to right) is presented in Table 16.</span>
+<span class="sd">        Note that some formats (e.g. TMY) does not follow this convention - as much as</span>
+<span class="sd">        possible, the present weather codes are converted to this convention during</span>
+<span class="sd">        WeatherConverter processing. Also note that the most important fields are those</span>
+<span class="sd">        representing liquid precipitation - where the surfaces of the building would be</span>
+<span class="sd">        wet. EnergyPlus uses &quot;Snow Depth&quot; to determine if snow is on the ground.</span>
+
+<span class="sd">        Read more at: https://energyplus.net/sites/all/modules/custom/nrel_custom/pdfs</span>
+<span class="sd">            /pdfs_v8.4.0/AuxiliaryPrograms.pdf (Chapter 2.9.1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">27</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">precipitable_water</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return annual Precipitable Water as a Ladybug Data List.</span>
+
+<span class="sd">        This is the value for Precipitable Water in mm. (This is not rain - rain is</span>
+<span class="sd">        inferred from the PresWeathObs field but a better result is from the Liquid</span>
+<span class="sd">        Precipitation Depth field). It is not currently used in EnergyPlus calculations</span>
+<span class="sd">        (primarily due to the unreliability of the reporting of this value). Missing</span>
+<span class="sd">        value is 999.</span>
+
+<span class="sd">        Read more at: https://energyplus.net/sites/all/modules/custom/nrel_custom/pdfs</span>
+<span class="sd">            /pdfs_v8.4.0/AuxiliaryPrograms.pdf (Chapter 2.9.1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">28</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">aerosol_optical_depth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return annual Aerosol Optical Depth as a Ladybug Data List.</span>
+
+<span class="sd">        This is the value for Aerosol Optical Depth in thousandths. It is not currently</span>
+<span class="sd">        used in EnergyPlus calculations. Missing value is .999.</span>
+
+<span class="sd">        Read more at: https://energyplus.net/sites/all/modules/custom/nrel_custom/pdfs</span>
+<span class="sd">            /pdfs_v8.4.0/AuxiliaryPrograms.pdf (Chapter 2.9.1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">29</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">snow_depth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return annual Snow Depth as a Ladybug Data List.</span>
+
+<span class="sd">        This is the value for Snow Depth in cm. This field is used to tell when snow</span>
+<span class="sd">        is on the ground and, thus, the ground reflectance may change. Missing value</span>
+<span class="sd">        is 999.</span>
+
+<span class="sd">        Read more at: https://energyplus.net/sites/all/modules/custom/nrel_custom/pdfs</span>
+<span class="sd">            /pdfs_v8.4.0/AuxiliaryPrograms.pdf (Chapter 2.9.1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">days_since_last_snowfall</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return annual Days Since Last Snow Fall as a Ladybug Data List.</span>
+
+<span class="sd">        This is the value for Days Since Last Snowfall. It is not currently used in</span>
+<span class="sd">        EnergyPlus calculations. Missing value is 99.</span>
+
+<span class="sd">        Read more at: https://energyplus.net/sites/all/modules/custom/nrel_custom/pdfs</span>
+<span class="sd">            /pdfs_v8.4.0/AuxiliaryPrograms.pdf (Chapter 2.9.1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">31</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">albedo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return annual Albedo values as a Ladybug Data List.</span>
+
+<span class="sd">        The ratio (unitless) of reflected solar irradiance to global horizontal</span>
+<span class="sd">        irradiance. It is not currently used in EnergyPlus.</span>
+
+<span class="sd">        Read more at: https://energyplus.net/sites/all/modules/custom/nrel_custom/pdfs</span>
+<span class="sd">            /pdfs_v8.4.0/AuxiliaryPrograms.pdf (Chapter 2.9.1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">liquid_precipitation_depth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return annual liquid precipitation depth as a Ladybug Data List.</span>
+
+<span class="sd">        The amount of liquid precipitation (mm) observed at the indicated time for the</span>
+<span class="sd">        period indicated in the liquid precipitation quantity field. If this value is</span>
+<span class="sd">        not missing, then it is used and overrides the &quot;precipitation&quot; flag as rainfall.</span>
+<span class="sd">        Conversely, if the precipitation flag shows rain and this field is missing or</span>
+<span class="sd">        zero, it is set to 1.5 (mm).</span>
+
+<span class="sd">        Read more at: https://energyplus.net/sites/all/modules/custom/nrel_custom/pdfs</span>
+<span class="sd">            /pdfs_v8.4.0/AuxiliaryPrograms.pdf (Chapter 2.9.1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">33</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">liquid_precipitation_quantity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return annual Liquid Precipitation Quantity as a Ladybug Data List.</span>
+
+<span class="sd">        The period of accumulation (hr) for the liquid precipitation depth field.</span>
+<span class="sd">        It is not currently used in EnergyPlus.</span>
+
+<span class="sd">        Read more at: https://energyplus.net/sites/all/modules/custom/nrel_custom/</span>
+<span class="sd">            pdfs/pdfs_v8.4.0/AuxiliaryPrograms.pdf (Chapter 2.9.1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_by_field</span><span class="p">(</span><span class="mi">34</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_wea_header</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;place </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">city</span> <span class="o">+</span> \
+            <span class="s2">&quot;latitude </span><span class="si">%.2f</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">latitude</span> <span class="o">+</span> \
+            <span class="s2">&quot;longitude </span><span class="si">%.2f</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">longitude</span> <span class="o">+</span> \
+            <span class="s2">&quot;time_zone </span><span class="si">%d</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">time_zone</span> <span class="o">*</span> <span class="mi">15</span><span class="p">)</span> <span class="o">+</span> \
+            <span class="s2">&quot;site_elevation </span><span class="si">%.1f</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">elevation</span> <span class="o">+</span> \
+            <span class="s2">&quot;weather_data_file_unit 1</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+<div class="viewcode-block" id="EPW.to_wea"><a class="viewcode-back" href="../../ladybug.html#ladybug.epw.EPW.to_wea">[docs]</a>    <span class="k">def</span> <span class="nf">to_wea</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hoys</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write an wea file from the epw file.</span>
+
+<span class="sd">        WEA carries radiation values from epw. Gendaymtx uses these values to</span>
+<span class="sd">        generate the sky. For an annual analysis it is identical to using epw2wea.</span>
+
+<span class="sd">        args:</span>
+<span class="sd">            file_path: Full file path for output file.</span>
+<span class="sd">            hoys: List of hours of the year. Default is 0-8759.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">hoys</span> <span class="o">=</span> <span class="n">hoys</span> <span class="ow">or</span> <span class="n">xrange</span><span class="p">(</span><span class="mi">8760</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">file_path</span><span class="p">:</span>
+            <span class="n">file_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_path</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.wea&#39;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">file_path</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.wea&#39;</span><span class="p">):</span>
+            <span class="n">file_path</span> <span class="o">+=</span> <span class="s1">&#39;.wea&#39;</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">weaFile</span><span class="p">:</span>
+            <span class="c1"># write header</span>
+            <span class="n">weaFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_wea_header</span><span class="p">())</span>
+            <span class="c1"># write values</span>
+            <span class="k">for</span> <span class="n">hoy</span> <span class="ow">in</span> <span class="n">hoys</span><span class="p">:</span>
+                <span class="n">dir_rad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">direct_normal_radiation</span><span class="p">[</span><span class="n">hoy</span><span class="p">]</span>
+                <span class="n">dif_rad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diffuse_horizontal_radiation</span><span class="p">[</span><span class="n">hoy</span><span class="p">]</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2"> </span><span class="si">%d</span><span class="s2"> </span><span class="si">%.3f</span><span class="s2"> </span><span class="si">%d</span><span class="s2"> </span><span class="si">%d</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                    <span class="o">%</span> <span class="p">(</span><span class="n">dir_rad</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">month</span><span class="p">,</span>
+                       <span class="n">dir_rad</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">day</span><span class="p">,</span>
+                       <span class="n">dir_rad</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">hour</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span>
+                       <span class="n">dir_rad</span><span class="p">,</span> <span class="n">dif_rad</span><span class="p">)</span>
+
+                <span class="n">weaFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">file_path</span></div>
+
+<div class="viewcode-block" id="EPW.ToString"><a class="viewcode-back" href="../../ladybug.html#ladybug.epw.EPW.ToString">[docs]</a>    <span class="k">def</span> <span class="nf">ToString</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwrite .NET ToString.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;epw file representation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;EPW file Data for [</span><span class="si">%s</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">city</span></div>
+
+
+<div class="viewcode-block" id="EPWFields"><a class="viewcode-back" href="../../ladybug.html#ladybug.epw.EPWFields">[docs]</a><span class="k">class</span> <span class="nc">EPWFields</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;EPW weather file fields.</span>
+
+<span class="sd">    Read more at:</span>
+<span class="sd">    https://energyplus.net/sites/all/modules/custom/nrel_custom/pdfs/</span>
+<span class="sd">        pdfs_v8.4.0/AuxiliaryPrograms.pdf</span>
+<span class="sd">    (Chapter 2.9.1)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">FIELDS</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Year&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">int</span>
+            <span class="p">},</span>
+
+        <span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Month&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">int</span>
+            <span class="p">},</span>
+
+        <span class="mi">2</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Day&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">int</span>
+            <span class="p">},</span>
+
+        <span class="mi">3</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Hour&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">int</span>
+            <span class="p">},</span>
+
+        <span class="mi">4</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Minute&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">int</span>
+            <span class="p">},</span>
+
+        <span class="mi">5</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Uncertainty Flags&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">str</span>
+            <span class="p">},</span>
+
+        <span class="mi">6</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Dry Bulb Temperature&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+            <span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">70</span><span class="p">,</span>
+            <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="mi">70</span><span class="p">,</span>
+            <span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="mf">99.9</span>
+            <span class="p">},</span>
+
+        <span class="mi">7</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Dew Point Temperature&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+            <span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">70</span><span class="p">,</span>
+            <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="mi">70</span><span class="p">,</span>
+            <span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="mf">99.9</span>
+            <span class="p">},</span>
+
+        <span class="mi">8</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Relative Humidity&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="s1">&#39;%&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="mi">999</span><span class="p">,</span>
+            <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="mi">110</span>
+            <span class="p">},</span>
+
+        <span class="mi">9</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Atmospheric Station Pressure&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="s1">&#39;Pa&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="mi">999999</span><span class="p">,</span>
+            <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">31000</span><span class="p">,</span>
+            <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="mi">120000</span>
+            <span class="p">},</span>
+
+        <span class="mi">10</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Extraterrestrial Horizontal Radiation&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+             <span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="s1">&#39;Wh/m2&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="mi">9999</span><span class="p">,</span>
+             <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">0</span>
+             <span class="p">},</span>
+
+        <span class="mi">11</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Extraterrestrial Direct Normal Radiation&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+             <span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="s1">&#39;Wh/m2&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="mi">9999</span><span class="p">,</span>
+             <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">0</span>
+             <span class="p">},</span>
+
+        <span class="mi">12</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Horizontal Infrared Radiation Intensity&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+             <span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="s1">&#39;Wh/m2&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="mi">9999</span><span class="p">,</span>
+             <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">0</span>
+             <span class="p">},</span>
+
+        <span class="mi">13</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Global Horizontal Radiation&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+             <span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="s1">&#39;Wh/m2&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="mi">9999</span><span class="p">,</span>
+             <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">0</span>
+             <span class="p">},</span>
+
+        <span class="mi">14</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Direct Normal Radiation&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+             <span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="s1">&#39;Wh/m2&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="mi">9999</span><span class="p">,</span>
+             <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">0</span>
+             <span class="p">},</span>
+
+        <span class="mi">15</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Diffuse Horizontal Radiation&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+             <span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="s1">&#39;Wh/m2&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="mi">9999</span><span class="p">,</span>
+             <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">0</span>
+             <span class="p">},</span>
+
+        <span class="mi">16</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Global Horizontal Illuminance&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+             <span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="s1">&#39;lux&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="mi">999999</span><span class="p">,</span>  <span class="c1"># note will be missing if &gt;= 999900</span>
+             <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">0</span>
+             <span class="p">},</span>
+
+        <span class="mi">17</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Direct Normal Illuminance&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+             <span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="s1">&#39;lux&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="mi">999999</span><span class="p">,</span>  <span class="c1"># note will be missing if &gt;= 999900</span>
+             <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">0</span>
+             <span class="p">},</span>
+
+        <span class="mi">18</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Diffuse Horizontal Illuminance&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+             <span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="s1">&#39;lux&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="mi">999999</span><span class="p">,</span>  <span class="c1"># note will be missing if &gt;= 999900</span>
+             <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">0</span>
+             <span class="p">},</span>
+
+        <span class="mi">19</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Zenith Luminance&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+             <span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="s1">&#39;Cd/m2&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="mi">9999</span><span class="p">,</span>  <span class="c1"># note will be missing if &gt;= 9999</span>
+             <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">0</span>
+             <span class="p">},</span>
+
+        <span class="mi">20</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Wind Direction&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+             <span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="s1">&#39;degrees&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="mi">999</span><span class="p">,</span>
+             <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+             <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="mi">360</span>
+             <span class="p">},</span>
+
+        <span class="mi">21</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Wind Speed&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+             <span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="s1">&#39;m/s&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="mi">999</span><span class="p">,</span>
+             <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+             <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="mi">40</span>
+             <span class="p">},</span>
+
+        <span class="mi">22</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Total Sky Cover&#39;</span><span class="p">,</span>  <span class="c1"># (used if Horizontal IR Intensity missing)</span>
+             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+             <span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="mi">99</span><span class="p">,</span>
+             <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+             <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="mi">10</span>
+             <span class="p">},</span>
+
+        <span class="mi">23</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Opaque Sky Cover&#39;</span><span class="p">,</span>  <span class="c1"># (used if Horizontal IR Intensity missing)</span>
+             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+             <span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="mi">99</span>
+             <span class="p">},</span>
+
+        <span class="mi">24</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Visibility&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+             <span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="s1">&#39;km&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="mi">9999</span>
+             <span class="p">},</span>
+
+        <span class="mi">25</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Ceiling Height&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+             <span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="s1">&#39;m&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="mi">99999</span>
+             <span class="p">},</span>
+
+        <span class="mi">26</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Present Weather Observation&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">int</span>
+             <span class="p">},</span>
+
+        <span class="mi">27</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Present Weather Codes&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">int</span>
+             <span class="p">},</span>
+
+        <span class="mi">28</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Precipitable Water&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+             <span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="s1">&#39;mm&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="mi">999</span>
+             <span class="p">},</span>
+
+        <span class="mi">29</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Aerosol Optical Depth&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+             <span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="s1">&#39;thousandths&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="mi">999</span>
+             <span class="p">},</span>
+
+        <span class="mi">30</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Snow Depth&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+             <span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="s1">&#39;cm&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="mi">999</span>
+             <span class="p">},</span>
+
+        <span class="mi">31</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Days Since Last Snowfall&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+             <span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="mi">99</span>
+             <span class="p">},</span>
+
+        <span class="mi">32</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Albedo&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+             <span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="mi">999</span>
+             <span class="p">},</span>
+
+        <span class="mi">33</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Liquid Precipitation Depth&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+             <span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="s1">&#39;mm&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="mi">999</span>
+             <span class="p">},</span>
+
+        <span class="mi">34</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Liquid Precipitation Quantity&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+             <span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="s1">&#39;hr&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="mi">99</span>
+             <span class="p">}</span>
+    <span class="p">}</span>
+
+<div class="viewcode-block" id="EPWFields.field_by_number"><a class="viewcode-back" href="../../ladybug.html#ladybug.epw.EPWFields.field_by_number">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">field_by_number</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">field_number</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return an EPWField based on field number.</span>
+
+<span class="sd">        0 Year</span>
+<span class="sd">        1 Month</span>
+<span class="sd">        2 Day</span>
+<span class="sd">        3 Hour</span>
+<span class="sd">        4 Minute</span>
+<span class="sd">        -</span>
+<span class="sd">        6 Dry Bulb Temperature</span>
+<span class="sd">        7 Dew Point Temperature</span>
+<span class="sd">        8 Relative Humidity</span>
+<span class="sd">        9 Atmospheric Station Pressure</span>
+<span class="sd">        10 Extraterrestrial Horizontal Radiation</span>
+<span class="sd">        11 Extraterrestrial Direct Normal Radiation</span>
+<span class="sd">        12 Horizontal Infrared Radiation Intensity</span>
+<span class="sd">        13 Global Horizontal Radiation</span>
+<span class="sd">        14 Direct Normal Radiation</span>
+<span class="sd">        15 Diffuse Horizontal Radiation</span>
+<span class="sd">        16 Global Horizontal Illuminance</span>
+<span class="sd">        17 Direct Normal Illuminance</span>
+<span class="sd">        18 Diffuse Horizontal Illuminance</span>
+<span class="sd">        19 Zenith Luminance</span>
+<span class="sd">        20 Wind Direction</span>
+<span class="sd">        21 Wind Speed</span>
+<span class="sd">        22 Total Sky Cover</span>
+<span class="sd">        23 Opaque Sky Cover</span>
+<span class="sd">        24 Visibility</span>
+<span class="sd">        25 Ceiling Height</span>
+<span class="sd">        26 Present Weather Observation</span>
+<span class="sd">        27 Present Weather Codes</span>
+<span class="sd">        28 Precipitable Water</span>
+<span class="sd">        29 Aerosol Optical Depth</span>
+<span class="sd">        30 Snow Depth</span>
+<span class="sd">        31 Days Since Last Snowfall</span>
+<span class="sd">        32 Albedo</span>
+<span class="sd">        33 Liquid Precipitation Depth</span>
+<span class="sd">        34 Liquid Precipitation Quantity</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">EPWField</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">FIELDS</span><span class="p">[</span><span class="n">field_number</span><span class="p">])</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;EPW fields representation.&quot;&quot;&quot;</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">FIELDS</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="EPWField"><a class="viewcode-back" href="../../ladybug.html#ladybug.epw.EPWField">[docs]</a><span class="k">class</span> <span class="nc">EPWField</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;An EPW field.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        name: Name of the field.</span>
+<span class="sd">        type: field value type (e.g. int, float, str)</span>
+<span class="sd">        unit: Field unit.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_dict</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">field_dict</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value_type</span> <span class="o">=</span> <span class="n">field_dict</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;unit&#39;</span> <span class="ow">in</span> <span class="n">field_dict</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">unit</span> <span class="o">=</span> <span class="n">field_dict</span><span class="p">[</span><span class="s1">&#39;unit&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">unit</span> <span class="o">=</span> <span class="kc">None</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

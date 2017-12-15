@@ -1,0 +1,250 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>butterfly.controlDict &#8212; Butterfly 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/butterfly.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Butterfly is a python library to create and run advanced computational fluid dynamic (CFD) simulations using OpenFOAM.</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=butterfly&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../butterfly.html">butterfly package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for butterfly.controlDict</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="sd">&quot;&quot;&quot;BlockMeshDict class.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">.foamfile</span> <span class="k">import</span> <span class="n">FoamFile</span><span class="p">,</span> <span class="n">foam_file_from_file</span>
+<span class="kn">from</span> <span class="nn">.functions</span> <span class="k">import</span> <span class="n">Function</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+
+
+<div class="viewcode-block" id="ControlDict"><a class="viewcode-back" href="../../butterfly.html#butterfly.controlDict.ControlDict">[docs]</a><span class="k">class</span> <span class="nc">ControlDict</span><span class="p">(</span><span class="n">FoamFile</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Control dict class.&quot;&quot;&quot;</span>
+
+    <span class="c1"># set default valus for this class</span>
+    <span class="n">__default_values</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;#include&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="c1"># application will be updated based on recipe</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;application&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;startFrom&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;latestTime&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;startTime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;stopAt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;endTime&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;endTime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1000&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;deltaT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;writeControl&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;timeStep&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;writeInterval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;100&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;purgeWrite&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;writeFormat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;ascii&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;writePrecision&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;7&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;writeCompression&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;off&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;timeFormat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;general&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;timePrecision&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;6&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;runTimeModifiable&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;true&#39;</span>
+    <span class="n">__default_values</span><span class="p">[</span><span class="s1">&#39;functions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init class.&quot;&quot;&quot;</span>
+        <span class="n">FoamFile</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;controlDict&#39;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="s1">&#39;dictionary&#39;</span><span class="p">,</span>
+                          <span class="n">location</span><span class="o">=</span><span class="s1">&#39;system&#39;</span><span class="p">,</span> <span class="n">default_values</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__default_values</span><span class="p">,</span>
+                          <span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ControlDict.from_file"><a class="viewcode-back" href="../../butterfly.html#butterfly.controlDict.ControlDict.from_file">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a FoamFile from a file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath: Full file path to dictionary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="n">foam_file_from_file</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">include</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get if any file is included in controlDict.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;#include&#39;</span><span class="p">]</span>
+
+    <span class="nd">@include</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">include</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add include to controlDict.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;#include&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set solver application.</span>
+
+<span class="sd">        (default: simpleFoam)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;application&#39;</span><span class="p">]</span>
+
+    <span class="nd">@application</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s1">&#39;simpleFoam&#39;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;application&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">startTime</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set start timestep (default: 0).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;startTime&#39;</span><span class="p">]</span>
+
+    <span class="nd">@startTime</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">startTime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;startTime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">endTime</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set end timestep (default: 1000).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;endTime&#39;</span><span class="p">]</span>
+
+    <span class="nd">@endTime</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">endTime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;endTime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">writeInterval</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the number of intervals for writing the results (default: 100).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;writeInterval&#39;</span><span class="p">]</span>
+
+    <span class="nd">@writeInterval</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">writeInterval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;writeInterval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">purgeWrite</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the number of results folders to be kept (default: 0).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;purgeWrite&#39;</span><span class="p">]</span>
+
+    <span class="nd">@purgeWrite</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">purgeWrite</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;purgeWrite&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">writeCompression</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write results as .zip files.</span>
+
+<span class="sd">        Set to True to compress the results before writing to your machine</span>
+<span class="sd">        (default: False)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;writeCompression&#39;</span><span class="p">]</span>
+
+    <span class="nd">@writeCompression</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">writeCompression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;writeCompression&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_bool_value</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">functions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function objects.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;functions&#39;</span><span class="p">]</span>
+
+    <span class="nd">@functions</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">functions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func_objects</span><span class="p">):</span>
+        <span class="n">fos</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;isFunction&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">Function</span><span class="o">.</span><span class="n">from_cpp_dictionary</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+               <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">func_objects</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;functions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fos</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;functions&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">values</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,319 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>honeybee.radiance.command.rmtxop &#8212; Honeybee 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../index.html">
+    <img class="logo" src="../../../../_static/honeybee.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Honeybee is a python library to create, run and visualize the results of daylight (radiance) and energy analysis (OpenStudio).</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=ladybug-tools&repo=honeybee&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../honeybee.html">honeybee package</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="http://discourse.ladybug.tools">Discussion Forum</a></li>
+    
+    <li class="toctree-l1"><a href="http://www.ladybug.tools">Ladybug Tools</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for honeybee.radiance.command.rmtxop</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="kn">from</span> <span class="nn">_commandbase</span> <span class="k">import</span> <span class="n">RadianceCommand</span>
+<span class="kn">from</span> <span class="nn">..datatype</span> <span class="k">import</span> <span class="n">RadiancePath</span><span class="p">,</span> <span class="n">RadianceTuple</span><span class="p">,</span> <span class="n">RadianceBoolFlag</span>
+<span class="kn">from</span> <span class="nn">..parameters.rmtxop</span> <span class="k">import</span> <span class="n">RmtxopParameters</span>
+<span class="kn">from</span> <span class="nn">...</span> <span class="k">import</span> <span class="n">config</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<div class="viewcode-block" id="RmtxopMatrix"><a class="viewcode-back" href="../../../../honeybee.radiance.command.html#honeybee.radiance.command.rmtxop.RmtxopMatrix">[docs]</a><span class="k">class</span> <span class="nc">RmtxopMatrix</span><span class="p">(</span><span class="n">RadianceCommand</span><span class="p">):</span>
+    <span class="n">transpose</span> <span class="o">=</span> <span class="n">RadianceBoolFlag</span><span class="p">(</span><span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="s1">&#39;transpose the matrix&#39;</span><span class="p">)</span>
+    <span class="n">scalar_factors</span> <span class="o">=</span> <span class="n">RadianceTuple</span><span class="p">(</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="s1">&#39;scalar values for elements&#39;</span><span class="p">)</span>
+    <span class="n">transform_coefficients</span> <span class="o">=</span> <span class="n">RadianceTuple</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;transformation coefficients&#39;</span><span class="p">)</span>
+    <span class="n">matrix_file</span> <span class="o">=</span> <span class="n">RadiancePath</span><span class="p">(</span><span class="s1">&#39;input_matrixFile&#39;</span><span class="p">,</span> <span class="s1">&#39;input matrix file.&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transpose</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scalar_factors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">transform_coefficients</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">matrix_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">RadianceCommand</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;rmtxop&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transpose</span> <span class="o">=</span> <span class="n">transpose</span>
+        <span class="sd">&quot;&quot;&quot;Set this to true to transpose the matrix&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scalar_factors</span> <span class="o">=</span> <span class="n">scalar_factors</span>
+        <span class="sd">&quot;&quot;&quot;Scalar values for resizing the elements of the matrix. If a single value is</span>
+<span class="sd">        specified then it will be applied across the board.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transform_coefficients</span> <span class="o">=</span> <span class="n">transform_coefficients</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matrix_file</span> <span class="o">=</span> <span class="n">matrix_file</span>
+
+    <span class="c1"># Overriding these properties as I don&#39;t want the script to check for</span>
+    <span class="c1"># binaries named PcombImage in radbin !</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">radbin_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get and set path to radiance binaries.</span>
+<span class="sd">        If you set a new value the value will be changed globally.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">radbin_path</span>
+
+    <span class="nd">@radbin_path</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">radbin_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="c1"># change the path in config so user need to set it up once in a single</span>
+        <span class="c1">#  script</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">radbin_path</span> <span class="o">=</span> <span class="n">path</span>
+
+<div class="viewcode-block" id="RmtxopMatrix.to_rad_string"><a class="viewcode-back" href="../../../../honeybee.radiance.command.html#honeybee.radiance.command.rmtxop.RmtxopMatrix.to_rad_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_rad_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">relative_path</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">transpose</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transpose</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+        <span class="n">scl_fact</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scalar_factors</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+        <span class="n">transform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_coefficients</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+        <span class="n">mtx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix_file</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+        <span class="n">rad_string</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">transpose</span><span class="p">,</span> <span class="n">scl_fact</span><span class="p">,</span> <span class="n">transform</span><span class="p">,</span> <span class="n">mtx</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">rad_string</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">input_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix_file</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span>
+
+<div class="viewcode-block" id="RmtxopMatrix.execute"><a class="viewcode-back" href="../../../../honeybee.radiance.command.html#honeybee.radiance.command.rmtxop.RmtxopMatrix.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;The class RmtxopMatrix cannot be executed on its own.&#39;</span>
+                        <span class="s1">&#39;It is only meant to create matrix classes for Rmtxop.&#39;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Rmtxop"><a class="viewcode-back" href="../../../../honeybee.radiance.command.html#honeybee.radiance.command.rmtxop.Rmtxop">[docs]</a><span class="k">class</span> <span class="nc">Rmtxop</span><span class="p">(</span><span class="n">RadianceCommand</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    rmtxop - concatenate, add, transpose, scale, and convert matrices</span>
+
+<span class="sd">    rmtxop [ -v ][ -f[afdc] ][ -t ][ -s sf .. ][ -c ce .. ] m1 [ + ] ..</span>
+
+<span class="sd">    #Simple usage (for just adding stuff):</span>
+<span class="sd">    mtx = Rmtxop()</span>
+<span class="sd">    mtx.matrix_files = [matrix_filePath1, matrix_filePath2]</span>
+<span class="sd">    mtx.output_file = output_matrixFilePath</span>
+<span class="sd">    #Then to_rad_string will be:</span>
+<span class="sd">        &#39;rmtxop matrix_filesPath1 + matrix_filePath2 &gt; output_matrixFilePath&#39;</span>
+
+<span class="sd">    #Advanced usage with transformations and such. In this case I am subtracting one</span>
+<span class="sd">    # matrix and adding another.</span>
+<span class="sd">    final_matrix = Rmtxop()</span>
+
+<span class="sd">    #std. dc matrix.</span>
+<span class="sd">    dc_matrix = RmtxopMatrix()</span>
+<span class="sd">    dc_matrix.matrix_file = x.ill</span>
+
+<span class="sd">    #direct dc matrix. -1 indicates that this one is being subtracted from dc matrix.</span>
+<span class="sd">    dc_direct_matrix = RmtxopMatrix()</span>
+<span class="sd">    dc_direct_matrix.matrix_file = y.ill</span>
+<span class="sd">    dc_direct_matrix.scalar_factors = [-1]</span>
+
+<span class="sd">    #Sun coefficient matrix.</span>
+<span class="sd">    sun_coeff_matrix = RmtxopMatrix()</span>
+<span class="sd">    sun_coeff_matrix.matrix_file = z.ill</span>
+
+<span class="sd">    #combine the matrices together. Sequence is extremely important</span>
+<span class="sd">    final_matrix.rmtxop_matrices  = [dc_matrix,dc_direct_matrix,sun_coeff_matrix]</span>
+<span class="sd">    final_matrix.output_file = res.ill</span>
+
+<span class="sd">    #Then the to_rad_string will be:</span>
+<span class="sd">        c:/radiance/bin/rmtxop     x.ill + -s -1 y.ill + z.ill &gt; res.ill</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">output_file</span> <span class="o">=</span> <span class="n">RadiancePath</span><span class="p">(</span><span class="s1">&#39;output_file&#39;</span><span class="p">,</span>
+                               <span class="n">descriptive_name</span><span class="o">=</span><span class="s1">&#39;output matrix file&#39;</span><span class="p">,</span>
+                               <span class="n">relative_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">check_exists</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix_files</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rmtxop_matrices</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rmtxop_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">RadianceCommand</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">matrix_files</span> <span class="o">=</span> <span class="n">matrix_files</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="n">output_file</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">rmtxop_parameters</span> <span class="o">=</span> <span class="n">rmtxop_parameters</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">rmtxop_matrices</span> <span class="o">=</span> <span class="n">rmtxop_matrices</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">rmtxop_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get and set rmtxop_parameters.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rmtxop_parameters</span>
+
+    <span class="nd">@rmtxop_parameters</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">rmtxop_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rmtxop_param</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__rmtxop_parameters</span> <span class="o">=</span> <span class="n">rmtxop_param</span> <span class="k">if</span> <span class="n">rmtxop_param</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> \
+            <span class="k">else</span> <span class="n">RmtxopParameters</span><span class="p">()</span>
+
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rmtxop_parameters</span><span class="p">,</span> <span class="s2">&quot;isRadianceParameters&quot;</span><span class="p">),</span> \
+            <span class="s2">&quot;input rmtxop_parameters is not a valid parameters type.&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">rmtxop_matrices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rmtxop_matrices</span>
+
+    <span class="nd">@rmtxop_matrices</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">rmtxop_matrices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rmtxop_matrices</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">rmtxop_matrices</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rmtxop_matrices</span><span class="p">,</span> <span class="n">RmtxopMatrix</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__rmtxop_matrices</span> <span class="o">=</span> <span class="p">[</span><span class="n">rmtxop_matrices</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">__rmtxop_matrices</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">matrix</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rmtxop_matrices</span><span class="p">):</span>
+                        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">RmtxopMatrix</span><span class="p">),</span> \
+                            <span class="s1">&#39;The input #</span><span class="si">%s</span><span class="s1"> is not an RmtxopMatrix&#39;</span> <span class="o">%</span> <span class="n">idx</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">__rmtxop_matrices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                        <span class="s2">&quot;The input for rmtxop_matrices should either be an instance&quot;</span>
+                        <span class="s2">&quot;of the class RmtxopMatrix or a list/tuple/iterable containing&quot;</span>
+                        <span class="s2">&quot; multiple instances of the RmtxopMatrix.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__rmtxop_matrices</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">matrix_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get and set scene files.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__matrix_files</span>
+
+    <span class="nd">@matrix_files</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">matrix_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">files</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__matrix_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="p">))</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__matrix_files</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="Rmtxop.to_rad_string"><a class="viewcode-back" href="../../../../honeybee.radiance.command.html#honeybee.radiance.command.rmtxop.Rmtxop.to_rad_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_rad_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">relative_path</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return full command as string.&quot;&quot;&quot;</span>
+
+        <span class="c1"># If matrices are complex .i.e containing transformations scalars etc., get to</span>
+        <span class="c1"># them first.</span>
+        <span class="n">compound_matrices</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmtxop_matrices</span><span class="p">:</span>
+            <span class="n">matrices</span> <span class="o">=</span> <span class="p">[</span><span class="n">matrix</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">()</span> <span class="k">for</span> <span class="n">matrix</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmtxop_matrices</span><span class="p">]</span>
+            <span class="n">compound_matrices</span> <span class="o">=</span> <span class="s2">&quot; + &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">matrices</span><span class="p">)</span>
+
+        <span class="c1"># This are just plain matrix files..for simple addition.</span>
+        <span class="n">matrix_files</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix_files</span><span class="p">:</span>
+            <span class="n">matrix_files</span> <span class="o">=</span> <span class="s2">&quot; + &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix_files</span><span class="p">)</span>
+            <span class="c1"># If compound matrices have already been specified, then add a plus in</span>
+            <span class="c1"># the beginning.</span>
+            <span class="k">if</span> <span class="n">compound_matrices</span><span class="p">:</span>
+                <span class="n">matrix_files</span> <span class="o">=</span> <span class="s2">&quot;+ </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">matrix_files</span>
+
+        <span class="n">rad_string</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> &gt; </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">normspace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radbin_path</span><span class="p">,</span> <span class="s1">&#39;rmtxop&#39;</span><span class="p">)),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rmtxop_parameters</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">(),</span>
+            <span class="n">compound_matrices</span><span class="p">,</span>
+            <span class="n">matrix_files</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">normspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_file</span><span class="o">.</span><span class="n">to_rad_string</span><span class="p">())</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rad_string</span><span class="o">.</span><span class="n">split</span><span class="p">())</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">input_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Input files.</span>
+
+<span class="sd">        For this command are actually None as the files are</span>
+<span class="sd">        specified as inputs using the matrices input</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix_files</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Ladybug Tools.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
