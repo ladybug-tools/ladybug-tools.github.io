@@ -38,7 +38,13 @@ By harnessing capabilities of CAD interfaces, Ladybug Tools produces a variety o
 Ladybug Tools is written in Python, which can be run on virtually any operating system and plugged into any geometry engine (provided the geometry library is translated).
 
 # Tools
-We are the developers of Ladybug, Honeybee, Butterfly, Dragonfly, and EPWMap
+We are the developers of:
+
+* [Ladybug]( https://github.com/ladybug-tools/ladybug )
+* [Honeybee]( https://github.com/ladybug-tools/honeybee )
+* [Butterfly]( https://github.com/ladybug-tools/butterfly )
+* [Dragonfly]( https://github.com/chriswmackey/Dragonfly )
+* [EPWMap]( https://github.com/ladybug-tools/epwmap )
 
 We also contribute to open-source projects including Design Explorer and the Glazing + Winter Comfort Tool.
 
