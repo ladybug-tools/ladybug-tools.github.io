@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Ladybug Tools | London 2018 Workshop</title>
+  <meta name="description" content="ladybug tools - london workshop 2018" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" />
+  <link href="http://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <link rel="stylesheet" href="../assets/css/header.css" />
+</head>
+
+<body class="bg-faded">
+
+  <header id="single-image" class="background-image" style="background-image:url('../assets/img/workshop/london2018.png')">
+    <div class="header-content">
+    </div>
+  </header>
+  <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+  <!--                Navigation bar on the top of the page                  -->
+  <!--
+    NOTE: If you're making a change to the nav bar you need to edit
+    it in all the other pages. On the main page logo, ladybug tools and products
+    scrolls down to the #products div however in other pages it is a drop-down
+    with multiple items.
+  -->
+  <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
+  <nav id="topNav" class="navbar fixed-top navbar-expand-sm">
+      <div class="container">
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsingNavbar">
+              <span>☰</span>
+          </button>
+          <a class="navbar-brand img page-scroll" href="../index.html">
+            <img src="../assets/img/logo.png">
+          </a>
+          <a class="navbar-brand page-scroll" href="../index.html">Ladybug Tools</a>
+          <div class="collapse navbar-collapse" id="collapsingNavbar">
+              <!-- items on the left side of the navbar -->
+              <ul class="navbar-nav">
+              </ul>
+              <!-- items on the right side of the navbar -->
+              <ul class="nav navbar-nav ml-auto">
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="" id="servicesDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Services
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="servicesDropdown">
+                      <a class="dropdown-item" href="">Workshops</a>
+                      <a class="dropdown-item" href="../consulting.html">Consulting</a>
+                      <a class="dropdown-item" href="../video-tutorial.html">On demand videos</a>
+                      <a class="dropdown-item" href="../cloud.html">Cloud computing</a>
+                  </div>
+                </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="" id="productsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Tools
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="productsDropdown">
+                        <a class="dropdown-item" href="../ladybug.html">Ladybug</a>
+                        <a class="dropdown-item" href="../honeybee.html">Honeybee</a>
+                        <a class="dropdown-item" href="../butterfly.html">Butterfly</a>
+                        <a class="dropdown-item" href="../dragonfly.html">Dragonfly</a>
+                    </div>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="" id="educationDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Education
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="educationDropdown">
+                        <a class="dropdown-item" href="../resource.html">Resources</a>
+                        <a class="dropdown-item" href="../publication.html">Publications</a>
+                        <a class="dropdown-item" href="../presentation.html">Presentations</a>
+                    </div>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="http://discourse.ladybug.tools" target="_blank">Forum</a>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="" id="aboutDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      About
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="aboutDropdown">
+                        <a class="dropdown-item" href="../about.html">Story</a>
+                        <a class="dropdown-item" href="../about.html#team">Team</a>
+                        <a class="dropdown-item" href="../about.html#faq">FAQ</a>
+                    </div>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="" id="membershipDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Membership
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="membershipDropdown">
+                        <a class="dropdown-item" href="../membership.html">Patron</a>
+                        <a class="dropdown-item" href="../membership.html#industry">Industry partner</a>
+                        <a class="dropdown-item" href="../membership.html#institution">Institutional partner</a>
+                        <a class="dropdown-item" href="../membership.html#patronwall">Patrons wall</a></a>
+                    </div>
+                  </li>
+              </ul>
+          </div>
+      </div>
+  </nav>
+
+  <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+  <!--                             Facts grid                                -->
+  <!--                    What is ladybug tools section                      -->
+  <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+  <section id="intro">
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-12">
+                  <h1 class="section-title">
+                    <a href="#intro">
+                      London Workshops, 19-24 March 2018
+                    </a>
+                  </h1>
+                  <hr class="primary">
+                  <p class="section-subcontent">
+                    We are delighted to officially announce the schedule for our week-long workshop series in London
+                    on March 19-24, 2018. See <a class="page-scroll" href="#maintable">the table below</a> for dates and topics.
+                    There are limited number of seats for each workshop. Please secure your seat as soon as possible.
+                    <b>See <a href="https://www.eventbee.com/v/ladybug/#tickets" target="_blank">this page</a> for registration.</b>
+                  </p>
+                  <p class="section-subcontent">
+                    We are offering a 25% discount for students with five spots in each workshop on a first-come,
+                    first-serve basis. To verify, email us a photo of your current valid student ID with the list of
+                    workshops that you are interested in and we will send you a discount key. The key will be valid
+                    for 24 hours. The email address is (london.workshops.2018@ladybug.tools).
+                  </p>
+                  <p class="section-subcontent">
+                    We want to greatly thank <a href="http://www.chapmanbdsp.com/" target="_blank">ChapmanBDSP</a>
+                    for sponsoring the venue for the workshops during the week.
+                    These workshops would not be possible without their fantastic support and collaboration. Be sure
+                    to visit <a href="http://www.chapmanbdsp.com/" target="_blank">their website and see their project and services</a>.
+                  </p>
+              </div>
+          </div>
+          <div class="container">
+              <div class="row">
+                  <div class="col-lg-12">
+                    <table class="table table-striped" id="maintable">
+                      <thead>
+                        <tr>
+                          <th>Date</th>
+                          <th>Time</th>
+                          <th>Topic</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th scope="row">Monday<br />March 19 2018</th>
+                          <td>9:00 am - 6:00 pm</td>
+                          <td>
+                            #1 Ladybug essentials (8 hrs)<br />
+                            <a class="page-scroll" href="#workshop1">See detailed curriculum</a>
+                          </td>
+                          <td>
+                            <a href="https://www.eventbee.com/v/ladybug/#tickets" target="_blank"
+                              class="btn btn-primary-outline btn-l" style="color: white;
+                              background-color: #001A33; bottom: 10px;">Register</a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Tuesday<br />March 20 2018</th>
+                          <td>9:00 am - 1:00 pm</td>
+                          <td>
+                            #2 Honeybee basics for daylighting in Grasshopper (4 hrs)<br />
+                            <a class="page-scroll" href="#workshop2">See detailed curriculum</a>
+                          </td>
+                          <td>
+                            <a href="https://www.eventbee.com/v/ladybug/#tickets" target="_blank"
+                              class="btn btn-primary-outline btn-l" style="color: white;
+                              background-color: #001A33; bottom: 10px;">Register</a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Tuesday<br />March 20 2018</th>
+                          <td>2:00 pm - 6:00 pm</td>
+                          <td>
+                            #3 Advanced daylight modeling with Honeybee in Grasshopper (4 hrs)<br />
+                            <a class="page-scroll" href="#workshop3">See detailed curriculum</a>
+                          </td>
+                          <td>
+                            <a href="https://www.eventbee.com/v/ladybug/#tickets" target="_blank"
+                              class="btn btn-primary-outline btn-l" style="color: white;
+                              background-color: #001A33; bottom: 10px;">Register</a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Wednesday<br />March 21 2018</th>
+                          <td>6:00 pm - 8:00 pm</td>
+                          <td>
+                            Public presentation
+                          </td>
+                          <td>
+                            TBD
+                          </td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Thursday<br />March 22 2018</th>
+                          <td>9:00 am - 1:00 pm</td>
+                          <td>
+                            #4 Honeybee basics for daylighting in Dynamo (4 hrs)<br />
+                            <a class="page-scroll" href="#workshop4">See detailed curriculum</a>
+                          </td>
+                          <td>
+                            <a href="https://www.eventbee.com/v/ladybug/#tickets" target="_blank"
+                              class="btn btn-primary-outline btn-l" style="color: white;
+                              background-color: #001A33; bottom: 10px;">Register</a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Thursday<br />March 22 2018</th>
+                          <td>2:00 pm - 6:00 pm</td>
+                          <td>
+                            #5 Airflow modeling with Butterfly in Grasshopper (4 hrs)<br />
+                            <a class="page-scroll" href="#workshop5">See detailed curriculum</a>
+                          </td>
+                          <td>
+                            <a href="https://www.eventbee.com/v/ladybug/#tickets" target="_blank"
+                              class="btn btn-primary-outline btn-l" style="color: white;
+                              background-color: #001A33; bottom: 10px;">Register</a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Friday<br />March 23 2018</th>
+                          <td>9:00 am - 6:00 pm</td>
+                          <td>
+                            #6 Energy modeling with Honeybee in Grasshopper (8 hrs)<br />
+                            <a class="page-scroll" href="#workshop6">See detailed curriculum</a>
+                          </td>
+                          <td>
+                            <a href="https://www.eventbee.com/v/ladybug/#tickets" target="_blank"
+                              class="btn btn-primary-outline btn-l" style="color: white;
+                              background-color: #001A33; bottom: 10px;">Register</a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Saturday<br />March 24 2018</th>
+                          <td>9:00 am - 1:00 pm</td>
+                          <td>
+                            #7 Honeybee basics for daylighting in Grasshopper (4 hrs)<br />
+                            <a class="page-scroll" href="#workshop7">See detailed curriculum</a>
+                          </td>
+                          <td>
+                            <a href="https://www.eventbee.com/v/ladybug/#tickets" target="_blank"
+                              class="btn btn-primary-outline btn-l" style="color: white;
+                              background-color: #001A33; bottom: 10px;">Register</a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Saturday<br />March 24 2018</th>
+                          <td>2:00 pm - 6:00 pm</td>
+                          <td>
+                            #8 Thermal comfort modeling with Honeybee in Grasshopper (4 hrs)<br />
+                            <a class="page-scroll" href="#workshop8">See detailed curriculum</a>
+                          </td>
+                          <td>
+                            <a href="https://www.eventbee.com/v/ladybug/#tickets" target="_blank"
+                              class="btn btn-primary-outline btn-l" style="color: white;
+                              background-color: #001A33; bottom: 10px;">Register</a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    </div>
+                  </div>
+                </div>
+          </div>
+      </div>
+  </section>
+  <section id="workshop1" class="bg-alt">
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-12">
+                  <h1 class="section-title">
+                    <a href="#workshop1">
+                      #1 Ladybug Essentials<br />
+                      Monday, March 19 2018<br />
+                      9:00 am - 6:00 pm
+                    </a>
+                  </h1>
+                  <hr class="primary">
+                  <p class="section-subcontent">
+                    The one-day Ladybug workshop will provide attendees with the ability to explore the relationship
+                    between weather data and environmental design decisions. The workshop will include a brief introduction
+                    into building environmental design and weather data analysis.
+                    In this workshop you will learn how to:
+                    <ul>
+                      <li>Import and visualize weather data</li>
+                      <li>Calculate outdoor thermal comfort</li>
+                      <li>Draw interactive diagrams and apply conditional statements</li>
+                      <li>Run radiation and solar access analysis</li>
+                      <li>Generate customized result visualizations</li>
+                      <li>Use environmental simulation output to evaluate and generate design options</li>
+                    </ul>
+                  </p>
+                  <p class="section-subcontent">
+                    <h3 class="section-title">
+                      Prerequisites
+                    </h3>
+                    <ul>
+                      <li>Basic knowledge of parametric modeling in Grasshopper is not required but is recommended.</li>
+                      <li>Rhino 5.0 or 6.0</li>
+                      <li>Grasshopper 0.0.0076 or higher</li>
+                      <li>Ladybug + Honeybee legacy plugins. Download the latest legacy version from
+                        <a href="http://www.food4rhino.com/app/ladybug-tools" target="_blank">Food4Rhino</a>
+                        and follow the <a href="https://github.com/mostaphaRoudsari/ladybug/wiki/Installation-Instructions" target="_blank">installation instruction</a>.</li>
+                      <li>For this workshop you do <u>not</u> need to install Radiance, EnergyPlus or OpenStudio.</li>
+                    </ul>
+                  </p>
+                  </div>
+                  </div>
+                  <div class="container">
+                  <div class="row">
+                  <div class="col-lg-12">
+                    <p class="section-subcontent">
+                      <h3 class="section-title">
+                        Curriculum
+                      </h3>
+                    </p>
+                    <table class="table table-striped" id="maintable">
+                      <thead>
+                        <tr>
+                          <th>Time</th>
+                          <th>Topic</th>
+                          <th>Description</th>
+                          <th>Level</th>
+                          <th>Duration</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th scope="row">9:00 to 9:30</th>
+                          <td>Introduction</td>
+                          <td>
+                            This presentation provides an overview of Ladybug Analysis Tools and its applications in
+                            different stages of the design process with focus on Ladybug applications.
+                          </td>
+                          <td>Beginner</td>
+                          <td>30 min</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">9:30 to 11:00</th>
+                          <td>Weather data analysis and visualization</td>
+                          <td>
+                            The workshop starts with a series of hands-on tutorials to develop workflows to analyze and visualize weather data. The attendees will be introduced to techniques for filtering and combining weather data to answer a specific environmental design question and come up with an early design decision.
+                          </td>
+                          <td>Beginner<br /><i>Ladybug</i></td>
+                          <td>90 min</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">11:00 to 11:15</th>
+                          <td>Break</td>
+                          <td></td>
+                          <td></td>
+                          <td>15 min</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">11:15 to 12:30</th>
+                          <td>Thermal comfort,<br />Solar-adjusted temperature</td>
+                          <td>
+                            This session discusses different thermal comfort models and studies the effect of solar radiation on outdoor thermal comfort. The goal is to identify hours that outdoor shading can be helpful.
+                          </td>
+                          <td>Intermediate<br /><i>Ladybug</i></td>
+                          <td>75 min</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">12:30 to 13:30</th>
+                          <td>Lunch</td>
+                          <td></td>
+                          <td></td>
+                          <td>60 min</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">13:30 to 14:45</th>
+                          <td>Sunpath,<br />Outdoor shading</td>
+                          <td>
+                            This session continues by using the findings from morning to design an outdoor canopy.
+                          </td>
+                          <td>Intermediate<br /><i>Ladybug</i></td>
+                          <td>75 min</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">14:45 to 15:00</th>
+                          <td>Break</td>
+                          <td></td>
+                          <td></td>
+                          <td>15 min</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">15:30 to 16:15</th>
+                          <td>Radiation analysis,<br />Shade benefit evaluator</td>
+                          <td>
+                            This session introduces an automated method to evaluate shading devices based on thermal comfort and also introduces how to set up a radiation analysis using Ladybug.
+                          </td>
+                          <td>Intermediate<br /><i>Ladybug</i></td>
+                          <td>75 min</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">16:15 to 16:30</th>
+                          <td>Break</td>
+                          <td></td>
+                          <td></td>
+                          <td>15 min</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">15:30 to 16:15</th>
+                          <td>Sunlight hours/solar access analysis,<br />Design challenge</td>
+                          <td>
+                            The design challenge for day 1 will be provided to the attendees. The attendees will use their learnings from the workshop to solve two different design problems.
+                            <br />
+                            The first design challenge explains the process of evaluating an existing condition against minimum solaraccess.
+                            <br />
+                            The second example introduces a workflow to generate maximum possible massing in an empty lot while meeting the code for minimum change in vertical sky component.
+                          </td>
+                          <td>Intermediate<br /><i>Ladybug</i></td>
+                          <td>90 min</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">18:00</th>
+                          <td>End of workshop</td>
+                          <td></td>
+                          <td></td>
+                          <td>
+                            <a href="https://www.eventbee.com/v/ladybug/#tickets" target="_blank"
+                              class="btn btn-primary-outline btn-l" style="color: white;
+                              background-color: #001A33; bottom: 10px;">Register</a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    </div>
+              </div>
+          </div>
+      </div>
+
+  </section>
+
+  <!-- Footer -->
+  <footer id="footer">
+      <div class="container">
+          <div class="row">
+              <div class="col-6 col-sm-3 column">
+                  <h6 class="text-uppercase text-muted">About</h6>
+                  <ul class="list-unstyled">
+                      <li><a href="../about.html">Our Story</a></li>
+                      <li><a href="../about.html#team">Team</a></li>
+                      <li><a href="http://discourse.ladybug.tools" target="_blank">Forum</a></li>
+                  </ul>
+              </div>
+              <div class="col-6 col-sm-3 column">
+                <h6 class="text-uppercase text-muted">Services</h6>
+                <ul class="list-unstyled">
+                  <li><a href="../consulting.html">Consulting</a></li>
+                  <li><a href="">Workshop</a></li>
+                  <li><a href="../video-tutorial.html">Video tutorial</a></li>
+                  <li><a href="../cloud.html">Cloud computing</a></li>
+                </ul>
+              </div>
+              <div class="col-6 col-sm-3 column">
+                  <h6 class="text-uppercase text-muted">Members</h6>
+                  <ul class="list-unstyled">
+                      <li><a href="../membership.html">Patron</a></li>
+                      <li><a href="../membership.html#industry">Industry partner</a></li>
+                      <li><a href="../membership.html#institution">Institutional partner</a></li>
+                      <li><a href="../membership.html#patronwall">Patrons wall</a></li>
+                  </ul>
+              </div>
+              <div class="col-6 col-sm-3 column">
+                  <h6 class="text-uppercase text-muted">Contact Us</h6>
+                  <ul class="list-unstyled">
+                      <li class="text-muted small"><a href="mailto:info@ladybug.tools?subject=[ladybug-tools] Hello!">info@ladybug.tools</a></li>
+                  </ul>
+                  <ul class="list-inline">
+                      <li class="list-inline-item">
+                        <a rel="nofollow" href="https://www.twitter.com/ladybug_tools" title="Twitter" target="_blank">
+                          <i class="icon-sm fa fa-twitter fa-2x"></i>
+                        </a>&nbsp;
+                      </li>
+                      <li class="list-inline-item">
+                        <a rel="nofollow" href="https://www.facebook.com/ladybug-tools" title="Facebook" target="_blank">
+                          <i class="icon-sm fa fa-facebook fa-2x"></i>
+                        </a>&nbsp;
+                      </li>
+                      <li class="list-inline-item">
+                        <a rel="nofollow" href="https://www.github.com/ladybug-tools" title="GitHub" target="_blank">
+                          <i class="icon-sm fa fa-github fa-2x"></i>
+                        </a>
+                      </li>
+                  </ul>
+                  <ul class="list-unstyled">
+                    <li class="text-muted small">
+                      <a href="https://www.patreon.com/bePatron?u=6230588" data-patreon-widget-type="become-patron-button" target="_blank"><img class="img-fluid d-block patron-button" src="../assets/img/patreon_button.png" /></a>
+
+                    </li>
+                  </ul>
+              </div>
+          </div>
+          <br>
+          <span class="float-left text-muted small">©2017-2018 Ladybug Tools LLC</span>
+      </div>
+  </footer>
+
+  <!--scripts loaded here-->
+  <script
+			  src="https://code.jquery.com/jquery-3.2.1.min.js"
+			  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+			  crossorigin="anonymous"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"
+    integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
+    crossorigin="anonymous"></script>
+  <script
+    src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
+    integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
+    crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/js/tether.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+  <script src="../assets/js/scripts.js"></script>
+
+  <script>
+
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+	  ga('create', 'UA-100351402-1', 'auto');
+	  ga('send', 'pageview');
+
+  </script>
+</body>
