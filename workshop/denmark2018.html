@@ -807,14 +807,17 @@
                   </p>
                   <hr class="primary">
                   <p class="section-subcontent">
-                    This course covers essential workflows for energy simulation with Honeybee. In this workshop, you will learn how to:
+                    Building off of the previous day’s workshop, we will add detailed HVAC systems into Honeybee energy models.
+                    It is highly recommended that participants attend the previous day’s workshop unless they are already very
+                    familiar with Honeybee energy modeling workflows.  In this workshop, you will learn how to:
                     <ul>
-                      <li>Prepare geometry for energy modeling</li>
-                      <li>Customize EnergyPlus materials and constructions</li>
-                      <li>Visualize and edit zone properties, including loads and schedules</li>
-                      <li>Run an energy simulation</li>
-                      <li>Interpret results using flood plots, energy balances, and geometry colored with simulation data</li>
-                      <li>Discuss workflows for going from CAD plans or Revit rooms to whole building energy models</li>
+                      <li>Assemble an energy model using surface-by-surface workflows</li>
+                      <li>Edit and visualize a range of HVAC templates</li>
+                      <li>Calculate energy use intensity for different design options</li>
+                      <li>Estimate the size/ cost of HVAC systems from peak load simulations./li>
+                      <li>Use energy model results to build detailed microclimate maps of building interiors</li>
+                      <li>Bring everything we have learned together by parametrically changing glazing ratio
+                        and evaluating the impact on energy use, HVAC size, and thermal comfort</li>
                     </ul>
                   </p>
                   <p class="section-subcontent">
@@ -828,7 +831,7 @@
                       <li>Grasshopper 0.0.0076 or higher</li>
                       <li>Ladybug + Honeybee legacy plugins. Download the latest legacy version from
                         <a class="bold_link" href="https://www.food4rhino.com/app/ladybug-tools" target="_blank">Food4Rhino</a>
-                        and follow the <a class="bold_link" href="https://github.com/mostaphaRoudsari/ladybug/wiki/Installation-Instructions" target="_blank">installation instruction</a>.</li>
+                        and follow the <a class="bold_link" href="https://github.com/mostaphaRoudsari/ladybug/wiki/Installation-Instructions" target="_blank">installation instructions</a>.</li>
                       <li><a class="bold_link" href="https://github.com/NREL/OpenStudio/releases/tag/v2.4.0">OpenStudio 2.4</a></li>
                     </ul>
                   </p>
@@ -854,124 +857,68 @@
                       </thead>
                       <tbody>
                         <tr>
-                          <th scope="row">9:00 to 9:30</th>
-                          <td>Introduction to energy modeling with visual scripting interfaces</td>
+                          <th scope="row">9:00 to 9:45</th>
+                          <td>Surface-by-surface workflows</td>
                           <td>
-                            This presentation provides an overview of the advantages of building energy models in scripting interfaces like Grasshopper.
+                            We will build a simple shoebox model using a surface-by-surface workflow.
+                            This type of model is suitable for parametric studies looking at a range of different facade options.
                           </td>
                           <td>Intermediate</td>
-                          <td>30 min</td>
-                        </tr>
-                        <tr>
-                          <th scope="row">15:15 to 16:15</th>
-                          <td>Adding HVAC systems</td>
-                          <td>
-                            After adding all of the passive features from the morning, we will add an HVAC system to deal with the remaining uncomfortably hours.  We will calculate energy use intensity from the results and track the energy impact of different HVAC strategies.
-                          </td>
-                          <td>Advanced<br /><i>Honeybee</i></td>
-                          <td>60 min</td>
-                        </tr>
-                        <tr>
-                          <th scope="row">16:15 to 16:30</th>
-                          <td>Break</td>
-                          <td></td>
-                          <td></td>
-                          <td>15 min</td>
-                        </tr>
-                        <tr>
-                        <tr>
-                          <th scope="row">9:30 to 11:00</th>
-                          <td>Building a simple unconditioned test box model</td>
-                          <td>
-                            The workshop starts by walking through the minimum amount of info needed to build an energy model of a single room.  This session will end with running the model and visualizing the hourly temperature within the room.  Lastly, the temperature data will be run through a thermal comfort model.
-                          </td>
-                          <td>Intermediate<br /><i>Honeybee</i></td>
-                          <td>90 min</td>
-                        </tr>
-                        <tr>
-                          <th scope="row">11:00 to 11:15</th>
-                          <td>Break</td>
-                          <td></td>
-                          <td></td>
-                          <td>15 min</td>
-                        </tr>
-                        <tr>
-                          <th scope="row">11:15 to 11:45</th>
-                          <td>Adding shade to an energy model</td>
-                          <td>
-                            After observing the hourly temperature within the test box, we will try to improve the comfort conditions by adding shade.
-                          </td>
-                          <td>Intermediate<br /><i>Honeybee</i></td>
-                          <td>30 min</td>
-                        </tr>
-                        <tr>
-                          <th scope="row">11:45 to 12:30</th>
-                          <td>Opening windows for natural ventilation</td>
-                          <td>
-                            To improve comfort further, we will allow occupants to open windows and learn how to assign schedules for window opening.
-                          </td>
-                          <td>Intermediate<br /><i>Honeybee</i></td>
                           <td>45 min</td>
                         </tr>
                         <tr>
-                          <th scope="row">12:30 to 13:00</th>
-                          <td>Changing constructions</td>
+                          <th scope="row">9:45 to 10:45</th>
+                          <td>Adding HVAC systems</td>
                           <td>
-                            To finish off the passive design of the space, we will add thermal mass and improve insulation on the windows.
+                            We will add a fully-detailed HVAC system to the shoe box model and calculate energy use intensity from the results.
                           </td>
-                          <td>Intermediate<br /><i>Honeybee</i></td>
+                          <td>Advanced<br /><i>Honeybee</i></td>
+                          <td>60 min</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">10:45 to 11:00</th>
+                          <td>Break</td>
+                          <td></td>
+                          <td></td>
+                          <td>15 min</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">11:00 to 11:30</th>
+                          <td>Peak loads and HVAC size / cost</td>
+                          <td>
+                           We will observe the peak loads experienced by our test box and understand the impact
+                           that facade strategies have on the size and cost of the HVAC system.
+                          </td>
+                          <td>Advanced<br /><i>Honeybee</i></td>
                           <td>30 min</td>
                         </tr>
                         <tr>
-                          <th scope="row">13:00 to 14:00</th>
-                          <td>Lunch</td>
-                          <td></td>
-                          <td></td>
-                          <td>60 min</td>
-                        </tr>
-                        <tr>
-                          <th scope="row">14:00 to 15:00</th>
-                          <td>Energy balances</td>
+                          <th scope="row">11:30 to 13:30</th>
                           <td>
-                            Picking up where we left off, we will look at energy balance graphics for different building types and build a graphic for the morning’s test box.
+                            Detailed microclimate maps
+                          </td>
+                          <td>
+                            Using the thermal results from our energy model, we will build a detailed map of temperature and thermal
+                            comfort within the test box room.  We will briefly touch on the calculations that go into building this
+                            detailed microclimate map.
                           </td>
                           <td>Advanced<br /><i>Honeybee</i></td>
-                          <td>60 min</td>
+                          <td>120 min</td>
                         </tr>
                         <tr>
-                          <th scope="row">15:00 to 15:15</th>
-                          <td>Break</td>
-                          <td></td>
-                          <td></td>
-                          <td>15 min</td>
-                        </tr>
-                        <tr>
-                          <th scope="row">15:15 to 16:15</th>
-                          <td>Adding HVAC systems</td>
+                          <th scope="row">13:30 to 14:00</th>
                           <td>
-                            After adding all of the passive features from the morning, we will add an HVAC system to deal with the remaining uncomfortably hours.  We will calculate energy use intensity from the results and track the energy impact of different HVAC strategies.
+                            Parametric sensitivity studies
+                          </td>
+                          <td>
+                            We will bring together everything that we have learned in order to understand the relationship between
+                            glazing ratio, energy use, HVAC size, and occupant thermal comfort.
                           </td>
                           <td>Advanced<br /><i>Honeybee</i></td>
-                          <td>60 min</td>
+                          <td>30 min</td>
                         </tr>
                         <tr>
-                          <th scope="row">16:15 to 16:30</th>
-                          <td>Break</td>
-                          <td></td>
-                          <td></td>
-                          <td>15 min</td>
-                        </tr>
-                        <tr>
-                          <th scope="row">16:30 to 18:00</th>
-                          <td>Full building energy model workflows</td>
-                          <td>
-                            For the final portion of the worksop, we will open an example file for a full-building energy model and go through how the model is set up.  Workflow for going from CAD plans or Revit rooms to energy models will be discussed and the session will end by coloring zones with energy model results.
-                          </td>
-                          <td>Advanced<br /><i>Honeybee</i></td>
-                          <td>90 min</td>
-                        </tr>
-                        <tr>
-                          <th scope="row">18:00</th>
+                          <th scope="row">14:00</th>
                           <td>End of workshop</td>
                           <td>
                             <a rel="nofollow" class="page-scroll" href="#maintable" title="Up">
