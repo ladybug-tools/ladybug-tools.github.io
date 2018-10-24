@@ -1,5 +1,10 @@
 # Ladybug Tools - Wikipedia Article Notes
 
+## Notability
+
+https://www.energy.gov/eere/buildings/articles/energy-department-announces-funding-16-small-businesses-stimulate-american
+https://www.ibpsa.us/videos/listing/ladybug-tools-and-green-building-xml-open-source-tools-building-analysis
+
 ## Websites standards to meet or exceed
 
 https://en.wikipedia.org/wiki/Autodesk_Ecotect_Analysis
