@@ -243,6 +243,7 @@ Ladybug Tools - Wikipedia Article Notes
 
 https://en.wikipedia.org/w/index.php?title=Draft:Ladybug_Tools
 * Add data to Infobox
+* Add logo image to infobox
 
 ### 2018-10-26 ~ Theo
 
