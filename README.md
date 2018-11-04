@@ -44,6 +44,7 @@ We are the developers of:
 * [Honeybee]( https://github.com/ladybug-tools/honeybee )
 * [Butterfly]( https://github.com/ladybug-tools/butterfly )
 * [Dragonfly]( https://github.com/chriswmackey/Dragonfly )
+* [Spider]( https://github.com/ladybug-tools/spider )
 * [EPWMap]( https://github.com/ladybug-tools/epwmap )
 
 We also contribute to open-source projects including Design Explorer and the Glazing + Winter Comfort Tool.

@@ -8,12 +8,16 @@ value='You are now in a GitHub web page view - Click this button to view this re
 
 # [Ladybug Tools - Wikipedia Article Notes]( #wikipedia-article-notes.md )
 
+Useful links
 * https://en.wikipedia.org/wiki/Draft:Ladybug_Tools
 * https://en.wikipedia.org/wiki/User:Chriswmackey
 * https://www.mediawiki.org/wiki/User:Mostapha_roudsari
 * https://en.wikipedia.org/w/index.php?title=User:Mostapha_roudsari&action=edit&redlink=1
 * https://en.wikipedia.org/wiki/User:TheoA
 
+Action Items
+* Theo:Do we have a deadline in mind? My guess is that it will take at least two or three weeks befor I would be happy to present the article to somebody who could submit the article (and we need to find that person too ).
+* Theo: Once there are the SVG logos in the assets/imag folder, I will get them into the Commons.
 
 ***
 
@@ -119,7 +123,7 @@ templates for categories
 
 ##### Stub Template
 
-* A weird kind of category
+A weird kind of category
 
 * https://en.wikipedia.org/wiki/Category:Computer-aided_design_stubs
 * https://en.wikipedia.org/wiki/Category:Computer_engineering_stubs
@@ -236,6 +240,9 @@ Ladybug Tools - Wikipedia Article Notes
 
 * Reorganize the sections
 * Add more links
+
+https://en.wikipedia.org/w/index.php?title=Draft:Ladybug_Tools
+* Add data to Infobox
 
 ### 2018-10-26 ~ Theo
 
