@@ -2,18 +2,25 @@
 
 <span style=display:none; >[You are now in a GitHub source code view - click this link to view Read Me file as a web page]( https://www.ladybug.tools/ladybug-tools.github.io/assets/drafts/ "View file as a web page." ) </span>
 
-<div><input type=button class = "btn btn-secondary btn-sm" onclick="window.location.href=https://github.com/ladybug-tools/ladybug-tools.github.io/blob/master/assets/drafts/wikipedia-article-notes.md";
+<div><input type=button onclick=window.location.href="https://github.com/ladybug-tools/ladybug-tools.github.io/blob/master/assets/drafts/wikipedia-article-notes.md";
 value='You are now in a GitHub web page view - Click this button to view this read me file as source code' ></div>
 
 
-# [Ladybug Tools - Wikipedia Article Notes]( #wikipedia-article-notes.md )
+# [Ladybug Tools - Wikipedia Article Notes]( index.html )
 
-Useful links
+<details open ><summary><h2 style=display:inline; > Useful links </h2></summary>
+
 * https://en.wikipedia.org/wiki/Draft:Ladybug_Tools
 * https://en.wikipedia.org/wiki/User:Chriswmackey
 * https://www.mediawiki.org/wiki/User:Mostapha_roudsari
 * https://en.wikipedia.org/w/index.php?title=User:Mostapha_roudsari&action=edit&redlink=1
 * https://en.wikipedia.org/wiki/User:TheoA
+
+***
+
+</details>
+
+<details open ><summary><h2 style=display:inline; > Action items </h2></summary>
 
 Action Items
 * Theo:Do we have a deadline in mind? My guess is that it will take at least two or three weeks befor I would be happy to present the article to somebody who could submit the article (and we need to find that person too ).
@@ -21,7 +28,9 @@ Action Items
 
 ***
 
-# General Arrangement of Wikipedia Articles
+</details>
+
+<details><summary><h2 style=display:inline; > General Arrangement of Wikipedia Articles</h2></summary>
 
 See https://en.wikipedia.org/wiki/Wikipedia:Manual_of_Style/Layout
 
@@ -42,9 +51,11 @@ A must have
 
 * https://en.wikipedia.org/wiki/Wikipedia:List_of_infoboxes
 * https://en.wikipedia.org/wiki/Template:Infobox_software
+* Infobox dot-com company
+* Infobox organization
 
 
-Looks like infobox software template is the way to go
+~~Looks like infobox software template is the way to go~~
 
 ## Body
 
@@ -134,8 +145,9 @@ A weird kind of category
 
 
 ***
+</details>
 
-## Other Wikipedia Locations
+<details><summary><h2 style=display:inline; > Other Wikipedia locations for placing links</h2></summary>
 
 Places where you put links to your your article
 
@@ -147,6 +159,7 @@ Places where you put links to your your article
 * https://en.wikipedia.org/wiki/List_of_CAx_companies
 * https://en.wikipedia.org/wiki/List_of_computer_simulation_software
 * https://en.wikipedia.org/wiki/List_of_file_formats#Computer-aided_design_.28CAD.29
+* https://en.wikipedia.org/wiki/List_of_free_and_open-source_software_organizations
 
 
 ### Comparisons
@@ -158,8 +171,9 @@ Places where you put links to your your article
 
 
 ***
+</details>
 
-# Wikipedia Guidelines
+<details><summary><h2 style=display:inline; > Wikipedia guidelines for articles</h2></summary>
 
 ## Five Pillars
 
@@ -196,6 +210,11 @@ https://en.wikipedia.org/wiki/Wikipedia:Notability
 
 ***
 
+</details>
+
+<details><summary><h2 style=display:inline; > Considerations for the Ladybug Tools Wikipedia presence </h2></summary>
+
+
 ### Ladybug Tools Notability References
 
 Is there a link to the 'best software award' that was on Ladybug Tools home page for a while?
@@ -211,30 +230,83 @@ Who presents the best information in the nicest ways?
 
 2018-11-03 ~ Theo: coming soon - adding to and curating this list
 
-Applications
+Applications CAD/CAE
+* https://en.wikipedia.org/wiki/ArchiCAD
+	* body sections:
+* https://en.wikipedia.org/wiki/AutoCAD
+	* Body sections: history / features / variants / ports
 * https://en.wikipedia.org/wiki/Autodesk_Ecotect_Analysis
-* https://en.wikipedia.org/wiki/Blender_(software) +++
+	* A stub
+* https://en.wikipedia.org/wiki/Autodesk_Revit
+	* Body sections: history / products / Use and implementation / modeling / rendering
+* <https://en.wikipedia.org/wiki/Blender_(software)>
+	* good quality article
+	Body sections: history / features / rendering... / physics / development / support / use in media industry / open projects / online services
+	* Categories of interest: 3D_computer_graphics & many other
+* https://en.wikipedia.org/wiki/Cinema_4D
+	* body sections:
 * https://en.wikipedia.org/wiki/GIMP
-* https://en.wikipedia.org/wiki/GitHub
+	* Body sections: history / development / distribution / professional reviews/ mascot / features / forks...
+	* Many relevant categories
 * https://en.wikipedia.org/wiki/Grasshopper_3D
+	* category: building_engineering, Computer-aided design software
 * https://en.wikipedia.org/wiki/LuxRender
-* https://en.wikipedia.org/wiki/Radiance_(software)
+	* Body sections: history / features
+* https://en.wikipedia.org/wiki/MicroStation
+	* body sections: history / file format
+* <https://en.wikipedia.org/wiki/Radiance_(software)>
+	* body sections: non-standard: formats / tools
 * https://en.wikipedia.org/wiki/Pixar_RenderMan
+	* Body sections: technology / awards / studios using...
 * https://en.wikipedia.org/wiki/OpenStudio
+	* Body sections: Features / Sketchup Plugin
 * https://en.wikipedia.org/wiki/Rhinoceros_3D
+	* Body sections: overview / plugins
 * https://en.wikipedia.org/wiki/SketchUp
+	* Body sections: history / editions / 3d warehouse / patents / software extensions / model viewer / gallery
 * https://en.wikipedia.org/wiki/Three.js
+	* Body sections: overview / history / features / usage / selected uses and works / community
 
-Other
+
+Lists
+* https://en.wikipedia.org/wiki/List_of_free_and_open-source_software_organizations
+
+FOSS organizations
+* https://en.wikipedia.org/wiki/The_Apache_Software_Foundation
+* https://en.wikipedia.org/wiki/Blender_Foundation
+* https://en.wikipedia.org/wiki/Linux_Foundation
+* https://en.wikipedia.org/wiki/Mozilla
+* https://en.wikipedia.org/wiki/OpenStreetMap_Foundation
+* https://en.wikipedia.org/wiki/Python_Software_Foundation
+* https://en.wikipedia.org/wiki/Ruby_Central
+
+Proprietary
+* https://en.wikipedia.org/wiki/GitHub
+
+
+Other related Wikipedia articles
 * https://en.wikipedia.org/wiki/Sensitivity_analysis_of_an_EnergyPlus_model
 * https://en.wikipedia.org/wiki/3D_computer_graphics
 
 
 ***
 
-## Change Log
+</details>
+
+<details><summary><h2 style=display:inline; > Change Log </h2></summary>
 
 Ladybug Tools - Wikipedia Article Notes
+
+### 2018-11-04 ~ Theo
+
+* Add details tags to the major sections of the document
+
+When I started thinking about this project what I has in mind was an article about a library or framework.
+Well, that does not really seem to be a thing in Wikipedia.
+Writing about Ladybug Tools as a single app seems not to work as well.
+So my current thinking is to write about LT as a FOSS organization.
+
+
 
 ### 2018-11-03 ~ Theo
 
@@ -249,3 +321,5 @@ https://en.wikipedia.org/w/index.php?title=Draft:Ladybug_Tools
 
 Ladybug Tools - Wikipedia Article Notes
 * Add more text and links
+
+</details>
