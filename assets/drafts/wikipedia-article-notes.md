@@ -20,10 +20,12 @@ value='You are now in a GitHub web page view - Click this button to view this re
 
 </details>
 
-<details open ><summary><h2 style=display:inline; > Action items </h2></summary>
+<details open><summary><h2 style=display:inline; > Action items </h2></summary>
 
 Action Items
-* Theo:Do we have a deadline in mind? My guess is that it will take at least two or three weeks befor I would be happy to present the article to somebody who could submit the article (and we need to find that person too ).
+* 2018-11-10 ~ Theo ~ need to agree sections headings. See 'Suggested sections' in Considerations...
+* 2018-11-09 ~ Theo ~ need to decide which type of Infobox we want. See below
+* Theo: Do we have a deadline in mind? My guess is that it will take at least two or three weeks befor I would be happy to present the article to somebody who could submit the article (and we need to find that person too ).
 * Theo: Once there are the SVG logos in the assets/imag folder, I will get them into the Commons.
 
 ***
@@ -41,38 +43,59 @@ See https://en.wikipedia.org/wiki/Wikipedia:Manual_of_Style/Layout
 
 
 
-## Before the lead section
+### Before the lead section
 
 ### Infoboxes
 
-See https://en.wikipedia.org/wiki/Wikipedia:Manual_of_Style/Infoboxes
+* See https://en.wikipedia.org/wiki/Wikipedia:Manual_of_Style/Infoboxes
+* An infobox is a must have. Infoboxes are tricky to prepare
+* An infobox is a panel, usually in the top right of an article, next to the lead section (in the desktop version of Wikipedia), or at the end of the lead section of an article (in the mobile version), that summarizes key features of the page's subject. Infoboxes may also include an image, a map, or both.
+* Wikipedia's infoboxes almost always use the template software feature. The templates have parameters; to work properly, the parameter values have to be specified when the template is inserted in the page. This allows each infobox to show information relevant to the article subject, while requiring only a minimal amount of coding within each article.
 
-A must have
-
+Types of infoboxes
 * https://en.wikipedia.org/wiki/Wikipedia:List_of_infoboxes
-* https://en.wikipedia.org/wiki/Template:Infobox_software
-* Infobox dot-com company
-* Infobox organization
+* https://en.wikipedia.org/wiki/Category:Organization_infobox_templates
 
+Possible choices
+* https://en.wikipedia.org/wiki/Template:Infobox_software
+* https://en.wikipedia.org/wiki/Template:Infobox_website *
+* https://en.wikipedia.org/wiki/Template:Infobox_organization *
+* https://en.wikipedia.org/wiki/Template:Infobox_company *
+* https://en.wikipedia.org/wiki/Template:Infobox_online_service
+
+***
+
+* suggested types as of 2018-11-09
 
 ~~Looks like infobox software template is the way to go~~
 
 ## Body
 
+* Articles longer than a stub are generally divided into sections, and sections over a certain length are generally divided into paragraphs; these divisions enhance the readability of the article. The names and orders of section headings are often determined by the relevant WikiProject, although articles should still follow good organizational and writing principles regarding sections and paragraphs.
 
 ### Lead Section
 
-See https://en.wikipedia.org/wiki/Wikipedia:Manual_of_Style/Lead_section
+* See https://en.wikipedia.org/wiki/Wikipedia:Manual_of_Style/Lead_section
+* The lead section (also known as the lead or introduction) of a Wikipedia article is the section before the table of contents and the first heading. The lead serves as an introduction to the article and a summary of its most important contents. It is not a news-style lead or "lede" paragraph.
+* The average Wikipedia visit is a few minutes.[1] The lead is the first thing most people will read on arriving at an article. It gives the basics in a nutshell and cultivates interest in reading on – though not by teasing the reader or hinting at what follows. It should be written in a clear, accessible style with a neutral point of view.
 
 
 ### Table of contents (TOC)
 
-See https://en.wikipedia.org/wiki/Help:Section#Table_of_contents_(TOC)
-
+* See https://en.wikipedia.org/wiki/Help:Section#Table_of_contents_(TOC)
+* For each page with at least four headings, a table of contents (TOC) is automatically generated...
 
 ### Content
 
+* Articles longer than a stub are generally divided into sections, and sections over a certain length are generally divided into paragraphs; these divisions enhance the readability of the article. The names and orders of section headings are often determined by the relevant WikiProject, although articles should still follow good organizational and writing principles regarding sections and paragraphs.
+
+* https://en.wikipedia.org/wiki/Category:WikiProject_style_advice
+* https://en.wikipedia.org/wiki/Wikipedia:WikiProject_Computer_science/Manual_of_style
+
+
 2018-11-03 ~ Theo: My next task is to look at software articles that I respect and begin to list the sections that are used frequently
+
+
 
 #### History
 
@@ -103,6 +126,7 @@ Contents: A bulleted list of recommended relevant websites, each accompanied by 
 ### Further reading
 
 Contents: An optional bulleted list, usually alphabetized, of a reasonable number of publications that would help interested readers learn more about the article subject.
+
 
 * https://www.food4rhino.com/app/ladybug-tools
 * https://www.grasshopper3d.com/group/ladybug
@@ -171,11 +195,12 @@ Places where you put links to your your article
 
 
 ***
+
 </details>
 
 <details><summary><h2 style=display:inline; > Wikipedia guidelines for articles</h2></summary>
 
-## Five Pillars
+### Five Pillars
 
 https://en.wikipedia.org/wiki/Wikipedia:Five_pillars
 
@@ -185,12 +210,12 @@ https://en.wikipedia.org/wiki/Wikipedia:Five_pillars
 * Wikipedia's editors should treat each other with respect and civility
 * Wikipedia has no firm rules
 
-## Rules
+### Rules
 
 * https://en.wikipedia.org/wiki/Wikipedia:Simplified_ruleset
 
 
-## Notability
+### Notability
 
 https://en.wikipedia.org/wiki/Wikipedia:Notability
 * On Wikipedia, notability is a test used by editors to decide whether a given topic warrants its own article.
@@ -200,7 +225,7 @@ https://en.wikipedia.org/wiki/Wikipedia:Notability
 
 
 
-## Style
+### Style
 
 * https://en.wikipedia.org/wiki/Wikipedia:Manual_of_Style
 * https://en.wikipedia.org/wiki/Wikipedia:Manual_of_Style/Layout
@@ -212,7 +237,7 @@ https://en.wikipedia.org/wiki/Wikipedia:Notability
 
 </details>
 
-<details><summary><h2 style=display:inline; > Considerations for the Ladybug Tools Wikipedia presence </h2></summary>
+<details open ><summary><h2 style=display:inline; > Considerations for the Ladybug Tools Wikipedia presence </h2></summary>
 
 
 ### Ladybug Tools Notability References
@@ -224,7 +249,7 @@ Is there a link to the 'best software award' that was on Ladybug Tools home page
 
 
 
-## Websites standards we want to to meet or exceed
+### Websites standards we want to to meet or exceed
 
 Who presents the best information in the nicest ways?
 
@@ -249,6 +274,8 @@ Applications CAD/CAE
 	* Body sections: history / development / distribution / professional reviews/ mascot / features / forks...
 	* Many relevant categories
 * https://en.wikipedia.org/wiki/Grasshopper_3D
+	* Infobox programming language
+|	* body sections: user interface / node based editor / see also ...
 	* category: building_engineering, Computer-aided design software
 * https://en.wikipedia.org/wiki/LuxRender
 	* Body sections: history / features
@@ -261,6 +288,7 @@ Applications CAD/CAE
 * https://en.wikipedia.org/wiki/OpenStudio
 	* Body sections: Features / Sketchup Plugin
 * https://en.wikipedia.org/wiki/Rhinoceros_3D
+	* Infobox software
 	* Body sections: overview / plugins
 * https://en.wikipedia.org/wiki/SketchUp
 	* Body sections: history / editions / 3d warehouse / patents / software extensions / model viewer / gallery
@@ -273,20 +301,59 @@ Lists
 
 FOSS organizations
 * https://en.wikipedia.org/wiki/The_Apache_Software_Foundation
+	* Body sections: History / Projects / Board of directors / Financials / See also / Notes / Further reading / External links
 * https://en.wikipedia.org/wiki/Blender_Foundation
+	* Body sections: Goals / Open projects / References / External links
+* https://en.wikipedia.org/wiki/Free_Software_Foundation
+	* body sections: 1	History/Current and ongoing activities/High priority projects/Hardware endorsements (RYF)/Structure/Board/Voting/Employment/Membership/Legal/Financial/Criticism/Recognition / See also...
+* https://en.wikipedia.org/wiki/Eclipse_Foundation
+	* many sections
+* https://en.wikipedia.org/wiki/Khronos_Group
+	* Infobox Organization
+	* Body sections: history / working groups / members / references / external links
 * https://en.wikipedia.org/wiki/Linux_Foundation
+	* Infobox organization
+	* Body sections: History/Goals /Initiatives/Foundation Projects/Community Stewardship/members/funding/events/references/external links
 * https://en.wikipedia.org/wiki/Mozilla
+	* Infobox company
+	* Body sections: History/values/software/other activities/community/see also/references/external links
 * https://en.wikipedia.org/wiki/OpenStreetMap_Foundation
+	* Infobox non-profit
+	* Body sections: Structure / See also / References / External links
 * https://en.wikipedia.org/wiki/Python_Software_Foundation
+	* Infobox organization
+	* Body sections: code of conduct / notes / external links
 * https://en.wikipedia.org/wiki/Ruby_Central
+	* Infobox none
+	* Body sections: see also/ references / external links
 
 Proprietary
 * https://en.wikipedia.org/wiki/GitHub
+	* Infobox dot-com company
+	* history/ company affairs/ services/ developed projects/ censorship/ see also...
 
 
 Other related Wikipedia articles
 * https://en.wikipedia.org/wiki/Sensitivity_analysis_of_an_EnergyPlus_model
 * https://en.wikipedia.org/wiki/3D_computer_graphics
+
+
+
+
+
+### Suggested sections
+
+2018-11-10 ~ Theo: my current suggestions for section topics
+* Lead
+* History
+* Goals
+* Products
+* Services
+* Community/Membership
+* Recognition / Awards
+* See also
+* References
+* External links
 
 
 ***
@@ -296,6 +363,14 @@ Other related Wikipedia articles
 <details><summary><h2 style=display:inline; > Change Log </h2></summary>
 
 Ladybug Tools - Wikipedia Article Notes
+
+### 2018-11-10 ~ Theo
+
+* Add to Infoboxes section
+* Add to body section
+* Websites standards...
+	* Add organizations and their body section titles
+	* Add 'suggested sections' section
 
 ### 2018-11-04 ~ Theo
 
