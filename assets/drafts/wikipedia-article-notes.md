@@ -244,9 +244,10 @@ https://en.wikipedia.org/wiki/Wikipedia:Notability
 
 Is there a link to the 'best software award' that was on Ladybug Tools home page for a while?
 
+* https://designtech.io/survey/designtech-dynawards-results/
 * https://www.energy.gov/eere/buildings/articles/energy-department-announces-funding-16-small-businesses-stimulate-american
 * https://www.ibpsa.us/videos/listing/ladybug-tools-and-green-building-xml-open-source-tools-building-analysis
-
+* https://www.food4rhino.com/browse?searchText=&sort_by=its_field_downloads
 
 
 ### Websites standards we want to to meet or exceed
@@ -281,12 +282,14 @@ Applications CAD/CAE
 	* Body sections: history / features
 * https://en.wikipedia.org/wiki/MicroStation
 	* body sections: history / file format
+* https://en.wikipedia.org/wiki/OpenFOAM
+* https://en.wikipedia.org/wiki/OpenStudio
+	* Body sections: Features / Sketchup Plugin
+* https://en.wikipedia.org/wiki/ParaView
 * <https://en.wikipedia.org/wiki/Radiance_(software)>
 	* body sections: non-standard: formats / tools
 * https://en.wikipedia.org/wiki/Pixar_RenderMan
 	* Body sections: technology / awards / studios using...
-* https://en.wikipedia.org/wiki/OpenStudio
-	* Body sections: Features / Sketchup Plugin
 * https://en.wikipedia.org/wiki/Rhinoceros_3D
 	* Infobox software
 	* Body sections: overview / plugins
@@ -341,21 +344,79 @@ Other related Wikipedia articles
 
 
 
-### Suggested sections
+</details>
+
+<details open><summary><h2 style=display:inline; > Suggested sections </h2></summary>
+
 
 2018-11-10 ~ Theo: my current suggestions for section topics
-* Lead
-* History
-* Goals
-* Products
-* Services
-* Community/Membership
-* Recognition / Awards
-* Gallery
-* See also
-* References
-* External links
 
+
+#### Lead
+
+
+#### History
+
+#### Goals
+
+Built upon validated simulation engines
+
+### Products
+
+Developers of:
+
+* Ladybug
+* Honeybee
+* Butterfly
+* Dragonfly
+* Spider
+* EPWMap
+
+### Services
+
+Workshops
+Consulting
+On demand videos
+Cloud computing
+
+### Community/Membership
+
+Forum
+
+#### Recognition / Awards
+
+See notability above
+
+#### Gallery
+
+ten or so images from: https://hydrashare.github.io/hydra/
+
+#### See also
+
+* [[openFOAM]]
+* [[OpenStudio]]
+* [[Radiance_(software)| Radiance]]
+
+#### Publications
+
+See https://www.ladybug-tools.github.io/publication.html
+
+#### References
+
+#### External links
+
+References
+* https://en.wikipedia.org/wiki/Wikipedia:External_links
+* https://en.wikipedia.org/wiki/Help:URL
+
+Notes
+* Normally, only one official link is included.
+
+Ours
+* [https://www.ladybug.tools/index.html Ladybug Tools home page]
+* [https://github.com/ladybug-tools Ladybug Tools source code]
+* [https://discourse.ladybug.tools/ Ladybug Tools forum]
+* [https://www.food4rhino.com/app/ladybug-tools Ladybug Tools on Grasshopper]
 
 ***
 
@@ -364,6 +425,11 @@ Other related Wikipedia articles
 <details><summary><h2 style=display:inline; > Change Log </h2></summary>
 
 Ladybug Tools - Wikipedia Article Notes
+
+
+### 2018-11-18 ~ Theo
+
+* Add test to suggested sections
 
 ### 2018-11-10 ~ Theo
 
