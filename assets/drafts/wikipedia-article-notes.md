@@ -389,7 +389,7 @@ See notability above
 
 #### Gallery
 
-ten or so images from: https://hydrashare.github.io/hydra/
+ten or so images from: https://hydrashare.github.io/hydra/ with explanations
 
 #### See also
 
