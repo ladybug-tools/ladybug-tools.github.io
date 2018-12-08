@@ -27,7 +27,7 @@
               <form id="emf-form" target="_self" enctype="multipart/form-data" method="post" action="https://www.emailmeform.com/builder/form/MA541tUxdg7e4ELZwbkoaiN3c">
 
                 <p><strong>Institution Name</strong><span style="color:red;">*</span><br>
-                <input id="element_1" name="element_1" value="" size="30" class="validate[required]" type="text" />
+                <input id="element_0" name="element_0" value="" size="30" class="validate[required]" type="text" />
                 </p>
 
                 <p style="margin-bottom:0px;"><strong>Your Name</strong><span style="color:red;">*</span>
@@ -238,31 +238,15 @@
 
   <script>
     $("#emf-form").on("change", function(event) {
-      var compName = $("#element_1").val()
-      var partType = $("#element_0").val()
-      var firstName = $("#element_4").val()
-      var lastName = $("#element_5").val()
-      var email = $("#element_9").val()
-      if (compName != '' && partType != '' && firstName != '' && lastName != '' && email.includes("@")){
+      var compName = $("#element_0").val()
+      var firstName = $("#element_3").val()
+      var lastName = $("#element_4").val()
+      var email = $("#element_8").val()
+      if (compName != '' && firstName != '' && lastName != '' && email.includes("@")){
         document.getElementById("myBtn").disabled = false
         $("#missing").text('')
       }
     })
-  </script>
-
-  <script>
-    // dictionary of form options
-    var formOptions = {
-      'bronze':"Industry BRONZE",
-      'silver':"Industry SILVER",
-      'gold':"Industry GOLD",
-      'platinum':"Industry PLATINUM",
-      'institutional':"Institutional"
-    }
-    //call URL parser function
-    var thisURL = location.href;
-    var partnerOption = thisURL.split("#")[1]
-    $("#element_0").val(formOptions[partnerOption])
   </script>
 
   <script>
