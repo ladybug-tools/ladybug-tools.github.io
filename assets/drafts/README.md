@@ -29,7 +29,7 @@ _<small>Ladybug Tools / Assets / Drafts</small>_
 
 ## Change Log
 
-### .2019-01-07 ~ Theo
+### 2019-01-07 ~ Theo
 
 
 * First commit
