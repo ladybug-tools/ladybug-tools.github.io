@@ -660,3 +660,12 @@ img::-moz-selection {
   border-color: black;
   border-width: 1px;
 }
+
+.icon {
+    background: url('/assets/svg/ladybug.svg');
+    height: 15px;
+    width: 15px;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+    display: inline-block
+}   
