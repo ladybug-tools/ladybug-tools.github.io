@@ -662,7 +662,7 @@ img::-moz-selection {
 }
 
 .icon {
-    background: url('/assets/svg/ladybug.svg');
+    background: url('../svg/ladybug.svg');
     height: 15px;
     width: 15px;
     padding-bottom: 0px;
