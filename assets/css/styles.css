@@ -662,9 +662,9 @@ img::-moz-selection {
 }
 
 .icon {
-    background: url('../svg/ladybug.svg');
-    height: 15px;
-    width: 15px;
+    background: url('../img/ladybug-trademark.ico');
+    height: 16px;
+    width: 16px;
     padding-bottom: 0px;
     margin-bottom: 0px;
     display: inline-block
