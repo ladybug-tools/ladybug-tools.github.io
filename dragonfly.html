@@ -26,9 +26,14 @@
               <div class="col-md-8 col-12 inner">
               <h1>Dragonfly</h1>
               <h6 class="wow fadeIn text-normal wow fadeIn">
-                Dragonfly models large-scale climate phenomena, such as
-                urban heat island, climate change, and local climate factors
-                such as topography.
+                Dragonfly enables the creation of district-scale models for energy simulation
+                with <a href="https://docs.urbanopt.net/" target="_blank">URBANopt</a>, 
+                electrical electrical infrastructure simulation with
+                <a href="https://www.epri.com/pages/sa/opendss" target="_blank">OpenDSS</a>,
+                renewables optimization with
+                <a href="https://reopt.nrel.gov/" target="_blank">REopt</a>,
+                and urban heat island modeling with the
+                <a href="https://github.com/ladybug-tools/uwg" target="_blank">Urban Weather Generator (UWG)</a>.
               </h6>
               <!--<a rel="nofollow" class="page-scroll" href="#intro" title="Read more">
                 <i class="icon-sm fa fa-chevron-down fa-2x"></i>
@@ -137,17 +142,22 @@
                   </h1>
                   <hr class="primary">
                   <p class="section-subcontent">
-                    Dragonfly enables the modeling and estimation of large-scale climate phenomena, such as
-                    urban heat island, future climate change, and the influence of local climate factors
-                    such as topographic variation. This is accomplished with the help of urban
-                    thermodynamic engines including the <a href="https://github.com/chriswmackey/UWG_Python" target="_blank">Urban Weather Generator</a>
-                    and <a href="https://citysim.epfl.ch/" target="_blank">CitySim</a>. Dragonfly
-                    also links to several datasets including the National Climactic Data Center's (NCDC)
-                    <a href="https://gis.ncdc.noaa.gov/maps/ncei#app=cdo&cfg=cdo&theme=hourly&layers=1&node=gis" target="_blank">database of publicly available hourly weather data</a>
-                    and <a href="https://reverb.echo.nasa.gov/reverb/#utf8=%E2%9C%93&spatial_map=satellite&spatial_type=rectangle" target="_blank">thermal satellite image datasets</a>
-                    (such as LANDSAT). The Dragonfly project makes these large-scale
-                    climate variables accessible to the other insects under Ladybug Tools, which rely on climate
-                    data as a starting point for analysis and simulation.
+                    Dragonfly enables the creation of district scale energy models through the use of
+                    <a href="https://github.com/ladybug-tools/dragonfly-schema/wiki/1.1-Model-Schema" target="_blank">an abstracted building geometry schema</a>.
+                    Dragonfly models can be translated directly into detailed 3D 
+                    <a href="./honeybee.html">Honeybee</a> models but can also be simulated
+                    directly in a variety of engines. Energy simulations of Dragonfly models
+                    can be run with the <a href="https://docs.urbanopt.net/" target="_blank">URBANopt SDK</a>,
+                    which leverages <a href="https://www.openstudio.net/" target="_blank">OpenStudio</a>
+                    and <a href="https://energyplus.net/" target="_blank">EnergyPlus</a>.
+                    Energy simulation results can be used to simulate loads on
+                    electrical electrical infrastructure with
+                    <a href="https://www.epri.com/pages/sa/opendss" target="_blank">OpenDSS</a>,
+                    and can also be incorporated into cost-optimization of renewables with
+                    <a href="https://reopt.nrel.gov/" target="_blank">REopt</a>.
+                    Lastly, any dragonfly model can be used to morph rural EPW files to
+                    account for the urban heat island effect using the
+                    <a href="https://github.com/ladybug-tools/uwg" target="_blank">Urban Weather Generator (UWG)</a>.
                   </p>
                 </br>
               </div>
@@ -159,18 +169,42 @@
           <div class="row">
             <!-- start of an icon -->
             <div class="col-md-2 col-sm-4 col-4 text-center">
-              <a class="page-scroll" href="#uhi">
-                  <img class="feature-icon" src="assets/img/dragonfly/uhi.png" />
+              <a class="page-scroll" href="#comingSoon">
+                  <img class="feature-icon" src="assets/img/dragonfly/urbanEnergy.png" />
               </a>
-              <h6 class="text-uppercase">Urban Heat Island Modeling</h6>
+              <h6 class="text-uppercase">Urban District Energy Use</h6>
+            </div>
+            <!-- end of an icon -->
+            <!-- start of an icon -->
+            <div class="col-md-2 col-sm-4 col-4 text-center">
+              <a class="page-scroll" href="#thermalImage">
+                  <img class="feature-icon" src="assets/img/dragonfly/electricalnetwork.png" />
+              </a>
+              <h6 class="text-uppercase">Electrical Grid Loads</h6>
             </div>
             <!-- end of an icon -->
             <!-- start of an icon -->
             <div class="col-md-2 col-sm-4 col-4 text-center">
               <a class="page-scroll" href="#comingSoon">
-                  <img class="feature-icon" src="assets/img/dragonfly/climateChange.png" />
+                  <img class="feature-icon" src="assets/img/dragonfly/renewables.png" />
               </a>
-              <h6 class="text-uppercase">Climate Change Projections</h6>
+              <h6 class="text-uppercase">Renewables Cost Optimization</h6>
+            </div>
+            <!-- end of an icon -->
+            <!-- start of an icon -->
+            <div class="col-md-2 col-sm-4 col-4 text-center">
+              <a class="page-scroll" href="#comingSoon">
+                  <img class="feature-icon" src="assets/img/dragonfly/peakload.png" />
+              </a>
+              <h6 class="text-uppercase">Peak Load + Demand Response</h6>
+            </div>
+            <!-- end of an icon -->
+            <!-- start of an icon -->
+            <div class="col-md-2 col-sm-4 col-4 text-center">
+              <a class="page-scroll" href="#uhi">
+                  <img class="feature-icon" src="assets/img/dragonfly/uhi.png" />
+              </a>
+              <h6 class="text-uppercase">Urban Heat Island Modeling</h6>
             </div>
             <!-- end of an icon -->
             <!-- start of an icon -->
@@ -181,28 +215,6 @@
               <h6 class="text-uppercase">Actual Met Year (AMY) Creation</h6>
             </div>
             <!-- end of an icon -->
-            <!-- start of an icon -->
-            <div class="col-md-2 col-sm-4 col-4 text-center">
-              <a class="page-scroll" href="#thermalImage">
-                  <img class="feature-icon" src="assets/img/dragonfly/landsat.png" />
-              </a>
-              <h6 class="text-uppercase">Thermal Satellite Images</h6>
-            </div>
-            <!-- end of an icon -->
-            <!-- start of an icon -->
-          <div class="col-md-2 col-sm-4 col-4 text-center">
-            <a class="page-scroll" href="#comingSoon">
-                <img class="feature-icon" src="assets/img/dragonfly/precipitation.png" />
-            </a>
-            <h6 class="text-uppercase">Hourly Precipitation</h6>
-          </div>
-          <!-- end of an icon -->
-            <div class="col-md-2 col-sm-4 col-4 text-center">
-              <a class="page-scroll" href="#comingSoon">
-                  <img class="feature-icon" src="assets/img/dragonfly/urbanEnergy.png" />
-              </a>
-              <h6 class="text-uppercase">Urban District Energy Models</h6>
-            </div>
           </div>
       </div>
   </section>
@@ -223,28 +235,52 @@
       <div class="container">
           <div class="row">
             <div class="col-lg-3 col-md-6 col-sm-12">
-                <a href="https://github.com/chriswmackey/Dragonfly" target="_blank">
+                <a href="https://www.food4rhino.com/en/app/ladybug-tools" target="_blank">
                   <div class="btn btn-primary-outline btn-xl wow fadeInUp m-t-3 d-block">
                   <i class="fa fa-download"></i> Download<br />for Grasshopper</div>
                 </a>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12">
-                <a href="https://github.com/chriswmackey/Dragonfly" target="_blank">
+                <a href="https://docs.ladybug.tools/dragonfly-primer/" target="_blank">
                   <div class="btn btn-primary-outline btn-xl wow fadeInUp m-t-3 d-block">
-                  <i class="fa fa-github"></i> Source Code<br />Legacy</div>
+                  <i class="fa fa-book"></i> Component<br />Docs</div>
                 </a>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12">
-                <a href="https://hydrashare.github.io/hydra/?keywords=dragonfly" target="_blank">
+              <a href="https://www.youtube.com/playlist?list=PLtSMbRCHXHVEJvpKRmIWy0h110_rnCDdB">
+                <div class="btn btn-primary-outline btn-xl wow fadeInUp m-t-3 d-block">
+                <i class="fa fa-video-camera"></i> Video<br />Tutorials</div>
+              </a>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <a href="https://github.com/ladybug-tools/lbt-grasshopper-samples/tree/master/samples/dragonfly" target="_blank">
                   <div class="btn btn-primary-outline btn-xl wow fadeInUp m-t-3 d-block">
-                  <i class="fa fa-plus"></i> Example<br />Files</div>
+                  <i class="fa fa-pencil"></i> Example<br />Files</div>
                 </a>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12">
-                <a href="./resource.html#dragonfly">
-                  <div class="btn btn-primary-outline btn-xl wow fadeInUp m-t-3 d-block">
-                  <i class="fa fa-book"></i> Learning<br />Resources</div>
-                </a>
+              <a href="https://www.ladybug.tools/dragonfly-core/docs/" target="_blank">
+                <div class="btn btn-primary-outline btn-xl wow fadeInUp m-t-3 d-block">
+                <i class="fa fa-github"></i> Core SDK<br />Docs</div>
+              </a>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <a href="https://www.ladybug.tools/dragonfly-energy/docs/" target="_blank">
+                <div class="btn btn-primary-outline btn-xl wow fadeInUp m-t-3 d-block">
+                <i class="fa fa-github"></i> Energy SDK<br />Docs</div>
+              </a>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <a href="https://www.ladybug.tools/dragonfly-uwg/docs/" target="_blank">
+                <div class="btn btn-primary-outline btn-xl wow fadeInUp m-t-3 d-block">
+                <i class="fa fa-github"></i> UWG SDK<br />Docs</div>
+              </a>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <a href="https://ladybug-tools.github.io/dragonfly-schema/" target="_blank">
+                <div class="btn btn-primary-outline btn-xl wow fadeInUp m-t-3 d-block">
+                <i class="fa fa-github"></i> File Schema<br />Docs</div>
+              </a>
             </div>
         </div>
   </section>
