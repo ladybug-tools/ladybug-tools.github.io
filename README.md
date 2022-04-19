@@ -18,8 +18,8 @@ Ladybug Tools is the only open source interface that unites all of its underlyin
 ## COMMUNITY-SUPPORTED
 Ladybug Tools is supported by a passionate and diverse community from around the world. Visit our online forum to see the discussions that shape our future development.
 
-## 100K+ DOWNLOADS
-Ladybug Tools has been downloaded more than 100,000 times and is the 3rd most popular plugin for Grasshopper. It's also the winner of the DynaAwards for best Dynamo analysis package.
+## 500+ DOWNLOADS
+Ladybug Tools has been downloaded more than 500,000 times and is the 3rd most popular plugin for Grasshopper.
 
 ## INTEGRATED
 Ladybug Tools runs within 3D modeling software and allows data transfer between its simulation engines. So all geometry creation, simulation, and visualization happen within one interface.

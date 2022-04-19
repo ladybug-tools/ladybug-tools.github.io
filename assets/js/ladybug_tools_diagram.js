@@ -31,9 +31,9 @@ var graph = {
         {"id": "Airflow", "group": 3, "img": "airflow.png", "size": 75, "text": "Airflow", "link": "./butterfly.html#indoorairflow"},
         {"id": "Outdoor_Comfort", "group": 3, "img": "outdoor_comfort.png", "size": 75, "text": "Outdoor comfort", "link": "./honeybee.html#microclimate"},
         {"id": "HVAC_Sizing", "group": 3, "img": "hvac_sizing.png", "size": 75, "text": "HVAC sizing", "link": "./honeybee.html#hvac"},
-        {"id": "urban", "group": 4, "img": "electricnetwork.png", "size": 50, "text": "Urban energy", "link": "./dragonfly.html#thermalImage"},
-        {"id": "Renewables", "group": 4, "img": "groundpv.png", "size": 50, "text": "Renewables", "link": "./dragonfly.html#uhi"},
-        {"id": "LANDSAT", "group": 4, "img": "landsat.png", "size": 50, "text": "Heat Island", "link": "./dragonfly.html#thermalImage"}
+        {"id": "urban", "group": 4, "img": "electricnetwork.png", "size": 50, "text": "Urban energy", "link": "./dragonfly.html#energyuse"},
+        {"id": "Renewables", "group": 4, "img": "groundpv.png", "size": 50, "text": "Renewables", "link": "./dragonfly.html#renewables"},
+        {"id": "LANDSAT", "group": 4, "img": "landsat.png", "size": 50, "text": "Heat Island", "link": "./dragonfly.html#uhi"}
     ],
     "links": [
         {"source": "Center", "target": "Ladybug", "value": 0},
