@@ -25,7 +25,7 @@ var graph = {
         {"id": "Electric_Lighting", "group": 2, "img": "electric_lighting.png", "size": 75, "text": "Electric lighting", "link": "./honeybee.html#electric"},
         {"id": "Annual_Daylight", "group": 2, "img": "annual_daylight.png", "size": 75, "text": "Annual daylight", "link": "./honeybee.html#annualDaylight"},
         {"id": "gbXML", "group": 2, "img": "gbxml.png", "size": 50, "text": "gbXML", "link": "https://windows.lbl.gov/software/therm"},
-        {"id": "Other", "group": 2, "img": "iesve.jpg", "size": 75, "text": "Other Software", "link": "./honeybee.html#envelope"},
+        {"id": "Other", "group": 2, "img": "t700.png", "size": 40, "text": "Other Software", "link": "./honeybee.html#envelope"},
         {"id": "Comfort", "group": 2, "img": "comfort.png", "size": 75, "text": "Indoor comfort", "link": "./honeybee.html#comfort"},
         {"id": "OpenFoam", "group": 3, "img": "OpenFoam.png", "size": 50, "text": "OpenFOAM", "link": "https://www.openfoam.com/"},
         {"id": "Airflow", "group": 3, "img": "airflow.png", "size": 75, "text": "Airflow", "link": "./butterfly.html#indoorairflow"},
